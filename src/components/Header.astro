@@ -1,0 +1,171 @@
+---
+import { mainNav, ctaNav } from "../data/nav";
+import Button from "./Button.astro";
+import Logo from "./Logo.astro";
+const currentPath = Astro.url.pathname;
+---
+
+<header class="site-header" data-header>
+  <div class="container header-inner">
+    <a href="/" class="logo" aria-label="Proc Group — página inicial">
+      <Logo variant="white" height={36} />
+    </a>
+
+    <nav class="main-nav" aria-label="Navegação principal">
+      <ul>
+        {mainNav.map((item) => (
+          <li class:list={["nav-item", { "has-children": item.children }]}>
+            <a href={item.href} aria-current={currentPath === item.href ? "page" : undefined}>
+              {item.label}
+              {item.children && <svg class="chev" width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>}
+            </a>
+            {item.children && (
+              <div class="dropdown">
+                {item.children.map((child) => (
+                  <a href={child.href} class="dropdown-item">
+                    <span class="dropdown-title">{child.label}</span>
+                    <span class="dropdown-desc">{child.description}</span>
+                  </a>
+                ))}
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="header-cta">
+      <Button href={ctaNav.href} variant="primary" size="md">{ctaNav.label}</Button>
+    </div>
+
+    <button class="menu-toggle" data-menu-toggle aria-label="Abrir menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <div class="mobile-nav" data-mobile-nav>
+    <ul>
+      {mainNav.map((item) => (
+        <li>
+          <a href={item.href}>{item.label}</a>
+          {item.children && (
+            <ul class="mobile-sub">
+              {item.children.map((child) => <li><a href={child.href}>{child.label}</a></li>)}
+            </ul>
+          )}
+        </li>
+      ))}
+      <li><a href={ctaNav.href} class="mobile-cta">{ctaNav.label}</a></li>
+    </ul>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 40px;
+    z-index: 100;
+    background: rgba(5, 0, 20, 0.82);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--color-border);
+    transition: box-shadow var(--dur-fast) ease;
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    height: 76px;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-shrink: 0;
+  }
+
+  .main-nav { flex: 1; display: flex; min-width: 0; }
+  .main-nav > ul { display: flex; align-items: center; gap: var(--space-6); }
+  .nav-item { position: relative; padding-block: var(--space-6); }
+  .nav-item > a {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--ink-300);
+    white-space: nowrap;
+    transition: color var(--dur-fast) ease;
+  }
+  .nav-item > a:hover, .nav-item > a[aria-current="page"] { color: var(--white); }
+  .chev { transition: transform var(--dur-fast) ease; }
+  .nav-item:hover .chev { transform: rotate(180deg); }
+
+  .dropdown {
+    position: absolute;
+    top: 100%;
+    left: -1rem;
+    background: var(--surface-2);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--color-border);
+    padding: var(--space-3);
+    min-width: 300px;
+    display: grid;
+    gap: 2px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition: opacity var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out), visibility var(--dur-fast);
+  }
+  .nav-item.has-children:hover .dropdown,
+  .nav-item.has-children:focus-within .dropdown {
+    opacity: 1; visibility: visible; transform: translateY(0);
+  }
+  .dropdown-item { display: flex; flex-direction: column; gap: 2px; padding: var(--space-3); border-radius: var(--radius-sm); }
+  .dropdown-item:hover { background: var(--surface-3); }
+  .dropdown-title { font-weight: 700; font-size: var(--fs-sm); color: var(--white); }
+  .dropdown-desc { font-size: var(--fs-xs); color: var(--ink-500); }
+
+  .header-cta { flex-shrink: 0; }
+  .menu-toggle { display: none; }
+
+  @media (max-width: 1200px) {
+    .main-nav, .header-cta { display: none; }
+    .menu-toggle {
+      display: flex; flex-direction: column; justify-content: center; gap: 5px;
+      width: 40px; height: 40px; background: none; border: none; margin-left: auto;
+    }
+    .menu-toggle span { display: block; width: 22px; height: 2px; background: var(--white); transition: transform var(--dur-fast) ease, opacity var(--dur-fast) ease; }
+    .header-inner { height: 68px; }
+  }
+
+  .mobile-nav {
+    display: none;
+    max-height: 0;
+    overflow: hidden;
+    background: var(--surface-1);
+    border-top: 1px solid var(--color-border);
+    transition: max-height var(--dur-med) var(--ease-out);
+  }
+  .mobile-nav.is-open { max-height: 80vh; overflow-y: auto; }
+  .mobile-nav ul { padding: var(--space-4) var(--space-6) var(--space-8); }
+  .mobile-nav > ul > li > a { display: block; padding: var(--space-3) 0; font-weight: 700; font-size: var(--fs-lg); text-transform: uppercase; letter-spacing: 0.02em; color: var(--white); }
+  .mobile-sub { padding-left: var(--space-4); }
+  .mobile-sub a { display: block; padding: var(--space-2) 0; color: var(--ink-300); font-size: var(--fs-sm); }
+  .mobile-cta { margin-top: var(--space-4); display: inline-block; background: var(--color-primary); color: var(--white) !important; padding: 0.8rem 1.6rem; border-radius: 999px; font-weight: 700; }
+
+  @media (max-width: 1200px) {
+    .mobile-nav { display: block; }
+  }
+</style>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
+  const mobileNav = document.querySelector<HTMLElement>("[data-mobile-nav]");
+  toggle?.addEventListener("click", () => {
+    const isOpen = mobileNav?.classList.toggle("is-open");
+    toggle.setAttribute("aria-expanded", String(!!isOpen));
+  });
+</script>

@@ -1,0 +1,29 @@
+---
+import BusinessUnitTemplate from "../../components/BusinessUnitTemplate.astro";
+
+const faqs = [
+  {
+    q: "A Proc atende empresas que já têm infraestrutura própria?",
+    a: "Sim. Atuamos tanto em migrações completas para cloud quanto em modelos híbridos, integrando infraestrutura própria do cliente com serviços gerenciados da Proc.",
+  },
+  {
+    q: "Como funciona o NOC (Centro de Operações de Rede)?",
+    a: "Nosso NOC monitora infraestrutura, rede e aplicações 24x7, identificando e respondendo a incidentes antes que afetem a operação do cliente.",
+  },
+  {
+    q: "Quais SLAs de disponibilidade vocês oferecem?",
+    a: "Os SLAs são definidos conforme a criticidade da operação do cliente, com contratos que preveem disponibilidade contínua para ambientes de missão crítica.",
+  },
+];
+---
+
+<BusinessUnitTemplate
+  slug="infraestrutura-de-ti"
+  metaTitle="Infraestrutura de TI — Alta Disponibilidade"
+  metaDescription="Cloud, backup, NOC, firewall, service desk e governança de infraestrutura para empresas que precisam de continuidade operacional e performance em escala."
+  solutionsHeading="Tecnologias para infraestrutura crítica e alta disponibilidade"
+  teamDescription="Profissionais dedicados a infraestrutura crítica, com experiência em cloud, redes, virtualização e governança de TI para operações de missão crítica."
+  faqs={faqs}
+  finalCtaTitle="Pronto para uma infraestrutura de TI mais confiável?"
+  finalCtaText="Fale com um especialista em Infraestrutura de TI da Proc."
+/>

@@ -1,0 +1,155 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Breadcrumb from "../components/Breadcrumb.astro";
+import Button from "../components/Button.astro";
+import { getBusinessUnit } from "../data/businessUnits";
+
+const cases = [
+  {
+    unit: getBusinessUnit("cidades-inteligentes")!,
+    title: "Centro Integrado de Operações para município de médio porte",
+    problem: "Câmeras de videomonitoramento espalhadas pela cidade sem integração, exigindo grande equipe para revisar gravações manualmente após ocorrências.",
+    challenge: "Unificar dezenas de câmeras de diferentes fabricantes em uma única central, com resposta em tempo real e reconhecimento automático de placas e rostos de interesse.",
+    solution: "Implantação de um Centro Integrado de Operações com a Proc AI Platform, unindo videomonitoramento inteligente, LPR e reconhecimento facial em um único painel operado 24x7.",
+    results: ["-32% tempo médio de resposta a ocorrências", "+3.400 câmeras integradas", "Operação 24x7 com equipe dedicada"],
+  },
+  {
+    unit: getBusinessUnit("seguranca-corporativa")!,
+    title: "Controle de acesso facial em parque industrial",
+    problem: "Catracas com cartão de acesso gerando filas nos horários de troca de turno e vulnerabilidade a compartilhamento de credenciais.",
+    challenge: "Substituir o controle por cartão sem interromper a operação da fábrica, mantendo alta velocidade de passagem em horários de pico.",
+    solution: "Reconhecimento facial integrado às catracas existentes via API aberta da Proc AI Platform, com fallback automático para os dispositivos antigos durante a transição.",
+    results: ["-70% tempo de fila no troca de turno", "0 incidentes de compartilhamento de credencial", "Implantação sem parada de produção"],
+  },
+  {
+    unit: getBusinessUnit("infraestrutura-de-ti")!,
+    title: "Migração para cloud híbrida com continuidade operacional",
+    problem: "Infraestrutura local antiga, sem redundância, com risco de indisponibilidade em picos de demanda.",
+    challenge: "Migrar cargas críticas para a nuvem sem interromper a operação do cliente, mantendo compliance e governança de dados.",
+    solution: "Arquitetura de cloud híbrida gerenciada pelo NOC da Proc, com monitoramento 24x7, backup automatizado e plano de continuidade testado.",
+    results: ["99.9% de disponibilidade", "-45% custo de infraestrutura", "Recuperação de desastre em minutos"],
+  },
+  {
+    unit: getBusinessUnit("ia-industrial")!,
+    title: "Inspeção visual automatizada em linha de produção",
+    problem: "Inspeção de qualidade feita manualmente, com alta variabilidade entre inspetores e baixa rastreabilidade de defeitos.",
+    challenge: "Automatizar a inspeção sem reduzir a velocidade da linha, identificando defeitos sutis em tempo real.",
+    solution: "Câmeras de Edge AI instaladas na linha existente, com modelos de visão computacional treinados para os defeitos específicos do processo do cliente.",
+    results: ["+18% de peças aprovadas na primeira inspeção", "Rastreabilidade completa por peça", "Detecção em tempo real na linha"],
+  },
+];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "Cases Proc Group",
+  description: "Cases de sucesso da Proc Group em Cidades Inteligentes, Segurança Corporativa, Infraestrutura de TI e IA Industrial.",
+};
+---
+
+<BaseLayout
+  title="Cases"
+  description="Cases de sucesso da Proc Group: problema, desafio, solução e resultados em Cidades Inteligentes, Segurança Corporativa, Infraestrutura de TI e IA Industrial."
+  schema={schema}
+>
+  <div class="container">
+    <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Cases", href: "/cases" }]} />
+  </div>
+
+  <section class="hero-page">
+    <div class="container">
+      <p class="eyebrow">Cases</p>
+      <h1>Resultados reais em cada unidade de negócio</h1>
+      <p class="lead">
+        Conheça como a Proc AI Platform resolve desafios concretos de segurança pública, segurança corporativa,
+        infraestrutura crítica e indústria.
+      </p>
+    </div>
+  </section>
+
+  <section class="section cases-section" data-theme="light">
+    <div class="container">
+      <div class="cases-grid">
+        {cases.map((c) => (
+          <article class="case-card" data-reveal style={`--unit-color: ${c.unit.color}`}>
+            <span class="case-badge">{c.unit.shortName}</span>
+            <h2>{c.title}</h2>
+
+            <div class="case-block">
+              <h3>Problema</h3>
+              <p>{c.problem}</p>
+            </div>
+            <div class="case-block">
+              <h3>Desafio</h3>
+              <p>{c.challenge}</p>
+            </div>
+            <div class="case-block">
+              <h3>Solução</h3>
+              <p>{c.solution}</p>
+            </div>
+
+            <div class="case-results">
+              {c.results.map((r) => (
+                <span class="result-pill">{r}</span>
+              ))}
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section final-cta">
+    <div class="container final-cta-inner" data-reveal>
+      <h2>Quer um resultado assim na sua operação?</h2>
+      <p>Fale com um especialista Proc e descubra a solução ideal para o seu contexto.</p>
+      <Button href="/contato?intent=demo" variant="primary" size="lg">Solicitar Demonstração</Button>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero-page { padding-block: var(--space-16) var(--space-8); }
+  .hero-page h1 { font-size: var(--fs-4xl); margin-top: var(--space-4); max-width: 780px; }
+  .lead { margin-top: var(--space-6); font-size: var(--fs-lg); color: var(--color-text-muted); max-width: 640px; }
+
+  .section { padding-block: var(--space-16); }
+  .cases-section { background: var(--color-bg); }
+
+  .cases-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-8); }
+  .case-card {
+    position: relative;
+    padding: var(--space-8);
+    border-radius: var(--radius-lg);
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+  }
+  .case-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--unit-color); }
+  .case-badge { font-size: var(--fs-xs); font-weight: 700; color: var(--unit-color); text-transform: uppercase; letter-spacing: 0.08em; }
+  .case-card h2 { margin-top: var(--space-3); font-size: var(--fs-xl); text-transform: none; font-family: var(--font-sans); }
+  .case-block { margin-top: var(--space-6); }
+  .case-block h3 { font-size: var(--fs-sm); text-transform: uppercase; letter-spacing: 0.06em; color: var(--unit-color); font-family: var(--font-sans); font-weight: 700; }
+  .case-block p { margin-top: var(--space-2); font-size: var(--fs-sm); color: var(--color-text-muted); }
+  .case-results { margin-top: var(--space-6); display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .result-pill {
+    font-size: var(--fs-xs); font-weight: 700;
+    padding: var(--space-2) var(--space-4);
+    border-radius: 999px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+  }
+
+  .final-cta {
+    background: linear-gradient(135deg, var(--navy-900), var(--navy-800));
+    color: var(--white);
+    text-align: center;
+  }
+  .final-cta-inner h2 { color: var(--white); font-size: var(--fs-3xl); max-width: 680px; margin-inline: auto; }
+  .final-cta-inner p { margin-top: var(--space-4); color: rgba(255,255,255,0.75); }
+  .final-cta-inner .btn { margin-top: var(--space-8); }
+
+  @media (max-width: 980px) {
+    .cases-grid { grid-template-columns: 1fr; }
+  }
+</style>

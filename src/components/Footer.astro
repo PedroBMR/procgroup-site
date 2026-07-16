@@ -1,0 +1,79 @@
+---
+import { mainNav } from "../data/nav";
+import Logo from "./Logo.astro";
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container footer-top">
+    <div class="footer-brand">
+      <Logo variant="white" height={32} />
+      <p>Uma plataforma. Múltiplas soluções. Inteligência para um mundo mais seguro, conectado e eficiente.</p>
+    </div>
+
+    <nav class="footer-nav" aria-label="Navegação do rodapé">
+      <div>
+        <h3>Navegação</h3>
+        <ul>
+          {mainNav.filter(i => i.label !== "Home").map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+        </ul>
+      </div>
+      <div>
+        <h3>Soluções</h3>
+        <ul>
+          {mainNav.find(i => i.label === "Soluções")?.children?.map((c) => <li><a href={c.href}>{c.label}</a></li>)}
+        </ul>
+      </div>
+      <div>
+        <h3>Contato</h3>
+        <ul>
+          <li><a href="mailto:comercial@procgroup.com.br">comercial@procgroup.com.br</a></li>
+          <li><a href="tel:+554632243532">+55 46 3224-3532</a></li>
+          <li>Caetano Munhoz da Rocha, 480 — Pato Branco / PR</li>
+          <li><a href="/contato">Solicitar demonstração</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+  <div class="container footer-bottom">
+    <p>&copy; {year} Proc Group. Todos os direitos reservados.</p>
+    <div class="footer-legal">
+      <a href="/politica-de-privacidade">Política de Privacidade</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--navy-900);
+    color: rgba(255,255,255,0.75);
+    padding-top: var(--space-24);
+  }
+  .footer-top {
+    display: grid;
+    grid-template-columns: 1.2fr 2fr;
+    gap: var(--space-16);
+    padding-bottom: var(--space-16);
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+  }
+  .footer-brand p { margin-top: var(--space-6); max-width: 320px; font-size: var(--fs-sm); line-height: var(--lh-normal); }
+
+  .footer-nav { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-8); }
+  .footer-nav h3 { color: var(--white); font-size: var(--fs-sm); margin-bottom: var(--space-4); }
+  .footer-nav li { margin-bottom: var(--space-2); }
+  .footer-nav a { font-size: var(--fs-sm); transition: color var(--dur-fast) ease; }
+  .footer-nav a:hover { color: var(--white); }
+
+  .footer-bottom {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-block: var(--space-6);
+    font-size: var(--fs-xs);
+  }
+
+  @media (max-width: 780px) {
+    .footer-top { grid-template-columns: 1fr; gap: var(--space-12); }
+    .footer-nav { grid-template-columns: 1fr 1fr; }
+    .footer-bottom { flex-direction: column; gap: var(--space-2); text-align: center; }
+  }
+</style>

@@ -1,0 +1,54 @@
+---
+import type { Stat } from "../data/stats";
+interface Props extends Stat {}
+const { value, suffix = "", label } = Astro.props;
+---
+
+<div class="stat" data-reveal>
+  <p class="stat-value" data-count={value} data-suffix={suffix}>0{suffix}</p>
+  <p class="stat-label">{label}</p>
+</div>
+
+<style>
+  .stat-value {
+    font-size: var(--fs-3xl);
+    font-weight: 800;
+    color: var(--white);
+    letter-spacing: -0.02em;
+  }
+  .stat-label {
+    margin-top: var(--space-1);
+    font-size: var(--fs-sm);
+    color: rgba(255,255,255,0.7);
+  }
+</style>
+
+<script>
+  const counters = document.querySelectorAll<HTMLElement>("[data-count]");
+  const animate = (el: HTMLElement) => {
+    const target = parseFloat(el.dataset.count || "0");
+    const suffix = el.dataset.suffix || "";
+    const isDecimal = String(target).includes(".");
+    const duration = 1400;
+    const start = performance.now();
+    const step = (now: number) => {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = target * eased;
+      el.textContent = (isDecimal ? current.toFixed(1) : Math.round(current).toString()) + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  };
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        animate(entry.target as HTMLElement);
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.4 });
+
+  counters.forEach((el) => io.observe(el));
+</script>

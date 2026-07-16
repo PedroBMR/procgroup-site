@@ -1,0 +1,88 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Breadcrumb from "../components/Breadcrumb.astro";
+const intent = Astro.url.searchParams.get("intent");
+---
+<BaseLayout title="Contato" description="Fale com um especialista Proc e solicite uma demonstração das soluções de Inteligência Artificial, Visão Computacional e Infraestrutura de TI.">
+  <div class="container">
+    <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Contato", href: "/contato" }]} />
+  </div>
+  <section class="contact-hero">
+    <div class="container">
+      <p class="eyebrow">Contato</p>
+      <h1>{intent === "demo" ? "Solicite uma demonstração" : "Fale com a Proc"}</h1>
+      <p class="lead">Conte um pouco sobre sua operação e um especialista da Proc entrará em contato.</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container form-grid">
+      <form class="contact-form">
+        <label>
+          Nome
+          <input type="text" name="name" required />
+        </label>
+        <label>
+          E-mail corporativo
+          <input type="email" name="email" required />
+        </label>
+        <label>
+          Empresa / Município
+          <input type="text" name="organization" />
+        </label>
+        <label>
+          Área de interesse
+          <select name="interest">
+            <option>Cidades Inteligentes</option>
+            <option>Segurança Corporativa</option>
+            <option>Infraestrutura de TI</option>
+            <option>IA Industrial</option>
+          </select>
+        </label>
+        <label>
+          Mensagem
+          <textarea name="message" rows="4"></textarea>
+        </label>
+        <button type="submit" class="submit-btn">Enviar solicitação</button>
+      </form>
+      <aside class="contact-info">
+        <h2>Outros canais</h2>
+        <p><strong>E-mail:</strong> comercial@procgroup.com.br</p>
+        <p><strong>Telefone:</strong> +55 46 3224-3532</p>
+        <p><strong>WhatsApp comercial:</strong> +55 46 99141-1324</p>
+        <p><strong>Endereço:</strong> Caetano Munhoz da Rocha, 480 — Pato Branco / PR</p>
+        <p><strong>Horário:</strong> Seg a Sex, 8h às 18h</p>
+        <p><strong>Também em:</strong> Curitiba / PR</p>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+<style>
+  .contact-hero { padding-block: var(--space-16) var(--space-8); }
+  .contact-hero h1 { font-size: var(--fs-4xl); margin-top: var(--space-4); }
+  .lead { margin-top: var(--space-6); font-size: var(--fs-lg); color: var(--color-text-muted); max-width: 560px; }
+  .section { padding-block: var(--space-8) var(--space-24); }
+  .form-grid { display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-16); align-items: start; }
+  .contact-form { display: grid; gap: var(--space-4); }
+  .contact-form label { display: grid; gap: var(--space-2); font-size: var(--fs-sm); font-weight: 600; color: var(--color-text); }
+  .contact-form input, .contact-form select, .contact-form textarea {
+    font: inherit; padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--color-border); border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    color: var(--color-text);
+  }
+  .contact-form input::placeholder, .contact-form textarea::placeholder { color: var(--color-text-faint); }
+  .contact-form select option { background: var(--surface-1); color: var(--color-text); }
+  .contact-form input:focus, .contact-form select:focus, .contact-form textarea:focus {
+    outline: 2px solid var(--color-primary); outline-offset: 1px;
+  }
+  .submit-btn {
+    justify-self: start; background: var(--color-primary); color: var(--white);
+    border: none; padding: 0.9rem 2rem; border-radius: 999px; font-weight: 700;
+    transition: background var(--dur-fast) ease;
+  }
+  .submit-btn:hover { background: var(--color-primary-dark); }
+  .contact-info { background: var(--color-bg-alt); border-radius: var(--radius-md); padding: var(--space-8); }
+  .contact-info h2 { font-size: var(--fs-lg); }
+  .contact-info p { margin-top: var(--space-3); font-size: var(--fs-sm); color: var(--color-text-muted); }
+  @media (max-width: 840px) { .form-grid { grid-template-columns: 1fr; } }
+</style>

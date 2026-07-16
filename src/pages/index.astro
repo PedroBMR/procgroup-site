@@ -1,0 +1,249 @@
+---
+import { Image } from "astro:assets";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Button from "../components/Button.astro";
+import HeroScenes from "../components/HeroScenes.astro";
+import StatCounter from "../components/StatCounter.astro";
+import { homeStats, supportBadge } from "../data/stats";
+import { businessUnits } from "../data/businessUnits";
+import hqPhoto from "../assets/images/hq-pato-branco.webp";
+
+const differentiators = [
+  { title: "Arquitetura Escalável", desc: "Plataforma modular pronta para crescer com a operação do cliente." },
+  { title: "IA Própria", desc: "Modelos de reconhecimento facial, LPR e analytics desenvolvidos internamente." },
+  { title: "Alta Disponibilidade", desc: "Infraestrutura redundante com SLA de disponibilidade contínua." },
+  { title: "Integração Aberta", desc: "APIs para conectar sistemas legados, sensores e plataformas de terceiros." },
+  { title: "Especialistas Certificados", desc: "Equipes dedicadas por segmento, não generalistas." },
+  { title: "Edge AI", desc: "Processamento de IA na borda para respostas em tempo real." },
+];
+---
+
+<BaseLayout
+  title="Proc Group — IA, Visão Computacional e Infraestrutura de TI"
+  description="A Proc desenvolve uma plataforma própria de Inteligência Artificial, Visão Computacional e Infraestrutura de TI para tornar cidades, empresas e indústrias mais seguras, eficientes e inteligentes."
+>
+  <section class="hero">
+    <HeroScenes />
+    <div class="container hero-inner">
+      <p class="eyebrow">Plataforma Proc AI</p>
+      <h1>Tecnologia inteligente para proteger cidades, impulsionar empresas e transformar indústrias.</h1>
+      <p class="hero-subtitle">
+        A Proc desenvolve soluções de Inteligência Artificial, Visão Computacional e Infraestrutura de TI para
+        criar operações mais seguras, eficientes e inteligentes.
+      </p>
+      <div class="hero-actions">
+        <Button href="/solucoes" variant="primary" size="lg">Conheça nossas soluções</Button>
+        <Button href="/contato?intent=demo" variant="ghost" size="lg">Solicite uma demonstração</Button>
+      </div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="container stats-grid">
+        {homeStats.map((stat) => <StatCounter {...stat} />)}
+        <div class="stat support-stat" data-reveal>
+          <p class="stat-value">{supportBadge.value}</p>
+          <p class="stat-label">{supportBadge.label}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section about-teaser" data-theme="light">
+    <div class="container about-grid">
+      <div data-reveal>
+        <p class="eyebrow">Quem somos</p>
+        <h2>Uma plataforma. Múltiplas soluções. Uma única inteligência.</h2>
+        <p class="lead">
+          A Proc não é apenas uma integradora de tecnologias — é uma empresa que desenvolve sua própria plataforma
+          de Inteligência Artificial, capaz de integrar diferentes soluções mantendo equipes altamente
+          especializadas em cada segmento de atuação.
+        </p>
+        <Button href="/empresa" variant="secondary">Conheça a Proc</Button>
+      </div>
+      <div class="about-visual" data-reveal>
+        <Image
+          class="about-photo"
+          src={hqPhoto}
+          alt="Sede da Proc Group em Pato Branco"
+          loading="lazy"
+          width={800}
+          height={600}
+          quality={70}
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="section platform-teaser">
+    <div class="container">
+      <div class="platform-teaser-header" data-reveal>
+        <p class="eyebrow">Plataforma Proc AI</p>
+        <h2>Uma única plataforma distribui inteligência para quatro áreas de negócio</h2>
+        <p class="lead">
+          Inteligência Artificial, Analytics, Cloud e APIs formam a base tecnológica que sustenta todas as soluções
+          da Proc — com especialistas dedicados para cada segmento.
+        </p>
+      </div>
+
+      <div class="units-grid">
+        {businessUnits.map((unit) => (
+          <a href={unit.href} class="unit-card" data-reveal style={`--unit-color: ${unit.color}`}>
+            <span class="unit-badge">{unit.shortName}</span>
+            <h3>{unit.name}</h3>
+            <p>{unit.tagline}</p>
+            <span class="unit-link">Ver soluções →</span>
+          </a>
+        ))}
+      </div>
+
+      <div class="platform-cta" data-reveal>
+        <Button href="/plataforma-proc-ai" variant="secondary" size="lg">Ver a Plataforma Proc AI</Button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section differentiators" data-theme="light">
+    <div class="container">
+      <div class="section-header" data-reveal>
+        <p class="eyebrow">Diferenciais</p>
+        <h2>Por que empresas e governos confiam na Proc</h2>
+      </div>
+      <div class="diff-grid">
+        {differentiators.map((item) => (
+          <div class="diff-card" data-reveal>
+            <h3>{item.title}</h3>
+            <p>{item.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section final-cta">
+    <div class="container final-cta-inner" data-reveal>
+      <h2>Pronto para transformar sua operação com inteligência artificial?</h2>
+      <p>Fale com um especialista Proc e descubra a solução ideal para o seu contexto.</p>
+      <Button href="/contato?intent=demo" variant="primary" size="lg">Solicitar Demonstração</Button>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: var(--white);
+    padding-top: var(--space-16);
+  }
+  .hero-inner { position: relative; z-index: 2; max-width: 920px; padding-block: var(--space-16); }
+  .hero h1 {
+    color: var(--white);
+    font-size: clamp(2.25rem, 2.2rem + 2.6vw, 4rem);
+    margin-top: var(--space-4);
+  }
+  .hero-subtitle {
+    margin-top: var(--space-6);
+    font-size: var(--fs-lg);
+    color: rgba(255,255,255,0.75);
+    max-width: 620px;
+  }
+  .hero-actions { display: flex; gap: var(--space-4); margin-top: var(--space-8); flex-wrap: wrap; }
+
+  .hero-stats {
+    position: relative;
+    z-index: 2;
+    border-top: 1px solid rgba(255,255,255,0.14);
+    padding-block: var(--space-8);
+  }
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-6); }
+  .support-stat .stat-value { color: var(--red-500); font-size: var(--fs-3xl); font-weight: 800; }
+  .support-stat .stat-label { margin-top: var(--space-1); font-size: var(--fs-sm); color: rgba(255,255,255,0.7); }
+
+  @media (max-width: 980px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 480px) {
+    .stats-grid { grid-template-columns: 1fr; }
+  }
+
+  .section { padding-block: var(--space-24); }
+  .section-header { max-width: 640px; margin-bottom: var(--space-12); }
+  .lead { margin-top: var(--space-6); font-size: var(--fs-base); color: var(--color-text-muted); max-width: 560px; }
+
+  .about-teaser { background: var(--color-bg); }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-16); align-items: center; }
+  .about-teaser h2 { margin-top: var(--space-4); font-size: var(--fs-3xl); }
+  .about-teaser .btn { margin-top: var(--space-8); }
+  .about-photo {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .platform-teaser { background: var(--navy-900); }
+  .platform-teaser-header { max-width: 680px; }
+  .platform-teaser-header h2 { margin-top: var(--space-4); font-size: var(--fs-3xl); }
+
+  .units-grid { margin-top: var(--space-12); display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-6); }
+  .unit-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-8) var(--space-6);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out), border-color var(--dur-fast) ease;
+    overflow: hidden;
+  }
+  .unit-card::before {
+    content: "";
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: var(--unit-color);
+  }
+  .unit-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); border-color: var(--unit-color); }
+  .unit-badge { font-size: var(--fs-xs); font-weight: 700; color: var(--unit-color); text-transform: uppercase; letter-spacing: 0.08em; }
+  .unit-card h3 { font-size: var(--fs-lg); margin-top: var(--space-2); }
+  .unit-card p { margin-top: var(--space-2); font-size: var(--fs-sm); color: var(--color-text-muted); flex: 1; }
+  .unit-link { margin-top: var(--space-4); font-size: var(--fs-xs); font-weight: 700; color: var(--color-text); }
+
+  .platform-cta { margin-top: var(--space-12); text-align: center; }
+
+  .differentiators { background: var(--color-bg); }
+  .diff-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
+  .diff-card {
+    padding: var(--space-8);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    transition: background var(--dur-fast) ease, border-color var(--dur-fast) ease;
+  }
+  .diff-card:hover { background: var(--color-surface-hover); border-color: var(--color-primary); }
+  .diff-card h3 { font-size: var(--fs-lg); }
+  .diff-card p { margin-top: var(--space-3); font-size: var(--fs-sm); color: var(--color-text-muted); }
+
+  .final-cta {
+    background: linear-gradient(135deg, var(--navy-900), var(--navy-800));
+    color: var(--white);
+    text-align: center;
+  }
+  .final-cta-inner h2 { color: var(--white); font-size: var(--fs-3xl); max-width: 680px; margin-inline: auto; }
+  .final-cta-inner p { margin-top: var(--space-4); color: rgba(255,255,255,0.75); }
+  .final-cta-inner .btn { margin-top: var(--space-8); }
+
+  @media (max-width: 980px) {
+    .about-grid { grid-template-columns: 1fr; }
+    .units-grid { grid-template-columns: repeat(2, 1fr); }
+    .diff-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 640px) {
+    .units-grid, .diff-grid { grid-template-columns: 1fr; }
+  }
+</style>

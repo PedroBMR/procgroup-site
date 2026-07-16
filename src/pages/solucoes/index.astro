@@ -1,0 +1,49 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Breadcrumb from "../../components/Breadcrumb.astro";
+import { businessUnits } from "../../data/businessUnits";
+---
+<BaseLayout title="Soluções" description="Conheça as quatro unidades de negócio da Proc: Cidades Inteligentes, Segurança Corporativa, Infraestrutura de TI e IA Industrial.">
+  <div class="container">
+    <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Soluções", href: "/solucoes" }]} />
+  </div>
+  <section class="hero-page">
+    <div class="container">
+      <p class="eyebrow">Soluções</p>
+      <h1>Quatro unidades de negócio. Uma única plataforma.</h1>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container units-grid">
+      {businessUnits.map((unit) => (
+        <a href={unit.href} class="unit-card" style={`--unit-color: ${unit.color}`}>
+          <span class="unit-badge">{unit.shortName}</span>
+          <h2>{unit.name}</h2>
+          <p>{unit.tagline}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+<style>
+  .hero-page { padding-block: var(--space-16) var(--space-8); }
+  .hero-page h1 { font-size: var(--fs-4xl); margin-top: var(--space-4); }
+  .section { padding-block: var(--space-16) var(--space-24); }
+  .units-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-6); }
+  .unit-card {
+    position: relative;
+    padding: var(--space-8);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out), border-color var(--dur-fast) ease;
+    overflow: hidden;
+  }
+  .unit-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--unit-color); }
+  .unit-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); border-color: var(--unit-color); }
+  .unit-badge { font-size: var(--fs-xs); font-weight: 700; color: var(--unit-color); text-transform: uppercase; letter-spacing: 0.08em; }
+  .unit-card h2 { margin-top: var(--space-2); font-size: var(--fs-xl); }
+  .unit-card p { margin-top: var(--space-2); color: var(--color-text-muted); }
+  @media (max-width: 640px) { .units-grid { grid-template-columns: 1fr; } }
+</style>

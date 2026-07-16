@@ -1,0 +1,43 @@
+---
+interface Crumb { label: string; href: string; }
+interface Props { items: Crumb[]; }
+const { items } = Astro.props;
+const siteUrl = "https://www.procgroup.com.br";
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: items.map((item, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    name: item.label,
+    item: new URL(item.href, siteUrl).toString(),
+  })),
+};
+---
+
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <ol>
+    {items.map((item, i) => (
+      <li>
+        {i === items.length - 1 ? (
+          <span aria-current="page">{item.label}</span>
+        ) : (
+          <a href={item.href}>{item.label}</a>
+        )}
+        {i < items.length - 1 && <span class="sep" aria-hidden="true">/</span>}
+      </li>
+    ))}
+  </ol>
+</nav>
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />
+
+<style>
+  .breadcrumb { padding-block: var(--space-4); }
+  .breadcrumb ol { display: flex; flex-wrap: wrap; gap: var(--space-2); font-size: var(--fs-xs); color: var(--color-text-faint); }
+  .breadcrumb li { display: flex; align-items: center; gap: var(--space-2); }
+  .breadcrumb a:hover { color: var(--red-500); }
+  .breadcrumb span[aria-current] { color: var(--color-text); font-weight: 600; }
+  .sep { color: var(--color-text-faint); opacity: 0.5; }
+</style>

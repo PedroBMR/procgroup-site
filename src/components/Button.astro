@@ -1,0 +1,49 @@
+---
+interface Props {
+  href: string;
+  variant?: "primary" | "secondary" | "ghost";
+  size?: "md" | "lg";
+  class?: string;
+}
+const { href, variant = "primary", size = "md", class: className = "" } = Astro.props;
+---
+
+<a href={href} class={`btn btn-${variant} btn-${size} ${className}`}>
+  <span><slot /></span>
+</a>
+
+<style>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    font-weight: 600;
+    border-radius: 999px;
+    white-space: nowrap;
+    transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  }
+  .btn-md { padding: 0.8rem 1.6rem; font-size: var(--fs-sm); }
+  .btn-lg { padding: 1rem 2rem; font-size: var(--fs-base); }
+
+  .btn-primary {
+    background: var(--color-primary);
+    color: var(--white);
+    box-shadow: var(--shadow-sm);
+  }
+  .btn-primary:hover { background: var(--color-primary-dark); transform: translateY(-2px); box-shadow: var(--glow-red); }
+
+  .btn-secondary {
+    background: var(--color-surface);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+  }
+  .btn-secondary:hover { border-color: var(--color-primary); background: var(--color-surface-hover); transform: translateY(-2px); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--white);
+    border: 1px solid rgba(255,255,255,0.35);
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.6); }
+</style>

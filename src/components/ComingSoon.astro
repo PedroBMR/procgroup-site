@@ -1,0 +1,24 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  description: string;
+}
+const { eyebrow, title, description } = Astro.props;
+---
+
+<section class="stub">
+  <div class="container">
+    <p class="eyebrow">{eyebrow}</p>
+    <h1>{title}</h1>
+    <p class="lead">{description}</p>
+    <p class="note">Esta página faz parte da próxima fase da reformulação do site.</p>
+  </div>
+</section>
+
+<style>
+  .stub { padding-block: var(--space-32); text-align: center; }
+  .stub h1 { margin-top: var(--space-4); font-size: var(--fs-4xl); }
+  .lead { margin: var(--space-6) auto 0; max-width: 560px; font-size: var(--fs-lg); color: var(--color-text-muted); }
+  .note { margin-top: var(--space-8); font-size: var(--fs-xs); color: var(--color-text-faint); }
+</style>

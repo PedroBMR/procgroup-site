@@ -1,0 +1,29 @@
+---
+import BusinessUnitTemplate from "../../components/BusinessUnitTemplate.astro";
+
+const faqs = [
+  {
+    q: "Como a Proc apoia a segurança pública das cidades?",
+    a: "Com uma plataforma integrada de videomonitoramento, reconhecimento facial, leitura de placas e analytics, conectada a um Centro Integrado de Operações operado por equipe especializada em segurança pública.",
+  },
+  {
+    q: "As soluções se integram a sistemas já existentes no município?",
+    a: "Sim. A Proc AI Platform possui APIs abertas para integração com câmeras, sensores e sistemas de gestão já utilizados pelo município.",
+  },
+  {
+    q: "É possível monitorar escolas e mobilidade urbana na mesma plataforma?",
+    a: "Sim, o monitoramento escolar e a mobilidade urbana fazem parte do mesmo ecossistema de Cidades Inteligentes, com dashboards unificados.",
+  },
+];
+---
+
+<BusinessUnitTemplate
+  slug="cidades-inteligentes"
+  metaTitle="Cidades Inteligentes — Segurança Pública com IA"
+  metaDescription="Soluções de reconhecimento facial, leitura de placas, videomonitoramento inteligente e centro integrado de operações para governos e municípios."
+  solutionsHeading="Tecnologias aplicadas à segurança pública e mobilidade urbana"
+  teamDescription="Profissionais dedicados a projetos de segurança pública, com experiência em centros de operações, videomonitoramento inteligente e integração com forças de segurança."
+  faqs={faqs}
+  finalCtaTitle="Vamos tornar sua cidade mais segura e inteligente?"
+  finalCtaText="Fale com um especialista em Cidades Inteligentes da Proc."
+/>
