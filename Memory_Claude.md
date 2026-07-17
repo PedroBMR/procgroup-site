@@ -61,6 +61,50 @@ SO nesta automação. Por isso o QA visual foi feito via inspeção estrutural d
 uma revisão visual completa. Se isso for importante, vale repetir com uma sessão de browser saudável
 numa próxima conversa.
 
+### Auditoria e correção de contraste de cores — concluído em 2026-07-17
+
+O usuário pediu explicitamente pra verificar texto ilegível/invisível por combinação de cores em todo o
+site. Rodei uma auditoria automatizada (script JS injetado via browser, calcula razão de contraste WCAG
+real entre `color` computado e o `background-color` efetivo do ancestral mais próximo) nas 14 páginas.
+Achei e corrigi 2 bugs sistêmicos reais (não é achismo visual, são números de contraste):
+
+**Bug 1 (corrigido):** `--unit-color` (cor de cada unidade de negócio, definida em
+`src/data/businessUnits.ts`) era usada como cor de TEXTO em badges/chips (`.unit-badge`, `.chip`) que às
+vezes caem sobre fundo escuro. Pra Segurança Corporativa (`var(--navy-900)`) e IA Industrial
+(`var(--navy-700)`) isso dava contraste ~1.0–1.5:1 (praticamente invisível) sempre que o badge aparecia
+fora de uma seção `data-theme="light"`. **Fix aplicado** (decisão do usuário: manter a cor da unidade só
+como acento em borda/tarja, texto do badge sempre branco em fundo escuro): troquei
+`color: var(--unit-color)` → `color: var(--white)` em `.unit-badge` de `src/pages/index.astro`,
+`src/pages/solucoes/index.astro`, `src/components/BusinessUnitTemplate.astro`, e em `.chip` de
+`src/pages/blog/index.astro`. **Não toquei** nas instâncias que já estavam em seção `data-theme="light"`
+(`.unit-badge` de `src/pages/empresa.astro` dentro de `.units-recap`, `.case-badge` de
+`src/pages/cases.astro`, `.post-category` de `src/pages/blog/index.astro`) — essas já tinham bom
+contraste (navy/vermelho sobre branco) e trocar quebraria.
+
+**Bug 2 (corrigido) — causa raiz mais interessante:** `--color-text` é uma custom property CSS
+redefinida dentro de `[data-theme="light"]` (ver `src/styles/tokens.css`). Ela só é recalculada em
+elementos que **declaram `color: var(--color-text)` explicitamente na própria regra**. Elementos sem
+nenhuma declaração de `color` própria herdam o valor já resolvido lá em `<body>` (sempre escuro) — a
+herança de CSS propaga o valor computado, não reavalia `var()` a cada geração. Isso deixava:
+- `.solution-card p` (lista de soluções tipo "Reconhecimento Facial") em `BusinessUnitTemplate.astro`,
+  dentro da seção clara `.solutions-section` — contraste ~1.07:1
+- `.result-pill` (selos de resultado tipo "-32% tempo médio...") em `src/pages/cases.astro`, dentro da
+  seção clara `.cases-section` — contraste ~1.17:1
+
+**Fix aplicado:** adicionei `color: var(--color-text);` explicitamente nas duas regras. Correção
+mecânica, sem decisão de design envolvida.
+
+**Achado menor, não corrigido (baixa prioridade):** o texto pequeno `.eyebrow` (ex: "Empresa",
+"Soluções" — vermelho `--red-500` em maiúsculas) aparece em quase toda página com contraste 3.6–4.5:1,
+ligeiramente abaixo do padrão WCAG AA estrito de 4.5:1 pra texto pequeno — ainda legível, não é "texto
+invisível", só não passa no critério mais rígido. Não mexi nisso, é um padrão de marca usado no site
+inteiro (`.eyebrow` em `src/styles/base.css`); se quiser corrigir, precisa aprovação do usuário porque
+mexe na cor de marca.
+
+**Verificado:** re-rodei a auditoria em todas as páginas afetadas depois do fix — os dois bugs sumiram,
+as instâncias que já estavam corretas continuam intactas, `npm run build` sem erros/warnings.
+**Ainda não commitado nem enviado ao GitHub nesta sessão** até o usuário confirmar.
+
 ### Detalhes do passo 2 (publicação) — concluído em 2026-07-17
 
 - Commits enviados a `master` (`origin/master`, repo público `PedroBMR/procgroup-site`): fix de
