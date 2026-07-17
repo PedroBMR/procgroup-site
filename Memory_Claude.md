@@ -102,8 +102,8 @@ inteiro (`.eyebrow` em `src/styles/base.css`); se quiser corrigir, precisa aprov
 mexe na cor de marca.
 
 **Verificado:** re-rodei a auditoria em todas as páginas afetadas depois do fix — os dois bugs sumiram,
-as instâncias que já estavam corretas continuam intactas, `npm run build` sem erros/warnings.
-**Ainda não commitado nem enviado ao GitHub nesta sessão** até o usuário confirmar.
+as instâncias que já estavam corretas continuam intactas, `npm run build` sem erros/warnings. Commitado
+e enviado (`6144b39`).
 
 ### Detalhes do passo 2 (publicação) — concluído em 2026-07-17
 
