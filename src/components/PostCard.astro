@@ -1,0 +1,60 @@
+---
+import {
+  categoryColor,
+  formatDate,
+  isoDate,
+  CATCH_ALL_CATEGORY,
+  type BlogPost,
+} from "../utils/blog";
+import { withBase } from "../utils/url";
+
+interface Props {
+  post: BlogPost;
+  loading?: "eager" | "lazy";
+}
+
+const { post, loading = "lazy" } = Astro.props;
+const { data } = post;
+const category = data.categories.find((c) => c.slug !== CATCH_ALL_CATEGORY) ?? data.categories[0];
+---
+
+<a
+  href={withBase(`/blog/${data.slug}`)}
+  class="post-card"
+  data-reveal
+  style={`--unit-color: ${categoryColor(category?.slug)}`}
+>
+  {data.image && (
+    <div class="post-image">
+      <img src={data.image.src} alt={data.image.alt} width={480} height={280} loading={loading} />
+    </div>
+  )}
+  <div class="post-body">
+    <div class="post-meta">
+      {category && <span class="post-category">{category.name}</span>}
+      <time datetime={isoDate(data.date)}>{formatDate(data.date)}</time>
+    </div>
+    <h2>{data.title}</h2>
+    <p>{data.excerpt}</p>
+  </div>
+</a>
+
+<style>
+  .post-card {
+    border-radius: var(--radius-md); overflow: hidden;
+    background: var(--color-bg-alt); border: 1px solid var(--color-border);
+    transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+  }
+  .post-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
+  .post-image { aspect-ratio: 16/9; overflow: hidden; }
+  .post-image img { width: 100%; height: 100%; object-fit: cover; }
+  .post-body { padding: var(--space-5); }
+  .post-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+  .post-category { font-size: var(--fs-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--unit-color); }
+  .post-meta time { font-size: var(--fs-xs); color: var(--color-text-faint); }
+  .post-card h2 {
+    margin-top: var(--space-2); font-size: var(--fs-base); font-family: var(--font-sans);
+    text-transform: none; font-weight: 700; line-height: var(--lh-snug);
+  }
+  .post-card p { margin-top: var(--space-2); font-size: var(--fs-xs); color: var(--color-text-muted); }
+</style>

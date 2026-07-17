@@ -3,6 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
 import Button from "../components/Button.astro";
 import PlatformMandala from "../components/PlatformMandala.astro";
+import AnimatedFlow from "../components/AnimatedFlow.astro";
 import { businessUnits } from "../data/businessUnits";
 import { withBase } from "../utils/url";
 
@@ -54,8 +55,23 @@ const schema = {
     </div>
   </section>
 
+  <section class="section flow-section" data-theme="light">
+    <div class="container">
+      <div class="section-header" data-reveal>
+        <p class="eyebrow">Como funciona</p>
+        <h2>Um evento. Quatro caminhos possíveis. Uma única plataforma.</h2>
+        <p class="lead">Veja como a Proc AI Platform leva inteligência da captura até a ação, em qualquer uma das quatro áreas de negócio.</p>
+      </div>
+      <AnimatedFlow />
+    </div>
+  </section>
+
   <section class="section diagram-section" data-theme="light">
     <div class="container">
+      <div class="section-header" data-reveal>
+        <p class="eyebrow">Mapa completo</p>
+        <h2>Todas as soluções, em uma única plataforma</h2>
+      </div>
       <PlatformMandala />
     </div>
   </section>
@@ -121,7 +137,10 @@ const schema = {
   .section-header h2 { margin-top: var(--space-4); font-size: var(--fs-3xl); }
   .section-header .lead { font-size: var(--fs-base); }
 
-  .diagram-section { background: var(--color-bg); }
+  .flow-section { background: var(--color-bg); }
+  .flow-section .section-header { text-align: center; margin-inline: auto; }
+  .diagram-section { background: var(--color-bg-alt); }
+  .diagram-section .section-header { text-align: center; margin-inline: auto; }
   .units-section { background: var(--navy-900); }
   .tech-section { background: var(--color-bg); }
   .distribution { display: flex; flex-direction: column; align-items: center; gap: var(--space-8); }

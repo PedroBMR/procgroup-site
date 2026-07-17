@@ -1,0 +1,183 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Breadcrumb from "../../components/Breadcrumb.astro";
+import {
+  byNewest,
+  categoryColor,
+  categoryHref,
+  formatDate,
+  isoDate,
+  type BlogPost,
+} from "../../utils/blog";
+import { withBase } from "../../utils/url";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  const sorted = [...posts].sort(byNewest);
+  return sorted.map((post) => {
+    const related = sorted.filter((p) => p.id !== post.id).slice(0, 3);
+    return {
+      params: { slug: post.data.slug },
+      props: { post, related },
+    };
+  });
+}
+
+interface Props {
+  post: BlogPost;
+  related: BlogPost[];
+}
+
+const { post, related } = Astro.props;
+const { data } = post;
+const { Content } = await render(post);
+
+const siteUrl = "https://www.procgroup.com.br";
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: data.title,
+  datePublished: data.date.toISOString(),
+  dateModified: data.modified.toISOString(),
+  author: { "@type": "Organization", name: data.author },
+  publisher: {
+    "@type": "Organization",
+    name: "Proc Group",
+    logo: { "@type": "ImageObject", url: `${siteUrl}/favicon.svg` },
+  },
+  ...(data.image ? { image: data.image.src } : {}),
+  description: data.excerpt,
+  mainEntityOfPage: new URL(`/blog/${data.slug}`, siteUrl).toString(),
+};
+---
+
+<BaseLayout
+  title={data.title}
+  description={data.excerpt}
+  ogImage={data.image?.src}
+  schema={schema}
+>
+  <div class="container">
+    <Breadcrumb
+      items={[
+        { label: "Home", href: "/" },
+        { label: "Blog", href: "/blog" },
+        { label: data.title, href: `/blog/${data.slug}` },
+      ]}
+    />
+  </div>
+
+  <article class="post">
+    <header class="post-head container">
+      <div class="post-meta">
+        {data.categories
+          .filter((c) => c.slug !== "tudo-sobre-tecnologia")
+          .map((c) => (
+            <a href={withBase(categoryHref(c.slug))} class="cat-pill" style={`--unit-color: ${categoryColor(c.slug)}`}>
+              {c.name}
+            </a>
+          ))}
+        <time datetime={isoDate(data.date)}>{formatDate(data.date)}</time>
+      </div>
+      <h1>{data.title}</h1>
+      {data.excerpt && <p class="lead">{data.excerpt}</p>}
+      <p class="byline">Por {data.author}</p>
+    </header>
+
+    {data.image && (
+      <div class="post-hero container">
+        <img
+          src={data.image.src}
+          alt={data.image.alt}
+          width={data.image.width}
+          height={data.image.height}
+          loading="eager"
+        />
+      </div>
+    )}
+
+    <section class="section prose-section" data-theme="light">
+      <div class="container">
+        <div class="prose">
+          <Content />
+        </div>
+      </div>
+    </section>
+  </article>
+
+  {related.length > 0 && (
+    <section class="section related-section" data-theme="light">
+      <div class="container">
+        <h2 class="related-title">Leia também</h2>
+        <div class="related-grid">
+          {related.map((r) => {
+            const cat = r.data.categories.find((c) => c.slug !== "tudo-sobre-tecnologia") ?? r.data.categories[0];
+            return (
+              <a href={withBase(`/blog/${r.data.slug}`)} class="related-card" data-reveal style={`--unit-color: ${categoryColor(cat?.slug)}`}>
+                {r.data.image && (
+                  <div class="related-image">
+                    <img src={r.data.image.src} alt={r.data.image.alt} width={480} height={280} loading="lazy" />
+                  </div>
+                )}
+                <div class="related-body">
+                  {cat && <span class="related-cat">{cat.name}</span>}
+                  <h3>{r.data.title}</h3>
+                  <time datetime={isoDate(r.data.date)}>{formatDate(r.data.date)}</time>
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  )}
+</BaseLayout>
+
+<style>
+  .post-head { padding-block: var(--space-12) var(--space-8); max-width: 820px; }
+  .post-meta {
+    display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3);
+    font-size: var(--fs-xs); color: var(--color-text-muted);
+  }
+  .cat-pill {
+    font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+    padding: var(--space-1) var(--space-3); border-radius: 999px;
+    border: 1px solid var(--unit-color); color: var(--white);
+    transition: background var(--dur-fast) ease;
+  }
+  .cat-pill:hover { background: var(--unit-color); }
+  .post-meta time { color: var(--color-text-faint); }
+  .post-head h1 { font-size: var(--fs-4xl); margin-top: var(--space-6); line-height: var(--lh-snug); }
+  .post-head .lead { margin-top: var(--space-6); font-size: var(--fs-lg); color: var(--color-text-muted); }
+  .byline { margin-top: var(--space-4); font-size: var(--fs-sm); color: var(--color-text-faint); }
+
+  .post-hero { margin-block: var(--space-4) var(--space-8); }
+  .post-hero img {
+    width: 100%; height: auto; border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+  }
+
+  .prose-section { padding-block: var(--space-16) var(--space-24); background: var(--color-bg); }
+
+  .related-section { padding-block: var(--space-16) var(--space-24); background: var(--color-bg); }
+  .related-title { font-family: var(--font-display); font-size: var(--fs-2xl); margin-bottom: var(--space-8); }
+  .related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
+  .related-card {
+    border-radius: var(--radius-md); overflow: hidden;
+    background: var(--color-bg-alt); border: 1px solid var(--color-border);
+    transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+  }
+  .related-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
+  .related-image { aspect-ratio: 16/9; overflow: hidden; }
+  .related-image img { width: 100%; height: 100%; object-fit: cover; }
+  .related-body { padding: var(--space-5); }
+  .related-cat { font-size: var(--fs-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--unit-color); }
+  .related-card h3 { margin-top: var(--space-2); font-size: var(--fs-base); font-family: var(--font-sans); font-weight: 700; line-height: var(--lh-snug); }
+  .related-card time { display: block; margin-top: var(--space-3); font-size: var(--fs-xs); color: var(--color-text-faint); }
+
+  @media (max-width: 900px) {
+    .related-grid { grid-template-columns: 1fr; }
+  }
+</style>

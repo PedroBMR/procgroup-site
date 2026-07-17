@@ -61,7 +61,7 @@ button { font: inherit; cursor: pointer; }
   font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--red-500);
+  color: var(--color-eyebrow);
 }
 
 .eyebrow::before {
@@ -97,3 +97,30 @@ button { font: inherit; cursor: pointer; }
   html { scroll-behavior: auto; }
   [data-reveal] { opacity: 1; transform: none; transition: none; }
 }
+
+/* Long-form content rendered from WordPress (blog posts, static pages) */
+.prose { max-width: 760px; margin-inline: auto; font-size: var(--fs-base); line-height: var(--lh-normal); color: var(--color-text); }
+.prose h2 { font-family: var(--font-display); font-size: var(--fs-2xl); margin-top: var(--space-12); margin-bottom: var(--space-4); line-height: var(--lh-snug); }
+.prose h3, .prose h4 { font-size: var(--fs-xl); margin-top: var(--space-8); margin-bottom: var(--space-3); }
+.prose p { margin-bottom: var(--space-6); }
+.prose ul, .prose ol { margin: 0 0 var(--space-6) var(--space-6); display: grid; gap: var(--space-2); }
+.prose li { padding-left: var(--space-2); }
+/* .prose only ever renders inside a data-theme="light" section (blog posts,
+   legal pages) — red-500/--color-primary is tuned for dark backgrounds and
+   fails contrast here, so link color is pinned to the light-safe reds directly. */
+.prose a { color: var(--red-600); text-decoration: underline; text-underline-offset: 2px; }
+.prose a:hover { color: var(--red-700); }
+.prose img { max-width: 100%; height: auto; border-radius: var(--radius-md); margin-block: var(--space-6); }
+.prose figure { margin: var(--space-8) 0; }
+.prose figcaption { font-size: var(--fs-xs); color: var(--color-text-faint); text-align: center; margin-top: var(--space-2); }
+.prose blockquote {
+  margin: var(--space-8) 0; padding: var(--space-4) var(--space-6);
+  border-left: 3px solid var(--color-primary); background: var(--color-bg-alt);
+  border-radius: var(--radius-sm); color: var(--color-text-muted);
+}
+.prose h2:first-child, .prose h3:first-child, .prose h4:first-child, .prose p:first-child { margin-top: 0; }
+.prose strong { color: var(--color-text); font-weight: 700; }
+
+/* Elementor wraps WP page content in structural divs we don't need to style,
+   but must neutralize its own default spacing so .prose's rhythm applies. */
+.prose .elementor-element { margin: 0; }

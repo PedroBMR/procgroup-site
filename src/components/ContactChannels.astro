@@ -1,0 +1,22 @@
+---
+interface Props {
+  title?: string;
+}
+const { title = "Outros canais" } = Astro.props;
+---
+
+<aside class="contact-info">
+  <h2>{title}</h2>
+  <p><strong>E-mail:</strong> comercial@procgroup.com.br</p>
+  <p><strong>Telefone:</strong> +55 46 3224-3532</p>
+  <p><strong>WhatsApp:</strong> +55 46 99141-1324</p>
+  <p><strong>Endereço:</strong> Caetano Munhoz da Rocha, 480 — Pato Branco / PR</p>
+  <p><strong>Horário:</strong> Seg a Sex, 8h às 18h</p>
+  <p><strong>Também em:</strong> Curitiba / PR</p>
+</aside>
+
+<style>
+  .contact-info { background: var(--color-bg-alt); border-radius: var(--radius-md); padding: var(--space-8); max-width: 420px; }
+  .contact-info h2 { font-size: var(--fs-lg); }
+  .contact-info p { margin-top: var(--space-3); font-size: var(--fs-sm); color: var(--color-text-muted); }
+</style>

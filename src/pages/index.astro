@@ -1,13 +1,19 @@
 ---
 import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Button from "../components/Button.astro";
-import HeroScenes from "../components/HeroScenes.astro";
+import HeroBackground from "../components/HeroBackground.astro";
 import StatCounter from "../components/StatCounter.astro";
+import PostCard from "../components/PostCard.astro";
+import ConnectedTicker from "../components/ConnectedTicker.astro";
 import { homeStats, supportBadge } from "../data/stats";
 import { businessUnits } from "../data/businessUnits";
+import { byNewest } from "../utils/blog";
 import hqPhoto from "../assets/images/hq-pato-branco.webp";
 import { withBase } from "../utils/url";
+
+const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
 
 const differentiators = [
   { title: "Arquitetura Escalável", desc: "Plataforma modular pronta para crescer com a operação do cliente." },
@@ -24,7 +30,7 @@ const differentiators = [
   description="A Proc desenvolve uma plataforma própria de Inteligência Artificial, Visão Computacional e Infraestrutura de TI para tornar cidades, empresas e indústrias mais seguras, eficientes e inteligentes."
 >
   <section class="hero">
-    <HeroScenes />
+    <HeroBackground />
     <div class="container hero-inner">
       <p class="eyebrow">Plataforma Proc AI</p>
       <h1>Tecnologia inteligente para proteger cidades, impulsionar empresas e transformar indústrias.</h1>
@@ -48,6 +54,8 @@ const differentiators = [
       </div>
     </div>
   </section>
+
+  <ConnectedTicker />
 
   <section class="section about-teaser" data-theme="light">
     <div class="container about-grid">
@@ -120,6 +128,23 @@ const differentiators = [
     </div>
   </section>
 
+  {latestPosts.length > 0 && (
+    <section class="section blog-teaser" data-theme="light">
+      <div class="container">
+        <div class="blog-teaser-header" data-reveal>
+          <div>
+            <p class="eyebrow">Do nosso blog</p>
+            <h2>Ideias e bastidores da Proc AI Platform</h2>
+          </div>
+          <Button href="/blog" variant="secondary">Ver todos os posts</Button>
+        </div>
+        <div class="blog-teaser-grid">
+          {latestPosts.map((post) => <PostCard post={post} />)}
+        </div>
+      </div>
+    </section>
+  )}
+
   <section class="section final-cta">
     <div class="container final-cta-inner" data-reveal>
       <h2>Pronto para transformar sua operação com inteligência artificial?</h2>
@@ -160,7 +185,7 @@ const differentiators = [
     padding-block: var(--space-8);
   }
   .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-6); }
-  .support-stat .stat-value { color: var(--red-500); font-size: var(--fs-3xl); font-weight: 800; }
+  .support-stat .stat-value { color: var(--red-400); font-size: var(--fs-3xl); font-weight: 800; }
   .support-stat .stat-label { margin-top: var(--space-1); font-size: var(--fs-sm); color: rgba(255,255,255,0.7); }
 
   @media (max-width: 980px) {
@@ -229,6 +254,15 @@ const differentiators = [
   .diff-card:hover { background: var(--color-surface-hover); border-color: var(--color-primary); }
   .diff-card h3 { font-size: var(--fs-lg); }
   .diff-card p { margin-top: var(--space-3); font-size: var(--fs-sm); color: var(--color-text-muted); }
+
+  .blog-teaser { background: var(--color-bg); }
+  .blog-teaser-header { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--space-6); flex-wrap: wrap; margin-bottom: var(--space-12); }
+  .blog-teaser-header h2 { margin-top: var(--space-4); font-size: var(--fs-3xl); max-width: 560px; }
+  .blog-teaser-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
+
+  @media (max-width: 900px) {
+    .blog-teaser-grid { grid-template-columns: 1fr; }
+  }
 
   .final-cta {
     background: linear-gradient(135deg, var(--navy-900), var(--navy-800));

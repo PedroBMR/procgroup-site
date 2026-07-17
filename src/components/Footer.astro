@@ -41,6 +41,8 @@ const year = new Date().getFullYear();
     <p>&copy; {year} Proc Group. Todos os direitos reservados.</p>
     <div class="footer-legal">
       <a href={withBase("/politica-de-privacidade")}>Política de Privacidade</a>
+      <span class="legal-note">Dados tratados em conformidade com a LGPD</span>
+      <span class="legal-note">Site com tecnologia estática, otimizado para velocidade e segurança</span>
     </div>
   </div>
 </footer>
@@ -71,10 +73,13 @@ const year = new Date().getFullYear();
     padding-block: var(--space-6);
     font-size: var(--fs-xs);
   }
+  .footer-legal { display: flex; align-items: center; gap: var(--space-4); }
+  .legal-note { color: rgba(255,255,255,0.5); }
 
   @media (max-width: 780px) {
     .footer-top { grid-template-columns: 1fr; gap: var(--space-12); }
     .footer-nav { grid-template-columns: 1fr 1fr; }
     .footer-bottom { flex-direction: column; gap: var(--space-2); text-align: center; }
+    .footer-legal { flex-direction: column; gap: var(--space-1); }
   }
 </style>

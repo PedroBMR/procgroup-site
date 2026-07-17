@@ -1,89 +1,47 @@
 ---
-import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Breadcrumb from "../../components/Breadcrumb.astro";
-import { businessUnits } from "../../data/businessUnits";
+import {
+  byNewest,
+  categoryColor,
+  categoryHref,
+  collectCategories,
+  formatDate,
+  isoDate,
+  CATCH_ALL_CATEGORY,
+} from "../../utils/blog";
 import { withBase } from "../../utils/url";
 
-import cidadesAeroportuaria from "../../assets/images/blog/cidades-seguranca-aeroportuaria.webp";
-import cidadesCoi from "../../assets/images/blog/cidades-02.png";
-import segurancaLgpd from "../../assets/images/blog/seguranca-facial-lgpd.webp";
-import segurancaAcesso from "../../assets/images/blog/seguranca-05.png";
-import infraCloud from "../../assets/images/blog/infra-cloud-vs-local.webp";
-import infraSre from "../../assets/images/blog/infra-sre-observabilidade.webp";
-import industrialVisao from "../../assets/images/blog/industrial-01.png";
-import industrialEdge from "../../assets/images/blog/industrial-06.png";
+const posts = (await getCollection("blog")).sort(byNewest);
+const [featured, ...rest] = posts;
 
-const posts = [
-  {
-    slug: "cidades-inteligentes",
-    unit: businessUnits[0],
-    title: "Segurança aeroportuária inteligente: como a IA está mudando o setor",
-    excerpt: "Reconhecimento facial, analytics e videomonitoramento integrado estão redefinindo a segurança em aeroportos.",
-    image: cidadesAeroportuaria,
-  },
-  {
-    slug: "cidades-inteligentes",
-    unit: businessUnits[0],
-    title: "Centros de Operações integrados: o que aprendemos implantando dezenas deles",
-    excerpt: "Lições práticas de projetos de Centro Integrado de Operações em municípios de diferentes portes.",
-    image: cidadesCoi,
-  },
-  {
-    slug: "seguranca-corporativa",
-    unit: businessUnits[1],
-    title: "Reconhecimento facial e LGPD: como conciliar segurança e conformidade",
-    excerpt: "O que empresas precisam considerar ao adotar reconhecimento facial dentro da legislação brasileira.",
-    image: segurancaLgpd,
-  },
-  {
-    slug: "seguranca-corporativa",
-    unit: businessUnits[1],
-    title: "Controle de acesso facial: o fim das catracas com cartão?",
-    excerpt: "Como o reconhecimento facial está substituindo credenciais físicas em ambientes corporativos e industriais.",
-    image: segurancaAcesso,
-  },
-  {
-    slug: "infraestrutura-de-ti",
-    unit: businessUnits[2],
-    title: "Cloud gerenciada vs. servidor local: qual escolher em 2026?",
-    excerpt: "Um comparativo prático de custo, performance e governança entre os dois modelos de infraestrutura.",
-    image: infraCloud,
-  },
-  {
-    slug: "infraestrutura-de-ti",
-    unit: businessUnits[2],
-    title: "SRE e observabilidade no varejo: lições de quem opera em escala",
-    excerpt: "Como práticas de SRE reduzem indisponibilidade em operações de varejo com alta sazonalidade.",
-    image: infraSre,
-  },
-  {
-    slug: "ia-industrial",
-    unit: businessUnits[3],
-    title: "Visão computacional na linha de produção: por onde começar",
-    excerpt: "Um guia prático para implantar inspeção visual automatizada sem parar a produção.",
-    image: industrialVisao,
-  },
-  {
-    slug: "ia-industrial",
-    unit: businessUnits[3],
-    title: "Edge AI na indústria: processamento em tempo real na borda",
-    excerpt: "Por que processar IA na borda reduz latência e amplia a autonomia de linhas de produção.",
-    image: industrialEdge,
-  },
-];
+// Chips: real WP categories (minus the catch-all that sits on every post).
+const categories = collectCategories(posts)
+  .filter((c) => c.slug !== CATCH_ALL_CATEGORY)
+  .sort((a, b) => a.name.localeCompare(b.name, "pt-BR"));
+
+function primaryCategory(cats: { slug: string; name: string }[]) {
+  return cats.find((c) => c.slug !== CATCH_ALL_CATEGORY) ?? cats[0];
+}
 
 const schema = {
   "@context": "https://schema.org",
   "@type": "Blog",
   name: "Blog Proc Group",
-  description: "Conteúdo sobre Cidades Inteligentes, Segurança Corporativa, Infraestrutura de TI e IA Industrial.",
+  description: "Conteúdo sobre segurança pública, segurança corporativa, infraestrutura de TI e tecnologia.",
+  blogPost: posts.map((post) => ({
+    "@type": "BlogPosting",
+    headline: post.data.title,
+    datePublished: post.data.date.toISOString(),
+    url: new URL(`/blog/${post.data.slug}`, "https://www.procgroup.com.br").toString(),
+  })),
 };
 ---
 
 <BaseLayout
   title="Blog"
-  description="Conteúdo sobre Cidades Inteligentes, Segurança Corporativa, Infraestrutura de TI e IA Industrial, direto dos especialistas da Proc Group."
+  description="Novidades, eventos e conteúdo técnico da Proc Group sobre segurança pública, segurança corporativa, infraestrutura de TI e inteligência artificial."
   schema={schema}
 >
   <div class="container">
@@ -93,32 +51,82 @@ const schema = {
   <section class="hero-page">
     <div class="container">
       <p class="eyebrow">Blog</p>
-      <h1>Ideias e bastidores da Proc AI Platform</h1>
-      <p class="lead">Conteúdo dividido nas quatro áreas de atuação da Proc.</p>
-      <div class="category-chips">
-        {businessUnits.map((unit) => (
-          <a href={withBase(`/solucoes/${unit.slug}`)} class="chip" style={`--unit-color: ${unit.color}`}>{unit.shortName}</a>
-        ))}
-      </div>
+      <h1>Novidades, eventos e tecnologia</h1>
+      <p class="lead">Conteúdo direto dos especialistas da Proc Group.</p>
+      {categories.length > 0 && (
+        <div class="category-chips">
+          <span class="chip is-active">Todos</span>
+          {categories.map((cat) => (
+            <a href={withBase(categoryHref(cat.slug))} class="chip" style={`--unit-color: ${categoryColor(cat.slug)}`}>
+              {cat.name}
+            </a>
+          ))}
+        </div>
+      )}
     </div>
   </section>
 
   <section class="section posts-section" data-theme="light">
     <div class="container">
-      <div class="posts-grid">
-        {posts.map((post) => (
-          <a href={withBase(`/solucoes/${post.slug}`)} class="post-card" data-reveal style={`--unit-color: ${post.unit.color}`}>
-            <div class="post-image">
-              <Image src={post.image} alt={post.title} width={480} height={280} quality={65} />
+      {featured && (
+        <a
+          href={withBase(`/blog/${featured.data.slug}`)}
+          class="feature-card"
+          data-reveal
+          style={`--unit-color: ${categoryColor(primaryCategory(featured.data.categories)?.slug)}`}
+        >
+          {featured.data.image && (
+            <div class="feature-image">
+              <img src={featured.data.image.src} alt={featured.data.image.alt} width={760} height={480} loading="eager" />
             </div>
-            <div class="post-body">
-              <span class="post-category">{post.unit.name}</span>
-              <h2>{post.title}</h2>
-              <p>{post.excerpt}</p>
+          )}
+          <div class="feature-body">
+            <div class="feature-meta">
+              {primaryCategory(featured.data.categories) && (
+                <span class="post-category">{primaryCategory(featured.data.categories).name}</span>
+              )}
+              <time datetime={isoDate(featured.data.date)}>{formatDate(featured.data.date)}</time>
             </div>
-          </a>
-        ))}
-      </div>
+            <h2>{featured.data.title}</h2>
+            <p>{featured.data.excerpt}</p>
+            <span class="read-more">Ler artigo →</span>
+          </div>
+        </a>
+      )}
+
+      {rest.length > 0 && (
+        <div class="posts-grid">
+          {rest.map((post) => {
+            const cat = primaryCategory(post.data.categories);
+            return (
+              <a
+                href={withBase(`/blog/${post.data.slug}`)}
+                class="post-card"
+                data-reveal
+                style={`--unit-color: ${categoryColor(cat?.slug)}`}
+              >
+                {post.data.image && (
+                  <div class="post-image">
+                    <img src={post.data.image.src} alt={post.data.image.alt} width={480} height={280} loading="lazy" />
+                  </div>
+                )}
+                <div class="post-body">
+                  <div class="post-meta">
+                    {cat && <span class="post-category">{cat.name}</span>}
+                    <time datetime={isoDate(post.data.date)}>{formatDate(post.data.date)}</time>
+                  </div>
+                  <h2>{post.data.title}</h2>
+                  <p>{post.data.excerpt}</p>
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      )}
+
+      {posts.length === 0 && (
+        <p class="empty">Nenhum post publicado ainda. Volte em breve.</p>
+      )}
     </div>
   </section>
 </BaseLayout>
@@ -131,42 +139,54 @@ const schema = {
   .category-chips { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-8); }
   .chip {
     font-size: var(--fs-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
-    padding: var(--space-2) var(--space-4);
-    border-radius: 999px;
-    border: 1px solid var(--unit-color);
-    color: var(--white);
+    padding: var(--space-2) var(--space-4); border-radius: 999px;
+    border: 1px solid var(--unit-color, var(--color-border-strong)); color: var(--white);
     transition: background var(--dur-fast) ease, color var(--dur-fast) ease;
   }
-  .chip:hover { background: var(--unit-color); color: var(--white); }
+  .chip.is-active { background: var(--white); color: var(--navy-900); border-color: var(--white); }
+  .chip:not(.is-active):hover { background: var(--unit-color); color: var(--white); }
 
   .section { padding-block: var(--space-16) var(--space-24); }
   .posts-section { background: var(--color-bg); }
 
-  .posts-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-6); }
+  .feature-card {
+    display: grid; grid-template-columns: 1.15fr 1fr; gap: 0;
+    border-radius: var(--radius-lg); overflow: hidden; margin-bottom: var(--space-12);
+    background: var(--color-bg-alt); border: 1px solid var(--color-border);
+    transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+  }
+  .feature-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+  .feature-image { overflow: hidden; min-height: 320px; }
+  .feature-image img { width: 100%; height: 100%; object-fit: cover; }
+  .feature-body { padding: var(--space-8); display: flex; flex-direction: column; justify-content: center; }
+  .feature-meta, .post-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+  .feature-body h2 { margin-top: var(--space-3); font-size: var(--fs-2xl); font-family: var(--font-display); line-height: var(--lh-snug); }
+  .feature-body p { margin-top: var(--space-4); font-size: var(--fs-base); color: var(--color-text-muted); }
+  .read-more { margin-top: var(--space-6); font-weight: 700; font-size: var(--fs-sm); color: var(--unit-color); }
+
+  .posts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
   .post-card {
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    background: var(--color-bg-alt);
-    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md); overflow: hidden;
+    background: var(--color-bg-alt); border: 1px solid var(--color-border);
     transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
   }
   .post-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
   .post-image { aspect-ratio: 16/9; overflow: hidden; }
-  .post-image :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .post-image img { width: 100%; height: 100%; object-fit: cover; }
   .post-body { padding: var(--space-5); }
   .post-category { font-size: var(--fs-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--unit-color); }
+  .post-meta time, .feature-meta time { font-size: var(--fs-xs); color: var(--color-text-faint); }
   .post-card h2 {
-    margin-top: var(--space-2);
-    font-size: var(--fs-base);
-    font-family: var(--font-sans);
-    text-transform: none;
-    font-weight: 700;
-    line-height: var(--lh-snug);
+    margin-top: var(--space-2); font-size: var(--fs-base); font-family: var(--font-sans);
+    text-transform: none; font-weight: 700; line-height: var(--lh-snug);
   }
   .post-card p { margin-top: var(--space-2); font-size: var(--fs-xs); color: var(--color-text-muted); }
+  .empty { color: var(--color-text-muted); font-size: var(--fs-lg); }
 
   @media (max-width: 980px) {
     .posts-grid { grid-template-columns: 1fr 1fr; }
+    .feature-card { grid-template-columns: 1fr; }
+    .feature-image { min-height: 220px; aspect-ratio: 16/9; }
   }
   @media (max-width: 640px) {
     .posts-grid { grid-template-columns: 1fr; }

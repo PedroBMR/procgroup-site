@@ -1,0 +1,116 @@
+---
+// Fundo animado do hero da Home — overlay estilo "visão computacional"
+// (caixas de detecção com confiança + painel de atividade), escolhido entre
+// 4 opções comparadas ao vivo. Mantido abstrato de propósito: retângulos
+// genéricos, não rostos nem pessoas, para não parecer vigilância real.
+const boxes = [
+  { top: "18%", left: "56%", w: 96, h: 72, delay: "0s", label: "96%" },
+  { top: "48%", left: "72%", w: 64, h: 64, delay: "1.6s", label: "89%" },
+  { top: "60%", left: "24%", w: 110, h: 56, delay: "3.2s", label: "98%" },
+  { top: "24%", left: "16%", w: 72, h: 88, delay: "4.8s", label: "92%" },
+  { top: "70%", left: "60%", w: 80, h: 60, delay: "6.4s", label: "95%" },
+  { top: "36%", left: "40%", w: 66, h: 66, delay: "8s", label: "91%" },
+];
+const bars = [40, 70, 55, 90, 35, 65, 50, 80];
+---
+
+<div class="hero-background" aria-hidden="true">
+  <span class="grid-layer"></span>
+  {boxes.map((b) => (
+    <span
+      class="detect-box"
+      style={`top:${b.top}; left:${b.left}; width:${b.w}px; height:${b.h}px; animation-delay:${b.delay};`}
+    >
+      <span class="corner tl"></span>
+      <span class="corner tr"></span>
+      <span class="corner bl"></span>
+      <span class="corner br"></span>
+      <span class="confidence">{b.label}</span>
+    </span>
+  ))}
+
+  <div class="readout">
+    <span class="readout-label">Análise em tempo real</span>
+    <div class="bars">
+      {bars.map((h, i) => <span class="bar" style={`--h:${h}%; animation-delay:${i * 0.15}s;`}></span>)}
+    </div>
+  </div>
+</div>
+
+<style>
+  .hero-background {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background: radial-gradient(120% 100% at 50% 0%, var(--navy-800) 0%, var(--navy-950) 70%);
+  }
+  .grid-layer {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(85% 65% at 50% 40%, black 40%, transparent 100%);
+  }
+
+  .detect-box { position: absolute; opacity: 0; animation: detect-cycle 6.5s ease-in-out infinite; }
+  .corner { position: absolute; width: 14px; height: 14px; border: 2px solid var(--red-500); }
+  .corner.tl { top: 0; left: 0; border-right: none; border-bottom: none; }
+  .corner.tr { top: 0; right: 0; border-left: none; border-bottom: none; }
+  .corner.bl { bottom: 0; left: 0; border-right: none; border-top: none; }
+  .corner.br { bottom: 0; right: 0; border-left: none; border-top: none; }
+  .confidence {
+    position: absolute;
+    top: -18px; left: 0;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.03em;
+    color: var(--red-400);
+    font-family: var(--font-sans);
+  }
+
+  @keyframes detect-cycle {
+    0% { opacity: 0; transform: scale(0.92); }
+    10% { opacity: 0.9; transform: scale(1); }
+    75% { opacity: 0.9; }
+    90% { opacity: 0; }
+    100% { opacity: 0; }
+  }
+
+  .readout {
+    position: absolute;
+    bottom: var(--space-12);
+    right: var(--space-12);
+    padding: var(--space-3) var(--space-4);
+    background: rgba(6, 10, 20, 0.5);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: var(--radius-sm);
+    backdrop-filter: blur(4px);
+  }
+  .readout-label {
+    display: block;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: var(--space-2);
+  }
+  .bars { display: flex; align-items: flex-end; gap: 3px; height: 28px; }
+  .bar {
+    width: 4px;
+    height: var(--h);
+    background: var(--red-500);
+    opacity: 0.7;
+    border-radius: 1px;
+    animation: bar-pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes bar-pulse {
+    0%, 100% { transform: scaleY(0.6); opacity: 0.5; }
+    50% { transform: scaleY(1); opacity: 0.9; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .detect-box { animation: none; opacity: 0.5; }
+    .bar { animation: none; transform: scaleY(0.8); }
+  }
+  @media (max-width: 900px) {
+    .readout { display: none; }
+  }
+</style>

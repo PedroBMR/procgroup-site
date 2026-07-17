@@ -7,11 +7,13 @@ import { getBusinessUnit } from "../data/businessUnits";
 const cases = [
   {
     unit: getBusinessUnit("cidades-inteligentes")!,
-    title: "Centro Integrado de Operações para município de médio porte",
-    problem: "Câmeras de videomonitoramento espalhadas pela cidade sem integração, exigindo grande equipe para revisar gravações manualmente após ocorrências.",
-    challenge: "Unificar dezenas de câmeras de diferentes fabricantes em uma única central, com resposta em tempo real e reconhecimento automático de placas e rostos de interesse.",
-    solution: "Implantação de um Centro Integrado de Operações com a Proc AI Platform, unindo videomonitoramento inteligente, LPR e reconhecimento facial em um único painel operado 24x7.",
-    results: ["-32% tempo médio de resposta a ocorrências", "+3.400 câmeras integradas", "Operação 24x7 com equipe dedicada"],
+    title: "Pato 360° — rede de videomonitoramento inteligente no Sudoeste do Paraná",
+    problem: "Rede municipal de câmeras crescendo rapidamente, com necessidade de reconhecimento facial, leitura de placas e análise de áudio operando em tempo real.",
+    challenge: "Integrar centenas de câmeras públicas e privadas a uma central única, replicando o modelo em outros municípios da região.",
+    solution: "Proc Group desenvolve a infraestrutura de software do Pato 360°, levado a Pato Branco, Marmeleiro, Sulina, Chopinzinho e Coronel Vivida via CPSI (Contrato Público para Solução Inovadora, Lei 182/2021), integrado ao Sistema Córtex e à Polícia Rodoviária Federal.",
+    results: ["5 municípios atendidos via CPSI", "700+ câmeras com IA em Pato Branco", "Alertas em tempo real à Polícia Militar"],
+    isReal: true,
+    source: "Dados públicos da Prefeitura/Câmara de Pato Branco/PR + confirmação direta do time da Proc sobre os municípios atendidos — verificar antes de publicar.",
   },
   {
     unit: getBusinessUnit("seguranca-corporativa")!,
@@ -64,6 +66,10 @@ const schema = {
         Conheça como a Proc AI Platform resolve desafios concretos de segurança pública, segurança corporativa,
         infraestrutura crítica e indústria.
       </p>
+      <p class="placeholder-banner">
+        ⚠️ PLACEHOLDER — os cases abaixo são exemplos ilustrativos de estrutura e formato, não resultados reais
+        de clientes. Substituir por cases verificados antes de publicar.
+      </p>
     </div>
   </section>
 
@@ -72,6 +78,11 @@ const schema = {
       <div class="cases-grid">
         {cases.map((c) => (
           <article class="case-card" data-reveal style={`--unit-color: ${c.unit.color}`}>
+            {c.isReal ? (
+              <span class="real-tag">Case real</span>
+            ) : (
+              <span class="placeholder-tag">Exemplo ilustrativo</span>
+            )}
             <span class="case-badge">{c.unit.shortName}</span>
             <h2>{c.title}</h2>
 
@@ -93,6 +104,8 @@ const schema = {
                 <span class="result-pill">{r}</span>
               ))}
             </div>
+
+            {c.source && <p class="case-source">{c.source}</p>}
           </article>
         ))}
       </div>
@@ -113,6 +126,18 @@ const schema = {
   .hero-page h1 { font-size: var(--fs-4xl); margin-top: var(--space-4); max-width: 780px; }
   .lead { margin-top: var(--space-6); font-size: var(--fs-lg); color: var(--color-text-muted); max-width: 640px; }
 
+  .placeholder-banner {
+    margin-top: var(--space-6);
+    padding: var(--space-4) var(--space-5);
+    max-width: 720px;
+    background: rgba(255, 200, 0, 0.1);
+    border: 1px dashed rgba(255, 200, 0, 0.5);
+    border-radius: var(--radius-sm);
+    color: #ffc800;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+  }
+
   .section { padding-block: var(--space-16); }
   .cases-section { background: var(--color-bg); }
 
@@ -126,7 +151,34 @@ const schema = {
     overflow: hidden;
   }
   .case-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--unit-color); }
-  .case-badge { font-size: var(--fs-xs); font-weight: 700; color: var(--unit-color); text-transform: uppercase; letter-spacing: 0.08em; }
+  .placeholder-tag {
+    display: inline-block;
+    margin-bottom: var(--space-3);
+    padding: var(--space-1) var(--space-3);
+    border-radius: 999px;
+    background: rgba(180, 130, 0, 0.12);
+    border: 1px dashed rgba(180, 130, 0, 0.6);
+    color: #8a6200;
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .real-tag {
+    display: inline-block;
+    margin-bottom: var(--space-3);
+    padding: var(--space-1) var(--space-3);
+    border-radius: 999px;
+    background: var(--color-success-bg);
+    border: 1px solid rgba(22, 163, 74, 0.4);
+    color: var(--color-success);
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .case-source { margin-top: var(--space-6); font-size: 11px; color: var(--color-text-faint); }
+  .case-badge { display: block; font-size: var(--fs-xs); font-weight: 700; color: var(--unit-color); text-transform: uppercase; letter-spacing: 0.08em; }
   .case-card h2 { margin-top: var(--space-3); font-size: var(--fs-xl); text-transform: none; font-family: var(--font-sans); }
   .case-block { margin-top: var(--space-6); }
   .case-block h3 { font-size: var(--fs-sm); text-transform: uppercase; letter-spacing: 0.06em; color: var(--unit-color); font-family: var(--font-sans); font-weight: 700; }

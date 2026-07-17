@@ -1,7 +1,35 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import ComingSoon from "../components/ComingSoon.astro";
+import Breadcrumb from "../components/Breadcrumb.astro";
+import ContactChannels from "../components/ContactChannels.astro";
 ---
-<BaseLayout title="Suporte Técnico" description="Abra um chamado de suporte técnico, acompanhe atendimentos em andamento e fale com a equipe de suporte da Proc Group.">
-  <ComingSoon eyebrow="Suporte" title="Suporte Técnico" description="A central de abertura de chamados de suporte está em desenvolvimento nesta reformulação. Enquanto isso, fale com nossa equipe pelo WhatsApp ou telefone comercial." />
+<BaseLayout title="Suporte Técnico" description="Fale com a equipe de suporte técnico da Proc Group pelo WhatsApp, telefone ou e-mail.">
+  <div class="container">
+    <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Suporte Técnico", href: "/suporte" }]} />
+  </div>
+
+  <section class="hero-page">
+    <div class="container">
+      <p class="eyebrow">Suporte</p>
+      <h1>Suporte Técnico</h1>
+      <p class="lead">
+        Fale diretamente com nossa equipe técnica. Um sistema de abertura e acompanhamento de
+        chamados está em avaliação para uma próxima fase — hoje, o atendimento é feito pelos
+        canais abaixo.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <ContactChannels title="Canais de suporte" />
+    </div>
+  </section>
 </BaseLayout>
+
+<style>
+  .hero-page { padding-block: var(--space-16) var(--space-8); }
+  .hero-page h1 { font-size: var(--fs-4xl); margin-top: var(--space-4); }
+  .lead { margin-top: var(--space-6); font-size: var(--fs-lg); color: var(--color-text-muted); max-width: 620px; }
+  .section { padding-block: var(--space-8) var(--space-24); }
+</style>

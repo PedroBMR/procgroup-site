@@ -79,7 +79,7 @@ const schema = [
     </div>
   </section>
 
-  <section class="section solutions-section" data-theme="light">
+  <section class="section solutions-section" data-theme="light" style={`--unit-color: ${unit.color}`}>
     <div class="container">
       <div class="section-header" data-reveal>
         <p class="eyebrow">Soluções</p>
@@ -95,6 +95,8 @@ const schema = [
       </div>
     </div>
   </section>
+
+  <slot name="case-study" />
 
   <section class="section team-section">
     <div class="container team-grid">
@@ -172,7 +174,7 @@ const schema = [
     transition: background var(--dur-fast) ease;
   }
   .solution-card:hover { background: var(--color-surface-hover); }
-  .solution-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--red-500); flex-shrink: 0; }
+  .solution-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--unit-color); flex-shrink: 0; }
 
   .solutions-section { background: var(--color-bg); }
   .team-section { background: var(--navy-900); }

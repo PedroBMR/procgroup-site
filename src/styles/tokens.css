@@ -12,6 +12,21 @@
   --red-tint: rgba(226, 8, 29, 0.12);
   --white: #ffffff;
 
+  /* Tag/category accents — kept separate from the brand red so blog
+     categories are distinguishable by hue, not just by shade of red.
+     Not used for buttons, links, or any brand chrome. */
+  --tag-amber: #b45309;
+  --tag-teal: #0f766e;
+
+  /* Semantic status — distinct from the brand red used for CTAs, so a
+     "primary action" and an "error" never read as the same signal.
+     Tuned for dark backgrounds by default; see [data-theme="light"] below
+     for the light-safe variant (same lesson as --color-eyebrow). */
+  --color-success: #16a34a;
+  --color-success-bg: rgba(22, 163, 74, 0.12);
+  --color-danger: var(--red-600);
+  --color-danger-bg: var(--red-tint);
+
   /* Surfaces (dark theme) */
   --surface-0: var(--navy-950);
   --surface-1: #0c1220;
@@ -35,6 +50,10 @@
   --color-primary-dark: var(--red-600);
   --color-navy: var(--navy-900);
   --color-accent: var(--red-500);
+  /* Lighter than the brand red-500 button/CTA color — small uppercase label
+     text needs more contrast against a dark background than a large button
+     surface does, so it gets its own token instead of reusing --color-accent. */
+  --color-eyebrow: var(--red-400);
   --color-border: rgba(255, 255, 255, 0.09);
   --color-border-strong: rgba(255, 255, 255, 0.18);
 
@@ -103,4 +122,9 @@
   --color-text-faint: #626e82;
   --color-border: rgba(11, 23, 48, 0.12);
   --color-border-strong: rgba(11, 23, 48, 0.22);
+  /* red-400 (tuned for dark backgrounds) is too light to read on white. */
+  --color-eyebrow: var(--red-600);
+  /* #16a34a (tuned for dark backgrounds) fails contrast on white. */
+  --color-success: #15803d;
+  --color-success-bg: rgba(21, 128, 61, 0.1);
 }

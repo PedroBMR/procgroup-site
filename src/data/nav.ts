@@ -40,8 +40,41 @@ export const mainNav: NavItem[] = [
       },
     ],
   },
+  // Second navigation axis (by buyer segment, not by product line) — lets a
+  // visitor find themselves ("eu sou prefeitura") instead of first having to
+  // learn Proc's internal business-unit names. Same pattern as Genetec's
+  // Products/Industries split and Axon's Public Safety/Federal/Enterprise nav.
+  {
+    label: "Segmentos",
+    href: "/solucoes",
+    children: [
+      {
+        label: "Governo e Segurança Pública",
+        href: "/solucoes/cidades-inteligentes",
+        description: "Prefeituras, secretarias e órgãos de segurança",
+      },
+      {
+        label: "Empresas",
+        href: "/solucoes/seguranca-corporativa",
+        description: "Segurança corporativa, cloud e infraestrutura de TI",
+      },
+      {
+        label: "Indústria",
+        href: "/solucoes/ia-industrial",
+        description: "Visão computacional para linhas de produção",
+      },
+    ],
+  },
   { label: "Cases", href: "/cases" },
-  { label: "Blog", href: "/blog" },
+  {
+    label: "Blog",
+    href: "/blog",
+    children: [
+      { label: "Todo o conteúdo", href: "/blog", description: "Novidades, eventos e artigos técnicos" },
+      { label: "Novidades", href: "/blog/categoria/novidades", description: "Lançamentos, projetos e institucional" },
+      { label: "Agenda de Eventos", href: "/eventos", description: "Feiras e encontros com a Proc Group" },
+    ],
+  },
   { label: "Contato", href: "/contato" },
 ];
 
