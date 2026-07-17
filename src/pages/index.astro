@@ -12,6 +12,7 @@ import { businessUnits } from "../data/businessUnits";
 import { byNewest } from "../utils/blog";
 import hqPhoto from "../assets/images/hq-pato-branco.webp";
 import { withBase } from "../utils/url";
+import { WHATSAPP_DEMO } from "../data/contact";
 
 const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
 
@@ -23,6 +24,18 @@ const differentiators = [
   { title: "Especialistas Certificados", desc: "Equipes dedicadas por segmento, não generalistas." },
   { title: "Edge AI", desc: "Processamento de IA na borda para respostas em tempo real." },
 ];
+
+// Descrições dos cards de solução na Home — texto do documento de conteúdo da Proc.
+const homeCardDesc: Record<string, string> = {
+  "cidades-inteligentes":
+    "Soluções inteligentes para melhorar a vida da população na segurança pública e na mobilidade urbana das cidades.",
+  "seguranca-corporativa":
+    "Videomonitoramento e controle de acesso com IA para pessoas e veículos, com alertas para ações suspeitas.",
+  "infraestrutura-de-ti":
+    "Gestão, monitoramento e sustentação de ambientes de TI — cloud, backup, firewall e antivírus para garantir performance e disponibilidade.",
+  "ia-industrial":
+    "Visão Computacional Industrial com IA para automatizar inspeções de qualidade e aumentar a produtividade na indústria.",
+};
 ---
 
 <BaseLayout
@@ -33,14 +46,15 @@ const differentiators = [
     <HeroBackground />
     <div class="container hero-inner">
       <p class="eyebrow">Plataforma Proc AI</p>
-      <h1>Tecnologia inteligente para proteger cidades, impulsionar empresas e transformar indústrias.</h1>
+      <h1>Tecnologia inteligente para um mundo mais seguro, conectado e eficiente.</h1>
       <p class="hero-subtitle">
-        A Proc desenvolve soluções de Inteligência Artificial, Visão Computacional e Infraestrutura de TI para
-        criar operações mais seguras, eficientes e inteligentes.
+        A Proc desenvolve soluções de Inteligência Artificial, Visão Computacional, Segurança Corporativa e
+        Infraestrutura de TI que transformam dados em decisões inteligentes, protegendo pessoas e conectando
+        cidades, empresas e indústrias em um único ecossistema tecnológico.
       </p>
       <div class="hero-actions">
-        <Button href="/solucoes" variant="primary" size="lg">Conheça nossas soluções</Button>
-        <Button href="/contato?intent=demo" variant="ghost" size="lg">Solicite uma demonstração</Button>
+        <Button href="/plataforma-proc-ai" variant="primary" size="lg">Conheça a Plataforma Proc AI</Button>
+        <Button href={WHATSAPP_DEMO} variant="ghost" size="lg">Solicite uma Demonstração</Button>
       </div>
     </div>
 
@@ -60,12 +74,13 @@ const differentiators = [
   <section class="section about-teaser" data-theme="light">
     <div class="container about-grid">
       <div data-reveal>
-        <p class="eyebrow">Quem somos</p>
-        <h2>Uma plataforma. Múltiplas soluções. Uma única inteligência.</h2>
+        <p class="eyebrow">O que a Proc faz?</p>
+        <h2>Tecnologia que conecta Inteligência Artificial, Visão Computacional e Infraestrutura de TI para transformar operações.</h2>
         <p class="lead">
-          A Proc não é apenas uma integradora de tecnologias — é uma empresa que desenvolve sua própria plataforma
-          de Inteligência Artificial, capaz de integrar diferentes soluções mantendo equipes altamente
-          especializadas em cada segmento de atuação.
+          A Proc desenvolve soluções tecnológicas que unem Inteligência Artificial, Visão Computacional, Analytics
+          e Infraestrutura de TI para atender governos, empresas e indústrias. Nossa plataforma integra dados,
+          equipamentos e sistemas em um único ecossistema, permitindo automatizar processos, fortalecer a segurança,
+          aumentar a produtividade e apoiar decisões estratégicas com informações em tempo real.
         </p>
         <Button href="/empresa" variant="secondary">Conheça a Proc</Button>
       </div>
@@ -87,10 +102,10 @@ const differentiators = [
     <div class="container">
       <div class="platform-teaser-header" data-reveal>
         <p class="eyebrow">Plataforma Proc AI</p>
-        <h2>Uma única plataforma distribui inteligência para quatro áreas de negócio</h2>
+        <h2>Uma plataforma unificada, quatro áreas de negócio, um só ecossistema</h2>
         <p class="lead">
-          Inteligência Artificial, Analytics, Cloud e APIs formam a base tecnológica que sustenta todas as soluções
-          da Proc — com especialistas dedicados para cada segmento.
+          Plataforma unificada e integrada de IA, Analytics e Visão Computacional, para centralização e gestão
+          inteligente de todas as operações — com equipes especializadas dedicadas a cada área de atuação.
         </p>
       </div>
 
@@ -99,7 +114,7 @@ const differentiators = [
           <a href={withBase(unit.href)} class="unit-card" data-reveal style={`--unit-color: ${unit.color}`}>
             <span class="unit-badge">{unit.shortName}</span>
             <h3>{unit.name}</h3>
-            <p>{unit.tagline}</p>
+            <p>{homeCardDesc[unit.slug] ?? unit.tagline}</p>
             <span class="unit-link">Ver soluções →</span>
           </a>
         ))}
@@ -149,7 +164,7 @@ const differentiators = [
     <div class="container final-cta-inner" data-reveal>
       <h2>Pronto para transformar sua operação com inteligência artificial?</h2>
       <p>Fale com um especialista Proc e descubra a solução ideal para o seu contexto.</p>
-      <Button href="/contato?intent=demo" variant="primary" size="lg">Solicitar Demonstração</Button>
+      <Button href={WHATSAPP_DEMO} variant="primary" size="lg">Solicitar Demonstração</Button>
     </div>
   </section>
 </BaseLayout>
@@ -233,6 +248,8 @@ const differentiators = [
     content: "";
     position: absolute; top: 0; left: 0; right: 0; height: 4px;
     background: var(--unit-color);
+    /* Navy units match the dark card surface and vanish; lighten the bar. */
+    background: color-mix(in srgb, var(--unit-color), white 24%);
   }
   .unit-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); border-color: var(--unit-color); }
   .unit-badge { font-size: var(--fs-xs); font-weight: 700; color: var(--white); text-transform: uppercase; letter-spacing: 0.08em; }

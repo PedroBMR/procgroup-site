@@ -42,10 +42,12 @@ const { href, variant = "primary", size = "md", class: className = "" } = Astro.
   }
   .btn-secondary:hover { border-color: var(--color-primary); background: var(--color-surface-hover); transform: translateY(-2px); }
 
+  /* Theme-aware so it stays legible on light sections too (white-on-white
+     made it invisible there). currentColor drives the border from the text. */
   .btn-ghost {
     background: transparent;
-    color: var(--white);
-    border: 1px solid rgba(255,255,255,0.35);
+    color: var(--color-text);
+    border: 1px solid currentColor;
   }
-  .btn-ghost:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.6); }
+  .btn-ghost:hover { background: var(--color-surface-hover); border-color: var(--color-text); }
 </style>

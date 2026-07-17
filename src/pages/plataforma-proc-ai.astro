@@ -6,6 +6,7 @@ import PlatformMandala from "../components/PlatformMandala.astro";
 import AnimatedFlow from "../components/AnimatedFlow.astro";
 import { businessUnits } from "../data/businessUnits";
 import { withBase } from "../utils/url";
+import { WHATSAPP_DEMO } from "../data/contact";
 
 const technologies = [
   { name: "Inteligência Artificial", desc: "Modelos próprios treinados para reconhecimento, classificação e predição em tempo real." },
@@ -122,7 +123,7 @@ const schema = {
     <div class="container final-cta-inner" data-reveal>
       <h2>Quer ver a Proc AI Platform em ação?</h2>
       <p>Solicite uma demonstração e conheça a plataforma aplicada ao seu contexto.</p>
-      <Button href="/contato?intent=demo" variant="primary" size="lg">Solicitar Demonstração</Button>
+      <Button href={WHATSAPP_DEMO} variant="primary" size="lg">Solicitar Demonstração</Button>
     </div>
   </section>
 </BaseLayout>

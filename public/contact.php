@@ -92,21 +92,33 @@ $organization = cleanText($_POST['organization'] ?? '', 200);
 $interestRaw = $_POST['interest'] ?? '';
 $interest = in_array($interestRaw, INTEREST_OPTIONS, true) ? $interestRaw : '';
 $message = cleanText($_POST['message'] ?? '', 4000);
+// Extra fields used by the event landing page (NFC keychains): a phone instead
+// of e-mail, plus which event the lead came from.
+$phone = cleanText($_POST['phone'] ?? '', 40);
+$event = cleanText($_POST['event'] ?? '', 120);
 
-if ($name === '' || $email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    respond(false, 'Preencha nome e e-mail corporativo válidos.', 422);
+// The site contact form requires a valid corporate e-mail; the event form
+// collects a phone. Accept either, as long as there's a name and one way to
+// reach the person back.
+$emailValid = $email !== '' && filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
+if ($name === '' || (!$emailValid && $phone === '')) {
+    respond(false, 'Preencha seu nome e um e-mail válido ou telefone.', 422);
+}
+if ($email !== '' && !$emailValid) {
+    respond(false, 'Informe um e-mail válido.', 422);
 }
 
 $safeEmail = cleanHeaderValue($email);
 $safeName = cleanHeaderValue($name);
 
 $bodyLines = [
-    "Novo contato pelo site Proc Group",
+    ($event !== '' ? "Novo lead — evento: {$event}" : "Novo contato pelo site Proc Group"),
     "",
     "Nome: {$name}",
-    "E-mail: {$email}",
+    "E-mail: " . ($email !== '' ? $email : '-'),
+    "Telefone: " . ($phone !== '' ? $phone : '-'),
     "Perfil: " . ($profile !== '' ? $profile : '-'),
-    "Empresa / Município: " . ($organization !== '' ? $organization : '-'),
+    "Empresa / Município / Cidade: " . ($organization !== '' ? $organization : '-'),
     "Área de interesse: " . ($interest !== '' ? $interest : '-'),
     "",
     "Mensagem:",
@@ -114,13 +126,16 @@ $bodyLines = [
 ];
 $body = implode("\n", $bodyLines);
 
-$subject = 'Novo contato pelo site' . ($profile !== '' ? " — {$profile}" : '');
-$headers = [
-    'From: Site Proc Group <' . FROM_EMAIL . '>',
-    'Reply-To: ' . $safeName . ' <' . $safeEmail . '>',
-    'Content-Type: text/plain; charset=UTF-8',
-    'X-Mailer: PHP/' . phpversion(),
-];
+$subject = ($event !== '' ? "Lead do evento {$event}" : 'Novo contato pelo site')
+    . ($profile !== '' ? " — {$profile}" : '');
+$headers = ['From: Site Proc Group <' . FROM_EMAIL . '>'];
+if ($emailValid) {
+    // Only set Reply-To when we actually have a valid address (event leads may
+    // only leave a phone).
+    $headers[] = 'Reply-To: ' . $safeName . ' <' . $safeEmail . '>';
+}
+$headers[] = 'Content-Type: text/plain; charset=UTF-8';
+$headers[] = 'X-Mailer: PHP/' . phpversion();
 
 $sent = @mail(RECIPIENT_EMAIL, $subject, $body, implode("\r\n", $headers));
 

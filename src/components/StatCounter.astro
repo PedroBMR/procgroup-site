@@ -5,7 +5,7 @@ const { value, suffix = "", label } = Astro.props;
 ---
 
 <div class="stat" data-reveal>
-  <p class="stat-value" data-count={value} data-suffix={suffix}>0{suffix}</p>
+  <p class="stat-value" data-count={value} data-suffix={suffix}>{value}{suffix}</p>
   <p class="stat-label">{label}</p>
 </div>
 
@@ -25,6 +25,10 @@ const { value, suffix = "", label } = Astro.props;
 
 <script>
   const counters = document.querySelectorAll<HTMLElement>("[data-count]");
+  // The value is server-rendered as its final number (so it's correct without
+  // JS). For JS users, reset to 0 here so the count-up animation has somewhere
+  // to travel from.
+  counters.forEach((el) => { el.textContent = "0" + (el.dataset.suffix || ""); });
   const animate = (el: HTMLElement) => {
     const target = parseFloat(el.dataset.count || "0");
     const suffix = el.dataset.suffix || "";

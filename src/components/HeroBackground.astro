@@ -113,4 +113,10 @@ const bars = [40, 70, 55, 90, 35, 65, 50, 80];
   @media (max-width: 900px) {
     .readout { display: none; }
   }
+  /* On phones the hero title fills the screen, so the scattered detection boxes
+     (red brackets + confidence labels) end up cluttering around the text.
+     Keep the gradient + grid, drop the boxes. */
+  @media (max-width: 768px) {
+    .detect-box { display: none; }
+  }
 </style>

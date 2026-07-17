@@ -1,3 +1,5 @@
+import { WHATSAPP_DEMO } from "./contact";
+
 export interface NavChild {
   label: string;
   href: string;
@@ -78,4 +80,4 @@ export const mainNav: NavItem[] = [
   { label: "Contato", href: "/contato" },
 ];
 
-export const ctaNav = { label: "Solicitar Demonstração", href: "/contato?intent=demo" };
+export const ctaNav = { label: "Solicitar Demonstração", href: WHATSAPP_DEMO };

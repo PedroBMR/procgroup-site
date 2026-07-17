@@ -1,29 +1,22 @@
 ---
 import { businessUnits } from "../data/businessUnits";
 
-const cx = 480;
-const cy = 480;
-
-const coreR = 74;
-const ringAInner = 82;
-const ringAOuter = 156;
-const ringBInner = 162;
-const ringBOuter = 258;
-const ringCInner = 264;
-const ringCOuter = 276;
-const labelR = ringCOuter + 16;
-const unitLabelR = (ringAInner + ringAOuter) / 2;
-
-const unitGap = 3.2;
-const segGap = 1.1;
-const unitSpan = 360 / businessUnits.length - unitGap;
+// Hub central: 4 arcos coloridos (um por unidade) ao redor de um núcleo "PROC AI".
+// As soluções ficam listadas em colunas legíveis abaixo — layout mais claro e
+// responsivo que o antigo sunburst de rótulos radiais.
+const cx = 120;
+const cy = 120;
+const aInner = 64;
+const aOuter = 92;
+const gap = 6;
+const span = 360 / businessUnits.length - gap;
 
 function point(r: number, angleDeg: number) {
   const rad = ((angleDeg - 90) * Math.PI) / 180;
   return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
 }
 
-function wedgePath(r0: number, r1: number, startDeg: number, endDeg: number) {
+function arcPath(r0: number, r1: number, startDeg: number, endDeg: number) {
   const large = endDeg - startDeg > 180 ? 1 : 0;
   const a = point(r1, startDeg);
   const b = point(r1, endDeg);
@@ -32,150 +25,99 @@ function wedgePath(r0: number, r1: number, startDeg: number, endDeg: number) {
   return `M ${a.x.toFixed(2)} ${a.y.toFixed(2)} A ${r1} ${r1} 0 ${large} 1 ${b.x.toFixed(2)} ${b.y.toFixed(2)} L ${c.x.toFixed(2)} ${c.y.toFixed(2)} A ${r0} ${r0} 0 ${large} 0 ${d.x.toFixed(2)} ${d.y.toFixed(2)} Z`;
 }
 
-function labelTransform(angleDeg: number, r: number) {
-  const p = point(r, angleDeg);
-  let rotate = angleDeg - 90;
-  let anchor = "start";
-  if (angleDeg > 180) {
-    rotate = angleDeg - 270;
-    anchor = "end";
-  }
-  return { x: p.x, y: p.y, rotate, anchor };
-}
-
-const unitWedges = businessUnits.map((unit, i) => {
-  const start = i * (unitSpan + unitGap);
-  const end = start + unitSpan;
-  const mid = (start + end) / 2;
-
-  const segCount = unit.solutions.length;
-  const segSpan = (unitSpan - segGap * (segCount - 1)) / segCount;
-
-  const segments = unit.solutions.map((sol, j) => {
-    const segStart = start + j * (segSpan + segGap);
-    const segEnd = segStart + segSpan;
-    const segMid = (segStart + segEnd) / 2;
-    return {
-      name: sol,
-      path: wedgePath(ringBInner, ringBOuter, segStart, segEnd),
-      label: labelTransform(segMid, labelR),
-      tick: { a: point(ringBOuter, segMid), b: point(ringCOuter, segMid) },
-      shade: j % 2 === 0 ? 0.5 : 0.32,
-    };
-  });
-
-  return {
-    unit,
-    start,
-    end,
-    mid,
-    path: wedgePath(ringAInner, ringAOuter, start, end),
-    outerPath: wedgePath(ringCInner, ringCOuter, start, end),
-    label: labelTransform(mid, unitLabelR),
-    segments,
-  };
+const arcs = businessUnits.map((unit, i) => {
+  const start = i * (span + gap);
+  return { d: arcPath(aInner, aOuter, start, start + span), color: unit.color, name: unit.name };
 });
+
+// Símbolo Proc AI (direção "C": anel aberto + ondas de sinal) desenhado no núcleo.
+const aiCy = 100;
+const aiWaveCy = 107;
+const aiScale = 0.8;
+const aiPt = (r: number, a: number, oy: number) => {
+  const t = ((a - 90) * Math.PI) / 180;
+  return `${(cx + r * Math.cos(t)).toFixed(2)} ${(oy + r * Math.sin(t)).toFixed(2)}`;
+};
+const aiArc = (r: number, s: number, e: number, oy: number) => {
+  const large = e - s > 180 ? 1 : 0;
+  return `M ${aiPt(r, s, oy)} A ${r} ${r} 0 ${large} 1 ${aiPt(r, e, oy)}`;
+};
+const aiRing = aiArc(16.5 * aiScale, 205, 515, aiCy);
+const aiWaves = [21, 15.5, 10].map((r) => aiArc(r * aiScale, 320, 400, aiWaveCy));
 ---
 
-<div class="mandala-wrap" data-reveal>
-  <svg viewBox="0 0 960 960" class="mandala" role="img" aria-label="Diagrama da Proc AI Platform e suas quatro unidades de negócio">
-    <defs>
-      <radialGradient id="mandalaGlow" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stop-color="var(--red-500)" stop-opacity="0.1" />
-        <stop offset="100%" stop-color="var(--red-500)" stop-opacity="0" />
-      </radialGradient>
-    </defs>
-    <circle cx={cx} cy={cy} r={ringCOuter + 60} fill="url(#mandalaGlow)" />
+<div class="platform-map">
+  <div class="pm-hub" data-reveal>
+    <svg viewBox="0 0 240 240" role="img" aria-label="Núcleo da Proc AI Platform conectando as quatro unidades de negócio">
+      {arcs.map((a) => <path d={a.d} fill={a.color} />)}
+      <circle cx={cx} cy={cy} r={aInner - 8} class="pm-core" />
+      <path d={aiRing} class="pm-ring" fill="none" stroke-width="3.4" stroke-linecap="round" />
+      {aiWaves.map((d) => <path d={d} class="pm-wave" fill="none" stroke-width="2.3" stroke-linecap="round" />)}
+      <text x={cx} y={cy + 22} text-anchor="middle" class="pm-core-label">PROC AI</text>
+    </svg>
+  </div>
 
-    {unitWedges.map((w) => (
-      <g class="unit-group">
-        <path d={w.path} fill={w.unit.color} opacity="0.92" />
-
-        {w.segments.map((seg) => (
-          <path d={seg.path} fill={w.unit.color} opacity={seg.shade} />
-        ))}
-
-        <path d={w.outerPath} fill={w.unit.color} opacity="0.35" />
-
-        <text
-          x={w.label.x}
-          y={w.label.y}
-          transform={`rotate(${w.label.rotate} ${w.label.x} ${w.label.y})`}
-          text-anchor={w.label.anchor}
-          class="unit-label"
-        >
-          {w.unit.shortName.toUpperCase()}
-        </text>
-
-        {w.segments.map((seg) => (
-          <>
-            <line x1={seg.tick.a.x} y1={seg.tick.a.y} x2={seg.tick.b.x} y2={seg.tick.b.y} class="tick" />
-            <text
-              x={seg.label.x}
-              y={seg.label.y}
-              transform={`rotate(${seg.label.rotate} ${seg.label.x} ${seg.label.y})`}
-              text-anchor={seg.label.anchor}
-              class="seg-label"
-            >
-              {seg.name}
-            </text>
-          </>
-        ))}
-      </g>
+  <div class="pm-cols">
+    {businessUnits.map((unit) => (
+      <div class="pm-col" data-reveal style={`--u: ${unit.color}`}>
+        <h3>{unit.name}</h3>
+        <p class="pm-sn">{unit.shortName}</p>
+        <ul class="pm-sols">
+          {unit.solutions.map((sol) => <li>{sol}</li>)}
+        </ul>
+      </div>
     ))}
-
-    <circle cx={cx} cy={cy} r={coreR} class="mandala-core" />
-    <g transform={`translate(${cx - 22}, ${cy - 30})`}>
-      <path
-        d="M7 7h14a9.5 9.5 0 0 1 0 19H14v9"
-        fill="none"
-        stroke="var(--red-500)"
-        stroke-width="4"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-    </g>
-    <text x={cx} y={cy + 27} text-anchor="middle" class="core-label">PROC AI</text>
-  </svg>
+  </div>
 </div>
 
 <style>
-  .mandala-wrap {
-    max-width: 800px;
-    margin-inline: auto;
-  }
-  .mandala { width: 100%; height: auto; overflow: visible; }
-  .mandala-core {
-    fill: var(--color-bg-alt);
-    stroke: var(--color-border-strong);
-    stroke-width: 2;
-  }
-  .core-label {
+  .platform-map { max-width: 1080px; margin-inline: auto; }
+
+  .pm-hub { display: flex; justify-content: center; margin-bottom: var(--space-12); }
+  .pm-hub svg { width: 220px; height: 220px; overflow: visible; }
+  .pm-core { fill: var(--color-bg); stroke: var(--color-border); stroke-width: 1.5; }
+  .pm-ring { stroke: var(--color-text); }
+  .pm-wave { stroke: var(--color-primary); }
+  .pm-core-label {
     font-family: var(--font-display);
-    font-size: 19px;
     font-weight: 800;
+    font-size: 15px;
     letter-spacing: 0.04em;
     fill: var(--color-text);
   }
-  .unit-label {
-    font-family: var(--font-sans);
-    font-size: 14.5px;
-    font-weight: 700;
-    letter-spacing: 0.03em;
-    fill: var(--white);
-  }
-  .seg-label {
-    font-family: var(--font-sans);
-    font-size: 11px;
-    fill: var(--color-text);
-  }
-  .tick {
-    stroke: var(--color-border-strong);
-    stroke-width: 1;
-  }
-  .unit-group path { transition: opacity var(--dur-fast) ease; }
 
-  @media (max-width: 640px) {
-    .seg-label, .tick { display: none; }
+  .pm-cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); }
+  .pm-col {
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    border-top: 3px solid var(--u);
+    border-radius: var(--radius-md);
+    padding: var(--space-5) var(--space-5) var(--space-6);
   }
+  .pm-col h3 {
+    display: flex; align-items: center; gap: var(--space-2);
+    font-family: var(--font-display);
+    font-size: var(--fs-lg);
+    text-transform: uppercase;
+    line-height: var(--lh-snug);
+    color: var(--color-text);
+  }
+  .pm-col h3::before { content: ""; width: 11px; height: 11px; border-radius: 50%; background: var(--u); flex: none; }
+  .pm-sn {
+    margin: 2px 0 var(--space-4) calc(11px + var(--space-2));
+    font-size: var(--fs-xs); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--color-text-faint);
+  }
+  .pm-sols { display: flex; flex-direction: column; gap: var(--space-2); }
+  .pm-sols li {
+    position: relative; padding-left: var(--space-4);
+    font-size: var(--fs-sm); color: var(--color-text-muted); line-height: 1.35;
+  }
+  .pm-sols li::before {
+    content: ""; position: absolute; left: 0; top: 0.5em;
+    width: 6px; height: 6px; border-radius: 50%; background: var(--u); opacity: 0.55;
+  }
+
+  @media (max-width: 900px) { .pm-cols { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px) { .pm-cols { grid-template-columns: 1fr; } }
 </style>
