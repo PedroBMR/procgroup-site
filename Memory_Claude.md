@@ -7,20 +7,34 @@
 
 ## 🔴 PRÓXIMA SESSÃO — COMECE AQUI
 
-**Passo 1 (base-path fix) está 100% completo** (ver checklist abaixo com o resultado final). Mudanças
-feitas mas **ainda não commitadas nem enviadas ao GitHub** — pedir confirmação ao usuário antes de
-`git add`/`commit`/`push`, já que é uma ação que afeta o repositório remoto (público).
+**Passos 1 e 2 concluídos e verificados ao vivo.** Site publicado e funcionando em
+**https://pedrobmr.github.io/procgroup-site/** (testado no browser: home e `/blog/` carregam com
+status 200, sem erros de console, CSS/logo corretos).
 
 Ordem de execução combinada com o usuário, **nesta sequência**:
 
 1. ~~Terminar a correção de base-path para o GitHub Pages~~ ✅ **concluído em 2026-07-16**
-2. **PRÓXIMO PASSO**: publicar de fato no GitHub Pages (commit+push do fix, workflow do Actions,
-   habilitar Pages no repo) — ver seção abaixo
-3. Terminar o QA de todas as páginas
+2. ~~Publicar de fato no GitHub Pages~~ ✅ **concluído em 2026-07-17** — ver detalhes abaixo
+3. **PRÓXIMO PASSO**: terminar o QA de todas as páginas (funcional + UI/UX, o usuário pediu os dois
+   separadamente)
 4. Criar todas as páginas em inglês e espanhol
 5. Só depois disso, conversar sobre a nova página de **Eventos** (atualizada com frequência conforme o
    evento que a Proc estiver participando) — feature ainda não especificada, precisa levantar requisitos
    com o usuário antes de implementar.
+
+### Detalhes do passo 2 (publicação) — concluído em 2026-07-17
+
+- Commits enviados a `master` (`origin/master`, repo público `PedroBMR/procgroup-site`): fix de
+  base-path (`0f7b0b7`), workflow de deploy (`092c6fa`), fix de versão do Node no workflow (`6d1759e`).
+- `.github/workflows/deploy.yml` criado usando `withastro/action@v3` + `actions/deploy-pages@v4`.
+  **Importante:** precisou fixar `node-version: 22` explicitamente no input do `withastro/action`,
+  porque o Astro 7 exige Node `>=22.12.0` e a action usa Node 20 por padrão — sem isso o build falha
+  com "Node.js v20.20.2 is not supported by Astro!". Se algum dia mexer nesse workflow de novo, manter
+  esse pin.
+- GitHub Pages habilitado via `gh api repos/PedroBMR/procgroup-site/pages -X POST -f build_type=workflow`
+  (fonte = GitHub Actions, branch `master`).
+- Verificado ao vivo no browser: `/` e `/blog/` retornam 200, título correto, sem erros de console,
+  CSS e o logo do header (`/procgroup-site/brand/logo-white.png`) carregando certo.
 
 ### Checklist do passo 1 (base-path fix) — CONCLUÍDO em 2026-07-16
 
