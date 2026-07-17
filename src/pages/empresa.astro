@@ -7,6 +7,7 @@ import StatCounter from "../components/StatCounter.astro";
 import { homeStats } from "../data/stats";
 import { businessUnits } from "../data/businessUnits";
 import hqPhoto from "../assets/images/hq-pato-branco.webp";
+import { withBase } from "../utils/url";
 
 const values = [
   { title: "Visão consultiva e preventiva", desc: "Atuamos antes que o problema aconteça, não apenas reagindo a incidentes." },
@@ -152,7 +153,7 @@ const schema = {
       </div>
       <div class="units-grid">
         {businessUnits.map((unit) => (
-          <a href={unit.href} class="unit-card" data-reveal style={`--unit-color: ${unit.color}`}>
+          <a href={withBase(unit.href)} class="unit-card" data-reveal style={`--unit-color: ${unit.color}`}>
             <span class="unit-badge">{unit.shortName}</span>
             <h3>{unit.name}</h3>
             <p>{unit.tagline}</p>

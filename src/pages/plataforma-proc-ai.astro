@@ -4,6 +4,7 @@ import Breadcrumb from "../components/Breadcrumb.astro";
 import Button from "../components/Button.astro";
 import PlatformMandala from "../components/PlatformMandala.astro";
 import { businessUnits } from "../data/businessUnits";
+import { withBase } from "../utils/url";
 
 const technologies = [
   { name: "Inteligência Artificial", desc: "Modelos próprios treinados para reconhecimento, classificação e predição em tempo real." },
@@ -71,7 +72,7 @@ const schema = {
         <div class="distribution-core" data-reveal>Proc AI Platform</div>
         <div class="distribution-units">
           {businessUnits.map((unit) => (
-            <a href={unit.href} class="distribution-unit" data-reveal style={`--unit-color: ${unit.color}`}>
+            <a href={withBase(unit.href)} class="distribution-unit" data-reveal style={`--unit-color: ${unit.color}`}>
               <span class="unit-dot"></span>
               <div>
                 <p class="unit-name">{unit.name}</p>

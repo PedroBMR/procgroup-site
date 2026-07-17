@@ -7,6 +7,7 @@ import StatCounter from "../components/StatCounter.astro";
 import { homeStats, supportBadge } from "../data/stats";
 import { businessUnits } from "../data/businessUnits";
 import hqPhoto from "../assets/images/hq-pato-branco.webp";
+import { withBase } from "../utils/url";
 
 const differentiators = [
   { title: "Arquitetura Escalável", desc: "Plataforma modular pronta para crescer com a operação do cliente." },
@@ -87,7 +88,7 @@ const differentiators = [
 
       <div class="units-grid">
         {businessUnits.map((unit) => (
-          <a href={unit.href} class="unit-card" data-reveal style={`--unit-color: ${unit.color}`}>
+          <a href={withBase(unit.href)} class="unit-card" data-reveal style={`--unit-color: ${unit.color}`}>
             <span class="unit-badge">{unit.shortName}</span>
             <h3>{unit.name}</h3>
             <p>{unit.tagline}</p>

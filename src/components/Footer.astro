@@ -1,6 +1,7 @@
 ---
 import { mainNav } from "../data/nav";
 import Logo from "./Logo.astro";
+import { withBase } from "../utils/url";
 const year = new Date().getFullYear();
 ---
 
@@ -15,13 +16,13 @@ const year = new Date().getFullYear();
       <div>
         <h3>Navegação</h3>
         <ul>
-          {mainNav.filter(i => i.label !== "Home").map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+          {mainNav.filter(i => i.label !== "Home").map((item) => <li><a href={withBase(item.href)}>{item.label}</a></li>)}
         </ul>
       </div>
       <div>
         <h3>Soluções</h3>
         <ul>
-          {mainNav.find(i => i.label === "Soluções")?.children?.map((c) => <li><a href={c.href}>{c.label}</a></li>)}
+          {mainNav.find(i => i.label === "Soluções")?.children?.map((c) => <li><a href={withBase(c.href)}>{c.label}</a></li>)}
         </ul>
       </div>
       <div>
@@ -30,7 +31,7 @@ const year = new Date().getFullYear();
           <li><a href="mailto:comercial@procgroup.com.br">comercial@procgroup.com.br</a></li>
           <li><a href="tel:+554632243532">+55 46 3224-3532</a></li>
           <li>Caetano Munhoz da Rocha, 480 — Pato Branco / PR</li>
-          <li><a href="/contato">Solicitar demonstração</a></li>
+          <li><a href={withBase("/contato")}>Solicitar demonstração</a></li>
         </ul>
       </div>
     </nav>
@@ -39,7 +40,7 @@ const year = new Date().getFullYear();
   <div class="container footer-bottom">
     <p>&copy; {year} Proc Group. Todos os direitos reservados.</p>
     <div class="footer-legal">
-      <a href="/politica-de-privacidade">Política de Privacidade</a>
+      <a href={withBase("/politica-de-privacidade")}>Política de Privacidade</a>
     </div>
   </div>
 </footer>

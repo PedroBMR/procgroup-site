@@ -3,6 +3,7 @@ import { Image } from "astro:assets";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Breadcrumb from "../../components/Breadcrumb.astro";
 import { businessUnits } from "../../data/businessUnits";
+import { withBase } from "../../utils/url";
 
 import cidadesAeroportuaria from "../../assets/images/blog/cidades-seguranca-aeroportuaria.webp";
 import cidadesCoi from "../../assets/images/blog/cidades-02.png";
@@ -96,7 +97,7 @@ const schema = {
       <p class="lead">Conteúdo dividido nas quatro áreas de atuação da Proc.</p>
       <div class="category-chips">
         {businessUnits.map((unit) => (
-          <a href={`/solucoes/${unit.slug}`} class="chip" style={`--unit-color: ${unit.color}`}>{unit.shortName}</a>
+          <a href={withBase(`/solucoes/${unit.slug}`)} class="chip" style={`--unit-color: ${unit.color}`}>{unit.shortName}</a>
         ))}
       </div>
     </div>
@@ -106,7 +107,7 @@ const schema = {
     <div class="container">
       <div class="posts-grid">
         {posts.map((post) => (
-          <a href={`/solucoes/${post.slug}`} class="post-card" data-reveal style={`--unit-color: ${post.unit.color}`}>
+          <a href={withBase(`/solucoes/${post.slug}`)} class="post-card" data-reveal style={`--unit-color: ${post.unit.color}`}>
             <div class="post-image">
               <Image src={post.image} alt={post.title} width={480} height={280} quality={65} />
             </div>

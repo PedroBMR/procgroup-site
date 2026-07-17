@@ -1,5 +1,6 @@
 import { defaultLocale, locales, type Locale } from "./config";
 import { translations } from "./translations";
+import { withBase } from "../utils/url";
 
 export function getLangFromUrl(url: URL): Locale {
   const [, maybeLocale] = url.pathname.split("/");
@@ -13,5 +14,6 @@ export function useTranslations(lang: Locale) {
 
 export function localizePath(path: string, lang: Locale): string {
   const cleanPath = path === "/" ? "" : path;
-  return lang === defaultLocale ? path : `/${lang}${cleanPath}`;
+  const localized = lang === defaultLocale ? path : `/${lang}${cleanPath}`;
+  return withBase(localized);
 }

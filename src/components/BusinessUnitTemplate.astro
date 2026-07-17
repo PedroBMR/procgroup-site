@@ -3,6 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
 import Button from "../components/Button.astro";
 import { getBusinessUnit, businessUnits } from "../data/businessUnits";
+import { withBase } from "../utils/url";
 
 interface Faq {
   q: string;
@@ -131,7 +132,7 @@ const schema = [
       </div>
       <div class="units-grid">
         {otherUnits.map((u) => (
-          <a href={u.href} class="unit-card" data-reveal style={`--unit-color: ${u.color}`}>
+          <a href={withBase(u.href)} class="unit-card" data-reveal style={`--unit-color: ${u.color}`}>
             <span class="unit-badge">{u.shortName}</span>
             <h3>{u.name}</h3>
             <p>{u.tagline}</p>
