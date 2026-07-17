@@ -15,12 +15,51 @@ Ordem de execução combinada com o usuário, **nesta sequência**:
 
 1. ~~Terminar a correção de base-path para o GitHub Pages~~ ✅ **concluído em 2026-07-16**
 2. ~~Publicar de fato no GitHub Pages~~ ✅ **concluído em 2026-07-17** — ver detalhes abaixo
-3. **PRÓXIMO PASSO**: terminar o QA de todas as páginas (funcional + UI/UX, o usuário pediu os dois
-   separadamente)
+3. ~~Terminar o QA de todas as páginas~~ ✅ **rodado em 2026-07-17** — achou 2 problemas que precisam de
+   decisão do usuário antes de seguir (ver "Achados do QA" abaixo). **Aguardando decisão do usuário
+   sobre esses 2 pontos antes de considerar o QA "fechado".**
 4. Criar todas as páginas em inglês e espanhol
 5. Só depois disso, conversar sobre a nova página de **Eventos** (atualizada com frequência conforme o
    evento que a Proc estiver participando) — feature ainda não especificada, precisa levantar requisitos
    com o usuário antes de implementar.
+
+### Achados do QA (2026-07-17) — pendentes de decisão do usuário
+
+**🔴 Crítico — formulário de contato não envia nada a lugar nenhum.**
+`src/pages/contato.astro` tem um `<form class="contact-form">` sem `action`, sem `method` (usa o
+default do HTML, que é GET pra própria URL) e sem nenhum handler JS. Confirmei em runtime: `form.action`
+resolve pra própria URL da página, `form.method` é "get", `hasSubmitListener` é `false`. Não existe
+nenhuma rota de API no projeto (`src/pages/api/**` não existe, site é 100% estático). Ou seja: quando
+alguém preenche e clica em "Enviar solicitação" (ou em qualquer CTA "Solicitar Demonstração" do site,
+que leva pra essa página), a página só recarrega com os dados na query string e **nada é enviado** —
+sem e-mail, sem webhook, sem confirmação de erro. Esse é o principal caminho de conversão do site
+inteiro (CTA primário em Home, Header, todas as unidades de negócio). Precisa decidir com o usuário: qual
+serviço usar pra receber os leads (ex.: Formspree, Netlify Forms, um serverless function que manda
+e-mail, ou simplesmente trocar por um `mailto:` direto) antes de implementar.
+
+**🟡 Importante — 3 páginas são stubs "coming soon", não conteúdo final.**
+`src/pages/suporte.astro`, `src/pages/trabalhe-conosco.astro` e `src/pages/politica-de-privacidade.astro`
+usam o componente `src/components/ComingSoon.astro`, que renderiza só um título + descrição +
+"Esta página faz parte da próxima fase da reformulação do site." Isso **contradiz uma entrada antiga
+desta mesma memória** que dizia "todas em PT, completas — sem stubs coming soon restantes" — aquela
+entrada estava desatualizada/incorreta. Politica de Privacidade é particularmente sensível (página legal
+referenciada no footer, e o site já está publicado ao vivo no GitHub Pages com esse placeholder). Precisa
+perguntar ao usuário se: (a) essas 3 páginas devem ficar assim por enquanto (aceitável pra uma fase
+inicial), ou (b) precisam de conteúdo real antes de considerar o QA fechado — especialmente a de
+privacidade, por ser página legal/LGPD.
+
+**Verificações que passaram limpas:** 14 páginas sem erros de console, sem 404 de imagem/asset, sem
+overflow horizontal em mobile (375px) nem desktop (~1265px), menu mobile abre/fecha corretamente
+(verificado via toggle programático), todos os links internos (nav, footer, breadcrumb, cards de unidade
+de negócio, blog) resolvem para rotas válidas com o base-path correto.
+
+**Limitação desta sessão de QA:** a captura de screenshot (`computer` tool) e simulação de clique/hover
+por coordenada travaram com timeout a sessão inteira — `document.hasFocus()` retornava `false` e
+`document.hidden` retornava `true`, indicando que a aba do Browser pane não estava com foco no nível do
+SO nesta automação. Por isso o QA visual foi feito via inspeção estrutural de DOM/CSS computado
+(overflow, classes, seletores) em vez de screenshots pixel-a-pixel — não é uma garantia equivalente a
+uma revisão visual completa. Se isso for importante, vale repetir com uma sessão de browser saudável
+numa próxima conversa.
 
 ### Detalhes do passo 2 (publicação) — concluído em 2026-07-17
 
