@@ -1,83 +1,67 @@
 ---
 import { Image } from "astro:assets";
-import BaseLayout from "../layouts/BaseLayout.astro";
-import Breadcrumb from "../components/Breadcrumb.astro";
-import Button from "../components/Button.astro";
-import StatCounter from "../components/StatCounter.astro";
-import { homeStats } from "../data/stats";
-import { businessUnits } from "../data/businessUnits";
-import hqPhoto from "../assets/images/hq-pato-branco.webp";
-import { withBase } from "../utils/url";
-import { WHATSAPP_DEMO } from "../data/contact";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Breadcrumb from "../../components/Breadcrumb.astro";
+import Button from "../../components/Button.astro";
+import { homeStats } from "../../data/stats";
+import { getBusinessUnits } from "../../data/businessUnits";
+import hqPhoto from "../../assets/images/hq-pato-branco.webp";
+import { WHATSAPP_DEMO } from "../../data/contact";
+import { useTranslations, localePath, localizePath } from "../../i18n/utils";
+import { usePages } from "../../i18n/pages";
+import { defaultLocale, type Locale } from "../../i18n/config";
 
-const values = [
-  { title: "Visão consultiva e preventiva", desc: "Atuamos antes que o problema aconteça, não apenas reagindo a incidentes." },
-  { title: "Tecnologia confiável", desc: "Cloud certificada, IA aplicada e integração com órgãos oficiais de segurança." },
-  { title: "Entrega completa", desc: "Infraestrutura, monitoramento, suporte e inteligência em uma só plataforma." },
-  { title: "Compromisso social", desc: "Soluções que protegem comunidades e fortalecem o poder público." },
-];
-
-const timeline = [
-  { year: "2014", title: "Fundação", desc: "Fundada em Pato Branco (PR), com foco em infraestrutura de TI para supermercados." },
-  { year: "2016–2018", title: "Consolidação", desc: "Consolidação em soluções de cloud, backup e suporte completo." },
-  { year: "2019", title: "Expansão", desc: "Expansão para o setor público, com projetos pioneiros em câmeras inteligentes e reconhecimento facial." },
-  { year: "Hoje", title: "Presente", desc: "Presença crescente em todo o Sul do Brasil, evoluindo de duas frentes sólidas para quatro unidades especializadas." },
-];
+export function getStaticPaths() {
+  return [{ params: { lang: undefined } }, { params: { lang: "en" } }, { params: { lang: "es" } }];
+}
+const lang = (Astro.params.lang as Locale) || defaultLocale;
+const tr = useTranslations(lang);
+const t = usePages(lang).empresa;
+const statsLabels = tr.home.statsLabels;
+const businessUnits = getBusinessUnits(lang);
 
 const schema = {
   "@context": "https://schema.org",
   "@type": "AboutPage",
   name: "Empresa Proc Group",
-  description: "Conheça a história, a missão e os valores da Proc Group.",
+  description: t.metaDescription,
 };
 ---
 
-<BaseLayout
-  title="Empresa"
-  description="Conheça a Proc Group: uma empresa de tecnologia que desenvolve sua própria plataforma de Inteligência Artificial para cidades, empresas e indústrias."
-  schema={schema}
->
+<BaseLayout title={tr.nav.empresa} description={t.metaDescription} schema={schema}>
   <div class="container">
-    <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Empresa", href: "/empresa" }]} />
+    <Breadcrumb
+      items={[
+        { label: tr.nav.home, href: localePath("/", lang) },
+        { label: tr.nav.empresa, href: localePath("/empresa", lang) },
+      ]}
+    />
   </div>
 
   <section class="hero-page">
     <div class="container">
-      <p class="eyebrow">Empresa</p>
-      <h1>Uma empresa de tecnologia. Não uma integradora.</h1>
-      <p class="lead">
-        Fundada em 2014 em Pato Branco (PR), a Proc nasceu para atender as necessidades específicas do varejo
-        alimentar em infraestrutura de TI. Hoje desenvolvemos nossa própria plataforma de Inteligência Artificial,
-        Visão Computacional e Infraestrutura de TI — mantendo equipes altamente especializadas em cada segmento
-        de atuação.
-      </p>
+      <p class="eyebrow">{t.heroEyebrow}</p>
+      <h1>{t.heroTitle}</h1>
+      <p class="lead">{t.heroLead}</p>
     </div>
   </section>
 
   <section class="photo-section">
-    <Image src={hqPhoto} alt="Sede da Proc Group em Pato Branco" width={1600} height={720} quality={70} class="hq-photo" />
+    <Image src={hqPhoto} alt={t.photoAlt} width={1600} height={720} quality={70} class="hq-photo" />
   </section>
 
   <section class="section story-section" data-theme="light">
     <div class="container story-grid">
       <div data-reveal>
-        <p class="eyebrow">Nossa história</p>
-        <h2>Uma plataforma. Múltiplas soluções. Uma única inteligência.</h2>
-        <p class="lead">
-          Desde o primeiro projeto, acreditamos que inovação de verdade acontece quando a tecnologia serve às
-          pessoas — melhorando processos, garantindo segurança, fortalecendo negócios e contribuindo para o bem
-          comum. Em 2019 ampliamos nossa atuação para o setor público, criando soluções que hoje fazem parte da
-          rotina de prefeituras, forças de segurança e aeroportos. Hoje a Proc não é apenas uma integradora de
-          tecnologias — é uma empresa que desenvolve sua própria plataforma de Inteligência Artificial, com
-          equipes especializadas em Cidades Inteligentes, Segurança Corporativa, Infraestrutura de TI e IA
-          Industrial.
-        </p>
+        <p class="eyebrow">{t.storyEyebrow}</p>
+        <h2>{t.storyTitle}</h2>
+        <p class="lead">{t.storyText}</p>
       </div>
       <div class="stats-mini" data-reveal>
-        {homeStats.slice(0, 4).map((stat) => (
+        {homeStats.map((stat, i) => (
           <div class="mini-stat">
             <p class="mini-value">{stat.value}{stat.suffix}</p>
-            <p class="mini-label">{stat.label}</p>
+            <p class="mini-label">{statsLabels[i]}</p>
           </div>
         ))}
       </div>
@@ -87,15 +71,15 @@ const schema = {
   <section class="section timeline-section" data-theme="light">
     <div class="container">
       <div class="section-header" data-reveal>
-        <p class="eyebrow">Nossa trajetória</p>
-        <h2>Mais de uma década construindo tecnologia com propósito</h2>
+        <p class="eyebrow">{t.timelineEyebrow}</p>
+        <h2>{t.timelineTitle}</h2>
       </div>
       <div class="timeline-grid">
-        {timeline.map((t) => (
+        {t.timeline.map((item) => (
           <div class="timeline-card" data-reveal>
-            <span class="timeline-year">{t.year}</span>
-            <h3>{t.title}</h3>
-            <p>{t.desc}</p>
+            <span class="timeline-year">{item.year}</span>
+            <h3>{item.title}</h3>
+            <p>{item.desc}</p>
           </div>
         ))}
       </div>
@@ -105,11 +89,11 @@ const schema = {
   <section class="section values-section">
     <div class="container">
       <div class="section-header" data-reveal>
-        <p class="eyebrow">O que nos diferencia</p>
-        <h2>O que guia o trabalho da Proc</h2>
+        <p class="eyebrow">{t.valuesEyebrow}</p>
+        <h2>{t.valuesTitle}</h2>
       </div>
       <div class="values-grid">
-        {values.map((v) => (
+        {t.values.map((v) => (
           <div class="value-card" data-reveal>
             <h3>{v.title}</h3>
             <p>{v.desc}</p>
@@ -122,26 +106,16 @@ const schema = {
   <section class="section credibility-section">
     <div class="container">
       <div class="section-header" data-reveal>
-        <p class="eyebrow">Credibilidade</p>
-        <h2>Reconhecida por empresas e autoridades públicas</h2>
+        <p class="eyebrow">{t.credEyebrow}</p>
+        <h2>{t.credTitle}</h2>
       </div>
       <div class="credibility-grid">
-        <div class="credibility-card" data-reveal>
-          <h3>Embarque + Seguro</h3>
-          <p>Parceiros oficiais do programa do Governo Federal.</p>
-        </div>
-        <div class="credibility-card" data-reveal>
-          <h3>Órgãos de segurança</h3>
-          <p>Tecnologias utilizadas por forças de segurança de diversas cidades.</p>
-        </div>
-        <div class="credibility-card" data-reveal>
-          <h3>Grandes players</h3>
-          <p>Projetos realizados para grandes players, como Latam Linhas Aéreas.</p>
-        </div>
-        <div class="credibility-card" data-reveal>
-          <h3>Equipes certificadas</h3>
-          <p>Operação de ambientes críticos com excelência.</p>
-        </div>
+        {t.credibility.map((c) => (
+          <div class="credibility-card" data-reveal>
+            <h3>{c.title}</h3>
+            <p>{c.desc}</p>
+          </div>
+        ))}
       </div>
     </div>
   </section>
@@ -149,12 +123,12 @@ const schema = {
   <section class="section units-recap" data-theme="light">
     <div class="container">
       <div class="section-header" data-reveal>
-        <p class="eyebrow">Onde atuamos</p>
-        <h2>Quatro unidades de negócio, uma única plataforma</h2>
+        <p class="eyebrow">{t.unitsEyebrow}</p>
+        <h2>{t.unitsTitle}</h2>
       </div>
       <div class="units-grid">
         {businessUnits.map((unit) => (
-          <a href={withBase(unit.href)} class="unit-card" data-reveal style={`--unit-color: ${unit.color}`}>
+          <a href={localizePath(unit.href, lang)} class="unit-card" data-reveal style={`--unit-color: ${unit.color}`}>
             <span class="unit-badge">{unit.shortName}</span>
             <h3>{unit.name}</h3>
             <p>{unit.tagline}</p>
@@ -166,9 +140,9 @@ const schema = {
 
   <section class="section final-cta">
     <div class="container final-cta-inner" data-reveal>
-      <h2>Quer conhecer a Proc de perto?</h2>
-      <p>Fale com um de nossos especialistas e descubra como podemos ajudar sua operação.</p>
-      <Button href={WHATSAPP_DEMO} variant="primary" size="lg">Solicitar Demonstração</Button>
+      <h2>{t.finalCtaTitle}</h2>
+      <p>{t.finalCtaText}</p>
+      <Button href={WHATSAPP_DEMO} variant="primary" size="lg" data-magnetic>{tr.solutions.ctaDemo}</Button>
     </div>
   </section>
 </BaseLayout>
@@ -186,7 +160,7 @@ const schema = {
   .section-header h2 { margin-top: var(--space-4); font-size: var(--fs-3xl); }
 
   .story-section { background: var(--color-bg); }
-  .story-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: var(--space-16); align-items: center; }
+  .story-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: var(--space-16); align-items: center; }
   .story-grid h2 { margin-top: var(--space-4); font-size: var(--fs-3xl); }
   .stats-mini { display: grid; grid-template-columns: 1fr; gap: var(--space-4); }
   .mini-stat { padding: var(--space-6); background: var(--color-bg-alt); border-radius: var(--radius-md); border: 1px solid var(--color-border); }
@@ -194,26 +168,26 @@ const schema = {
   .mini-label { margin-top: var(--space-1); font-size: var(--fs-xs); color: var(--color-text-muted); }
 
   .timeline-section { background: var(--color-bg-alt); }
-  .timeline-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-6); }
+  .timeline-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-6); }
   .timeline-card { padding: var(--space-6); border-radius: var(--radius-md); background: var(--color-surface); border: 1px solid var(--color-border); }
   .timeline-year { font-size: var(--fs-xs); font-weight: 700; color: var(--color-primary-dark); text-transform: uppercase; letter-spacing: 0.06em; }
   .timeline-card h3 { margin-top: var(--space-2); font-size: var(--fs-lg); }
   .timeline-card p { margin-top: var(--space-2); font-size: var(--fs-sm); color: var(--color-text-muted); }
 
   .values-section { background: var(--navy-900); }
-  .values-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-6); }
+  .values-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-6); }
   .value-card { padding: var(--space-8) var(--space-6); border-radius: var(--radius-md); background: var(--color-surface); border: 1px solid var(--color-border); }
   .value-card h3 { font-size: var(--fs-lg); }
   .value-card p { margin-top: var(--space-3); font-size: var(--fs-sm); color: var(--color-text-muted); }
 
   .credibility-section { background: var(--color-bg-alt); }
-  .credibility-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-6); }
+  .credibility-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-6); }
   .credibility-card { padding: var(--space-6); border-radius: var(--radius-md); background: var(--color-surface); border: 1px solid var(--color-border); }
   .credibility-card h3 { font-size: var(--fs-base); }
   .credibility-card p { margin-top: var(--space-2); font-size: var(--fs-sm); color: var(--color-text-muted); }
 
   .units-recap { background: var(--color-bg); }
-  .units-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-6); }
+  .units-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-6); }
   .unit-card {
     position: relative;
     padding: var(--space-8) var(--space-6);
@@ -225,7 +199,7 @@ const schema = {
     overflow: hidden;
   }
   .unit-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--unit-color); }
-  .unit-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); border-color: var(--unit-color); }
+  .unit-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); border-color: color-mix(in srgb, var(--unit-color), white 36%); }
   .unit-badge { font-size: var(--fs-xs); font-weight: 700; color: var(--unit-color); text-transform: uppercase; letter-spacing: 0.08em; }
   .unit-card h3 { margin-top: var(--space-2); font-size: var(--fs-lg); }
   .unit-card p { margin-top: var(--space-2); font-size: var(--fs-sm); color: var(--color-text-muted); }
@@ -241,7 +215,7 @@ const schema = {
 
   @media (max-width: 980px) {
     .story-grid { grid-template-columns: 1fr; }
-    .values-grid, .units-grid, .timeline-grid, .credibility-grid { grid-template-columns: 1fr 1fr; }
+    .values-grid, .units-grid, .timeline-grid, .credibility-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   }
   @media (max-width: 640px) {
     .values-grid, .units-grid, .stats-mini, .timeline-grid, .credibility-grid { grid-template-columns: 1fr; }

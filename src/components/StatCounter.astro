@@ -25,10 +25,12 @@ const { value, suffix = "", label } = Astro.props;
 
 <script>
   const counters = document.querySelectorAll<HTMLElement>("[data-count]");
-  // The value is server-rendered as its final number (so it's correct without
-  // JS). For JS users, reset to 0 here so the count-up animation has somewhere
-  // to travel from.
-  counters.forEach((el) => { el.textContent = "0" + (el.dataset.suffix || ""); });
+  // Quem pediu menos movimento fica com o número final que veio do servidor:
+  // este era o único ponto animado do site que não checava a preferência.
+  // Importante que a checagem venha ANTES do reset para "0" — zerar e não
+  // animar deixaria os contadores em zero na tela.
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
   const animate = (el: HTMLElement) => {
     const target = parseFloat(el.dataset.count || "0");
     const suffix = el.dataset.suffix || "";
@@ -45,14 +47,22 @@ const { value, suffix = "", label } = Astro.props;
     requestAnimationFrame(step);
   };
 
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        animate(entry.target as HTMLElement);
-        io.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.4 });
+  if (!reduce) {
+    // Nada de zerar os contadores aqui. O código anterior zerava todos no load
+    // e só restaurava quando o IntersectionObserver disparasse — então, até o
+    // bloco entrar na tela, o visitante lia "0+" e "0%" no lugar de "200+" e
+    // "99%". Se o observer nunca disparasse, ficava em zero para sempre.
+    // Como o primeiro quadro de animate() já escreve 0, deixar o valor do
+    // servidor até lá dá exatamente a mesma animação, sem essa janela.
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          animate(entry.target as HTMLElement);
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.4 });
 
-  counters.forEach((el) => io.observe(el));
+    counters.forEach((el) => io.observe(el));
+  }
 </script>

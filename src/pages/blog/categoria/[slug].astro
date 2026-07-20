@@ -84,7 +84,7 @@ const schema = {
   .lead { margin-top: var(--space-6); font-size: var(--fs-lg); color: var(--color-text-muted); }
   .section { padding-block: var(--space-16) var(--space-24); }
   .posts-section { background: var(--color-bg); }
-  .posts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
-  @media (max-width: 980px) { .posts-grid { grid-template-columns: 1fr 1fr; } }
+  .posts-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); }
+  @media (max-width: 980px) { .posts-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
   @media (max-width: 640px) { .posts-grid { grid-template-columns: 1fr; } }
 </style>

@@ -13,3 +13,17 @@ export const localeNames: Record<Locale, string> = {
   en: "English",
   es: "Español",
 };
+
+/** Valor do atributo <html lang>. */
+export const htmlLangAttr: Record<Locale, string> = {
+  pt: "pt-BR",
+  en: "en",
+  es: "es",
+};
+
+/** Valor de og:locale. */
+export const ogLocaleAttr: Record<Locale, string> = {
+  pt: "pt_BR",
+  en: "en_US",
+  es: "es_ES",
+};

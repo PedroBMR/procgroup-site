@@ -3,6 +3,8 @@ import TopBar from "../components/TopBar.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import { withBase } from "../utils/url";
+import { getLangFromUrl, useTranslations, logicalPath, localePath, isSingleVersionPath } from "../i18n/utils";
+import { locales, defaultLocale, htmlLangAttr, ogLocaleAttr } from "../i18n/config";
 import "../styles/tokens.css";
 import "../styles/base.css";
 
@@ -19,7 +21,10 @@ const {
   title,
   description,
   path = Astro.url.pathname,
-  ogImage = "/og-default.svg",
+  // PNG, não SVG: Facebook, LinkedIn e WhatsApp não renderizam SVG em
+  // og:image — o card saía sem imagem nenhuma. Gerado por scripts/gerar-og.mjs
+  // a partir de src/assets/og-default.svg.
+  ogImage = "/og-default.png",
   schema,
   noIndex = false,
 } = Astro.props;
@@ -36,12 +41,38 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 const canonicalPath = base && path.startsWith(base) ? path.slice(base.length) || "/" : path;
 const canonical = new URL(canonicalPath, siteUrl).toString();
 
+// Mesma correção para a imagem social: as capas do blog passaram a ser geradas
+// pelo astro:assets, então chegam aqui já com o prefixo de base — que não pode
+// entrar na URL absoluta do domínio final.
+const ogPath = base && ogImage.startsWith(base) ? ogImage.slice(base.length) : ogImage;
+const ogImageUrl = new URL(ogPath, siteUrl).toString();
+
+// i18n: idioma da URL + versões alternativas da página em cada idioma (hreflang).
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const htmlLang = htmlLangAttr[lang];
+const ogLocale = ogLocaleAttr[lang];
+const logical = logicalPath(Astro.url);
+// Páginas de versão única (blog, 404) não têm equivalente em outro idioma.
+// Emitir hreflang apontando para /en/... e /es/... gerava alternativas que dão
+// 404 — e o Google descarta o cluster inteiro quando isso acontece. Com uma
+// única versão, o correto é não declarar hreflang nenhum.
+const singleVersion = isSingleVersionPath(logical);
+const alternates = singleVersion
+  ? []
+  : locales.map((l) => ({
+      lang: l,
+      hrefLang: htmlLangAttr[l],
+      href: new URL(localePath(logical, l), siteUrl).toString(),
+    }));
+const xDefault = singleVersion ? null : new URL(localePath(logical, defaultLocale), siteUrl).toString();
+
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "Proc Group",
   url: siteUrl,
-  logo: `${siteUrl}/favicon.svg`,
+  logo: `${siteUrl}/brand/mark-red.webp`,
   description:
     "Plataforma de Inteligência Artificial, Visão Computacional e Infraestrutura de TI para cidades, empresas e indústrias.",
   foundingDate: "2014",
@@ -60,7 +91,7 @@ const schemaList = Array.isArray(schema) ? schema : schema ? [schema] : [];
 ---
 
 <!doctype html>
-<html lang="pt-BR">
+<html lang={htmlLang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -68,8 +99,11 @@ const schemaList = Array.isArray(schema) ? schema : schema ? [schema] : [];
         below to show them. If JS never runs, force everything visible so the
         page is never left blank. */}
     <noscript><style>[data-reveal]{opacity:1 !important;transform:none !important;}</style></noscript>
-    <link rel="icon" type="image/svg+xml" href={withBase("/favicon.svg")} />
+    <link rel="icon" type="image/webp" href={withBase("/brand/mark-red.webp")} />
+    <link rel="apple-touch-icon" href={withBase("/brand/mark-red.webp")} />
     <link rel="canonical" href={canonical} />
+    {alternates.map((a) => <link rel="alternate" hreflang={a.hrefLang} href={a.href} />)}
+    {xDefault && <link rel="alternate" hreflang="x-default" href={xDefault} />}
     {noIndex && <meta name="robots" content="noindex,nofollow" />}
 
     <title>{fullTitle}</title>
@@ -80,18 +114,24 @@ const schemaList = Array.isArray(schema) ? schema : schema ? [schema] : [];
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={new URL(ogImage, siteUrl).toString()} />
-    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:locale" content={ogLocale} />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={new URL(ogImage, siteUrl).toString()} />
+    <meta name="twitter:image" content={ogImageUrl} />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    {/* Pesos pedidos = pesos usados. Barlow 900 e Space Grotesk 500 não
+        aparecem em lugar nenhum do CSS (conferido por varredura de
+        font-weight em src/), então eram dois arquivos baixados à toa. */}
     <link
-      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Space+Grotesk:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
 
@@ -99,27 +139,16 @@ const schemaList = Array.isArray(schema) ? schema : schema ? [schema] : [];
     {schemaList.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
   </head>
   <body>
-    <a href="#main" class="visually-hidden">Pular para o conteúdo</a>
+    <a href="#main" class="visually-hidden">{t.common.skipLink}</a>
     <TopBar />
     <Header />
-    <main id="main">
+    <main id="main" tabindex="-1">
       <slot />
     </main>
     <Footer />
 
     <script>
-      const io = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add("is-visible");
-              io.unobserve(entry.target);
-            }
-          });
-        },
-        { threshold: 0.15, rootMargin: "0px 0px -60px 0px" }
-      );
-      document.querySelectorAll("[data-reveal]").forEach((el) => io.observe(el));
+      import "../scripts/motion.ts";
     </script>
   </body>
 </html>

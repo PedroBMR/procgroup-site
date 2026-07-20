@@ -1,5 +1,12 @@
 ---
-import { businessUnits } from "../data/businessUnits";
+import { getBusinessUnits } from "../data/businessUnits";
+import { getLangFromUrl } from "../i18n/utils";
+import { usePages } from "../i18n/pages";
+import { withBase } from "../utils/url";
+
+const lang = getLangFromUrl(Astro.url);
+const t = usePages(lang).mandala;
+const businessUnits = getBusinessUnits(lang);
 
 // Hub central: 4 arcos coloridos (um por unidade) ao redor de um núcleo "PROC AI".
 // As soluções ficam listadas em colunas legíveis abaixo — layout mais claro e
@@ -30,30 +37,17 @@ const arcs = businessUnits.map((unit, i) => {
   return { d: arcPath(aInner, aOuter, start, start + span), color: unit.color, name: unit.name };
 });
 
-// Símbolo Proc AI (direção "C": anel aberto + ondas de sinal) desenhado no núcleo.
-const aiCy = 100;
-const aiWaveCy = 107;
-const aiScale = 0.8;
-const aiPt = (r: number, a: number, oy: number) => {
-  const t = ((a - 90) * Math.PI) / 180;
-  return `${(cx + r * Math.cos(t)).toFixed(2)} ${(oy + r * Math.sin(t)).toFixed(2)}`;
-};
-const aiArc = (r: number, s: number, e: number, oy: number) => {
-  const large = e - s > 180 ? 1 : 0;
-  return `M ${aiPt(r, s, oy)} A ${r} ${r} 0 ${large} 1 ${aiPt(r, e, oy)}`;
-};
-const aiRing = aiArc(16.5 * aiScale, 205, 515, aiCy);
-const aiWaves = [21, 15.5, 10].map((r) => aiArc(r * aiScale, 320, 400, aiWaveCy));
+// Marca Proc AI = o ícone EXATO do favicon do site (public/brand/mark-red.webp),
+// usado como imagem, sem redesenhar e sem recortar.
 ---
 
 <div class="platform-map">
   <div class="pm-hub" data-reveal>
-    <svg viewBox="0 0 240 240" role="img" aria-label="Núcleo da Proc AI Platform conectando as quatro unidades de negócio">
+    <svg viewBox="0 0 240 240" role="img" aria-label={t.ariaLabel}>
       {arcs.map((a) => <path d={a.d} fill={a.color} />)}
       <circle cx={cx} cy={cy} r={aInner - 8} class="pm-core" />
-      <path d={aiRing} class="pm-ring" fill="none" stroke-width="3.4" stroke-linecap="round" />
-      {aiWaves.map((d) => <path d={d} class="pm-wave" fill="none" stroke-width="2.3" stroke-linecap="round" />)}
-      <text x={cx} y={cy + 22} text-anchor="middle" class="pm-core-label">PROC AI</text>
+      <image href={withBase("/brand/mark-red.webp")} x={cx - 50} y="64" width="100" height="100" />
+      <text x={cx} y={cy + 26} text-anchor="middle" class="pm-core-label">PROC AI</text>
     </svg>
   </div>
 
@@ -76,8 +70,6 @@ const aiWaves = [21, 15.5, 10].map((r) => aiArc(r * aiScale, 320, 400, aiWaveCy)
   .pm-hub { display: flex; justify-content: center; margin-bottom: var(--space-12); }
   .pm-hub svg { width: 220px; height: 220px; overflow: visible; }
   .pm-core { fill: var(--color-bg); stroke: var(--color-border); stroke-width: 1.5; }
-  .pm-ring { stroke: var(--color-text); }
-  .pm-wave { stroke: var(--color-primary); }
   .pm-core-label {
     font-family: var(--font-display);
     font-weight: 800;
@@ -86,11 +78,17 @@ const aiWaves = [21, 15.5, 10].map((r) => aiArc(r * aiScale, 320, 400, aiWaveCy)
     fill: var(--color-text);
   }
 
-  .pm-cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); }
+  .pm-cols { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-4); }
   .pm-col {
-    background: var(--color-bg-alt);
+    /* A seção que contém estas colunas também usa --color-bg-alt, então card e
+       fundo mediam 1,00:1 e as quatro colunas desapareciam. A única separação
+       era a borda, a 1,28:1 — abaixo do mínimo de 3:1 para elemento de
+       interface. --color-surface é branco no tema claro e destaca a coluna. */
+    background: var(--color-surface);
     border: 1px solid var(--color-border);
-    border-top: 3px solid var(--u);
+    /* A barra do topo é a cor da unidade; navy sobre navy sumiria no tema
+       escuro, então recebe o mesmo clareamento usado nos outros cards. */
+    border-top: 3px solid color-mix(in srgb, var(--u), white 36%);
     border-radius: var(--radius-md);
     padding: var(--space-5) var(--space-5) var(--space-6);
   }
@@ -118,6 +116,6 @@ const aiWaves = [21, 15.5, 10].map((r) => aiArc(r * aiScale, 320, 400, aiWaveCy)
     width: 6px; height: 6px; border-radius: 50%; background: var(--u); opacity: 0.55;
   }
 
-  @media (max-width: 900px) { .pm-cols { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 900px) { .pm-cols { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
   @media (max-width: 520px) { .pm-cols { grid-template-columns: 1fr; } }
 </style>

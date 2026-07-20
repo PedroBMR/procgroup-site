@@ -1,29 +1,37 @@
 ---
-import { mainNav, ctaNav } from "../data/nav";
+import { getMainNav, getCtaNav } from "../data/nav";
 import Button from "./Button.astro";
 import Logo from "./Logo.astro";
-import { withBase } from "../utils/url";
+import { getLangFromUrl, localizePath, useTranslations } from "../i18n/utils";
+
+const lang = getLangFromUrl(Astro.url);
+const common = useTranslations(lang).common;
+const mainNav = getMainNav(lang);
+const ctaNav = getCtaNav(lang);
 const currentPath = Astro.url.pathname;
+const homeHref = localizePath("/", lang);
+const menuLabel = { pt: "Abrir menu", en: "Open menu", es: "Abrir menú" }[lang];
+const homeAria = { pt: "Proc Group — página inicial", en: "Proc Group — home", es: "Proc Group — inicio" }[lang];
 ---
 
 <header class="site-header" data-header>
   <div class="container header-inner">
-    <a href={withBase("/")} class="logo" aria-label="Proc Group — página inicial">
+    <a href={homeHref} class="logo" aria-label={homeAria}>
       <Logo variant="white" height={36} />
     </a>
 
-    <nav class="main-nav" aria-label="Navegação principal">
+    <nav class="main-nav" aria-label={common.navMain}>
       <ul>
         {mainNav.map((item) => (
           <li class:list={["nav-item", { "has-children": item.children }]}>
-            <a href={withBase(item.href)} aria-current={currentPath === withBase(item.href) ? "page" : undefined}>
+            <a href={item.href} aria-current={currentPath === item.href ? "page" : undefined}>
               {item.label}
-              {item.children && <svg class="chev" width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>}
+              {item.children && <svg aria-hidden="true" focusable="false" class="chev" width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>}
             </a>
             {item.children && (
               <div class="dropdown">
                 {item.children.map((child) => (
-                  <a href={withBase(child.href)} class="dropdown-item">
+                  <a href={child.href} class="dropdown-item">
                     <span class="dropdown-title">{child.label}</span>
                     <span class="dropdown-desc">{child.description}</span>
                   </a>
@@ -39,33 +47,39 @@ const currentPath = Astro.url.pathname;
       <Button href={ctaNav.href} variant="primary" size="md">{ctaNav.label}</Button>
     </div>
 
-    <button class="menu-toggle" data-menu-toggle aria-label="Abrir menu" aria-expanded="false">
+    <button
+      class="menu-toggle"
+      data-menu-toggle
+      aria-label={menuLabel}
+      aria-expanded="false"
+      aria-controls="mobile-nav"
+    >
       <span></span><span></span><span></span>
     </button>
   </div>
 
-  <div class="mobile-nav" data-mobile-nav>
+  <nav id="mobile-nav" class="mobile-nav" data-mobile-nav aria-label={menuLabel}>
     <ul>
       {mainNav.map((item) => (
         <li>
-          <a href={withBase(item.href)}>{item.label}</a>
+          <a href={item.href}>{item.label}</a>
           {item.children && (
             <ul class="mobile-sub">
-              {item.children.map((child) => <li><a href={withBase(child.href)}>{child.label}</a></li>)}
+              {item.children.map((child) => <li><a href={child.href}>{child.label}</a></li>)}
             </ul>
           )}
         </li>
       ))}
-      <li><a href={withBase(ctaNav.href)} class="mobile-cta">{ctaNav.label}</a></li>
+      <li><a href={ctaNav.href} class="mobile-cta">{ctaNav.label}</a></li>
     </ul>
-  </div>
+  </nav>
 </header>
 
 <style>
   .site-header {
     position: sticky;
-    top: 40px;
-    z-index: 100;
+    top: var(--topbar-h);
+    z-index: var(--z-sticky);
     background: rgba(6, 10, 20, 0.82);
     backdrop-filter: blur(14px);
     border-bottom: 1px solid var(--color-border);
@@ -75,7 +89,7 @@ const currentPath = Astro.url.pathname;
     display: flex;
     align-items: center;
     gap: var(--space-6);
-    height: 76px;
+    height: var(--header-h);
   }
   .logo {
     display: flex;
@@ -136,26 +150,36 @@ const currentPath = Astro.url.pathname;
     .main-nav, .header-cta { display: none; }
     .menu-toggle {
       display: flex; flex-direction: column; justify-content: center; gap: 5px;
-      width: 40px; height: 40px; background: none; border: none; margin-left: auto;
+      /* 44x44: é o controle principal de navegação no celular e estava em
+         40x40. O header tem 68px de altura aqui, então cabe. */
+      width: 44px; height: 44px; background: none; border: none; margin-left: auto;
+      align-items: center;
     }
     .menu-toggle span { display: block; width: 22px; height: 2px; background: var(--white); transition: transform var(--dur-fast) ease, opacity var(--dur-fast) ease; }
-    .header-inner { height: 68px; }
+    .header-inner { height: var(--header-h-mobile); }
   }
 
   .mobile-nav {
     display: none;
     max-height: 0;
     overflow: hidden;
+    /* max-height: 0 + overflow: hidden RECORTA, mas não tira os ~12 links da
+       ordem de tabulação: abaixo de 1200px o menu fechado é display:block e
+       quem navega por teclado atravessava uma dúzia de links invisíveis depois
+       do logo. visibility:hidden remove do foco — é o mesmo recurso que o
+       dropdown do desktop já usa logo acima. */
+    visibility: hidden;
     background: var(--surface-1);
     border-top: 1px solid var(--color-border);
-    transition: max-height var(--dur-med) var(--ease-out);
+    transition: max-height var(--dur-med) var(--ease-out), visibility var(--dur-med);
   }
-  .mobile-nav.is-open { max-height: 80vh; overflow-y: auto; }
+  /* dvh, não vh: no celular vh ignora a barra de endereço. */
+  .mobile-nav.is-open { visibility: visible; max-height: 80dvh; overflow-y: auto; }
   .mobile-nav ul { padding: var(--space-4) var(--space-6) var(--space-8); }
   .mobile-nav > ul > li > a { display: block; padding: var(--space-3) 0; font-weight: 700; font-size: var(--fs-lg); text-transform: uppercase; letter-spacing: 0.02em; color: var(--white); }
   .mobile-sub { padding-left: var(--space-4); }
   .mobile-sub a { display: block; padding: var(--space-2) 0; color: var(--ink-300); font-size: var(--fs-sm); }
-  .mobile-cta { margin-top: var(--space-4); display: inline-block; background: var(--color-primary); color: var(--white) !important; padding: 0.8rem 1.6rem; border-radius: 999px; font-weight: 700; }
+  .mobile-cta { margin-top: var(--space-4); display: inline-block; background: var(--color-primary); color: var(--white) !important; padding: 0.8rem 1.6rem; border-radius: var(--radius-pill); font-weight: 700; }
 
   @media (max-width: 1200px) {
     .mobile-nav { display: block; }
@@ -165,8 +189,28 @@ const currentPath = Astro.url.pathname;
 <script>
   const toggle = document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
   const mobileNav = document.querySelector<HTMLElement>("[data-mobile-nav]");
+
+  const setOpen = (open: boolean) => {
+    mobileNav?.classList.toggle("is-open", open);
+    toggle?.setAttribute("aria-expanded", String(open));
+  };
+
   toggle?.addEventListener("click", () => {
-    const isOpen = mobileNav?.classList.toggle("is-open");
-    toggle.setAttribute("aria-expanded", String(!!isOpen));
+    setOpen(!mobileNav?.classList.contains("is-open"));
+  });
+
+  // Esc fecha e devolve o foco ao botão — sem isso o foco fica solto no menu
+  // que acabou de sumir.
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    if (!mobileNav?.classList.contains("is-open")) return;
+    setOpen(false);
+    toggle?.focus();
+  });
+
+  // Navegar para outra âncora da mesma página deixaria o menu aberto por cima
+  // do conteúdo.
+  mobileNav?.addEventListener("click", (e) => {
+    if ((e.target as HTMLElement).closest("a")) setOpen(false);
   });
 </script>

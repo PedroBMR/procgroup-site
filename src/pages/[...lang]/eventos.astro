@@ -1,0 +1,73 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Breadcrumb from "../../components/Breadcrumb.astro";
+import PostCard from "../../components/PostCard.astro";
+import { postsInCategory, EVENTS_CATEGORY } from "../../utils/blog";
+import { useTranslations, localePath } from "../../i18n/utils";
+import { usePages } from "../../i18n/pages";
+import { defaultLocale, type Locale } from "../../i18n/config";
+
+export function getStaticPaths() {
+  return [{ params: { lang: undefined } }, { params: { lang: "en" } }, { params: { lang: "es" } }];
+}
+const lang = (Astro.params.lang as Locale) || defaultLocale;
+const tr = useTranslations(lang);
+const t = usePages(lang).eventos;
+
+const posts = postsInCategory(await getCollection("blog"), EVENTS_CATEGORY);
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: `${t.metaTitle} | Proc Group`,
+  description: t.metaDescription,
+};
+---
+
+<BaseLayout title={t.metaTitle} description={t.metaDescription} schema={schema}>
+  <div class="container">
+    <Breadcrumb
+      items={[
+        { label: tr.nav.home, href: localePath("/", lang) },
+        { label: t.title, href: localePath("/eventos", lang) },
+      ]}
+    />
+  </div>
+
+  <section class="hero-page">
+    <div class="container">
+      <p class="eyebrow">{t.eyebrow}</p>
+      <h1>{t.title}</h1>
+      <p class="lead">{t.lead}</p>
+      {tr.common.blogLangNote && <p class="lang-note">{tr.common.blogLangNote}</p>}
+    </div>
+  </section>
+
+  <section class="section posts-section" data-theme="light">
+    <div class="container">
+      {posts.length > 0 ? (
+        // Os posts vêm do WordPress e só existem em português — marcar o idioma
+        // do bloco nas páginas /en e /es (WCAG 3.1.2).
+        <div class="posts-grid" lang={lang === defaultLocale ? undefined : "pt-BR"}>
+          {posts.map((post) => <PostCard post={post} />)}
+        </div>
+      ) : (
+        <p class="empty">{t.empty}</p>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero-page { padding-block: var(--space-16) var(--space-8); }
+  .hero-page h1 { font-size: var(--fs-4xl); margin-top: var(--space-4); max-width: 780px; }
+  .lead { margin-top: var(--space-6); font-size: var(--fs-lg); color: var(--color-text-muted); max-width: 640px; }
+  .lang-note { margin-top: var(--space-3); font-size: var(--fs-sm); color: var(--color-text-faint); }
+  .section { padding-block: var(--space-16) var(--space-24); }
+  .posts-section { background: var(--color-bg); }
+  .posts-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); }
+  .empty { color: var(--color-text-muted); font-size: var(--fs-lg); }
+  @media (max-width: 980px) { .posts-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+  @media (max-width: 640px) { .posts-grid { grid-template-columns: 1fr; } }
+</style>

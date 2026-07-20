@@ -3,8 +3,10 @@
 // reinterpretação do ticker "RUAS · BAIRROS · CIDADES · TODOS CONECTADOS"
 // visto em site de concorrente, usando a linguagem e o tagline que a Proc
 // já usa (ver Footer.astro: "Uma plataforma. Múltiplas soluções.").
-const items = ["Câmeras", "Sensores", "Centros de Operação", "Cidades", "Empresas", "Indústrias"];
-const highlight = "Uma plataforma. Tudo conectado.";
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+const t = useTranslations(getLangFromUrl(Astro.url)).ticker;
+const items = t.items;
+const highlight = t.highlight;
 ---
 
 <div class="ticker" aria-hidden="true">

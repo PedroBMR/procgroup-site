@@ -6,11 +6,12 @@ interface Props {
   variant?: "primary" | "secondary" | "ghost";
   size?: "md" | "lg";
   class?: string;
+  [key: string]: unknown;
 }
-const { href, variant = "primary", size = "md", class: className = "" } = Astro.props;
+const { href, variant = "primary", size = "md", class: className = "", ...rest } = Astro.props;
 ---
 
-<a href={withBase(href)} class={`btn btn-${variant} btn-${size} ${className}`}>
+<a href={withBase(href)} class={`btn btn-${variant} btn-${size} ${className}`} {...rest}>
   <span><slot /></span>
 </a>
 
@@ -21,7 +22,7 @@ const { href, variant = "primary", size = "md", class: className = "" } = Astro.
     justify-content: center;
     gap: var(--space-2);
     font-weight: 600;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     white-space: nowrap;
     transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
   }
@@ -35,10 +36,14 @@ const { href, variant = "primary", size = "md", class: className = "" } = Astro.
   }
   .btn-primary:hover { background: var(--color-primary-dark); transform: translateY(-2px); box-shadow: var(--glow-red); }
 
+  /* A borda é a única pista visual deste botão: em seções data-theme="light" o
+     fundo dele (--color-surface = branco) é igual ao da seção, então com
+     --color-border (1.28:1) ele virava texto solto. --color-border-ui é o token
+     de contorno de controle, com os 3:1 que a WCAG 1.4.11 pede. */
   .btn-secondary {
     background: var(--color-surface);
     color: var(--color-text);
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border-ui);
   }
   .btn-secondary:hover { border-color: var(--color-primary); background: var(--color-surface-hover); transform: translateY(-2px); }
 

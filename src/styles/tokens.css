@@ -24,8 +24,13 @@
      for the light-safe variant (same lesson as --color-eyebrow). */
   --color-success: #16a34a;
   --color-success-bg: rgba(22, 163, 74, 0.12);
-  --color-danger: var(--red-600);
+  /* Vermelho de ERRO, para texto. Era --red-600, escuro demais para ler sobre
+     fundo escuro (2,6:1) — por isso o formulário acabou usando --red-400 na
+     mão e ignorando o token. Agora o token é a cor certa em cada tema, mesma
+     lógica de --color-eyebrow. */
+  --color-danger: var(--red-400);
   --color-danger-bg: var(--red-tint);
+  --color-danger-border: rgba(226, 8, 29, 0.3);
 
   /* Surfaces (dark theme) */
   --surface-0: var(--navy-950);
@@ -48,7 +53,6 @@
   --color-text-faint: var(--ink-500);
   --color-primary: var(--red-500);
   --color-primary-dark: var(--red-600);
-  --color-navy: var(--navy-900);
   --color-accent: var(--red-500);
   /* Lighter than the brand red-500 button/CTA color — small uppercase label
      text needs more contrast against a dark background than a large button
@@ -56,6 +60,11 @@
   --color-eyebrow: var(--red-400);
   --color-border: rgba(255, 255, 255, 0.09);
   --color-border-strong: rgba(255, 255, 255, 0.18);
+  /* Contorno de CONTROLE (botão, campo) — não decorativo. WCAG 1.4.11 exige
+     3:1 para a borda que é a única pista visual de um controle, e nem
+     --color-border (1.21:1) nem --color-border-strong (1.64:1) chegam lá.
+     Medido: 3.31:1 sobre --color-surface. Não usar em divisórias. */
+  --color-border-ui: rgba(255, 255, 255, 0.36);
 
   /* Typography — Space Grotesk body / Barlow Condensed display, like kabatone.com */
   --font-sans: "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -68,7 +77,6 @@
   --fs-2xl: 2.25rem;
   --fs-3xl: 3rem;
   --fs-4xl: 4.25rem;
-  --fs-5xl: 5.5rem;
   --lh-tight: 1.02;
   --lh-snug: 1.15;
   --lh-normal: 1.6;
@@ -78,6 +86,7 @@
   --space-2: 0.5rem;
   --space-3: 0.75rem;
   --space-4: 1rem;
+  --space-5: 1.25rem;
   --space-6: 1.5rem;
   --space-8: 2rem;
   --space-12: 3rem;
@@ -90,6 +99,20 @@
   --radius-sm: 8px;
   --radius-md: 14px;
   --radius-lg: 24px;
+  --radius-pill: 999px;
+
+  /* Altura da cromagem fixa. O Header gruda logo abaixo da TopBar, e as âncoras
+     precisam parar abaixo das duas — antes esses valores estavam repetidos à
+     mão em três arquivos, então mexer na TopBar quebrava o sticky e o scroll. */
+  --topbar-h: 40px;
+  --header-h: 76px;
+  --header-h-mobile: 68px;
+
+  /* Empilhamento. A ordem importa: a TopBar fica acima do Header, que gruda
+     abaixo dela; overlays acima dos dois. */
+  --z-sticky: 100;
+  --z-topbar: 101;
+  --z-overlay: 200;
   --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.28);
   --shadow-md: 0 16px 40px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 28px 72px rgba(0, 0, 0, 0.55);
@@ -102,7 +125,6 @@
 
 @media (max-width: 900px) {
   :root {
-    --fs-5xl: 3.25rem;
     --fs-4xl: 2.75rem;
     --fs-3xl: 2.25rem;
     --fs-2xl: 1.75rem;
@@ -122,6 +144,10 @@
   --color-text-faint: #626e82;
   --color-border: rgba(11, 23, 48, 0.12);
   --color-border-strong: rgba(11, 23, 48, 0.22);
+  /* Mesma lógica do tema escuro: em seção clara o .btn-secondary é branco
+     sobre branco (1.00:1), então a borda é a única pista de que ali existe um
+     botão. Medido: 3.22:1 sobre branco. */
+  --color-border-ui: rgba(11, 23, 48, 0.48);
   /* red-400 (tuned for dark backgrounds) is too light to read on white. */
   --color-eyebrow: var(--red-600);
   /* #16a34a (tuned for dark backgrounds) fails contrast on white. */

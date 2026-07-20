@@ -1,29 +1,22 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
-import Breadcrumb from "../components/Breadcrumb.astro";
-import Button from "../components/Button.astro";
-import PlatformMandala from "../components/PlatformMandala.astro";
-import AnimatedFlow from "../components/AnimatedFlow.astro";
-import { businessUnits } from "../data/businessUnits";
-import { withBase } from "../utils/url";
-import { WHATSAPP_DEMO } from "../data/contact";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Breadcrumb from "../../components/Breadcrumb.astro";
+import Button from "../../components/Button.astro";
+import PlatformMandala from "../../components/PlatformMandala.astro";
+import AnimatedFlow from "../../components/AnimatedFlow.astro";
+import { getBusinessUnits } from "../../data/businessUnits";
+import { WHATSAPP_DEMO } from "../../data/contact";
+import { useTranslations, localePath, localizePath } from "../../i18n/utils";
+import { usePages } from "../../i18n/pages";
+import { defaultLocale, type Locale } from "../../i18n/config";
 
-const technologies = [
-  { name: "Inteligência Artificial", desc: "Modelos próprios treinados para reconhecimento, classificação e predição em tempo real." },
-  { name: "Machine Learning", desc: "Algoritmos que aprendem com dados operacionais para melhorar continuamente a precisão." },
-  { name: "Deep Learning", desc: "Redes neurais profundas aplicadas a visão computacional e análise de padrões complexos." },
-  { name: "Computer Vision", desc: "Interpretação de imagens e vídeos para detecção de objetos, pessoas e eventos." },
-  { name: "OCR", desc: "Reconhecimento óptico de caracteres para leitura de placas, documentos e etiquetas." },
-  { name: "Reconhecimento Facial", desc: "Identificação e verificação de identidade com alta precisão e baixa latência." },
-  { name: "LPR", desc: "Leitura automática de placas veiculares para controle de acesso e mobilidade." },
-  { name: "Analytics", desc: "Transformação de dados brutos em indicadores acionáveis para gestores e operadores." },
-  { name: "Cloud", desc: "Infraestrutura elástica, redundante e segura para escalar operações críticas." },
-  { name: "Edge Computing", desc: "Processamento de IA próximo à origem dos dados, reduzindo latência e tráfego." },
-  { name: "IoT", desc: "Conectividade entre sensores, câmeras e dispositivos físicos e a plataforma central." },
-  { name: "APIs", desc: "Integração aberta com sistemas legados e plataformas de terceiros." },
-  { name: "Big Data", desc: "Processamento de grandes volumes de dados para análises históricas e preditivas." },
-  { name: "Dashboards", desc: "Painéis visuais em tempo real para tomada de decisão rápida e informada." },
-];
+export function getStaticPaths() {
+  return [{ params: { lang: undefined } }, { params: { lang: "en" } }, { params: { lang: "es" } }];
+}
+const lang = (Astro.params.lang as Locale) || defaultLocale;
+const tr = useTranslations(lang);
+const t = usePages(lang).plataforma;
+const businessUnits = getBusinessUnits(lang);
 
 const schema = {
   "@context": "https://schema.org",
@@ -31,37 +24,34 @@ const schema = {
   name: "Proc AI Platform",
   applicationCategory: "BusinessApplication",
   operatingSystem: "Cloud",
-  description:
-    "Plataforma de Inteligência Artificial, Analytics, Cloud e APIs que distribui inteligência para soluções de Cidades Inteligentes, Segurança Corporativa, Infraestrutura de TI e IA Industrial.",
+  description: t.metaDescription,
 };
 ---
 
-<BaseLayout
-  title="Plataforma Proc AI"
-  description="Conheça a Proc AI Platform: a base tecnológica de Inteligência Artificial, Analytics, Cloud e APIs que sustenta todas as soluções da Proc Group."
-  schema={schema}
->
+<BaseLayout title={tr.nav.plataforma} description={t.metaDescription} schema={schema}>
   <div class="container">
-    <Breadcrumb items={[{ label: "Home", href: "/" }, { label: "Plataforma Proc AI", href: "/plataforma-proc-ai" }]} />
+    <Breadcrumb
+      items={[
+        { label: tr.nav.home, href: localePath("/", lang) },
+        { label: tr.nav.plataforma, href: localePath("/plataforma-proc-ai", lang) },
+      ]}
+    />
   </div>
 
   <section class="hero-page">
     <div class="container">
-      <p class="eyebrow">Plataforma Proc AI</p>
-      <h1>Uma única plataforma. Inteligência para toda a operação.</h1>
-      <p class="lead">
-        A Proc AI Platform é a base tecnológica que sustenta todas as soluções da empresa — Inteligência Artificial,
-        Analytics, Banco de Dados, Cloud, APIs, Dashboards e Integrações operando de forma unificada.
-      </p>
+      <p class="eyebrow">{t.heroEyebrow}</p>
+      <h1>{t.heroTitle}</h1>
+      <p class="lead">{t.heroLead}</p>
     </div>
   </section>
 
   <section class="section flow-section" data-theme="light">
     <div class="container">
       <div class="section-header" data-reveal>
-        <p class="eyebrow">Como funciona</p>
-        <h2>Um evento. Quatro caminhos possíveis. Uma única plataforma.</h2>
-        <p class="lead">Veja como a Proc AI Platform leva inteligência da captura até a ação, em qualquer uma das quatro áreas de negócio.</p>
+        <p class="eyebrow">{t.flowEyebrow}</p>
+        <h2>{t.flowTitle}</h2>
+        <p class="lead">{t.flowLead}</p>
       </div>
       <AnimatedFlow />
     </div>
@@ -70,8 +60,8 @@ const schema = {
   <section class="section diagram-section" data-theme="light">
     <div class="container">
       <div class="section-header" data-reveal>
-        <p class="eyebrow">Mapa completo</p>
-        <h2>Todas as soluções, em uma única plataforma</h2>
+        <p class="eyebrow">{t.diagramEyebrow}</p>
+        <h2>{t.diagramTitle}</h2>
       </div>
       <PlatformMandala />
     </div>
@@ -80,16 +70,16 @@ const schema = {
   <section class="section units-section">
     <div class="container">
       <div class="section-header" data-reveal>
-        <p class="eyebrow">Distribuição de inteligência</p>
-        <h2>A plataforma distribui inteligência para quatro áreas de negócio</h2>
-        <p class="lead">Uma plataforma, múltiplas soluções — com especialistas dedicados em cada segmento.</p>
+        <p class="eyebrow">{t.distEyebrow}</p>
+        <h2>{t.distTitle}</h2>
+        <p class="lead">{t.distLead}</p>
       </div>
 
       <div class="distribution">
         <div class="distribution-core" data-reveal>Proc AI Platform</div>
         <div class="distribution-units">
           {businessUnits.map((unit) => (
-            <a href={withBase(unit.href)} class="distribution-unit" data-reveal style={`--unit-color: ${unit.color}`}>
+            <a href={localizePath(unit.href, lang)} class="distribution-unit" data-reveal style={`--unit-color: ${unit.color}`}>
               <span class="unit-dot"></span>
               <div>
                 <p class="unit-name">{unit.name}</p>
@@ -105,11 +95,11 @@ const schema = {
   <section class="section tech-section" data-theme="light">
     <div class="container">
       <div class="section-header" data-reveal>
-        <p class="eyebrow">Tecnologias</p>
-        <h2>As tecnologias por trás da Proc AI Platform</h2>
+        <p class="eyebrow">{t.techEyebrow}</p>
+        <h2>{t.techTitle}</h2>
       </div>
       <div class="tech-grid">
-        {technologies.map((tech) => (
+        {t.technologies.map((tech) => (
           <div class="tech-card" data-reveal>
             <h3>{tech.name}</h3>
             <p>{tech.desc}</p>
@@ -121,9 +111,9 @@ const schema = {
 
   <section class="section final-cta">
     <div class="container final-cta-inner" data-reveal>
-      <h2>Quer ver a Proc AI Platform em ação?</h2>
-      <p>Solicite uma demonstração e conheça a plataforma aplicada ao seu contexto.</p>
-      <Button href={WHATSAPP_DEMO} variant="primary" size="lg">Solicitar Demonstração</Button>
+      <h2>{t.finalCtaTitle}</h2>
+      <p>{t.finalCtaText}</p>
+      <Button href={WHATSAPP_DEMO} variant="primary" size="lg" data-magnetic>{tr.solutions.ctaDemo}</Button>
     </div>
   </section>
 </BaseLayout>
@@ -150,10 +140,10 @@ const schema = {
     color: var(--white);
     font-weight: 800;
     padding: var(--space-6) var(--space-12);
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     box-shadow: var(--shadow-md);
   }
-  .distribution-units { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-6); width: 100%; }
+  .distribution-units { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-6); width: 100%; }
   .distribution-unit {
     display: flex;
     gap: var(--space-3);
@@ -165,12 +155,12 @@ const schema = {
     box-shadow: var(--shadow-sm);
     transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out), border-color var(--dur-fast) ease;
   }
-  .distribution-unit:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--unit-color); }
+  .distribution-unit:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: color-mix(in srgb, var(--unit-color), white 36%); }
   .unit-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--unit-color); margin-top: 6px; flex-shrink: 0; }
   .unit-name { font-weight: 700; color: var(--color-text); }
   .unit-team { margin-top: var(--space-1); font-size: var(--fs-xs); color: var(--color-text-faint); }
 
-  .tech-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); }
+  .tech-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-4); }
   .tech-card {
     padding: var(--space-6);
     border-radius: var(--radius-md);
@@ -192,8 +182,8 @@ const schema = {
   .final-cta-inner .btn { margin-top: var(--space-8); }
 
   @media (max-width: 980px) {
-    .distribution-units { grid-template-columns: 1fr 1fr; }
-    .tech-grid { grid-template-columns: 1fr 1fr; }
+    .distribution-units { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .tech-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   }
   @media (max-width: 640px) {
     .distribution-units, .tech-grid { grid-template-columns: 1fr; }

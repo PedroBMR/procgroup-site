@@ -1,0 +1,99 @@
+---
+// Página de erro 404.
+//
+// O site é estático, então esta página é gerada uma vez e servida para qualquer
+// URL inexistente — ela não sabe, no build, em que idioma o visitante estava.
+// Por isso é renderizada no idioma padrão (PT) e um script curto troca os textos
+// quando a URL começa com /en/ ou /es/ (mesma abordagem já usada em evento.astro).
+//
+// ATENÇÃO: em Apache/cPanel isto só entra em vigor com `ErrorDocument 404` no
+// .htaccess — que ainda não existe (ver ROADMAP.md, Prioridade 4). Sem isso, o
+// visitante continua vendo a página de erro padrão do servidor.
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Button from "../components/Button.astro";
+import { translations } from "../i18n/translations";
+import { locales, defaultLocale, htmlLangAttr } from "../i18n/config";
+import { localizePath } from "../i18n/utils";
+
+const t = translations[defaultLocale].notFound;
+
+// Textos e destinos dos três idiomas, para o script trocar sem novo request.
+// Os hrefs já saem com o base path (localizePath aplica withBase), e o base vai
+// junto porque o script precisa dele para descobrir o idioma na URL.
+const payload = {
+  base: import.meta.env.BASE_URL.replace(/\/$/, ""),
+  langs: Object.fromEntries(
+    locales.map((l) => [
+      l,
+      {
+        ...translations[l].notFound,
+        htmlLang: htmlLangAttr[l],
+        home: localizePath("/", l),
+        contato: localizePath("/contato", l),
+      },
+    ]),
+  ),
+};
+---
+
+<BaseLayout title={t.metaTitle} description={t.lead} noIndex>
+  <section class="notfound">
+    <div class="container">
+      <p class="eyebrow" data-nf="eyebrow">{t.eyebrow}</p>
+      <h1 data-nf="title">{t.title}</h1>
+      <p class="lead" data-nf="lead">{t.lead}</p>
+      <div class="actions">
+        <Button href="/" variant="primary" data-nf-home>{t.ctaHome}</Button>
+        <Button href="/contato" variant="secondary" data-nf-contato>{t.ctaContato}</Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script type="application/json" id="nf-i18n" set:html={JSON.stringify(payload)} />
+
+<script>
+  // Troca os textos para o idioma indicado pela URL. Sem isso, quem errasse um
+  // endereço dentro de /en veria a página de erro em português.
+  interface NfLang {
+    eyebrow: string; title: string; lead: string;
+    ctaHome: string; ctaContato: string;
+    htmlLang: string; home: string; contato: string;
+  }
+
+  const raw = document.getElementById("nf-i18n")?.textContent;
+  if (raw) {
+    const { base, langs } = JSON.parse(raw) as { base: string; langs: Record<string, NfLang> };
+    let path = location.pathname;
+    if (base && path.startsWith(base)) path = path.slice(base.length);
+    const v = langs[path.split("/")[1]];
+    if (v) {
+      document.documentElement.lang = v.htmlLang;
+      const set = (sel: string, text: string) => {
+        const el = document.querySelector<HTMLElement>(sel);
+        if (el) el.textContent = text;
+      };
+      set('[data-nf="eyebrow"]', v.eyebrow);
+      set('[data-nf="title"]', v.title);
+      set('[data-nf="lead"]', v.lead);
+      // O Button.astro envolve o rótulo num <span>, então o texto vai nele —
+      // trocar o textContent do <a> apagaria o span.
+      const link = (sel: string, href: string, label: string) => {
+        const a = document.querySelector<HTMLAnchorElement>(sel);
+        if (!a) return;
+        a.href = href;
+        const span = a.querySelector("span");
+        if (span) span.textContent = label;
+      };
+      link("[data-nf-home]", v.home, v.ctaHome);
+      link("[data-nf-contato]", v.contato, v.ctaContato);
+    }
+  }
+</script>
+
+<style>
+  .notfound { padding-block: var(--space-32); text-align: center; }
+  .notfound h1 { margin-top: var(--space-4); font-size: var(--fs-4xl); }
+  .lead { margin: var(--space-6) auto 0; max-width: 520px; font-size: var(--fs-lg); color: var(--color-text-muted); }
+  .actions { margin-top: var(--space-12); display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap; }
+</style>

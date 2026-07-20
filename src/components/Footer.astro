@@ -1,7 +1,13 @@
 ---
-import { mainNav } from "../data/nav";
+import { getMainNav } from "../data/nav";
 import Logo from "./Logo.astro";
-import { withBase } from "../utils/url";
+import { getLangFromUrl, useTranslations, localizePath } from "../i18n/utils";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang).footer;
+const common = useTranslations(lang).common;
+const mainNav = getMainNav(lang);
+const solucoes = mainNav.find((i) => i.id === "solucoes")?.children ?? [];
 const year = new Date().getFullYear();
 ---
 
@@ -9,40 +15,40 @@ const year = new Date().getFullYear();
   <div class="container footer-top">
     <div class="footer-brand">
       <Logo variant="white" height={32} />
-      <p>Uma plataforma. Múltiplas soluções. Inteligência para um mundo mais seguro, conectado e eficiente.</p>
+      <p>{t.tagline}</p>
     </div>
 
-    <nav class="footer-nav" aria-label="Navegação do rodapé">
+    <nav class="footer-nav" aria-label={common.navFooter}>
       <div>
-        <h3>Navegação</h3>
+        <h3>{t.navHeading}</h3>
         <ul>
-          {mainNav.filter(i => i.label !== "Home").map((item) => <li><a href={withBase(item.href)}>{item.label}</a></li>)}
+          {mainNav.filter((i) => i.id !== "home").map((item) => <li><a href={item.href}>{item.label}</a></li>)}
         </ul>
       </div>
       <div>
-        <h3>Soluções</h3>
+        <h3>{t.solucoesHeading}</h3>
         <ul>
-          {mainNav.find(i => i.label === "Soluções")?.children?.map((c) => <li><a href={withBase(c.href)}>{c.label}</a></li>)}
+          {solucoes.map((c) => <li><a href={c.href}>{c.label}</a></li>)}
         </ul>
       </div>
       <div>
-        <h3>Contato</h3>
+        <h3>{t.contatoHeading}</h3>
         <ul>
           <li><a href="mailto:comercial@procgroup.com.br">comercial@procgroup.com.br</a></li>
           <li><a href="tel:+554632243532">+55 46 3224-3532</a></li>
-          <li>Caetano Munhoz da Rocha, 480 — Pato Branco / PR</li>
-          <li><a href={withBase("/contato")}>Solicitar demonstração</a></li>
+          <li>{t.address}</li>
+          <li><a href={localizePath("/contato", lang)}>{t.demoLink}</a></li>
         </ul>
       </div>
     </nav>
   </div>
 
   <div class="container footer-bottom">
-    <p>&copy; {year} Proc Group. Todos os direitos reservados.</p>
+    <p>&copy; {year} Proc Group. {t.rights}</p>
     <div class="footer-legal">
-      <a href={withBase("/politica-de-privacidade")}>Política de Privacidade</a>
-      <span class="legal-note">Dados tratados em conformidade com a LGPD</span>
-      <span class="legal-note">Site com tecnologia estática, otimizado para velocidade e segurança</span>
+      <a href={localizePath("/politica-de-privacidade", lang)}>{t.privacy}</a>
+      <span class="legal-note">{t.lgpdNote}</span>
+      <span class="legal-note">{t.staticNote}</span>
     </div>
   </div>
 </footer>
@@ -55,14 +61,14 @@ const year = new Date().getFullYear();
   }
   .footer-top {
     display: grid;
-    grid-template-columns: 1.2fr 2fr;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 2fr);
     gap: var(--space-16);
     padding-bottom: var(--space-16);
     border-bottom: 1px solid rgba(255,255,255,0.12);
   }
   .footer-brand p { margin-top: var(--space-6); max-width: 320px; font-size: var(--fs-sm); line-height: var(--lh-normal); }
 
-  .footer-nav { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-8); }
+  .footer-nav { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-8); }
   .footer-nav h3 { color: var(--white); font-size: var(--fs-sm); margin-bottom: var(--space-4); }
   .footer-nav li { margin-bottom: var(--space-2); }
   .footer-nav a { font-size: var(--fs-sm); transition: color var(--dur-fast) ease; }
@@ -78,7 +84,7 @@ const year = new Date().getFullYear();
 
   @media (max-width: 780px) {
     .footer-top { grid-template-columns: 1fr; gap: var(--space-12); }
-    .footer-nav { grid-template-columns: 1fr 1fr; }
+    .footer-nav { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
     .footer-bottom { flex-direction: column; gap: var(--space-2); text-align: center; }
     .footer-legal { flex-direction: column; gap: var(--space-1); }
   }

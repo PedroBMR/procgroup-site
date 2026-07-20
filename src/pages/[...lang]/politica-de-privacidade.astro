@@ -1,0 +1,72 @@
+---
+import { getEntry, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Breadcrumb from "../../components/Breadcrumb.astro";
+import ComingSoon from "../../components/ComingSoon.astro";
+import { formatDate } from "../../utils/blog";
+import { useTranslations, localePath } from "../../i18n/utils";
+import { usePages } from "../../i18n/pages";
+import { defaultLocale, type Locale } from "../../i18n/config";
+
+export function getStaticPaths() {
+  return [{ params: { lang: undefined } }, { params: { lang: "en" } }, { params: { lang: "es" } }];
+}
+const lang = (Astro.params.lang as Locale) || defaultLocale;
+const tr = useTranslations(lang);
+const t = usePages(lang).privacy;
+
+const page = await getEntry("pages", "politica-de-privacidade");
+const { Content } = page ? await render(page) : { Content: undefined };
+---
+
+<BaseLayout title={t.title} description={t.metaDescription}>
+  <div class="container">
+    <Breadcrumb
+      items={[
+        { label: tr.nav.home, href: localePath("/", lang) },
+        { label: t.title, href: localePath("/politica-de-privacidade", lang) },
+      ]}
+    />
+  </div>
+
+  {page && Content ? (
+    <article class="policy">
+      <header class="policy-head container">
+        <p class="eyebrow">{t.eyebrow}</p>
+        {/* t.title, não page.data.title: o título do WordPress vem sempre em
+            português, então o h1 contradizia o <title> e o lang da página. */}
+        <h1>{t.title}</h1>
+        <p class="updated">{t.updatedPrefix} {formatDate(page.data.modified)}</p>
+        {t.langNote && <p class="lang-note">{t.langNote}</p>}
+      </header>
+      <section class="section" data-theme="light">
+        <div class="container">
+          {/* O documento existe só em português (entrada única do WordPress).
+              Sem marcar o idioma, o leitor de tela lê português com fonética
+              inglesa nas páginas /en e /es (WCAG 3.1.2). */}
+          <div class="prose" lang={lang === defaultLocale ? undefined : "pt-BR"}>
+            <Content />
+          </div>
+        </div>
+      </section>
+    </article>
+  ) : (
+    <ComingSoon eyebrow={t.eyebrow} title={t.title} description={t.comingSoonDesc} />
+  )}
+</BaseLayout>
+
+<style>
+  .policy-head { padding-block: var(--space-16) var(--space-8); max-width: 820px; }
+  .policy-head h1 { font-size: var(--fs-4xl); margin-top: var(--space-4); line-height: var(--lh-snug); }
+  .updated { margin-top: var(--space-4); font-size: var(--fs-sm); color: var(--color-text-faint); }
+  .lang-note {
+    margin-top: var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--fs-sm);
+    color: var(--color-text-muted);
+    background: var(--color-surface);
+    border-left: 3px solid var(--color-primary);
+    border-radius: var(--radius-sm);
+  }
+  .section { padding-block: var(--space-8) var(--space-24); background: var(--color-bg); }
+</style>

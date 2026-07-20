@@ -1,5 +1,6 @@
 import { defineCollection, z } from "astro:content";
 import type { Loader } from "astro/loaders";
+import { sanitizeWpHtml } from "./utils/sanitizeWp";
 
 /**
  * Headless-WordPress blog source.
@@ -60,11 +61,25 @@ function stripTags(html: string): string {
   return decodeEntities(html.replace(/<[^>]*>/g, "")).replace(/\s+/g, " ").trim();
 }
 
+/**
+ * Motivo da falha, para o loader decidir entre falhar alto ou manter o cache.
+ * `configuracao` = o endpoint não existe (WordPress mudou de domínio, WP_API_URL
+ * errado). `rede` = indisponibilidade momentânea. Os dois davam zero item e
+ * eram tratados igual, então uma migração do WP passava como "instabilidade" e
+ * o build seguia verde com o blog congelado.
+ */
+type FalhaWp = null | "rede" | "configuracao";
+
+interface ResultadoWp<T> {
+  itens: T[];
+  falha: FalhaWp;
+}
+
 /** Paginates through a WP REST collection endpoint, collecting every item. */
 async function fetchAllWpItems<T>(
   endpoint: string,
   logger: { info(msg: string): void; error(msg: string): void },
-): Promise<T[]> {
+): Promise<ResultadoWp<T>> {
   const all: T[] = [];
   for (let page = 1; ; page++) {
     const url = `${endpoint}${endpoint.includes("?") ? "&" : "?"}per_page=${PER_PAGE}&page=${page}`;
@@ -73,19 +88,67 @@ async function fetchAllWpItems<T>(
       response = await fetch(url);
     } catch (error) {
       logger.error(`Falha de rede ao buscar o WordPress: ${(error as Error).message}`);
-      break;
+      return { itens: all, falha: "rede" };
     }
     if (response.status === 400 && page > 1) break; // WP returns 400 past the last page
     if (!response.ok) {
       logger.error(`WordPress respondeu ${response.status} para ${url}`);
-      break;
+      // 404 na primeira página quer dizer que não há API REST nesse endereço —
+      // é configuração, não instabilidade.
+      const ehConfiguracao = page === 1 && (response.status === 404 || response.status === 401 || response.status === 403);
+      return { itens: all, falha: ehConfiguracao ? "configuracao" : "rede" };
     }
     const batch = (await response.json()) as T[];
     all.push(...batch);
     const totalPages = Number(response.headers.get("x-wp-totalpages") ?? "1");
     if (page >= totalPages || batch.length === 0) break;
   }
-  return all;
+  return { itens: all, falha: null };
+}
+
+/**
+ * Decide o que fazer quando não veio nada. Manter o cache é certo para uma
+ * queda momentânea, mas mascara erro de configuração permanente — e, se nem
+ * cache existe, o build sai com o blog vazio sem ninguém perceber.
+ */
+function abortarSeNaoForTransitorio(
+  falha: FalhaWp,
+  temCache: boolean,
+  logger: { warn(msg: string): void },
+  oQue: string,
+): void {
+  if (falha === "configuracao") {
+    throw new Error(
+      `Não há API REST do WordPress em ${WP_BASE} (${oQue}). Se o WordPress mudou de endereço, ` +
+        `defina WP_API_URL apontando para o novo host. O build foi interrompido de propósito: ` +
+        `seguir adiante publicaria o site com o blog congelado ou vazio.`,
+    );
+  }
+  if (!temCache) {
+    throw new Error(
+      `Nenhum ${oQue} veio do WordPress (${WP_BASE}) e não há cache de build anterior. ` +
+        `O build foi interrompido para não publicar o site sem esse conteúdo.`,
+    );
+  }
+  logger.warn(`Nenhum ${oQue} retornado; mantendo o conteúdo em cache do build anterior.`);
+}
+
+/**
+ * Contas administrativas cujo "nome" é só o login, porque ninguém preencheu o
+ * nome de exibição no WordPress. Hoje 7 dos 15 posts saem assinados por
+ * "Root_", o que aparece publicamente no site.
+ *
+ * Esta é uma REDE DE SEGURANÇA, não a correção: o certo é preencher o nome de
+ * exibição no WordPress. Mas até lá é melhor assinar com a marca do que expor
+ * o login de uma conta de administração — e, se aparecer outra conta assim, o
+ * site não passa a publicá-la.
+ */
+const LOGINS_NAO_PUBLICAVEIS = new Set(["root", "root_", "admin", "administrator", "wordpress", "user"]);
+
+function nomeDeAutorPublicavel(nome: string | undefined): string {
+  const limpo = (nome ?? "").trim();
+  if (!limpo) return "Proc Group";
+  return LOGINS_NAO_PUBLICAVEIS.has(limpo.toLowerCase()) ? "Proc Group" : limpo;
 }
 
 function mapPost(post: WpPost) {
@@ -104,8 +167,11 @@ function mapPost(post: WpPost) {
     date: post.date,
     modified: post.modified,
     excerpt: stripTags(post.excerpt.rendered),
-    content: post.content.rendered,
-    author: embedded.author?.[0]?.name ?? "Proc Group",
+    // Sanitizado aqui, na entrada: o corpo do post é renderizado com
+    // `<Content />` e vira HTML estático no mesmo domínio do site. Ver
+    // utils/sanitizeWp.ts para o que passa e o que é removido.
+    content: sanitizeWpHtml(post.content.rendered),
+    author: nomeDeAutorPublicavel(embedded.author?.[0]?.name),
     image: media?.source_url
       ? {
           src: media.source_url,
@@ -124,12 +190,10 @@ function wordpressLoader(): Loader {
     async load({ store, logger, parseData }) {
       logger.info(`Buscando posts do WordPress em ${WP_BASE}`);
       const endpoint = `${WP_BASE}/wp-json/wp/v2/posts?_embed=1&orderby=date&order=desc`;
-      const all = await fetchAllWpItems<WpPost>(endpoint, logger);
+      const { itens: all, falha } = await fetchAllWpItems<WpPost>(endpoint, logger);
 
       if (all.length === 0) {
-        // Keep whatever was cached from a previous successful build rather than
-        // wiping the blog when WordPress is briefly unreachable.
-        logger.warn("Nenhum post retornado; mantendo o conteúdo em cache do build anterior.");
+        abortarSeNaoForTransitorio(falha, Array.from(store.keys()).length > 0, logger, "post");
         return;
       }
 
@@ -164,10 +228,10 @@ function wordpressPagesLoader(): Loader {
     async load({ store, logger, parseData }) {
       logger.info(`Buscando páginas do WordPress em ${WP_BASE}`);
       const endpoint = `${WP_BASE}/wp-json/wp/v2/pages`;
-      const all = await fetchAllWpItems<WpPage>(endpoint, logger);
+      const { itens: all, falha } = await fetchAllWpItems<WpPage>(endpoint, logger);
 
       if (all.length === 0) {
-        logger.warn("Nenhuma página retornada; mantendo o conteúdo em cache do build anterior.");
+        abortarSeNaoForTransitorio(falha, Array.from(store.keys()).length > 0, logger, "página");
         return;
       }
 
@@ -179,7 +243,9 @@ function wordpressPagesLoader(): Loader {
           slug: raw.slug,
           title: decodeEntities(raw.title.rendered),
           modified: raw.modified,
-          content: raw.content.rendered,
+          // Mesmo tratamento do blog — a Política de Privacidade também entra
+          // como HTML bruto do WordPress.
+          content: sanitizeWpHtml(raw.content.rendered),
         };
         const data = await parseData({ id: mapped.id, data: mapped });
         store.set({ id: mapped.id, data, rendered: { html: mapped.content } });

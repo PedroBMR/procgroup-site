@@ -1,14 +1,25 @@
 ---
 import { withBase } from "../utils/url";
+import { whatsapp, WHATSAPP_SUPORTE } from "../data/contact";
+import { getLangFromUrl, useTranslations, localizePath, localeAlternates } from "../i18n/utils";
+import { localeLabels, localeNames, htmlLangAttr } from "../i18n/config";
+import { flagSvg } from "../i18n/flags";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const alternates = localeAlternates(Astro.url);
 
 const icons: Record<string, string> = {
-  whatsapp: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Z" stroke="currentColor" stroke-width="1.6"/><path d="M8.4 8.6c.2-.5.5-.5.8-.5h.6c.2 0 .4 0 .6.5.2.5.7 1.7.7 1.8.1.1.1.3 0 .4-.1.2-.1.3-.3.5-.1.2-.3.3-.4.5-.2.1-.3.3-.1.6.2.4.8 1.3 1.8 2.1 1.2 1 2.2 1.4 2.6 1.5.2.1.4.1.5-.1.2-.2.6-.7.8-.9.2-.2.3-.2.5-.1.2.1 1.4.7 1.7.8.3.1.5.2.5.3.1.2.1.9-.2 1.7-.3.8-1.6 1.5-2.2 1.5-.6.1-1.3.1-2.1-.1-.5-.1-1.1-.3-1.9-.7-3.3-1.4-5.4-4.7-5.6-4.9-.2-.2-1.3-1.7-1.3-3.3 0-1.6.8-2.3 1.1-2.7Z" fill="currentColor"/></svg>`,
-  ticket: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 9a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v1.5a1.5 1.5 0 0 0 0 3V15a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1.5a1.5 1.5 0 0 0 0-3V9Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M10 7v10" stroke="currentColor" stroke-width="1.6" stroke-dasharray="2 2"/></svg>`,
-  briefcase: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="7" width="20" height="13" rx="2" stroke="currentColor" stroke-width="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke="currentColor" stroke-width="2"/></svg>`,
-  facebook: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 9h3V6h-3c-1.7 0-3 1.3-3 3v2H9v3h2v6h3v-6h3l1-3h-4v-2c0-.6.4-1 1-1Z" fill="currentColor"/></svg>`,
-  instagram: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/></svg>`,
-  linkedin: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" stroke-width="2"/><circle cx="7.5" cy="8" r="1.4" fill="currentColor"/><path d="M7.5 11v6M11.5 17v-3.5c0-1.4 1-2.5 2.3-2.5s2.2 1 2.2 2.5V17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
-  youtube: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="5" width="20" height="14" rx="4" stroke="currentColor" stroke-width="2"/><path d="M10 9.5v5l4.5-2.5-4.5-2.5Z" fill="currentColor"/></svg>`,
+  whatsapp: `<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Z" stroke="currentColor" stroke-width="1.6"/><path d="M8.4 8.6c.2-.5.5-.5.8-.5h.6c.2 0 .4 0 .6.5.2.5.7 1.7.7 1.8.1.1.1.3 0 .4-.1.2-.1.3-.3.5-.1.2-.3.3-.4.5-.2.1-.3.3-.1.6.2.4.8 1.3 1.8 2.1 1.2 1 2.2 1.4 2.6 1.5.2.1.4.1.5-.1.2-.2.6-.7.8-.9.2-.2.3-.2.5-.1.2.1 1.4.7 1.7.8.3.1.5.2.5.3.1.2.1.9-.2 1.7-.3.8-1.6 1.5-2.2 1.5-.6.1-1.3.1-2.1-.1-.5-.1-1.1-.3-1.9-.7-3.3-1.4-5.4-4.7-5.6-4.9-.2-.2-1.3-1.7-1.3-3.3 0-1.6.8-2.3 1.1-2.7Z" fill="currentColor"/></svg>`,
+  ticket: `<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 9a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v1.5a1.5 1.5 0 0 0 0 3V15a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1.5a1.5 1.5 0 0 0 0-3V9Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M10 7v10" stroke="currentColor" stroke-width="1.6" stroke-dasharray="2 2"/></svg>`,
+  briefcase: `<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="7" width="20" height="13" rx="2" stroke="currentColor" stroke-width="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke="currentColor" stroke-width="2"/></svg>`,
+  facebook: `<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 9h3V6h-3c-1.7 0-3 1.3-3 3v2H9v3h2v6h3v-6h3l1-3h-4v-2c0-.6.4-1 1-1Z" fill="currentColor"/></svg>`,
+  instagram: `<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/></svg>`,
+  linkedin: `<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" stroke-width="2"/><circle cx="7.5" cy="8" r="1.4" fill="currentColor"/><path d="M7.5 11v6M11.5 17v-3.5c0-1.4 1-2.5 2.3-2.5s2.2 1 2.2 2.5V17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
+  // Ícone mantido: o link do YouTube saiu por não haver URL do canal da Proc
+  // (o anterior levava à home do youtube.com). Para reativar, basta acrescentar
+  // a entrada em socialLinks abaixo.
+  youtube: `<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="5" width="20" height="14" rx="4" stroke="currentColor" stroke-width="2"/><path d="M10 9.5v5l4.5-2.5-4.5-2.5Z" fill="currentColor"/></svg>`,
 };
 
 interface UtilityLink {
@@ -25,17 +36,31 @@ const utilityLinks: UtilityLink[] = [
     href: "https://wa.me/5546991411324",
     icon: "whatsapp",
     external: true,
-    ariaLabel: "WhatsApp Vendas",
+    ariaLabel: t.topbar.whatsapp,
   },
-  { label: "Suporte Técnico", href: "/suporte", icon: "ticket" },
-  { label: "Trabalhe conosco", href: "/trabalhe-conosco", icon: "briefcase" },
+  // Suporte técnico abre o WhatsApp direto, num número PRÓPRIO — diferente do
+  // comercial acima. Antes levava para a página /suporte.
+  {
+    label: t.topbar.suporte,
+    href: whatsapp(t.topbar.suporteMsg, WHATSAPP_SUPORTE),
+    icon: "ticket",
+    external: true,
+    ariaLabel: t.topbar.suporte,
+  },
+  { label: t.topbar.trabalhe, href: localizePath("/trabalhe-conosco", lang), icon: "briefcase" },
 ];
 
+// Perfis reais da Proc. Antes estes links apontavam para a home de cada rede
+// (facebook.com, instagram.com…), enquanto o aria-label prometia o perfil da
+// empresa — o rótulo dizia uma coisa e o link levava a outra.
+//
+// URLs sem parâmetro de rastreamento: o `?trk=` do LinkedIn e o `?locale=pt_BR`
+// do Facebook vêm de copiar o endereço logado. O locale fixo é especialmente
+// indesejado num site trilíngue.
 const socialLinks = [
-  { label: "Facebook", href: "https://www.facebook.com", icon: "facebook" },
-  { label: "Instagram", href: "https://www.instagram.com", icon: "instagram" },
-  { label: "LinkedIn", href: "https://www.linkedin.com", icon: "linkedin" },
-  { label: "YouTube", href: "https://www.youtube.com", icon: "youtube" },
+  { label: "Facebook", href: "https://www.facebook.com/procgroupbrasil/", icon: "facebook" },
+  { label: "Instagram", href: "https://www.instagram.com/procgroup/", icon: "instagram" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/company/procgroupti", icon: "linkedin" },
 ];
 ---
 
@@ -45,7 +70,7 @@ const socialLinks = [
       {utilityLinks.map((item) => (
         <li>
           <a
-            href={item.external ? item.href : withBase(item.href)}
+            href={item.href}
             aria-label={item.ariaLabel}
             target={item.external ? "_blank" : undefined}
             rel={item.external ? "noopener noreferrer" : undefined}
@@ -56,15 +81,33 @@ const socialLinks = [
         </li>
       ))}
     </ul>
-    <ul class="social-links" aria-label="Redes sociais">
-      {socialLinks.map((item) => (
-        <li>
-          <a href={item.href} aria-label={item.label} target="_blank" rel="noopener noreferrer">
-            <span class="icon" set:html={icons[item.icon]} />
+
+    <div class="topbar-right">
+      <nav class="lang-switch" aria-label={t.common.langMenuLabel}>
+        {alternates.map((a) => (
+          <a
+            href={a.href}
+            class:list={["lang", { active: a.lang === lang }]}
+            hreflang={htmlLangAttr[a.lang]}
+            aria-current={a.lang === lang ? "page" : undefined}
+            title={localeNames[a.lang]}
+          >
+            <span class="flag" set:html={flagSvg[a.lang]} />
+            <span class="lang-code">{localeLabels[a.lang]}</span>
           </a>
-        </li>
-      ))}
-    </ul>
+        ))}
+      </nav>
+
+      <ul class="social-links" aria-label={t.common.social}>
+        {socialLinks.map((item) => (
+          <li>
+            <a href={item.href} aria-label={item.label} target="_blank" rel="noopener noreferrer">
+              <span class="icon" set:html={icons[item.icon]} />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
   </div>
 </div>
 
@@ -72,7 +115,7 @@ const socialLinks = [
   .topbar {
     position: sticky;
     top: 0;
-    z-index: 101;
+    z-index: var(--z-topbar);
     background: var(--navy-950);
     color: rgba(255, 255, 255, 0.85);
     font-size: var(--fs-xs);
@@ -81,7 +124,8 @@ const socialLinks = [
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 40px;
+    gap: var(--space-4);
+    height: var(--topbar-h);
   }
   .utility-links {
     display: flex;
@@ -92,7 +136,7 @@ const socialLinks = [
     display: flex;
     align-items: center;
     gap: 6px;
-    height: 40px;
+    height: var(--topbar-h);
     padding-inline: var(--space-1);
     font-weight: 600;
     transition: color var(--dur-fast) ease;
@@ -102,8 +146,46 @@ const socialLinks = [
   .icon :global(svg) { width: 100%; height: 100%; }
   .utility-links .icon { color: var(--red-500); }
 
+  .topbar-right { display: flex; align-items: center; gap: var(--space-4); }
+
+  .lang-switch { display: inline-flex; align-items: center; gap: 2px; }
+  .lang-switch .lang {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 7px;
+    border-radius: var(--radius-pill);
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 700;
+    line-height: 1;
+    transition: color var(--dur-fast) ease, background var(--dur-fast) ease;
+  }
+  /* A pílula visual tem ~19px de altura, bem abaixo do alvo de toque mínimo,
+     mas a TopBar toda tem 40px — não dá para engordar o desenho sem estourar a
+     barra. Este ::after estende só a ÁREA CLICÁVEL até os 40px, sem mudar o
+     visual. Mesma técnica nos ícones sociais abaixo. */
+  .lang-switch .lang::after {
+    content: "";
+    position: absolute;
+    inset: -11px -3px;
+  }
+  .lang-switch .lang:hover { color: var(--white); }
+  .lang-switch .lang.active { color: var(--white); background: rgba(255, 255, 255, 0.12); }
+  .lang-switch .flag {
+    width: 18px;
+    height: 12px;
+    border-radius: 2px;
+    overflow: hidden;
+    display: block;
+    flex: none;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25);
+  }
+  .lang-switch .flag :global(svg) { width: 100%; height: 100%; display: block; }
+
   .social-links { display: flex; align-items: center; gap: var(--space-2); }
   .social-links a {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -113,11 +195,32 @@ const socialLinks = [
     background: var(--red-500);
     transition: background var(--dur-fast) ease, transform var(--dur-fast) ease;
   }
+  .social-links a::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+  }
   .social-links a:hover { background: var(--red-600); transform: translateY(-1px); }
   .social-links .icon { width: 14px; height: 14px; color: var(--white); }
 
   @media (max-width: 780px) {
-    .utility-label { display: none; }
+    /* Antes era display:none. O rótulo é o ÚNICO texto destes links — os SVGs
+       não têm nome acessível —, então escondê-los assim deixava "Suporte
+       Técnico", "Trabalhe Conosco" e o seletor de idioma como links sem nome
+       nenhum no celular (WCAG 2.4.4 / 4.1.2). Recortar em vez de remover tira
+       da tela mas mantém na árvore de acessibilidade. */
+    .utility-label,
+    .lang-switch .lang-code {
+      position: absolute;
+      width: 1px; height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
     .utility-links { gap: var(--space-4); }
+  }
+  @media (max-width: 520px) {
+    .social-links { display: none; }
   }
 </style>

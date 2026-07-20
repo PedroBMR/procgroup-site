@@ -1,0 +1,25 @@
+---
+import BusinessUnitTemplate from "../../../components/BusinessUnitTemplate.astro";
+import { useTranslations } from "../../../i18n/utils";
+import { defaultLocale, type Locale } from "../../../i18n/config";
+
+export function getStaticPaths() {
+  return [{ params: { lang: undefined } }, { params: { lang: "en" } }, { params: { lang: "es" } }];
+}
+
+const lang = (Astro.params.lang as Locale) || defaultLocale;
+const p = useTranslations(lang).solutions.pages["ia-industrial"];
+---
+
+<BusinessUnitTemplate
+  slug="ia-industrial"
+  metaTitle={p.metaTitle}
+  metaDescription={p.metaDescription}
+  heroTitle={p.heroTitle}
+  heroLead={p.heroLead}
+  solutionsHeading={p.solutionsHeading}
+  teamDescription={p.teamDescription}
+  faqs={p.faqs}
+  finalCtaTitle={p.finalCtaTitle}
+  finalCtaText={p.finalCtaText}
+/>

@@ -1,69 +1,53 @@
 ---
 import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
-import BaseLayout from "../layouts/BaseLayout.astro";
-import Button from "../components/Button.astro";
-import HeroBackground from "../components/HeroBackground.astro";
-import StatCounter from "../components/StatCounter.astro";
-import PostCard from "../components/PostCard.astro";
-import ConnectedTicker from "../components/ConnectedTicker.astro";
-import { homeStats, supportBadge } from "../data/stats";
-import { businessUnits } from "../data/businessUnits";
-import { byNewest } from "../utils/blog";
-import hqPhoto from "../assets/images/hq-pato-branco.webp";
-import { withBase } from "../utils/url";
-import { WHATSAPP_DEMO } from "../data/contact";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Button from "../../components/Button.astro";
+import HeroBackground from "../../components/HeroBackground.astro";
+import StatCounter from "../../components/StatCounter.astro";
+import PostCard from "../../components/PostCard.astro";
+import ConnectedTicker from "../../components/ConnectedTicker.astro";
+import { homeStats, supportBadge } from "../../data/stats";
+import { businessUnits } from "../../data/businessUnits";
+import { byNewest } from "../../utils/blog";
+import hqPhoto from "../../assets/images/hq-pato-branco.webp";
+import { WHATSAPP_DEMO } from "../../data/contact";
+import { useTranslations, localePath, localizePath } from "../../i18n/utils";
+import { defaultLocale, type Locale } from "../../i18n/config";
+
+// Uma rota, três idiomas: PT na raiz (/), EN em /en, ES em /es.
+export function getStaticPaths() {
+  return [{ params: { lang: undefined } }, { params: { lang: "en" } }, { params: { lang: "es" } }];
+}
+
+const lang = (Astro.params.lang as Locale) || defaultLocale;
+const t = useTranslations(lang).home;
+const common = useTranslations(lang).common;
+const cards = t.cards as Record<string, { name: string; desc: string }>;
+const P = (path: string) => localePath(path, lang);
 
 const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
-
-const differentiators = [
-  { title: "Arquitetura Escalável", desc: "Plataforma modular pronta para crescer com a operação do cliente." },
-  { title: "IA Própria", desc: "Modelos de reconhecimento facial, LPR e analytics desenvolvidos internamente." },
-  { title: "Alta Disponibilidade", desc: "Infraestrutura redundante com SLA de disponibilidade contínua." },
-  { title: "Integração Aberta", desc: "APIs para conectar sistemas legados, sensores e plataformas de terceiros." },
-  { title: "Especialistas Certificados", desc: "Equipes dedicadas por segmento, não generalistas." },
-  { title: "Edge AI", desc: "Processamento de IA na borda para respostas em tempo real." },
-];
-
-// Descrições dos cards de solução na Home — texto do documento de conteúdo da Proc.
-const homeCardDesc: Record<string, string> = {
-  "cidades-inteligentes":
-    "Soluções inteligentes para melhorar a vida da população na segurança pública e na mobilidade urbana das cidades.",
-  "seguranca-corporativa":
-    "Videomonitoramento e controle de acesso com IA para pessoas e veículos, com alertas para ações suspeitas.",
-  "infraestrutura-de-ti":
-    "Gestão, monitoramento e sustentação de ambientes de TI — cloud, backup, firewall e antivírus para garantir performance e disponibilidade.",
-  "ia-industrial":
-    "Visão Computacional Industrial com IA para automatizar inspeções de qualidade e aumentar a produtividade na indústria.",
-};
 ---
 
-<BaseLayout
-  title="Proc Group — IA, Visão Computacional e Infraestrutura de TI"
-  description="A Proc desenvolve uma plataforma própria de Inteligência Artificial, Visão Computacional e Infraestrutura de TI para tornar cidades, empresas e indústrias mais seguras, eficientes e inteligentes."
->
+<BaseLayout title={t.metaTitle} description={t.metaDescription}>
   <section class="hero">
     <HeroBackground />
-    <div class="container hero-inner">
-      <p class="eyebrow">Plataforma Proc AI</p>
-      <h1>Tecnologia inteligente para um mundo mais seguro, conectado e eficiente.</h1>
-      <p class="hero-subtitle">
-        A Proc desenvolve soluções de Inteligência Artificial, Visão Computacional, Segurança Corporativa e
-        Infraestrutura de TI que transformam dados em decisões inteligentes, protegendo pessoas e conectando
-        cidades, empresas e indústrias em um único ecossistema tecnológico.
-      </p>
+    <div class="container hero-inner" data-hero-intro>
+      <p class="eyebrow">{t.heroEyebrow}</p>
+      <h1>{t.heroTitle}</h1>
+      <p class="hero-subtitle">{t.heroSubtitle}</p>
       <div class="hero-actions">
-        <Button href="/plataforma-proc-ai" variant="primary" size="lg">Conheça a Plataforma Proc AI</Button>
-        <Button href={WHATSAPP_DEMO} variant="ghost" size="lg">Solicite uma Demonstração</Button>
+        <Button href={P("/plataforma-proc-ai")} variant="primary" size="lg" data-magnetic>{t.heroCtaPrimary}</Button>
+        <Button href={WHATSAPP_DEMO} variant="ghost" size="lg" data-magnetic>{t.heroCtaSecondary}</Button>
       </div>
     </div>
 
     <div class="hero-stats">
       <div class="container stats-grid">
-        {homeStats.map((stat) => <StatCounter {...stat} />)}
+        {homeStats.map((stat, i) => <StatCounter value={stat.value} suffix={stat.suffix} label={t.statsLabels[i]} />)}
         <div class="stat support-stat" data-reveal>
           <p class="stat-value">{supportBadge.value}</p>
-          <p class="stat-label">{supportBadge.label}</p>
+          <p class="stat-label">{t.supportLabel}</p>
         </div>
       </div>
     </div>
@@ -74,21 +58,16 @@ const homeCardDesc: Record<string, string> = {
   <section class="section about-teaser" data-theme="light">
     <div class="container about-grid">
       <div data-reveal>
-        <p class="eyebrow">O que a Proc faz?</p>
-        <h2>Tecnologia que conecta Inteligência Artificial, Visão Computacional e Infraestrutura de TI para transformar operações.</h2>
-        <p class="lead">
-          A Proc desenvolve soluções tecnológicas que unem Inteligência Artificial, Visão Computacional, Analytics
-          e Infraestrutura de TI para atender governos, empresas e indústrias. Nossa plataforma integra dados,
-          equipamentos e sistemas em um único ecossistema, permitindo automatizar processos, fortalecer a segurança,
-          aumentar a produtividade e apoiar decisões estratégicas com informações em tempo real.
-        </p>
-        <Button href="/empresa" variant="secondary">Conheça a Proc</Button>
+        <p class="eyebrow">{t.aboutEyebrow}</p>
+        <h2>{t.aboutTitle}</h2>
+        <p class="lead">{t.aboutText}</p>
+        <Button href={P("/empresa")} variant="secondary">{t.aboutCta}</Button>
       </div>
       <div class="about-visual" data-reveal>
         <Image
           class="about-photo"
           src={hqPhoto}
-          alt="Sede da Proc Group em Pato Branco"
+          alt={t.aboutPhotoAlt}
           loading="lazy"
           width={800}
           height={600}
@@ -101,27 +80,24 @@ const homeCardDesc: Record<string, string> = {
   <section class="section platform-teaser">
     <div class="container">
       <div class="platform-teaser-header" data-reveal>
-        <p class="eyebrow">Plataforma Proc AI</p>
-        <h2>Uma plataforma unificada, quatro áreas de negócio, um só ecossistema</h2>
-        <p class="lead">
-          Plataforma unificada e integrada de IA, Analytics e Visão Computacional, para centralização e gestão
-          inteligente de todas as operações — com equipes especializadas dedicadas a cada área de atuação.
-        </p>
+        <p class="eyebrow">{t.platformEyebrow}</p>
+        <h2>{t.platformTitle}</h2>
+        <p class="lead">{t.platformText}</p>
       </div>
 
       <div class="units-grid">
         {businessUnits.map((unit) => (
-          <a href={withBase(unit.href)} class="unit-card" data-reveal style={`--unit-color: ${unit.color}`}>
+          <a href={localizePath(unit.href, lang)} class="unit-card" data-reveal style={`--unit-color: ${unit.color}`}>
             <span class="unit-badge">{unit.shortName}</span>
-            <h3>{unit.name}</h3>
-            <p>{homeCardDesc[unit.slug] ?? unit.tagline}</p>
-            <span class="unit-link">Ver soluções →</span>
+            <h3>{cards[unit.slug]?.name ?? unit.name}</h3>
+            <p>{cards[unit.slug]?.desc ?? unit.tagline}</p>
+            <span class="unit-link">{t.unitLink}</span>
           </a>
         ))}
       </div>
 
       <div class="platform-cta" data-reveal>
-        <Button href="/plataforma-proc-ai" variant="secondary" size="lg">Ver a Plataforma Proc AI</Button>
+        <Button href={P("/plataforma-proc-ai")} variant="secondary" size="lg">{t.platformCta}</Button>
       </div>
     </div>
   </section>
@@ -129,11 +105,11 @@ const homeCardDesc: Record<string, string> = {
   <section class="section differentiators" data-theme="light">
     <div class="container">
       <div class="section-header" data-reveal>
-        <p class="eyebrow">Diferenciais</p>
-        <h2>Por que empresas e governos confiam na Proc</h2>
+        <p class="eyebrow">{t.diffEyebrow}</p>
+        <h2>{t.diffTitle}</h2>
       </div>
       <div class="diff-grid">
-        {differentiators.map((item) => (
+        {t.differentiators.map((item) => (
           <div class="diff-card" data-reveal>
             <h3>{item.title}</h3>
             <p>{item.desc}</p>
@@ -148,12 +124,16 @@ const homeCardDesc: Record<string, string> = {
       <div class="container">
         <div class="blog-teaser-header" data-reveal>
           <div>
-            <p class="eyebrow">Do nosso blog</p>
-            <h2>Ideias e bastidores da Proc AI Platform</h2>
+            <p class="eyebrow">{t.blogEyebrow}</p>
+            <h2>{t.blogTitle}</h2>
+            {common.blogLangNote && <p class="blog-lang-note">{common.blogLangNote}</p>}
           </div>
-          <Button href="/blog" variant="secondary">Ver todos os posts</Button>
+          <Button href={P("/blog")} variant="secondary">{t.blogCta}</Button>
         </div>
-        <div class="blog-teaser-grid">
+        {/* O blog vem do WordPress e só existe em português. Marcar o idioma do
+            bloco evita que o leitor de tela leia português com fonética inglesa
+            nas páginas /en e /es (WCAG 3.1.2). */}
+        <div class="blog-teaser-grid" lang={lang === defaultLocale ? undefined : "pt-BR"}>
           {latestPosts.map((post) => <PostCard post={post} />)}
         </div>
       </div>
@@ -162,9 +142,9 @@ const homeCardDesc: Record<string, string> = {
 
   <section class="section final-cta">
     <div class="container final-cta-inner" data-reveal>
-      <h2>Pronto para transformar sua operação com inteligência artificial?</h2>
-      <p>Fale com um especialista Proc e descubra a solução ideal para o seu contexto.</p>
-      <Button href={WHATSAPP_DEMO} variant="primary" size="lg">Solicitar Demonstração</Button>
+      <h2>{t.finalCtaTitle}</h2>
+      <p>{t.finalCtaText}</p>
+      <Button href={WHATSAPP_DEMO} variant="primary" size="lg" data-magnetic>{t.finalCtaButton}</Button>
     </div>
   </section>
 </BaseLayout>
@@ -172,7 +152,11 @@ const homeCardDesc: Record<string, string> = {
 <style>
   .hero {
     position: relative;
+    /* svh e não vh: no celular vh usa o viewport GRANDE, ignorando a barra de
+       endereço. Somado aos 108px de TopBar + Header fixos, o hero passava da
+       tela e o bloco de estatísticas ficava sempre cortado. */
     min-height: 92vh;
+    min-height: 92svh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -199,12 +183,12 @@ const homeCardDesc: Record<string, string> = {
     border-top: 1px solid rgba(255,255,255,0.14);
     padding-block: var(--space-8);
   }
-  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-6); }
+  .stats-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-6); }
   .support-stat .stat-value { color: var(--red-400); font-size: var(--fs-3xl); font-weight: 800; }
   .support-stat .stat-label { margin-top: var(--space-1); font-size: var(--fs-sm); color: rgba(255,255,255,0.7); }
 
   @media (max-width: 980px) {
-    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   @media (max-width: 480px) {
     .stats-grid { grid-template-columns: 1fr; }
@@ -215,7 +199,7 @@ const homeCardDesc: Record<string, string> = {
   .lead { margin-top: var(--space-6); font-size: var(--fs-base); color: var(--color-text-muted); max-width: 560px; }
 
   .about-teaser { background: var(--color-bg); }
-  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-16); align-items: center; }
+  .about-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-16); align-items: center; }
   .about-teaser h2 { margin-top: var(--space-4); font-size: var(--fs-3xl); }
   .about-teaser .btn { margin-top: var(--space-8); }
   .about-photo {
@@ -230,7 +214,7 @@ const homeCardDesc: Record<string, string> = {
   .platform-teaser-header { max-width: 680px; }
   .platform-teaser-header h2 { margin-top: var(--space-4); font-size: var(--fs-3xl); }
 
-  .units-grid { margin-top: var(--space-12); display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-6); }
+  .units-grid { margin-top: var(--space-12); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-6); }
   .unit-card {
     position: relative;
     display: flex;
@@ -251,7 +235,7 @@ const homeCardDesc: Record<string, string> = {
     /* Navy units match the dark card surface and vanish; lighten the bar. */
     background: color-mix(in srgb, var(--unit-color), white 24%);
   }
-  .unit-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); border-color: var(--unit-color); }
+  .unit-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); border-color: color-mix(in srgb, var(--unit-color), white 36%); }
   .unit-badge { font-size: var(--fs-xs); font-weight: 700; color: var(--white); text-transform: uppercase; letter-spacing: 0.08em; }
   .unit-card h3 { font-size: var(--fs-lg); margin-top: var(--space-2); }
   .unit-card p { margin-top: var(--space-2); font-size: var(--fs-sm); color: var(--color-text-muted); flex: 1; }
@@ -260,7 +244,7 @@ const homeCardDesc: Record<string, string> = {
   .platform-cta { margin-top: var(--space-12); text-align: center; }
 
   .differentiators { background: var(--color-bg); }
-  .diff-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
+  .diff-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); }
   .diff-card {
     padding: var(--space-8);
     border-radius: var(--radius-md);
@@ -275,7 +259,8 @@ const homeCardDesc: Record<string, string> = {
   .blog-teaser { background: var(--color-bg); }
   .blog-teaser-header { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--space-6); flex-wrap: wrap; margin-bottom: var(--space-12); }
   .blog-teaser-header h2 { margin-top: var(--space-4); font-size: var(--fs-3xl); max-width: 560px; }
-  .blog-teaser-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
+  .blog-lang-note { margin-top: var(--space-3); font-size: var(--fs-sm); color: var(--color-text-muted); }
+  .blog-teaser-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); }
 
   @media (max-width: 900px) {
     .blog-teaser-grid { grid-template-columns: 1fr; }
@@ -292,8 +277,8 @@ const homeCardDesc: Record<string, string> = {
 
   @media (max-width: 980px) {
     .about-grid { grid-template-columns: 1fr; }
-    .units-grid { grid-template-columns: repeat(2, 1fr); }
-    .diff-grid { grid-template-columns: 1fr 1fr; }
+    .units-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .diff-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   }
   @media (max-width: 640px) {
     .units-grid, .diff-grid { grid-template-columns: 1fr; }

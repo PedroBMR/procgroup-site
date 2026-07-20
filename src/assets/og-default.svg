@@ -1,0 +1,42 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <!--
+    FUNDO E TEXTO da imagem social padrão. NÃO é servido, e NÃO contém o logo:
+    o logo é o arquivo real public/brand/logo-white.png, sobreposto pelo
+    scripts/gerar-og.mjs — a marca não deve ser redesenhada em SVG.
+
+    O resultado é public/og-default.png. Para regenerar:
+      node scripts/gerar-og.mjs
+
+    Cores de src/styles/tokens.css. A versão anterior desta imagem usava roxo
+    (#0e023f / #241a6e), fora da marca.
+  -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1730"/>
+      <stop offset="100%" stop-color="#060a14"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.12" cy="0" r="0.75">
+      <stop offset="0%" stop-color="#e2081d" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#e2081d" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <rect x="0" y="0" width="10" height="630" fill="#e2081d"/>
+
+  <!-- O logo entra aqui, entre y=72 e y=230, composto pelo script. -->
+
+  <text x="80" y="330" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="bold" fill="#ffffff">Tecnologia inteligente para um mundo</text>
+  <text x="80" y="384" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="bold" fill="#ffffff">mais seguro, conectado e eficiente.</text>
+
+  <rect x="80" y="436" width="96" height="4" fill="#e2081d"/>
+
+  <!--
+    As QUATRO unidades de negócio, juntas — o site as apresenta assim
+    ("Quatro unidades de negócio, uma única plataforma"). Infraestrutura de TI
+    é uma delas: na versão anterior desta imagem ela aparecia só na linha de
+    capacidades, o que fazia parecer que os segmentos eram três.
+  -->
+  <text x="80" y="510" font-family="Arial, Helvetica, sans-serif" font-size="23" fill="#94a3b8">Cidades Inteligentes  ·  Segurança Corporativa  ·  Infraestrutura de TI  ·  IA Industrial</text>
+</svg>

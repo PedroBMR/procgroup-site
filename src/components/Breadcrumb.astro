@@ -1,9 +1,11 @@
 ---
 import { withBase } from "../utils/url";
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
 
 interface Crumb { label: string; href: string; }
 interface Props { items: Crumb[]; }
 const { items } = Astro.props;
+const common = useTranslations(getLangFromUrl(Astro.url)).common;
 const siteUrl = "https://www.procgroup.com.br";
 
 const schema = {
@@ -18,7 +20,7 @@ const schema = {
 };
 ---
 
-<nav class="breadcrumb" aria-label="Breadcrumb">
+<nav class="breadcrumb" aria-label={common.breadcrumb}>
   <ol>
     {items.map((item, i) => (
       <li>

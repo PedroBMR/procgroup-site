@@ -1,5 +1,14 @@
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 120px; }
+/* A âncora precisa parar abaixo da TopBar + Header, que são fixos. Derivado
+   dos tokens em vez de um 120px chutado — o valor real é 116px no desktop
+   (40+76) e 108px no mobile (40+68), então o número fixo estava errado nos dois. */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--topbar-h) + var(--header-h) + var(--space-2));
+}
+@media (max-width: 1200px) {
+  html { scroll-padding-top: calc(var(--topbar-h) + var(--header-h-mobile) + var(--space-2)); }
+}
 
 body {
   margin: 0;
@@ -88,6 +97,24 @@ button { font: inherit; cursor: pointer; }
   white-space: nowrap;
 }
 
+/* O skip link é a única coisa que usa .visually-hidden, e ele precisa aparecer
+   ao receber foco — senão o usuário de teclado que enxerga tabula para um alvo
+   de 1×1px e não vê nada (WCAG 2.4.7). Fica acima da TopBar (z-index 101). */
+.visually-hidden:focus-visible {
+  position: fixed;
+  top: var(--space-2);
+  left: var(--space-2);
+  width: auto; height: auto;
+  clip: auto;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border-ui);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  z-index: 200;
+}
+
 /* Scroll reveal */
 [data-reveal] {
   opacity: 0;
@@ -98,6 +125,12 @@ button { font: inherit; cursor: pointer; }
   opacity: 1;
   transform: none;
 }
+
+/* Quando o GSAP assume, ele controla os reveals via inline styles — desliga a
+   transição CSS pra não animar duas vezes. Botões magnéticos: o GSAP dirige o
+   transform, então a transição CSS não deve incluí-lo (evita atraso/tranco). */
+html.gsap-ready [data-reveal] { transition: none; }
+html.gsap-ready [data-magnetic] { transition-property: background, color, box-shadow, border-color; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

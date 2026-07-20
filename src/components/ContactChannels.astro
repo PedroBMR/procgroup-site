@@ -1,18 +1,23 @@
 ---
+import { getLangFromUrl } from "../i18n/utils";
+import { usePages } from "../i18n/pages";
+
 interface Props {
   title?: string;
 }
-const { title = "Outros canais" } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const c = usePages(lang).contactChannels;
+const { title = c.defaultTitle } = Astro.props;
 ---
 
 <aside class="contact-info">
   <h2>{title}</h2>
-  <p><strong>E-mail:</strong> comercial@procgroup.com.br</p>
-  <p><strong>Telefone:</strong> +55 46 3224-3532</p>
-  <p><strong>WhatsApp:</strong> +55 46 99141-1324</p>
-  <p><strong>Endereço:</strong> Caetano Munhoz da Rocha, 480 — Pato Branco / PR</p>
-  <p><strong>Horário:</strong> Seg a Sex, 8h às 18h</p>
-  <p><strong>Também em:</strong> Curitiba / PR</p>
+  <p><strong>{c.email}:</strong> comercial@procgroup.com.br</p>
+  <p><strong>{c.phone}:</strong> +55 46 3224-3532</p>
+  <p><strong>{c.whatsapp}:</strong> +55 46 99141-1324</p>
+  <p><strong>{c.address}:</strong> {c.addressValue}</p>
+  <p><strong>{c.hours}:</strong> {c.hoursValue}</p>
+  <p><strong>{c.alsoIn}:</strong> {c.alsoInValue}</p>
 </aside>
 
 <style>

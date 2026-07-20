@@ -1,7 +1,9 @@
 ---
 import { getCollection, render } from "astro:content";
+import { getImage } from "astro:assets";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Breadcrumb from "../../components/Breadcrumb.astro";
+import BlogImage from "../../components/BlogImage.astro";
 import {
   byNewest,
   categoryColor,
@@ -34,6 +36,15 @@ const { data } = post;
 const { Content } = await render(post);
 
 const siteUrl = "https://www.procgroup.com.br";
+const basePrefix = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+// og:image / twitter:image / schema apontavam direto para o WordPress. Como o
+// site estático vai assumir procgroup.com.br, essas URLs quebrariam no cutover
+// e os previews sociais ficariam sem imagem. getImage() gera a mesma versão
+// otimizada e local que o <BlogImage> usa na página.
+const ogImage = data.image
+  ? (await getImage({ src: data.image.src, width: 1200, height: Math.round(1200 * ((data.image.height ?? 630) / (data.image.width ?? 1200))) })).src
+  : undefined;
 
 const schema = {
   "@context": "https://schema.org",
@@ -45,9 +56,10 @@ const schema = {
   publisher: {
     "@type": "Organization",
     name: "Proc Group",
-    logo: { "@type": "ImageObject", url: `${siteUrl}/favicon.svg` },
+    logo: { "@type": "ImageObject", url: `${siteUrl}/brand/mark-red.webp` },
   },
-  ...(data.image ? { image: data.image.src } : {}),
+  // Igual ao canonical: o base path não pode entrar na URL absoluta do domínio final.
+  ...(ogImage ? { image: new URL(ogImage.replace(basePrefix, ""), siteUrl).toString() } : {}),
   description: data.excerpt,
   mainEntityOfPage: new URL(`/blog/${data.slug}`, siteUrl).toString(),
 };
@@ -56,7 +68,7 @@ const schema = {
 <BaseLayout
   title={data.title}
   description={data.excerpt}
-  ogImage={data.image?.src}
+  ogImage={ogImage}
   schema={schema}
 >
   <div class="container">
@@ -88,13 +100,7 @@ const schema = {
 
     {data.image && (
       <div class="post-hero container">
-        <img
-          src={data.image.src}
-          alt={data.image.alt}
-          width={data.image.width}
-          height={data.image.height}
-          loading="eager"
-        />
+        <BlogImage image={data.image} width={1200} densities={[1]} loading="eager" />
       </div>
     )}
 
@@ -118,7 +124,7 @@ const schema = {
               <a href={withBase(`/blog/${r.data.slug}`)} class="related-card" data-reveal style={`--unit-color: ${categoryColor(cat?.slug)}`}>
                 {r.data.image && (
                   <div class="related-image">
-                    <img src={r.data.image.src} alt={r.data.image.alt} width={480} height={280} loading="lazy" />
+                    <BlogImage image={r.data.image} width={480} decorative />
                   </div>
                 )}
                 <div class="related-body">
@@ -143,7 +149,7 @@ const schema = {
   }
   .cat-pill {
     font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
-    padding: var(--space-1) var(--space-3); border-radius: 999px;
+    padding: var(--space-1) var(--space-3); border-radius: var(--radius-pill);
     border: 1px solid var(--unit-color); color: var(--white);
     transition: background var(--dur-fast) ease;
   }
@@ -163,7 +169,7 @@ const schema = {
 
   .related-section { padding-block: var(--space-16) var(--space-24); background: var(--color-bg); }
   .related-title { font-family: var(--font-display); font-size: var(--fs-2xl); margin-bottom: var(--space-8); }
-  .related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
+  .related-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); }
   .related-card {
     border-radius: var(--radius-md); overflow: hidden;
     background: var(--color-bg-alt); border: 1px solid var(--color-border);

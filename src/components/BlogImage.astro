@@ -1,0 +1,67 @@
+---
+// Capa de post do blog, otimizada no build.
+//
+// As imagens vêm do WordPress em tamanho original — PNGs de até 2,5 MB exibidos
+// em cards de 480px. Passar pelo astro:assets baixa no build, converte para
+// WebP no tamanho certo e serve a partir do próprio domínio. Além do ganho de
+// peso, isso desliga a dependência do WordPress continuar respondendo: as
+// imagens eram hot-link de procgroup.com.br, que é justamente o domínio onde
+// este site vai entrar.
+//
+// A altura é derivada da proporção REAL informada pelo WordPress. Os <img>
+// anteriores declaravam 480x280 para capas 1024x320, reservando espaço na
+// proporção errada (CLS).
+import { Image } from "astro:assets";
+import type { BlogPost } from "../utils/blog";
+
+interface Props {
+  image: NonNullable<BlogPost["data"]["image"]>;
+  /** Largura de exibição em CSS pixels. */
+  width: number;
+  /**
+   * Passe `true` quando o card inteiro já é um link cujo texto repete o título
+   * do post. Nesse caso a imagem é decorativa e `alt=""` evita que o leitor de
+   * tela anuncie o mesmo título duas vezes dentro do mesmo link.
+   */
+  decorative?: boolean;
+  /**
+   * Múltiplos de densidade a gerar. O padrão [1, 2] serve cards pequenos; num
+   * hero de 1200px a variante 2x sairia com 2400px e pesaria mais do que o
+   * ganho de nitidez justifica, então lá se passa [1].
+   */
+  densities?: number[];
+  loading?: "eager" | "lazy";
+  class?: string;
+}
+
+const { image, width, densities = [1, 2], loading = "lazy", class: className, decorative = false } = Astro.props;
+
+const ratio = image.width && image.height ? image.height / image.width : null;
+const alt = decorative ? "" : image.alt;
+---
+
+{
+  ratio ? (
+    <Image
+      src={image.src}
+      alt={alt}
+      width={width}
+      height={Math.round(width * ratio)}
+      densities={densities}
+      loading={loading}
+      decoding="async"
+      class={className}
+    />
+  ) : (
+    // Sem dimensões no WordPress: deixa o Astro descobrir baixando a imagem.
+    <Image
+      src={image.src}
+      alt={alt}
+      width={width}
+      inferSize
+      loading={loading}
+      decoding="async"
+      class={className}
+    />
+  )
+}

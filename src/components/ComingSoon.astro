@@ -1,10 +1,17 @@
 ---
+import { getLangFromUrl } from "../i18n/utils";
 interface Props {
   eyebrow: string;
   title: string;
   description: string;
 }
 const { eyebrow, title, description } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const note = {
+  pt: "Esta página faz parte da próxima fase da reformulação do site.",
+  en: "This page is part of the next phase of the site revamp.",
+  es: "Esta página forma parte de la próxima fase de la renovación del sitio.",
+}[lang];
 ---
 
 <section class="stub">
@@ -12,7 +19,7 @@ const { eyebrow, title, description } = Astro.props;
     <p class="eyebrow">{eyebrow}</p>
     <h1>{title}</h1>
     <p class="lead">{description}</p>
-    <p class="note">Esta página faz parte da próxima fase da reformulação do site.</p>
+    <p class="note">{note}</p>
   </div>
 </section>
 

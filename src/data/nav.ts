@@ -1,4 +1,6 @@
 import { WHATSAPP_DEMO } from "./contact";
+import { useTranslations, localizePath } from "../i18n/utils";
+import type { Locale } from "../i18n/config";
 
 export interface NavChild {
   label: string;
@@ -7,77 +9,59 @@ export interface NavChild {
 }
 
 export interface NavItem {
+  /** Chave estável (independe do idioma) para filtros no Header/Footer. */
+  id: string;
   label: string;
   href: string;
   children?: NavChild[];
 }
 
-export const mainNav: NavItem[] = [
-  { label: "Home", href: "/" },
-  { label: "Empresa", href: "/empresa" },
-  { label: "Plataforma Proc AI", href: "/plataforma-proc-ai" },
-  {
-    label: "Soluções",
-    href: "/solucoes",
-    children: [
-      {
-        label: "Cidades Inteligentes",
-        href: "/solucoes/cidades-inteligentes",
-        description: "Segurança pública e mobilidade urbana com IA",
-      },
-      {
-        label: "Segurança Corporativa",
-        href: "/solucoes/seguranca-corporativa",
-        description: "Videomonitoramento e controle de acesso para empresas",
-      },
-      {
-        label: "Infraestrutura de TI",
-        href: "/solucoes/infraestrutura-de-ti",
-        description: "Cloud, NOC, backup e governança de TI",
-      },
-      {
-        label: "IA Industrial",
-        href: "/solucoes/ia-industrial",
-        description: "Visão computacional para indústria 4.0",
-      },
-    ],
-  },
-  // Second navigation axis (by buyer segment, not by product line) — lets a
-  // visitor find themselves ("eu sou prefeitura") instead of first having to
-  // learn Proc's internal business-unit names. Same pattern as Genetec's
-  // Products/Industries split and Axon's Public Safety/Federal/Enterprise nav.
-  {
-    label: "Segmentos",
-    href: "/solucoes",
-    children: [
-      {
-        label: "Governo e Segurança Pública",
-        href: "/solucoes/cidades-inteligentes",
-        description: "Prefeituras, secretarias e órgãos de segurança",
-      },
-      {
-        label: "Empresas",
-        href: "/solucoes/seguranca-corporativa",
-        description: "Segurança corporativa, cloud e infraestrutura de TI",
-      },
-      {
-        label: "Indústria",
-        href: "/solucoes/ia-industrial",
-        description: "Visão computacional para linhas de produção",
-      },
-    ],
-  },
-  { label: "Cases", href: "/cases" },
-  {
-    label: "Blog",
-    href: "/blog",
-    children: [
-      { label: "Todo o conteúdo", href: "/blog", description: "Novidades, eventos e artigos técnicos" },
-      { label: "Novidades", href: "/blog/categoria/novidades", description: "Lançamentos, projetos e institucional" },
-      { label: "Agenda de Eventos", href: "/eventos", description: "Feiras e encontros com a Proc Group" },
-    ],
-  },
-  { label: "Contato", href: "/contato" },
-];
+/** Navegação principal, com rótulos e hrefs no idioma informado (hrefs já com base path). */
+export function getMainNav(lang: Locale): NavItem[] {
+  const t = useTranslations(lang).nav;
+  const L = (path: string) => localizePath(path, lang);
+  return [
+    { id: "home", label: t.home, href: L("/") },
+    { id: "empresa", label: t.empresa, href: L("/empresa") },
+    { id: "plataforma", label: t.plataforma, href: L("/plataforma-proc-ai") },
+    {
+      id: "solucoes",
+      label: t.solucoes,
+      href: L("/solucoes"),
+      children: [
+        { label: t.sol.cidades.label, href: L("/solucoes/cidades-inteligentes"), description: t.sol.cidades.desc },
+        { label: t.sol.seguranca.label, href: L("/solucoes/seguranca-corporativa"), description: t.sol.seguranca.desc },
+        { label: t.sol.ti.label, href: L("/solucoes/infraestrutura-de-ti"), description: t.sol.ti.desc },
+        { label: t.sol.ia.label, href: L("/solucoes/ia-industrial"), description: t.sol.ia.desc },
+      ],
+    },
+    // Segundo eixo de navegação (por segmento de comprador, não por linha de produto).
+    {
+      id: "segmentos",
+      label: t.segmentos,
+      href: L("/solucoes"),
+      children: [
+        { label: t.seg.governo.label, href: L("/solucoes/cidades-inteligentes"), description: t.seg.governo.desc },
+        { label: t.seg.empresas.label, href: L("/solucoes/seguranca-corporativa"), description: t.seg.empresas.desc },
+        { label: t.seg.industria.label, href: L("/solucoes/ia-industrial"), description: t.seg.industria.desc },
+      ],
+    },
+    { id: "cases", label: t.cases, href: L("/cases") },
+    {
+      id: "blog",
+      label: t.blog,
+      href: L("/blog"),
+      children: [
+        { label: t.blogMenu.todo.label, href: L("/blog"), description: t.blogMenu.todo.desc },
+        { label: t.blogMenu.novidades.label, href: L("/blog/categoria/novidades"), description: t.blogMenu.novidades.desc },
+        { label: t.blogMenu.agenda.label, href: L("/eventos"), description: t.blogMenu.agenda.desc },
+      ],
+    },
+    { id: "contato", label: t.contato, href: L("/contato") },
+  ];
+}
 
-export const ctaNav = { label: "Solicitar Demonstração", href: WHATSAPP_DEMO };
+/** CTA principal ("Solicitar Demonstração") — link de WhatsApp (externo). */
+export function getCtaNav(lang: Locale) {
+  return { label: useTranslations(lang).nav.cta, href: WHATSAPP_DEMO };
+}

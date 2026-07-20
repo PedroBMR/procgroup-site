@@ -54,7 +54,13 @@ function respond(bool $ok, string $message, int $status = 200): never
     $referer = $_SERVER['HTTP_REFERER'] ?? '';
     $redirectBase = FALLBACK_REDIRECT;
     if ($referer !== '' && parse_url($referer, PHP_URL_HOST) === ($_SERVER['HTTP_HOST'] ?? null)) {
-        $redirectBase = parse_url($referer, PHP_URL_PATH) ?: FALLBACK_REDIRECT;
+        $path = parse_url($referer, PHP_URL_PATH) ?: '';
+        // Only a path starting with a single "/" is a same-site path. "//evil.com/x"
+        // passes the host check above (the host came from the referer) but the
+        // browser reads it as a protocol-relative URL and leaves the site.
+        if (preg_match('#^/(?!/)#', $path) === 1) {
+            $redirectBase = $path;
+        }
     }
     $flag = $ok ? 'enviado=1' : 'erro=1';
     header('Location: ' . $redirectBase . '?' . $flag);
@@ -68,10 +74,77 @@ function cleanHeaderValue(string $value): string
     return trim(str_replace(["\r", "\n"], '', $value));
 }
 
+// strip_tags() does NOT remove CR/LF, and trim() only touches the ends. Any
+// value that later reaches a mail header (the subject is built from $event)
+// would carry an injected newline straight into the header block. Stripping
+// line breaks here covers every caller, present and future.
 function cleanText(string $value, int $maxLength = 2000): string
 {
     $value = trim(strip_tags($value));
+    $value = str_replace(["\r", "\n"], ' ', $value);
+    // mbstring existe no PHP 8.2 da Hostinger, mas se faltar um fatal aqui
+    // derrubaria o formulário sem diagnóstico. substr corta por bytes e pode
+    // partir um caractere acentuado ao meio — aceitável só como último recurso,
+    // e num limite que nenhum envio real alcança.
+    if (!function_exists('mb_substr')) {
+        return substr($value, 0, $maxLength);
+    }
     return mb_substr($value, 0, $maxLength);
+}
+
+// A display name goes inside a quoted string in the header. Without quoting,
+// a name like `Fulano <atacante@exemplo.com>,` would add a second, attacker
+// controlled address to Reply-To, so whoever answers the lead answers them too.
+function quotedDisplayName(string $name): string
+{
+    $name = cleanHeaderValue($name);
+    $name = str_replace(['"', '\\'], '', $name);
+    return '"' . $name . '"';
+}
+
+/**
+ * Simple per-IP throttle. The honeypot only stops bots that fill every field —
+ * a direct POST loop ignores it and would burn the shared plan's mail quota.
+ * The IP is stored hashed: we need to recognise a repeat sender, not to keep a
+ * log of who visited.
+ */
+const RATE_LIMIT_MAX = 5;
+const RATE_LIMIT_WINDOW = 600; // segundos
+
+function rateLimitExceeded(): bool
+{
+    $dir = sys_get_temp_dir() . '/procgroup-contact';
+    if (!is_dir($dir)) {
+        @mkdir($dir, 0700, true);
+    }
+    // If we cannot measure, let the message through: a broken throttle must not
+    // silently swallow real leads.
+    if (!is_dir($dir) || !is_writable($dir)) {
+        return false;
+    }
+
+    $ip = $_SERVER['REMOTE_ADDR'] ?? '';
+    // Deliberately not using X-Forwarded-For: it is attacker-controlled, so
+    // trusting it would make the limit trivial to bypass.
+    $file = $dir . '/' . hash('sha256', $ip) . '.json';
+    $now = time();
+
+    $hits = [];
+    if (is_file($file)) {
+        $raw = @file_get_contents($file);
+        $decoded = $raw !== false ? json_decode($raw, true) : null;
+        if (is_array($decoded)) {
+            $hits = array_filter($decoded, static fn($t) => is_int($t) && $t > $now - RATE_LIMIT_WINDOW);
+        }
+    }
+
+    if (count($hits) >= RATE_LIMIT_MAX) {
+        return true;
+    }
+
+    $hits[] = $now;
+    @file_put_contents($file, json_encode(array_values($hits)), LOCK_EX);
+    return false;
 }
 
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
@@ -82,6 +155,10 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
 // input trip it. Pretend success so the bot doesn't learn to avoid it.
 if (($_POST['website'] ?? '') !== '') {
     respond(true, 'Recebemos sua mensagem.');
+}
+
+if (rateLimitExceeded()) {
+    respond(false, 'Muitas tentativas seguidas. Aguarde alguns minutos e tente novamente.', 429);
 }
 
 $name = cleanText($_POST['name'] ?? '', 200);
@@ -109,7 +186,6 @@ if ($email !== '' && !$emailValid) {
 }
 
 $safeEmail = cleanHeaderValue($email);
-$safeName = cleanHeaderValue($name);
 
 $bodyLines = [
     ($event !== '' ? "Novo lead — evento: {$event}" : "Novo contato pelo site Proc Group"),
@@ -126,16 +202,21 @@ $bodyLines = [
 ];
 $body = implode("\n", $bodyLines);
 
-$subject = ($event !== '' ? "Lead do evento {$event}" : 'Novo contato pelo site')
-    . ($profile !== '' ? " — {$profile}" : '');
+// $event comes from a hidden field on the event landing page, so it is
+// attacker-controlled. It reaches mail()'s subject parameter, which is written
+// into the header block — hence cleanHeaderValue on the way out, on top of the
+// line-break stripping cleanText() already does.
+$subject = cleanHeaderValue(
+    ($event !== '' ? "Lead do evento {$event}" : 'Novo contato pelo site')
+    . ($profile !== '' ? " — {$profile}" : '')
+);
 $headers = ['From: Site Proc Group <' . FROM_EMAIL . '>'];
 if ($emailValid) {
     // Only set Reply-To when we actually have a valid address (event leads may
     // only leave a phone).
-    $headers[] = 'Reply-To: ' . $safeName . ' <' . $safeEmail . '>';
+    $headers[] = 'Reply-To: ' . quotedDisplayName($name) . ' <' . $safeEmail . '>';
 }
 $headers[] = 'Content-Type: text/plain; charset=UTF-8';
-$headers[] = 'X-Mailer: PHP/' . phpversion();
 
 $sent = @mail(RECIPIENT_EMAIL, $subject, $body, implode("\r\n", $headers));
 

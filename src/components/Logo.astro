@@ -24,7 +24,7 @@ const width = Math.round(height * ratio);
       class="logo-mask"
       role="img"
       aria-label="Proc Group"
-      style={`--logo-h:${height}px; --logo-w:${width}px;`}
+      style={`--logo-h:${height}px; --logo-w:${width}px; --logo-src:url("${withBase("/brand/logo-white.png")}");`}
     />
   )
 }
@@ -35,7 +35,10 @@ const width = Math.round(height * ratio);
     height: var(--logo-h);
     width: var(--logo-w);
     background-color: var(--navy-900);
-    -webkit-mask: url("/brand/logo-white.png") center / contain no-repeat;
-    mask: url("/brand/logo-white.png") center / contain no-repeat;
+    /* A URL vem por custom property, definida no elemento com withBase(): um
+       url() escrito aqui ignoraria o base path do projeto e apontaria para
+       /brand/... na raiz do domínio, dando 404 sob /procgroup-site. */
+    -webkit-mask: var(--logo-src) center / contain no-repeat;
+    mask: var(--logo-src) center / contain no-repeat;
   }
 </style>

@@ -1,33 +1,126 @@
 ---
 // Landing page de evento (mobile-first) — acessada via chaveiro NFC/RFID.
-// URL fixa /evento; o conteúdo vem do bloco `evento` em src/data/events.ts
+// URL fixa /evento; o conteúdo PT vem do bloco `evento` em src/data/events.ts
 // (edite lá a cada evento). Fora do menu e do sitemap; noindex. Sem chrome do site.
+//
+// Trilíngue (PT/EN/ES): renderiza PT no servidor (resiliente sem JS) e traz um
+// seletor de idioma que troca todo o conteúdo no cliente — as traduções EN/ES
+// e a UI ficam em src/data/eventoContent.ts. Auto-detecta o idioma do navegador
+// e memoriza a escolha do visitante.
 import "../styles/tokens.css";
 import "../styles/base.css";
 import { businessUnits } from "../data/businessUnits";
 import { evento } from "../data/events";
-import { WHATSAPP_NUMBER, whatsapp } from "../data/contact";
+import { whatsapp } from "../data/contact";
 import { homeStats, supportBadge } from "../data/stats";
 import { withBase } from "../utils/url";
+import { locales, defaultLocale, type Locale } from "../i18n/config";
+import { eventoUI, eventoUnitsI18n, unitTags } from "../data/eventoContent";
+import ProcMark from "../components/ProcMark.astro";
 
-const highlighted = evento.unidades
-  .map((slug) => businessUnits.find((u) => u.slug === slug))
-  .filter((u): u is NonNullable<typeof u> => Boolean(u));
+interface UnitView {
+  color: string;
+  tag: string;
+  name: string;
+  tagline: string;
+  description: string;
+  solutions: string[];
+}
+interface EventoView {
+  langName: string;
+  eyebrow: string;
+  titulo: string;
+  subtitulo: string;
+  waBtn: string;
+  ghostBtn: string;
+  waMsg: string;
+  waHref: string;
+  solutionsKicker: string;
+  units: UnitView[];
+  proof: { value: string; label: string }[];
+  why: string[];
+  formKicker: string;
+  formTitle: string;
+  fName: string;
+  fPhone: string;
+  fCity: string;
+  fNamePh: string;
+  fPhonePh: string;
+  fCityPh: string;
+  submit: string;
+  submitting: string;
+  sentOk: string;
+  sentFail: string;
+  sentBtn: string;
+  footerFine: string;
+}
 
-const waMsg =
-  evento.whatsappMsg ||
-  `Olá! Conheci a Proc num evento e quero saber mais sobre as soluções${evento.cidade ? ` para ${evento.cidade}` : ""}.`;
-const waHref = whatsapp(waMsg);
-
-const proof = [
-  ...homeStats.map((s) => ({ value: `${s.value}${s.suffix ?? ""}`, label: s.label })),
-  { value: supportBadge.value, label: supportBadge.label },
+const statValues = [
+  `${homeStats[0].value}${homeStats[0].suffix ?? ""}`,
+  `${homeStats[1].value}${homeStats[1].suffix ?? ""}`,
+  `${homeStats[2].value}${homeStats[2].suffix ?? ""}`,
+  supportBadge.value,
 ];
-const whyProc = [
-  "IA própria: reconhecimento facial, LPR e analytics desenvolvidos pela Proc.",
-  "Equipes especializadas por segmento — não generalistas.",
-  "Alta disponibilidade e monitoramento contínuo 24/7.",
-];
+
+// PT unit copy vem de businessUnits; EN/ES de eventoUnitsI18n.
+function unitsFor(lang: Locale): UnitView[] {
+  return evento.unidades
+    .map((slug): UnitView | null => {
+      const base = businessUnits.find((u) => u.slug === slug);
+      if (!base) return null;
+      const tag = unitTags[lang][slug] ?? base.shortName;
+      if (lang === "pt") {
+        return { color: base.color, tag, name: base.name, tagline: base.tagline, description: base.description, solutions: base.solutions };
+      }
+      const tr = eventoUnitsI18n[lang][slug];
+      return { color: base.color, tag, name: tr.name, tagline: tr.tagline, description: tr.description, solutions: tr.solutions };
+    })
+    .filter((u): u is UnitView => Boolean(u));
+}
+
+// Hero PT é editável por evento em events.ts; EN/ES vêm de eventoUI.
+const heroPt = {
+  eyebrow: evento.eyebrow,
+  titulo: evento.titulo,
+  subtitulo: evento.subtitulo,
+  waMsg: evento.whatsappMsg || eventoUI.pt.waMsg,
+};
+
+const content = {} as Record<Locale, EventoView>;
+for (const lang of locales) {
+  const ui = eventoUI[lang];
+  const hero = lang === "pt" ? heroPt : { eyebrow: ui.eyebrow, titulo: ui.titulo, subtitulo: ui.subtitulo, waMsg: ui.waMsg };
+  content[lang] = {
+    langName: ui.langName,
+    eyebrow: hero.eyebrow,
+    titulo: hero.titulo,
+    subtitulo: hero.subtitulo,
+    waBtn: ui.waBtn,
+    ghostBtn: ui.ghostBtn,
+    waMsg: hero.waMsg,
+    waHref: whatsapp(hero.waMsg),
+    solutionsKicker: ui.solutionsKicker,
+    units: unitsFor(lang),
+    proof: ui.proofLabels.map((label, i) => ({ value: statValues[i], label })),
+    why: [...ui.why],
+    formKicker: ui.formKicker,
+    formTitle: ui.formTitle,
+    fName: ui.fName,
+    fPhone: ui.fPhone,
+    fCity: ui.fCity,
+    fNamePh: ui.fNamePh,
+    fPhonePh: ui.fPhonePh,
+    fCityPh: ui.fCityPh,
+    submit: ui.submit,
+    submitting: ui.submitting,
+    sentOk: ui.sentOk,
+    sentFail: ui.sentFail,
+    sentBtn: ui.sentBtn,
+    footerFine: ui.footerFine,
+  };
+}
+
+const d = content[defaultLocale]; // SSR default (pt)
 const formEvent = evento.cidade || "Evento";
 const pageTitle = evento.cidade
   ? `Proc em ${evento.cidade}`
@@ -43,41 +136,58 @@ const WA_ICON =
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex,nofollow" />
-    <link rel="icon" type="image/svg+xml" href={withBase("/favicon.svg")} />
+    <link rel="icon" type="image/webp" href={withBase("/brand/mark-red.webp")} />
     <title>{pageTitle}</title>
     <meta name="description" content="Conheça as soluções da Proc e fale com um especialista." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Space+Grotesk:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
+    <script id="ev-i18n" type="application/json" set:html={JSON.stringify(content)} />
   </head>
   <body class="ev-body">
     <main class="ev-main">
       <header class="ev-hero">
-        <div class="ev-brand">
-          <span class="ev-mark" aria-hidden="true"></span>
-          <span>PROC</span>
+        <div class="ev-topbar">
+          <div class="ev-brand">
+            <ProcMark size={20} color="var(--red-500)" />
+            <span>PROC</span>
+          </div>
+          <div class="ev-langs" role="group" aria-label="Idioma / Language / Idioma">
+            <button type="button" class="ev-lang is-active" data-lang="pt" aria-pressed="true" aria-label="Português" title="Português">
+              <span class="ev-flag" aria-hidden="true"><svg viewBox="0 0 24 16"><rect width="24" height="16" fill="#009c3b"/><path d="M12 2 22 8 12 14 2 8Z" fill="#ffdf00"/><circle cx="12" cy="8" r="3" fill="#002776"/></svg></span>
+              <span class="ev-lang-code">PT</span>
+            </button>
+            <button type="button" class="ev-lang" data-lang="en" aria-pressed="false" aria-label="English" title="English">
+              <span class="ev-flag" aria-hidden="true"><svg viewBox="0 0 24 16"><rect width="24" height="16" fill="#b22234"/><g fill="#fff"><rect y="1.23" width="24" height="1.23"/><rect y="3.69" width="24" height="1.23"/><rect y="6.15" width="24" height="1.23"/><rect y="8.62" width="24" height="1.23"/><rect y="11.08" width="24" height="1.23"/><rect y="13.54" width="24" height="1.23"/></g><rect width="10.5" height="8.62" fill="#3c3b6e"/><g fill="#fff"><circle cx="1.8" cy="1.7" r=".42"/><circle cx="4.3" cy="1.7" r=".42"/><circle cx="6.8" cy="1.7" r=".42"/><circle cx="9.3" cy="1.7" r=".42"/><circle cx="3" cy="3.2" r=".42"/><circle cx="5.5" cy="3.2" r=".42"/><circle cx="8" cy="3.2" r=".42"/><circle cx="1.8" cy="4.7" r=".42"/><circle cx="4.3" cy="4.7" r=".42"/><circle cx="6.8" cy="4.7" r=".42"/><circle cx="9.3" cy="4.7" r=".42"/><circle cx="3" cy="6.2" r=".42"/><circle cx="5.5" cy="6.2" r=".42"/><circle cx="8" cy="6.2" r=".42"/></g></svg></span>
+              <span class="ev-lang-code">EN</span>
+            </button>
+            <button type="button" class="ev-lang" data-lang="es" aria-pressed="false" aria-label="Español" title="Español">
+              <span class="ev-flag" aria-hidden="true"><svg viewBox="0 0 24 16"><rect width="24" height="16" fill="#aa151b"/><rect y="4" width="24" height="8" fill="#f1bf00"/></svg></span>
+              <span class="ev-lang-code">ES</span>
+            </button>
+          </div>
         </div>
-        <p class="ev-eyebrow">{evento.eyebrow}</p>
-        <h1>{evento.titulo}</h1>
-        <p class="ev-sub">{evento.subtitulo}</p>
+        <p class="ev-eyebrow" data-t="eyebrow">{d.eyebrow}</p>
+        <h1 data-t="titulo">{d.titulo}</h1>
+        <p class="ev-sub" data-t="subtitulo">{d.subtitulo}</p>
         <div class="ev-actions">
-          <a class="ev-btn ev-btn-wa" href={waHref} rel="noopener" target="_blank">
+          <a class="ev-btn ev-btn-wa" data-wa href={d.waHref} rel="noopener" target="_blank">
             <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d={WA_ICON}/></svg>
-            <span>Falar no WhatsApp</span>
+            <span data-t="waBtn">{d.waBtn}</span>
           </a>
-          <a class="ev-btn ev-btn-ghost" href="#ev-form">Deixar meu contato</a>
+          <a class="ev-btn ev-btn-ghost" data-t="ghostBtn" href="#ev-form">{d.ghostBtn}</a>
         </div>
       </header>
 
       <section class="ev-section">
-        <p class="ev-kicker">O que a Proc traz para você</p>
-        <div class="ev-solutions">
-          {highlighted.map((u) => (
+        <p class="ev-kicker" data-t="solutionsKicker">{d.solutionsKicker}</p>
+        <div class="ev-solutions" id="ev-solutions">
+          {d.units.map((u) => (
             <article class="ev-sol" style={`--u: ${u.color}`}>
-              <span class="ev-sol-tag">{u.shortName}</span>
+              <span class="ev-sol-tag">{u.tag}</span>
               <h3>{u.name}</h3>
               <p class="ev-sol-lead">{u.tagline}</p>
               <p class="ev-sol-desc">{u.description}</p>
@@ -90,88 +200,228 @@ const WA_ICON =
       </section>
 
       <section class="ev-section ev-proof">
-        <div class="ev-proof-grid">
-          {proof.map((p) => (
+        <div class="ev-proof-grid" id="ev-proof">
+          {d.proof.map((p) => (
             <div class="ev-stat">
               <span class="ev-stat-v">{p.value}</span>
               <span class="ev-stat-l">{p.label}</span>
             </div>
           ))}
         </div>
-        <ul class="ev-why">
-          {whyProc.map((w) => <li>{w}</li>)}
+        <ul class="ev-why" id="ev-why">
+          {d.why.map((w) => <li>{w}</li>)}
         </ul>
       </section>
 
       <section class="ev-section" id="ev-form">
-        <p class="ev-kicker">Quer que a gente te chame?</p>
-        <h2 class="ev-form-title">Deixe seu contato — retornamos rapidinho.</h2>
+        <p class="ev-kicker" data-t="formKicker">{d.formKicker}</p>
+        <h2 class="ev-form-title" data-t="formTitle">{d.formTitle}</h2>
         <form class="ev-lead" method="post" action={withBase("/contact.php")} data-ev-form>
           <input type="text" name="website" tabindex="-1" autocomplete="off" class="ev-hp" aria-hidden="true" />
           <input type="hidden" name="event" value={formEvent} />
-          <label>Nome
-            <input type="text" name="name" required autocomplete="name" placeholder="Seu nome" />
+          <label><span data-t="fName">{d.fName}</span>
+            <input id="ev-name" type="text" name="name" required autocomplete="name" placeholder={d.fNamePh} />
           </label>
-          <label>Telefone / WhatsApp
-            <input type="tel" name="phone" required autocomplete="tel" inputmode="tel" placeholder="(00) 00000-0000" />
+          <label><span data-t="fPhone">{d.fPhone}</span>
+            <input id="ev-phone" type="tel" name="phone" required autocomplete="tel" inputmode="tel" placeholder={d.fPhonePh} />
           </label>
-          <label>Cidade
-            <input type="text" name="organization" autocomplete="address-level2" placeholder="Sua cidade" value={evento.cidade} />
+          <label><span data-t="fCity">{d.fCity}</span>
+            <input id="ev-city" type="text" name="organization" autocomplete="address-level2" placeholder={d.fCityPh} value={evento.cidade} />
           </label>
-          <button type="submit" class="ev-btn ev-btn-primary">Quero ser contatado</button>
+          <button type="submit" class="ev-btn ev-btn-primary" data-t="submit">{d.submit}</button>
           <p class="ev-status" data-ev-status role="status" aria-live="polite" hidden></p>
         </form>
       </section>
 
       <footer class="ev-footer">
         <div class="ev-brand ev-brand-sm">
-          <span class="ev-mark" aria-hidden="true"></span><span>PROC GROUP</span>
+          <ProcMark size={20} color="var(--red-500)" /><span>PROC GROUP</span>
         </div>
         <p><a href="tel:+554632243532">+55 46 3224-3532</a> · <a href="mailto:comercial@procgroup.com.br">comercial@procgroup.com.br</a></p>
-        <p class="ev-fine">Pato Branco · PR</p>
+        <p class="ev-fine" data-t="footerFine">{d.footerFine}</p>
       </footer>
     </main>
 
-    <a class="ev-sticky" href={waHref} rel="noopener" target="_blank">
+    <a class="ev-sticky" data-wa href={d.waHref} rel="noopener" target="_blank">
       <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d={WA_ICON}/></svg>
       <span>WhatsApp</span>
     </a>
 
-    <script is:inline set:html={`
+    <script is:inline>
       (function () {
-        var form = document.querySelector('[data-ev-form]');
-        var status = document.querySelector('[data-ev-status]');
-        if (!form) return;
-        form.addEventListener('submit', function (e) {
-          e.preventDefault();
-          var btn = form.querySelector('button[type=submit]');
-          btn.disabled = true; btn.textContent = 'Enviando...';
-          status.hidden = true;
-          fetch(form.action, { method: 'POST', body: new FormData(form), headers: { 'X-Requested-With': 'fetch', 'Accept': 'application/json' } })
-            .then(function (r) { return r.json().catch(function () { return { ok: r.ok, message: r.ok ? 'Recebido!' : 'Erro.' }; }); })
-            .then(function (res) {
-              status.hidden = false;
-              status.textContent = res.message || (res.ok ? 'Recebido! Vamos te chamar em breve.' : 'Não deu para enviar. Fale pelo WhatsApp.');
-              status.className = 'ev-status ' + (res.ok ? 'is-ok' : 'is-err');
-              if (res.ok) { form.reset(); btn.textContent = 'Enviado ✓'; }
-              else { btn.disabled = false; btn.textContent = 'Quero ser contatado'; }
+        var LANGS = ["pt", "en", "es"];
+        var HTML_LANG = { pt: "pt-BR", en: "en", es: "es" };
+        var data;
+        try {
+          data = JSON.parse(document.getElementById("ev-i18n").textContent);
+        } catch (e) {
+          return;
+        }
+        var current = "pt";
+
+        // Havia aqui um fallback que chamava https://api.country.is/ para
+        // descobrir o país pelo IP quando o idioma do navegador não era
+        // PT/EN/ES. Foi removido: mandava o IP de cada visitante para um
+        // terceiro, sem consentimento, numa página de captação de leads de um
+        // site que publica política de LGPD — e o ganho era pequeno. O idioma
+        // do aparelho já resolve o caso real, e quem não estiver em PT/EN/ES
+        // cai no português, que é o esperado num evento no Brasil. O seletor
+        // manual continua disponível e a escolha é lembrada.
+        function navLang() {
+          var list = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ""];
+          for (var i = 0; i < list.length; i++) {
+            var l = (list[i] || "").slice(0, 2).toLowerCase();
+            if (LANGS.indexOf(l) !== -1) return l;
+          }
+          return null;
+        }
+
+        function esc(s) {
+          return String(s).replace(/[&<>"]/g, function (c) {
+            return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+          });
+        }
+
+        function renderUnits(units) {
+          return units
+            .map(function (u) {
+              var chips = u.solutions.map(function (s) { return "<li>" + esc(s) + "</li>"; }).join("");
+              return (
+                '<article class="ev-sol" style="--u: ' + esc(u.color) + '">' +
+                '<span class="ev-sol-tag">' + esc(u.tag) + "</span>" +
+                "<h3>" + esc(u.name) + "</h3>" +
+                '<p class="ev-sol-lead">' + esc(u.tagline) + "</p>" +
+                '<p class="ev-sol-desc">' + esc(u.description) + "</p>" +
+                '<ul class="ev-chips">' + chips + "</ul>" +
+                "</article>"
+              );
             })
-            .catch(function () {
-              status.hidden = false; status.className = 'ev-status is-err';
-              status.textContent = 'Não deu para enviar agora. Fale pelo WhatsApp acima.';
-              btn.disabled = false; btn.textContent = 'Quero ser contatado';
-            });
+            .join("");
+        }
+
+        function renderProof(proof) {
+          return proof
+            .map(function (p) {
+              return (
+                '<div class="ev-stat"><span class="ev-stat-v">' + esc(p.value) +
+                '</span><span class="ev-stat-l">' + esc(p.label) + "</span></div>"
+              );
+            })
+            .join("");
+        }
+
+        function renderWhy(why) {
+          return why.map(function (w) { return "<li>" + esc(w) + "</li>"; }).join("");
+        }
+
+        function applyLang(lang, persist) {
+          if (LANGS.indexOf(lang) === -1) lang = "pt";
+          var v = data[lang];
+          if (!v) return;
+          current = lang;
+          document.documentElement.lang = HTML_LANG[lang] || lang;
+
+          document.querySelectorAll("[data-t]").forEach(function (el) {
+            var key = el.getAttribute("data-t");
+            if (v[key] != null) el.textContent = v[key];
+          });
+
+          var sol = document.getElementById("ev-solutions");
+          if (sol) sol.innerHTML = renderUnits(v.units);
+          var proof = document.getElementById("ev-proof");
+          if (proof) proof.innerHTML = renderProof(v.proof);
+          var why = document.getElementById("ev-why");
+          if (why) why.innerHTML = renderWhy(v.why);
+
+          var setPh = function (id, ph) { var el = document.getElementById(id); if (el) el.placeholder = ph; };
+          setPh("ev-name", v.fNamePh);
+          setPh("ev-phone", v.fPhonePh);
+          setPh("ev-city", v.fCityPh);
+
+          document.querySelectorAll("[data-wa]").forEach(function (a) { a.setAttribute("href", v.waHref); });
+
+          document.querySelectorAll(".ev-lang").forEach(function (b) {
+            var on = b.getAttribute("data-lang") === lang;
+            b.classList.toggle("is-active", on);
+            b.setAttribute("aria-pressed", on ? "true" : "false");
+          });
+
+          if (persist) { try { localStorage.setItem("evento-lang", lang); } catch (e) {} }
+        }
+
+        document.querySelectorAll(".ev-lang").forEach(function (b) {
+          b.addEventListener("click", function () { applyLang(b.getAttribute("data-lang"), true); });
         });
+
+        // Idioma inicial (cascata):
+        //   1) escolha manual salva (clique anterior do visitante)
+        //   2) idioma do navegador/aparelho — melhor sinal do que a pessoa fala
+        //   3) português, que é o padrão já renderizado pelo servidor
+        var saved = null;
+        try { saved = localStorage.getItem("evento-lang"); } catch (e) {}
+        if (saved && LANGS.indexOf(saved) !== -1) {
+          applyLang(saved, false);
+        } else {
+          var nl = navLang();
+          if (nl) applyLang(nl, false);
+        }
+
+        // Envio do formulário (com textos do idioma atual).
+        var form = document.querySelector("[data-ev-form]");
+        var status = document.querySelector("[data-ev-status]");
+        if (form) {
+          form.addEventListener("submit", function (e) {
+            e.preventDefault();
+            var v = data[current] || data.pt;
+            var btn = form.querySelector("button[type=submit]");
+            btn.disabled = true;
+            btn.textContent = v.submitting;
+            status.hidden = true;
+            fetch(form.action, {
+              method: "POST",
+              body: new FormData(form),
+              headers: { "X-Requested-With": "fetch", Accept: "application/json" },
+            })
+              .then(function (r) {
+                return r.json().catch(function () { return { ok: r.ok, message: r.ok ? v.sentOk : v.sentFail }; });
+              })
+              .then(function (res) {
+                status.hidden = false;
+                status.textContent = res.message || (res.ok ? v.sentOk : v.sentFail);
+                status.className = "ev-status " + (res.ok ? "is-ok" : "is-err");
+                if (res.ok) { form.reset(); btn.textContent = v.sentBtn; }
+                else { btn.disabled = false; btn.textContent = v.submit; }
+              })
+              .catch(function () {
+                status.hidden = false;
+                status.className = "ev-status is-err";
+                status.textContent = v.sentFail;
+                btn.disabled = false;
+                btn.textContent = v.submit;
+              });
+          });
+        }
       })();
-    `} />
+    </script>
 
     <style is:global>
       .ev-body { background: var(--navy-950); color: var(--color-text); padding-bottom: 84px; }
       .ev-main { max-width: 560px; margin-inline: auto; }
 
-      .ev-hero { padding: var(--space-8) var(--space-6) var(--space-12); }
+      .ev-hero { padding: var(--space-6) var(--space-6) var(--space-12); }
+      .ev-topbar { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); }
       .ev-brand { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-display); font-weight: 800; font-size: 1.25rem; letter-spacing: 0.06em; color: var(--white); }
       .ev-mark { width: 22px; height: 22px; flex: none; border-radius: 50%; background: radial-gradient(circle at 50% 60%, var(--red-500) 0 30%, transparent 32%); }
+
+      .ev-langs { display: inline-flex; gap: 2px; padding: 3px; background: rgba(255,255,255,0.06); border: 1px solid var(--color-border); border-radius: var(--radius-pill); }
+      .ev-lang { appearance: none; border: none; background: transparent; color: rgba(255,255,255,0.6); font: inherit; font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.04em; padding: 5px 9px; border-radius: var(--radius-pill); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; transition: color var(--dur-fast) ease, background var(--dur-fast) ease; }
+      .ev-flag { width: 22px; height: 15px; border-radius: 2px; overflow: hidden; flex: none; display: block; box-shadow: 0 0 0 1px rgba(255,255,255,0.25); }
+      .ev-flag svg { display: block; width: 100%; height: 100%; }
+      .ev-lang-code { line-height: 1; }
+      .ev-lang:hover { color: var(--white); }
+      .ev-lang.is-active { background: var(--color-primary); color: var(--white); }
+      .ev-lang:focus-visible { outline: 2px solid var(--red-400); outline-offset: 2px; }
+
       .ev-eyebrow { margin-top: var(--space-8); font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--red-400); }
       .ev-hero h1 { margin-top: var(--space-3); font-size: clamp(1.9rem, 1.5rem + 4vw, 2.6rem); color: var(--white); line-height: 1.05; }
       .ev-sub { margin-top: var(--space-4); font-size: var(--fs-lg); color: rgba(255,255,255,0.8); }
@@ -187,15 +437,24 @@ const WA_ICON =
       .ev-kicker { font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--red-400); margin-bottom: var(--space-5); }
 
       .ev-solutions { display: grid; gap: var(--space-4); }
-      .ev-sol { background: var(--surface-2); border: 1px solid var(--color-border); border-left: 4px solid var(--u); border-radius: var(--radius-md); padding: var(--space-6); }
-      .ev-sol-tag { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--u); background: color-mix(in srgb, var(--u), transparent 84%); padding: 4px 10px; border-radius: 999px; }
+      /* --u é a cor de marca da unidade, e duas das quatro são navy
+         (--navy-900 e --navy-700). Sobre este card, que também é navy, elas
+         mediam 1,03:1 e 1,28:1 — a barra lateral sumia e o texto da etiqueta
+         era literalmente invisível. Clarear a cor devolve o contraste. */
+      .ev-sol { background: var(--surface-2); border: 1px solid var(--color-border); border-left: 4px solid color-mix(in srgb, var(--u), white 36%); border-radius: var(--radius-md); padding: var(--space-6); }
+      /* O texto da etiqueta é branco, não a cor da unidade: clarear --u o
+         suficiente para 4,5:1 deixaria as quatro cores quase iguais entre si,
+         perdendo justamente a codificação que a etiqueta existe para dar. Com
+         texto branco a legibilidade fica garantida e a cor continua presente
+         no fundo do chip e na barra lateral do card. */
+      .ev-sol-tag { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--white); background: color-mix(in srgb, var(--u), transparent 70%); padding: 4px 10px; border-radius: var(--radius-pill); }
       .ev-sol h3 { margin-top: var(--space-3); font-size: var(--fs-xl); color: var(--white); }
       .ev-sol-lead { margin-top: var(--space-1); font-size: var(--fs-sm); font-weight: 600; color: rgba(255,255,255,0.85); }
       .ev-sol-desc { margin-top: var(--space-3); font-size: var(--fs-sm); color: var(--color-text-muted); line-height: 1.5; }
       .ev-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: var(--space-5); }
-      .ev-chips li { font-size: var(--fs-xs); font-weight: 600; color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.06); border: 1px solid var(--color-border); padding: 6px 12px; border-radius: 999px; }
+      .ev-chips li { font-size: var(--fs-xs); font-weight: 600; color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.06); border: 1px solid var(--color-border); padding: 6px 12px; border-radius: var(--radius-pill); }
 
-      .ev-proof-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+      .ev-proof-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-4); }
       .ev-stat { text-align: center; background: var(--surface-1); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-5); }
       .ev-stat-v { display: block; font-family: var(--font-display); font-size: var(--fs-2xl); font-weight: 800; color: var(--red-400); }
       .ev-stat-l { display: block; margin-top: 4px; font-size: var(--fs-xs); color: var(--color-text-muted); }

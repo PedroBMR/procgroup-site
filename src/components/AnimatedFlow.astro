@@ -4,14 +4,15 @@
 // conexões. Rótulos ficam ABAIXO de cada nó (nomes longos não cabem dentro do
 // círculo) e o SVG recebe width/height explícitos para não colapsar no tamanho
 // intrínseco padrão de 300x150.
-import { businessUnits } from "../data/businessUnits";
+import { getBusinessUnits } from "../data/businessUnits";
+import { getLangFromUrl } from "../i18n/utils";
+import { usePages } from "../i18n/pages";
+import { withBase } from "../utils/url";
 
-const steps = [
-  { n: "01", title: "Captura", desc: "Câmeras e sensores registram um evento em tempo real." },
-  { n: "02", title: "Análise", desc: "A Proc AI Platform classifica e entende o contexto." },
-  { n: "03", title: "Direcionamento", desc: "A inteligência é roteada para a unidade especializada certa." },
-  { n: "04", title: "Ação", desc: "Alerta ou resposta chega ao operador com contexto completo." },
-];
+const lang = getLangFromUrl(Astro.url);
+const t = usePages(lang).flow;
+const businessUnits = getBusinessUnits(lang);
+const steps = t.steps;
 
 const W = 1000;
 const H = 440;
@@ -35,20 +36,8 @@ function flowPath(nodeX: number) {
   return `M ${hub.x} ${sY} C ${hub.x} ${c1y}, ${nodeX} ${c2y}, ${nodeX} ${eY}`;
 }
 
-// Símbolo Proc AI (anel aberto + ondas) no hub, acima do texto.
-const hmScale = 0.62;
-const hmMarkCy = hub.y - 22;
-const hmWaveCy = hub.y - 16;
-const hmPt = (r: number, a: number, oy: number) => {
-  const t = ((a - 90) * Math.PI) / 180;
-  return `${(hub.x + r * Math.cos(t)).toFixed(2)} ${(oy + r * Math.sin(t)).toFixed(2)}`;
-};
-const hmArc = (r: number, s: number, e: number, oy: number) => {
-  const large = e - s > 180 ? 1 : 0;
-  return `M ${hmPt(r, s, oy)} A ${r} ${r} 0 ${large} 1 ${hmPt(r, e, oy)}`;
-};
-const hubRing = hmArc(16.5 * hmScale, 205, 515, hmMarkCy);
-const hubWaves = [21, 15.5, 10].map((r) => hmArc(r * hmScale, 320, 400, hmWaveCy));
+// Marca Proc AI = o ícone EXATO do favicon do site (public/brand/mark-red.webp),
+// usado como imagem, sem redesenhar e sem recortar.
 ---
 
 <div class="flow-wrap">
@@ -71,7 +60,7 @@ const hubWaves = [21, 15.5, 10].map((r) => hmArc(r * hmScale, 320, 400, hmWaveCy
       height={H}
       class="flow-svg"
       role="img"
-      aria-label="Fluxo de um evento do hub central da Proc AI Platform até as quatro unidades de negócio"
+      aria-label={t.ariaLabel}
     >
       {nodes.map((n) => (
         <path d={flowPath(n.x)} class="flow-line" style={`--unit-color: ${n.unit.color}`} />
@@ -90,8 +79,7 @@ const hubWaves = [21, 15.5, 10].map((r) => hmArc(r * hmScale, 320, 400, hmWaveCy
           <animate attributeName="opacity" dur="3s" repeatCount="indefinite" values="0.5;0" />
         </circle>
         <circle cx={hub.x} cy={hub.y} r={hub.r} class="hub-core" />
-        <path d={hubRing} fill="none" stroke="var(--white)" stroke-width="2.6" stroke-linecap="round" />
-        {hubWaves.map((d) => <path d={d} fill="none" stroke="var(--red-500)" stroke-width="1.9" stroke-linecap="round" />)}
+        <image href={withBase("/brand/mark-red.webp")} x={hub.x - 42} y="20" width="84" height="84" />
         <text x={hub.x} y={hub.y + 14} text-anchor="middle" class="hub-label">PROC AI</text>
         <text x={hub.x} y={hub.y + 30} text-anchor="middle" class="hub-sub">PLATFORM</text>
       </g>
@@ -121,7 +109,7 @@ const hubWaves = [21, 15.5, 10].map((r) => hmArc(r * hmScale, 320, 400, hmWaveCy
 
   .flow-steps {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: var(--space-6);
   }
   .flow-steps li { display: flex; gap: var(--space-3); }
@@ -149,10 +137,26 @@ const hubWaves = [21, 15.5, 10].map((r) => hmArc(r * hmScale, 320, 400, hmWaveCy
     .hub-ring { display: none; }
   }
   @media (max-width: 900px) {
-    .flow-steps { grid-template-columns: 1fr 1fr; }
+    .flow-steps { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   }
   @media (max-width: 560px) {
     .flow-steps { grid-template-columns: 1fr; }
     .node-label { font-size: 20px; }
+
+    /* Dentro de um SVG, px é unidade do viewBox e escala junto com o container.
+       Num viewport de 375px a escala vira 0,343 e os rótulos saíam com 3,4 a
+       9,3px na tela — ilegíveis. Aumentar a fonte em unidades do viewBox não
+       resolve: cada nó tem ~240 unidades de espaço e o maior rótulo já ocupa
+       140, então eles colidiriam. O diagrama passa a manter uma largura mínima
+       legível e rolar dentro do próprio container — o corpo da página continua
+       sem rolagem horizontal, e a lista .flow-steps logo acima já apresenta o
+       mesmo processo em texto para quem não quiser arrastar. */
+    .diagram {
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+    .flow-svg { min-width: 620px; }
+    .hub-sub { font-size: 18px; letter-spacing: 0.22em; }
   }
 </style>

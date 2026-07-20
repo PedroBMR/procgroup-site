@@ -7,6 +7,7 @@ import {
   type BlogPost,
 } from "../utils/blog";
 import { withBase } from "../utils/url";
+import BlogImage from "./BlogImage.astro";
 
 interface Props {
   post: BlogPost;
@@ -26,7 +27,7 @@ const category = data.categories.find((c) => c.slug !== CATCH_ALL_CATEGORY) ?? d
 >
   {data.image && (
     <div class="post-image">
-      <img src={data.image.src} alt={data.image.alt} width={480} height={280} loading={loading} />
+      <BlogImage image={data.image} width={480} loading={loading} decorative />
     </div>
   )}
   <div class="post-body">
