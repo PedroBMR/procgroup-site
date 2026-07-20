@@ -126,6 +126,16 @@ const pageTitle = evento.cidade
   ? `Proc em ${evento.cidade}`
   : "Proc — Soluções de IA, Segurança e Infraestrutura";
 
+// Card social (WhatsApp/LinkedIn/etc). Esta página monta o próprio <head> (não
+// usa o BaseLayout), então as tags OG vivem aqui. Sem elas o WhatsApp chutava um
+// logo solto da página. og:image e og:url são absolutos e apontam para a origem
+// real de deploy — o domínio futuro ainda dá 404 nesses arquivos. Mesma nota em
+// BaseLayout.astro.
+const ogDescription = "Conheça as soluções da Proc e fale com um especialista.";
+const socialOrigin = Astro.site ?? new URL("https://www.procgroup.com.br");
+const ogImageUrl = new URL(withBase("/og-default.png"), socialOrigin).toString();
+const ogUrl = new URL(withBase("/evento/"), socialOrigin).toString();
+
 const WA_ICON =
   "M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.7 1-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5C9.9 8.4 9.3 7 9 6.4c-.2-.5-.4-.4-.6-.5h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.6 1.1 2.8c.1.2 1.8 2.8 4.4 3.9.6.3 1.1.4 1.5.5.6.2 1.2.2 1.6.1.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.6-.3M12 21.5a9.5 9.5 0 0 1-4.8-1.3l-.3-.2-3.6.9.9-3.5-.2-.3A9.5 9.5 0 1 1 12 21.5m0-21A11.5 11.5 0 0 0 2 18.1L.5 23.5l5.5-1.4A11.5 11.5 0 1 0 12 .5";
 ---
@@ -138,7 +148,23 @@ const WA_ICON =
     <meta name="robots" content="noindex,nofollow" />
     <link rel="icon" type="image/webp" href={withBase("/brand/mark-red.webp")} />
     <title>{pageTitle}</title>
-    <meta name="description" content="Conheça as soluções da Proc e fale com um especialista." />
+    <meta name="description" content={ogDescription} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Proc Group" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={ogDescription} />
+    <meta property="og:url" content={ogUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={ogDescription} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

@@ -41,11 +41,17 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 const canonicalPath = base && path.startsWith(base) ? path.slice(base.length) || "/" : path;
 const canonical = new URL(canonicalPath, siteUrl).toString();
 
-// Mesma correção para a imagem social: as capas do blog passaram a ser geradas
-// pelo astro:assets, então chegam aqui já com o prefixo de base — que não pode
-// entrar na URL absoluta do domínio final.
+// A imagem social é o único caso que NÃO pode usar siteUrl: o canonical aponta
+// para o domínio futuro (www.procgroup.com.br), que ainda não serve os arquivos
+// — /og-default.png dá 404 lá. Um card compartilhado hoje sairia sem imagem.
+// Por isso o og:image é montado contra a origem real de deploy (Astro.site +
+// base), que o Astro mantém em sincronia com o host atual (github.io). Quando o
+// domínio próprio entrar no ar, basta ajustar `site`/`base` no astro.config.
+// As capas do blog chegam já com o prefixo de base (astro:assets); removemos e
+// recolocamos para não duplicar.
 const ogPath = base && ogImage.startsWith(base) ? ogImage.slice(base.length) : ogImage;
-const ogImageUrl = new URL(ogPath, siteUrl).toString();
+const deployOrigin = Astro.site ?? new URL(siteUrl);
+const ogImageUrl = new URL(base + ogPath, deployOrigin).toString();
 
 // i18n: idioma da URL + versões alternativas da página em cada idioma (hreflang).
 const lang = getLangFromUrl(Astro.url);
