@@ -156,6 +156,9 @@ const schema = {
     transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
   }
   .feature-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+  /* If the featured post has no image, the image column is never rendered — drop
+     to a single column so the body doesn't leave an empty half. */
+  .feature-card:not(:has(.feature-image)) { grid-template-columns: 1fr; }
   .feature-image { overflow: hidden; min-height: 320px; }
   .feature-image img { width: 100%; height: 100%; object-fit: cover; }
   .feature-body { padding: var(--space-8); display: flex; flex-direction: column; justify-content: center; }
@@ -186,7 +189,10 @@ const schema = {
   @media (max-width: 980px) {
     .posts-grid { grid-template-columns: 1fr 1fr; }
     .feature-card { grid-template-columns: 1fr; }
-    .feature-image { min-height: 220px; aspect-ratio: 16/9; }
+    /* min-height + aspect-ratio conflict: the min-height forced the height, and
+       aspect-ratio then derived the WIDTH from it (220 x 16/9 = 391px), overflowing
+       the cell on mobile. Let aspect-ratio derive height from the full width instead. */
+    .feature-image { min-height: 0; aspect-ratio: 16/9; }
   }
   @media (max-width: 640px) {
     .posts-grid { grid-template-columns: 1fr; }

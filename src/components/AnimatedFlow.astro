@@ -1,11 +1,9 @@
 ---
-// Diagrama animado "Como funciona a Proc AI Platform" — reinterpretação do
-// diagrama orquestrador visto em site de concorrente (aiquimist.com): em vez
-// de um donut estático (ver PlatformMandala.astro), este mostra um evento
-// fluindo de verdade do hub central para as 4 unidades de negócio, com
-// pulsos animados percorrendo as conexões. Conteúdo e visual próprios da
-// Proc — não reproduz texto nem código do concorrente, só a ideia de
-// "mostrar o fluxo acontecendo" em vez de só listar features.
+// Diagrama animado "Como funciona a Proc AI Platform": um evento flui do hub
+// central (PROC AI) para a unidade de negócio certa, com pulsos percorrendo as
+// conexões. Rótulos ficam ABAIXO de cada nó (nomes longos não cabem dentro do
+// círculo) e o SVG recebe width/height explícitos para não colapsar no tamanho
+// intrínseco padrão de 300x150.
 import { businessUnits } from "../data/businessUnits";
 
 const steps = [
@@ -16,25 +14,41 @@ const steps = [
 ];
 
 const W = 1000;
-const H = 420;
-const hub = { x: W / 2, y: 68, r: 54 };
-const nodeR = 42;
-const nodeY = H - 78;
+const H = 440;
+const hub = { x: W / 2, y: 74, r: 60 };
+const nodeR = 40;
+const nodeY = 300;
 const nodeXs = [140, 380, 620, 860];
 
-const nodes = businessUnits.map((unit, i) => ({
-  unit,
-  x: nodeXs[i],
-  y: nodeY,
-}));
+const nodes = businessUnits.map((unit, i) => {
+  const parts = unit.name.split(" ");
+  const l1 = parts.shift() as string;
+  const l2 = parts.join(" ");
+  return { unit, x: nodeXs[i], y: nodeY, l1, l2 };
+});
 
 function flowPath(nodeX: number) {
-  const startY = hub.y + hub.r;
-  const endY = nodeY - nodeR;
-  const c1y = startY + (endY - startY) * 0.35;
-  const c2y = startY + (endY - startY) * 0.75;
-  return `M ${hub.x} ${startY} C ${hub.x} ${c1y}, ${nodeX} ${c2y - 40}, ${nodeX} ${endY}`;
+  const sY = hub.y + hub.r;
+  const eY = nodeY - nodeR;
+  const c1y = sY + (eY - sY) * 0.42;
+  const c2y = sY + (eY - sY) * 0.82;
+  return `M ${hub.x} ${sY} C ${hub.x} ${c1y}, ${nodeX} ${c2y}, ${nodeX} ${eY}`;
 }
+
+// Símbolo Proc AI (anel aberto + ondas) no hub, acima do texto.
+const hmScale = 0.62;
+const hmMarkCy = hub.y - 22;
+const hmWaveCy = hub.y - 16;
+const hmPt = (r: number, a: number, oy: number) => {
+  const t = ((a - 90) * Math.PI) / 180;
+  return `${(hub.x + r * Math.cos(t)).toFixed(2)} ${(oy + r * Math.sin(t)).toFixed(2)}`;
+};
+const hmArc = (r: number, s: number, e: number, oy: number) => {
+  const large = e - s > 180 ? 1 : 0;
+  return `M ${hmPt(r, s, oy)} A ${r} ${r} 0 ${large} 1 ${hmPt(r, e, oy)}`;
+};
+const hubRing = hmArc(16.5 * hmScale, 205, 515, hmMarkCy);
+const hubWaves = [21, 15.5, 10].map((r) => hmArc(r * hmScale, 320, 400, hmWaveCy));
 ---
 
 <div class="flow-wrap">
@@ -51,25 +65,45 @@ function flowPath(nodeX: number) {
   </ol>
 
   <div class="diagram" data-reveal>
-    <svg viewBox={`0 0 ${W} ${H}`} class="flow-svg" role="img" aria-label="Fluxo de um evento do hub central da Proc AI Platform até as quatro unidades de negócio">
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width={W}
+      height={H}
+      class="flow-svg"
+      role="img"
+      aria-label="Fluxo de um evento do hub central da Proc AI Platform até as quatro unidades de negócio"
+    >
       {nodes.map((n) => (
         <path d={flowPath(n.x)} class="flow-line" style={`--unit-color: ${n.unit.color}`} />
       ))}
+
       {nodes.map((n, i) => (
-        <circle r="5" class="pulse" style={`--unit-color: ${n.unit.color}; animation-delay: ${i * 0.9}s;`}>
-          <animateMotion dur="3.6s" repeatCount="indefinite" begin={`${i * 0.9}s`} path={flowPath(n.x)} />
+        <circle r="8" class="pulse" style={`--unit-color: ${n.unit.color};`}>
+          <animateMotion dur="3.4s" repeatCount="indefinite" begin={`${i * 0.7}s`} path={flowPath(n.x)} keyPoints="0;1" keyTimes="0;1" calcMode="linear" />
+          <animate attributeName="opacity" dur="3.4s" repeatCount="indefinite" begin={`${i * 0.7}s`} values="0;1;1;1;0" keyTimes="0;0.08;0.5;0.9;1" />
         </circle>
       ))}
 
       <g class="hub">
+        <circle cx={hub.x} cy={hub.y} r={hub.r} class="hub-ring">
+          <animate attributeName="r" dur="3s" repeatCount="indefinite" values={`${hub.r};${hub.r + 20}`} />
+          <animate attributeName="opacity" dur="3s" repeatCount="indefinite" values="0.5;0" />
+        </circle>
         <circle cx={hub.x} cy={hub.y} r={hub.r} class="hub-core" />
-        <text x={hub.x} y={hub.y + 5} text-anchor="middle" class="hub-label">PROC AI</text>
+        <path d={hubRing} fill="none" stroke="var(--white)" stroke-width="2.6" stroke-linecap="round" />
+        {hubWaves.map((d) => <path d={d} fill="none" stroke="var(--red-500)" stroke-width="1.9" stroke-linecap="round" />)}
+        <text x={hub.x} y={hub.y + 14} text-anchor="middle" class="hub-label">PROC AI</text>
+        <text x={hub.x} y={hub.y + 30} text-anchor="middle" class="hub-sub">PLATFORM</text>
       </g>
 
       {nodes.map((n) => (
-        <g class="node" transform={`translate(${n.x}, ${n.y})`} style={`--unit-color: ${n.unit.color}`}>
-          <circle r={nodeR} class="node-core" />
-          <text y="-2" text-anchor="middle" class="node-label">{n.unit.shortName}</text>
+        <g class="node" style={`--unit-color: ${n.unit.color}`}>
+          <circle cx={n.x} cy={n.y} r={nodeR} class="node-core" />
+          <circle cx={n.x} cy={n.y} r="7" class="node-dot" />
+          <text x={n.x} y={n.y + nodeR + 26} text-anchor="middle" class="node-label">
+            <tspan x={n.x}>{n.l1}</tspan>
+            {n.l2 && <tspan x={n.x} dy="20">{n.l2}</tspan>}
+          </text>
         </g>
       ))}
     </svg>
@@ -77,7 +111,13 @@ function flowPath(nodeX: number) {
 </div>
 
 <style>
-  .flow-wrap { display: grid; gap: var(--space-12); }
+  .flow-wrap {
+    display: grid;
+    /* Explicit column so the single grid track fills the container instead of
+       shrinking to the SVG's 300px intrinsic width (which made the diagram tiny). */
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-12);
+  }
 
   .flow-steps {
     display: grid;
@@ -89,25 +129,30 @@ function flowPath(nodeX: number) {
   .step-title { font-weight: 700; color: var(--color-text); }
   .step-desc { margin-top: var(--space-1); font-size: var(--fs-xs); color: var(--color-text-muted); }
 
-  .diagram { max-width: 900px; margin-inline: auto; }
+  .diagram { width: 100%; max-width: 860px; margin-inline: auto; }
   .flow-svg { width: 100%; height: auto; overflow: visible; }
 
-  .flow-line { fill: none; stroke: var(--unit-color); stroke-opacity: 0.25; stroke-width: 2; }
-  .pulse { fill: var(--unit-color); filter: drop-shadow(0 0 4px var(--unit-color)); }
+  .flow-line { fill: none; stroke: var(--unit-color); stroke-opacity: 0.28; stroke-width: 2.5; }
+  .pulse { fill: var(--unit-color); filter: drop-shadow(0 0 6px var(--unit-color)); }
 
-  .hub-core { fill: var(--navy-900); stroke: var(--red-500); stroke-width: 2; }
-  .hub-label { font-family: var(--font-display); font-size: 20px; font-weight: 800; fill: var(--white); letter-spacing: 0.02em; }
+  .hub-ring { fill: none; stroke: var(--red-500); stroke-width: 2; }
+  .hub-core { fill: var(--navy-900); stroke: var(--red-500); stroke-width: 2.5; }
+  .hub-label { font-family: var(--font-display); font-size: 27px; font-weight: 800; fill: var(--white); letter-spacing: 0.03em; }
+  .hub-sub { font-family: var(--font-sans); font-size: 10px; font-weight: 600; letter-spacing: 0.34em; fill: rgba(255,255,255,0.6); }
 
-  .node-core { fill: var(--unit-color); opacity: 0.14; stroke: var(--unit-color); stroke-width: 2; }
-  .node-label { font-family: var(--font-sans); font-size: 14px; font-weight: 700; fill: var(--color-text); }
+  .node-core { fill: var(--unit-color); fill-opacity: 0.16; stroke: var(--unit-color); stroke-width: 2.5; }
+  .node-dot { fill: var(--unit-color); }
+  .node-label { font-family: var(--font-sans); font-size: 16px; font-weight: 700; fill: var(--color-text); }
 
   @media (prefers-reduced-motion: reduce) {
     .pulse { display: none; }
+    .hub-ring { display: none; }
   }
   @media (max-width: 900px) {
     .flow-steps { grid-template-columns: 1fr 1fr; }
   }
   @media (max-width: 560px) {
     .flow-steps { grid-template-columns: 1fr; }
+    .node-label { font-size: 20px; }
   }
 </style>

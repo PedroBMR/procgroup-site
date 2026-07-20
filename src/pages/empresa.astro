@@ -8,6 +8,7 @@ import { homeStats } from "../data/stats";
 import { businessUnits } from "../data/businessUnits";
 import hqPhoto from "../assets/images/hq-pato-branco.webp";
 import { withBase } from "../utils/url";
+import { WHATSAPP_DEMO } from "../data/contact";
 
 const values = [
   { title: "Visão consultiva e preventiva", desc: "Atuamos antes que o problema aconteça, não apenas reagindo a incidentes." },
@@ -167,7 +168,7 @@ const schema = {
     <div class="container final-cta-inner" data-reveal>
       <h2>Quer conhecer a Proc de perto?</h2>
       <p>Fale com um de nossos especialistas e descubra como podemos ajudar sua operação.</p>
-      <Button href="/contato?intent=demo" variant="primary" size="lg">Solicitar Demonstração</Button>
+      <Button href={WHATSAPP_DEMO} variant="primary" size="lg">Solicitar Demonstração</Button>
     </div>
   </section>
 </BaseLayout>
@@ -189,13 +190,13 @@ const schema = {
   .story-grid h2 { margin-top: var(--space-4); font-size: var(--fs-3xl); }
   .stats-mini { display: grid; grid-template-columns: 1fr; gap: var(--space-4); }
   .mini-stat { padding: var(--space-6); background: var(--color-bg-alt); border-radius: var(--radius-md); border: 1px solid var(--color-border); }
-  .mini-value { font-size: var(--fs-2xl); font-weight: 800; color: var(--red-500); }
+  .mini-value { font-size: var(--fs-2xl); font-weight: 800; color: var(--color-primary-dark); }
   .mini-label { margin-top: var(--space-1); font-size: var(--fs-xs); color: var(--color-text-muted); }
 
   .timeline-section { background: var(--color-bg-alt); }
   .timeline-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-6); }
   .timeline-card { padding: var(--space-6); border-radius: var(--radius-md); background: var(--color-surface); border: 1px solid var(--color-border); }
-  .timeline-year { font-size: var(--fs-xs); font-weight: 700; color: var(--red-500); text-transform: uppercase; letter-spacing: 0.06em; }
+  .timeline-year { font-size: var(--fs-xs); font-weight: 700; color: var(--color-primary-dark); text-transform: uppercase; letter-spacing: 0.06em; }
   .timeline-card h3 { margin-top: var(--space-2); font-size: var(--fs-lg); }
   .timeline-card p { margin-top: var(--space-2); font-size: var(--fs-sm); color: var(--color-text-muted); }
 

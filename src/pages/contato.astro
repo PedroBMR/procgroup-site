@@ -142,6 +142,9 @@ const intent = Astro.url.searchParams.get("intent");
     color: var(--color-text);
   }
   .contact-form input::placeholder, .contact-form textarea::placeholder { color: var(--color-text-faint); }
+  /* Cap dragging to the vertical axis so the field can't be stretched past the
+     form's width and overflow the container. */
+  .contact-form textarea { resize: vertical; min-height: 140px; }
   .contact-form select option { background: var(--surface-1); color: var(--color-text); }
   .contact-form input:focus, .contact-form select:focus, .contact-form textarea:focus {
     outline: 2px solid var(--color-primary); outline-offset: 1px;

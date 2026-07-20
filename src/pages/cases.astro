@@ -3,6 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
 import Button from "../components/Button.astro";
 import { getBusinessUnit } from "../data/businessUnits";
+import { WHATSAPP_DEMO } from "../data/contact";
 
 const cases = [
   {
@@ -116,7 +117,7 @@ const schema = {
     <div class="container final-cta-inner" data-reveal>
       <h2>Quer um resultado assim na sua operação?</h2>
       <p>Fale com um especialista Proc e descubra a solução ideal para o seu contexto.</p>
-      <Button href="/contato?intent=demo" variant="primary" size="lg">Solicitar Demonstração</Button>
+      <Button href={WHATSAPP_DEMO} variant="primary" size="lg">Solicitar Demonstração</Button>
     </div>
   </section>
 </BaseLayout>

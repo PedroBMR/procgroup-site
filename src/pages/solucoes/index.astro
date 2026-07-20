@@ -41,7 +41,13 @@ import { withBase } from "../../utils/url";
     transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out), border-color var(--dur-fast) ease;
     overflow: hidden;
   }
-  .unit-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--unit-color); }
+  .unit-card::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: var(--unit-color);
+    /* Navy units (#0b1730) match the dark card surface and vanish; lighten the
+       accent bar so every unit keeps a visible top stripe. */
+    background: color-mix(in srgb, var(--unit-color), white 24%);
+  }
   .unit-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); border-color: var(--unit-color); }
   .unit-badge { font-size: var(--fs-xs); font-weight: 700; color: var(--white); text-transform: uppercase; letter-spacing: 0.08em; }
   .unit-card h2 { margin-top: var(--space-2); font-size: var(--fs-xl); }

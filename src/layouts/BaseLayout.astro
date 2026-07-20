@@ -64,6 +64,10 @@ const schemaList = Array.isArray(schema) ? schema : schema ? [schema] : [];
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {/* Scroll-reveal starts elements at opacity:0 and relies on the JS observer
+        below to show them. If JS never runs, force everything visible so the
+        page is never left blank. */}
+    <noscript><style>[data-reveal]{opacity:1 !important;transform:none !important;}</style></noscript>
     <link rel="icon" type="image/svg+xml" href={withBase("/favicon.svg")} />
     <link rel="canonical" href={canonical} />
     {noIndex && <meta name="robots" content="noindex,nofollow" />}

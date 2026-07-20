@@ -1,0 +1,226 @@
+---
+// Landing page de evento (mobile-first) — acessada via chaveiro NFC/RFID.
+// URL fixa /evento; o conteúdo vem do bloco `evento` em src/data/events.ts
+// (edite lá a cada evento). Fora do menu e do sitemap; noindex. Sem chrome do site.
+import "../styles/tokens.css";
+import "../styles/base.css";
+import { businessUnits } from "../data/businessUnits";
+import { evento } from "../data/events";
+import { WHATSAPP_NUMBER, whatsapp } from "../data/contact";
+import { homeStats, supportBadge } from "../data/stats";
+import { withBase } from "../utils/url";
+
+const highlighted = evento.unidades
+  .map((slug) => businessUnits.find((u) => u.slug === slug))
+  .filter((u): u is NonNullable<typeof u> => Boolean(u));
+
+const waMsg =
+  evento.whatsappMsg ||
+  `Olá! Conheci a Proc num evento e quero saber mais sobre as soluções${evento.cidade ? ` para ${evento.cidade}` : ""}.`;
+const waHref = whatsapp(waMsg);
+
+const proof = [
+  ...homeStats.map((s) => ({ value: `${s.value}${s.suffix ?? ""}`, label: s.label })),
+  { value: supportBadge.value, label: supportBadge.label },
+];
+const whyProc = [
+  "IA própria: reconhecimento facial, LPR e analytics desenvolvidos pela Proc.",
+  "Equipes especializadas por segmento — não generalistas.",
+  "Alta disponibilidade e monitoramento contínuo 24/7.",
+];
+const formEvent = evento.cidade || "Evento";
+const pageTitle = evento.cidade
+  ? `Proc em ${evento.cidade}`
+  : "Proc — Soluções de IA, Segurança e Infraestrutura";
+
+const WA_ICON =
+  "M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.7 1-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5C9.9 8.4 9.3 7 9 6.4c-.2-.5-.4-.4-.6-.5h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.6 1.1 2.8c.1.2 1.8 2.8 4.4 3.9.6.3 1.1.4 1.5.5.6.2 1.2.2 1.6.1.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.6-.3M12 21.5a9.5 9.5 0 0 1-4.8-1.3l-.3-.2-3.6.9.9-3.5-.2-.3A9.5 9.5 0 1 1 12 21.5m0-21A11.5 11.5 0 0 0 2 18.1L.5 23.5l5.5-1.4A11.5 11.5 0 1 0 12 .5";
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="icon" type="image/svg+xml" href={withBase("/favicon.svg")} />
+    <title>{pageTitle}</title>
+    <meta name="description" content="Conheça as soluções da Proc e fale com um especialista." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="ev-body">
+    <main class="ev-main">
+      <header class="ev-hero">
+        <div class="ev-brand">
+          <span class="ev-mark" aria-hidden="true"></span>
+          <span>PROC</span>
+        </div>
+        <p class="ev-eyebrow">{evento.eyebrow}</p>
+        <h1>{evento.titulo}</h1>
+        <p class="ev-sub">{evento.subtitulo}</p>
+        <div class="ev-actions">
+          <a class="ev-btn ev-btn-wa" href={waHref} rel="noopener" target="_blank">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d={WA_ICON}/></svg>
+            <span>Falar no WhatsApp</span>
+          </a>
+          <a class="ev-btn ev-btn-ghost" href="#ev-form">Deixar meu contato</a>
+        </div>
+      </header>
+
+      <section class="ev-section">
+        <p class="ev-kicker">O que a Proc traz para você</p>
+        <div class="ev-solutions">
+          {highlighted.map((u) => (
+            <article class="ev-sol" style={`--u: ${u.color}`}>
+              <span class="ev-sol-tag">{u.shortName}</span>
+              <h3>{u.name}</h3>
+              <p class="ev-sol-lead">{u.tagline}</p>
+              <p class="ev-sol-desc">{u.description}</p>
+              <ul class="ev-chips">
+                {u.solutions.map((s) => <li>{s}</li>)}
+              </ul>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="ev-section ev-proof">
+        <div class="ev-proof-grid">
+          {proof.map((p) => (
+            <div class="ev-stat">
+              <span class="ev-stat-v">{p.value}</span>
+              <span class="ev-stat-l">{p.label}</span>
+            </div>
+          ))}
+        </div>
+        <ul class="ev-why">
+          {whyProc.map((w) => <li>{w}</li>)}
+        </ul>
+      </section>
+
+      <section class="ev-section" id="ev-form">
+        <p class="ev-kicker">Quer que a gente te chame?</p>
+        <h2 class="ev-form-title">Deixe seu contato — retornamos rapidinho.</h2>
+        <form class="ev-lead" method="post" action={withBase("/contact.php")} data-ev-form>
+          <input type="text" name="website" tabindex="-1" autocomplete="off" class="ev-hp" aria-hidden="true" />
+          <input type="hidden" name="event" value={formEvent} />
+          <label>Nome
+            <input type="text" name="name" required autocomplete="name" placeholder="Seu nome" />
+          </label>
+          <label>Telefone / WhatsApp
+            <input type="tel" name="phone" required autocomplete="tel" inputmode="tel" placeholder="(00) 00000-0000" />
+          </label>
+          <label>Cidade
+            <input type="text" name="organization" autocomplete="address-level2" placeholder="Sua cidade" value={evento.cidade} />
+          </label>
+          <button type="submit" class="ev-btn ev-btn-primary">Quero ser contatado</button>
+          <p class="ev-status" data-ev-status role="status" aria-live="polite" hidden></p>
+        </form>
+      </section>
+
+      <footer class="ev-footer">
+        <div class="ev-brand ev-brand-sm">
+          <span class="ev-mark" aria-hidden="true"></span><span>PROC GROUP</span>
+        </div>
+        <p><a href="tel:+554632243532">+55 46 3224-3532</a> · <a href="mailto:comercial@procgroup.com.br">comercial@procgroup.com.br</a></p>
+        <p class="ev-fine">Pato Branco · PR</p>
+      </footer>
+    </main>
+
+    <a class="ev-sticky" href={waHref} rel="noopener" target="_blank">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d={WA_ICON}/></svg>
+      <span>WhatsApp</span>
+    </a>
+
+    <script is:inline set:html={`
+      (function () {
+        var form = document.querySelector('[data-ev-form]');
+        var status = document.querySelector('[data-ev-status]');
+        if (!form) return;
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+          var btn = form.querySelector('button[type=submit]');
+          btn.disabled = true; btn.textContent = 'Enviando...';
+          status.hidden = true;
+          fetch(form.action, { method: 'POST', body: new FormData(form), headers: { 'X-Requested-With': 'fetch', 'Accept': 'application/json' } })
+            .then(function (r) { return r.json().catch(function () { return { ok: r.ok, message: r.ok ? 'Recebido!' : 'Erro.' }; }); })
+            .then(function (res) {
+              status.hidden = false;
+              status.textContent = res.message || (res.ok ? 'Recebido! Vamos te chamar em breve.' : 'Não deu para enviar. Fale pelo WhatsApp.');
+              status.className = 'ev-status ' + (res.ok ? 'is-ok' : 'is-err');
+              if (res.ok) { form.reset(); btn.textContent = 'Enviado ✓'; }
+              else { btn.disabled = false; btn.textContent = 'Quero ser contatado'; }
+            })
+            .catch(function () {
+              status.hidden = false; status.className = 'ev-status is-err';
+              status.textContent = 'Não deu para enviar agora. Fale pelo WhatsApp acima.';
+              btn.disabled = false; btn.textContent = 'Quero ser contatado';
+            });
+        });
+      })();
+    `} />
+
+    <style is:global>
+      .ev-body { background: var(--navy-950); color: var(--color-text); padding-bottom: 84px; }
+      .ev-main { max-width: 560px; margin-inline: auto; }
+
+      .ev-hero { padding: var(--space-8) var(--space-6) var(--space-12); }
+      .ev-brand { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-display); font-weight: 800; font-size: 1.25rem; letter-spacing: 0.06em; color: var(--white); }
+      .ev-mark { width: 22px; height: 22px; flex: none; border-radius: 50%; background: radial-gradient(circle at 50% 60%, var(--red-500) 0 30%, transparent 32%); }
+      .ev-eyebrow { margin-top: var(--space-8); font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--red-400); }
+      .ev-hero h1 { margin-top: var(--space-3); font-size: clamp(1.9rem, 1.5rem + 4vw, 2.6rem); color: var(--white); line-height: 1.05; }
+      .ev-sub { margin-top: var(--space-4); font-size: var(--fs-lg); color: rgba(255,255,255,0.8); }
+
+      .ev-actions { margin-top: var(--space-8); display: grid; gap: var(--space-3); }
+      .ev-btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 1rem 1.4rem; border-radius: 14px; font-weight: 700; font-size: var(--fs-base); text-align: center; }
+      .ev-btn-wa { background: #25d366; color: #05230f; }
+      .ev-btn-wa:active { transform: scale(0.99); }
+      .ev-btn-ghost { background: transparent; color: var(--white); border: 1px solid rgba(255,255,255,0.3); }
+      .ev-btn-primary { background: var(--color-primary); color: var(--white); width: 100%; border: none; box-shadow: var(--glow-red); }
+
+      .ev-section { padding: var(--space-8) var(--space-6); }
+      .ev-kicker { font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--red-400); margin-bottom: var(--space-5); }
+
+      .ev-solutions { display: grid; gap: var(--space-4); }
+      .ev-sol { background: var(--surface-2); border: 1px solid var(--color-border); border-left: 4px solid var(--u); border-radius: var(--radius-md); padding: var(--space-6); }
+      .ev-sol-tag { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--u); background: color-mix(in srgb, var(--u), transparent 84%); padding: 4px 10px; border-radius: 999px; }
+      .ev-sol h3 { margin-top: var(--space-3); font-size: var(--fs-xl); color: var(--white); }
+      .ev-sol-lead { margin-top: var(--space-1); font-size: var(--fs-sm); font-weight: 600; color: rgba(255,255,255,0.85); }
+      .ev-sol-desc { margin-top: var(--space-3); font-size: var(--fs-sm); color: var(--color-text-muted); line-height: 1.5; }
+      .ev-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: var(--space-5); }
+      .ev-chips li { font-size: var(--fs-xs); font-weight: 600; color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.06); border: 1px solid var(--color-border); padding: 6px 12px; border-radius: 999px; }
+
+      .ev-proof-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+      .ev-stat { text-align: center; background: var(--surface-1); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-5); }
+      .ev-stat-v { display: block; font-family: var(--font-display); font-size: var(--fs-2xl); font-weight: 800; color: var(--red-400); }
+      .ev-stat-l { display: block; margin-top: 4px; font-size: var(--fs-xs); color: var(--color-text-muted); }
+      .ev-why { margin-top: var(--space-6); display: grid; gap: var(--space-3); }
+      .ev-why li { position: relative; padding-left: var(--space-6); font-size: var(--fs-sm); color: rgba(255,255,255,0.85); }
+      .ev-why li::before { content: "✓"; position: absolute; left: 0; color: var(--red-400); font-weight: 800; }
+
+      .ev-form-title { font-size: var(--fs-xl); color: var(--white); margin-bottom: var(--space-6); line-height: 1.2; }
+      .ev-lead { display: grid; gap: var(--space-4); }
+      .ev-lead label { display: grid; gap: 6px; font-size: var(--fs-sm); font-weight: 600; color: rgba(255,255,255,0.85); }
+      .ev-lead input { font: inherit; padding: 0.9rem 1rem; border-radius: 12px; border: 1px solid var(--color-border-strong); background: var(--surface-1); color: var(--white); }
+      .ev-lead input::placeholder { color: var(--color-text-faint); }
+      .ev-lead input:focus-visible { outline: 2px solid var(--red-400); outline-offset: 1px; }
+      .ev-hp { position: absolute; left: -9999px; width: 1px; height: 1px; }
+      .ev-status { margin: 0; padding: 0.8rem 1rem; border-radius: 12px; font-size: var(--fs-sm); font-weight: 600; }
+      .ev-status.is-ok { background: var(--color-success-bg); color: #34d399; border: 1px solid rgba(52,211,153,0.3); }
+      .ev-status.is-err { background: var(--red-tint); color: var(--red-400); border: 1px solid rgba(226,8,29,0.3); }
+
+      .ev-footer { padding: var(--space-8) var(--space-6) var(--space-12); border-top: 1px solid var(--color-border); text-align: center; color: var(--color-text-muted); font-size: var(--fs-sm); }
+      .ev-footer a { color: var(--color-text-muted); text-decoration: underline; text-underline-offset: 2px; }
+      .ev-brand-sm { justify-content: center; font-size: 1rem; margin-bottom: var(--space-4); color: var(--white); }
+      .ev-fine { margin-top: var(--space-2); font-size: var(--fs-xs); color: var(--color-text-faint); }
+
+      .ev-sticky { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; display: flex; align-items: center; justify-content: center; gap: 10px; height: 64px; background: #25d366; color: #05230f; font-weight: 800; font-size: var(--fs-base); box-shadow: 0 -6px 24px rgba(0,0,0,0.4); }
+      @media (min-width: 561px) { .ev-sticky { border-radius: 14px 14px 0 0; max-width: 560px; margin-inline: auto; } }
+    </style>
+  </body>
+</html>

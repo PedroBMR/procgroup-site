@@ -4,6 +4,7 @@ import Breadcrumb from "../components/Breadcrumb.astro";
 import Button from "../components/Button.astro";
 import { getBusinessUnit, businessUnits } from "../data/businessUnits";
 import { withBase } from "../utils/url";
+import { WHATSAPP_DEMO } from "../data/contact";
 
 interface Faq {
   q: string;
@@ -14,6 +15,10 @@ interface Props {
   slug: string;
   metaTitle: string;
   metaDescription: string;
+  /** Título do hero (value prop do banner). Se omitido, usa o nome da unidade. */
+  heroTitle?: string;
+  /** Texto de apoio do hero. Se omitido, usa a descrição da unidade. */
+  heroLead?: string;
   solutionsHeading: string;
   teamDescription: string;
   faqs: Faq[];
@@ -25,6 +30,8 @@ const {
   slug,
   metaTitle,
   metaDescription,
+  heroTitle,
+  heroLead,
   solutionsHeading,
   teamDescription,
   faqs,
@@ -70,10 +77,10 @@ const schema = [
   <section class="hero-page">
     <div class="container">
       <p class="eyebrow">{unit.shortName}</p>
-      <h1>{unit.name}</h1>
-      <p class="lead">{unit.description}</p>
+      <h1>{heroTitle ?? unit.name}</h1>
+      <p class="lead">{heroLead ?? unit.description}</p>
       <div class="hero-actions">
-        <Button href="/contato?intent=demo" variant="primary" size="lg">Solicitar Demonstração</Button>
+        <Button href={WHATSAPP_DEMO} variant="primary" size="lg">Solicitar Demonstração</Button>
         <Button href="/plataforma-proc-ai" variant="secondary" size="lg">Ver a Plataforma Proc AI</Button>
       </div>
     </div>
@@ -148,7 +155,7 @@ const schema = [
     <div class="container final-cta-inner" data-reveal>
       <h2>{finalCtaTitle}</h2>
       <p>{finalCtaText}</p>
-      <Button href="/contato?intent=demo" variant="primary" size="lg">Solicitar Demonstração</Button>
+      <Button href={WHATSAPP_DEMO} variant="primary" size="lg">Solicitar Demonstração</Button>
     </div>
   </section>
 </BaseLayout>
@@ -184,18 +191,42 @@ const schema = [
   .team-visual {
     aspect-ratio: 4/3;
     border-radius: var(--radius-lg);
+    /* On the navy-900 team section, navy units (navy-900/navy-700) blended into
+       the background and looked like a broken image. Lighten the start stop and
+       end on navy-600 + add a border so the panel always reads as a shape. */
     background: linear-gradient(135deg, var(--unit-color), var(--navy-800));
+    background: linear-gradient(135deg, color-mix(in srgb, var(--unit-color), white 16%), var(--navy-600));
+    border: 1px solid var(--color-border-strong);
     box-shadow: var(--shadow-lg);
   }
 
   .faq-list { display: flex; flex-direction: column; gap: var(--space-3); max-width: 760px; }
   .faq-item {
-    padding: var(--space-5) var(--space-6);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
+    background: var(--color-surface);
+    overflow: hidden;
+    transition: border-color var(--dur-fast) ease;
   }
-  .faq-item summary { font-weight: 700; cursor: pointer; color: var(--color-text); }
-  .faq-item p { margin-top: var(--space-3); color: var(--color-text-muted); font-size: var(--fs-sm); }
+  .faq-item:hover, .faq-item[open] { border-color: var(--color-border-strong); }
+  .faq-item summary {
+    list-style: none;
+    display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);
+    padding: var(--space-5) var(--space-6);
+    font-weight: 700; cursor: pointer; color: var(--color-text);
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  /* Chevron drawn from borders instead of the default disclosure triangle;
+     rotates down when the item is open. */
+  .faq-item summary::after {
+    content: ""; flex: none; width: 10px; height: 10px; margin-top: -3px;
+    border-right: 2px solid var(--color-text-faint);
+    border-bottom: 2px solid var(--color-text-faint);
+    transform: rotate(45deg);
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+  .faq-item[open] summary::after { transform: rotate(-135deg); margin-top: 3px; }
+  .faq-item p { margin: 0; padding: 0 var(--space-6) var(--space-5); color: var(--color-text-muted); font-size: var(--fs-sm); max-width: 64ch; }
 
   .units-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
   .unit-card {
@@ -208,7 +239,12 @@ const schema = [
     transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out), border-color var(--dur-fast) ease;
     overflow: hidden;
   }
-  .unit-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--unit-color); }
+  .unit-card::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: var(--unit-color);
+    /* Navy units match the dark card surface and vanish; lighten the bar. */
+    background: color-mix(in srgb, var(--unit-color), white 24%);
+  }
   .unit-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); border-color: var(--unit-color); }
   .unit-badge { font-size: var(--fs-xs); font-weight: 700; color: var(--white); text-transform: uppercase; letter-spacing: 0.08em; }
   .unit-card h3 { margin-top: var(--space-2); font-size: var(--fs-lg); }

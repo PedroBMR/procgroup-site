@@ -1,5 +1,5 @@
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; scroll-padding-top: 120px; }
 
 body {
   margin: 0;
@@ -15,7 +15,7 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-img, video { max-width: 100%; display: block; }
+img, video { max-width: 100%; height: auto; display: block; }
 
 h1, h2, h3, h4 {
   margin: 0;
@@ -41,6 +41,12 @@ a { color: inherit; text-decoration: none; }
 ul { margin: 0; padding: 0; list-style: none; }
 
 button { font: inherit; cursor: pointer; }
+
+/* Global keyboard-focus ring. Replaces the browser's default black outline
+   (which rendered as a box hugging summary/links/buttons — visible e.g. on the
+   FAQ items). Keyboard focus gets the brand ring; mouse/touch focus gets none. */
+:focus-visible { outline: 2px solid var(--color-eyebrow); outline-offset: 2px; }
+:focus:not(:focus-visible) { outline: none; }
 
 .container {
   width: 100%;
@@ -124,3 +130,9 @@ button { font: inherit; cursor: pointer; }
 /* Elementor wraps WP page content in structural divs we don't need to style,
    but must neutralize its own default spacing so .prose's rhythm applies. */
 .prose .elementor-element { margin: 0; }
+
+/* WordPress content can carry long URLs, wide tables or code blocks. Break long
+   words and let wide blocks scroll internally so nothing pushes the page wider
+   than the viewport (which would cause horizontal scroll, especially on mobile). */
+.prose { overflow-wrap: break-word; }
+.prose :is(pre, table) { display: block; max-width: 100%; overflow-x: auto; }
