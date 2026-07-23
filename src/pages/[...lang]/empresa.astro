@@ -20,6 +20,18 @@ const t = usePages(lang).empresa;
 const statsLabels = tr.home.statsLabels;
 const businessUnits = getBusinessUnits(lang);
 
+// Blocos institucionais só-PT (Razão de Existir, Diferencial, Missão/Visão,
+// Valores, Compromisso). Guardados na renderização — EN/ES seguem sem eles.
+type EmpresaExtra = {
+  purposeEyebrow?: string; purposeTitle?: string; purposeParas?: string[];
+  differentialEyebrow?: string; differentialTitle?: string; differentialParas?: string[];
+  missionEyebrow?: string; missionText?: string; visionEyebrow?: string; visionText?: string;
+  principlesEyebrow?: string; principlesTitle?: string; principles?: { title: string; desc: string }[];
+  commitmentEyebrow?: string; commitmentTitle?: string; commitmentLead?: string;
+  commitmentItems?: string[]; commitmentClose?: string;
+};
+const e = t as unknown as EmpresaExtra;
+
 const schema = {
   "@context": "https://schema.org",
   "@type": "AboutPage",
@@ -49,6 +61,18 @@ const schema = {
   <section class="photo-section">
     <Image src={hqPhoto} alt={t.photoAlt} width={1600} height={720} quality={70} class="hq-photo" />
   </section>
+
+  {e.purposeParas && (
+    <section class="section purpose-section">
+      <div class="container purpose-inner" data-reveal>
+        <p class="eyebrow">{e.purposeEyebrow}</p>
+        <h2>{e.purposeTitle}</h2>
+        <div class="purpose-body">
+          {e.purposeParas.map((p) => <p>{p}</p>)}
+        </div>
+      </div>
+    </section>
+  )}
 
   <section class="section story-section" data-theme="light">
     <div class="container story-grid">
@@ -103,6 +127,54 @@ const schema = {
     </div>
   </section>
 
+  {e.differentialParas && (
+    <section class="section differential-section" data-theme="light">
+      <div class="container differential-inner" data-reveal>
+        <div class="differential-copy">
+          <p class="eyebrow">{e.differentialEyebrow}</p>
+          <h2>{e.differentialTitle}</h2>
+        </div>
+        <div class="differential-body">
+          {e.differentialParas.map((p) => <p>{p}</p>)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {e.missionText && (
+    <section class="section mv-section">
+      <div class="container mv-grid">
+        <div class="mv-card" data-reveal>
+          <p class="eyebrow">{e.missionEyebrow}</p>
+          <p class="mv-text">{e.missionText}</p>
+        </div>
+        <div class="mv-card" data-reveal>
+          <p class="eyebrow">{e.visionEyebrow}</p>
+          <p class="mv-text">{e.visionText}</p>
+        </div>
+      </div>
+    </section>
+  )}
+
+  {e.principles && (
+    <section class="section principles-section" data-theme="light">
+      <div class="container">
+        <div class="section-header" data-reveal>
+          <p class="eyebrow">{e.principlesEyebrow}</p>
+          <h2>{e.principlesTitle}</h2>
+        </div>
+        <div class="principles-grid">
+          {e.principles.map((p) => (
+            <div class="principle-card" data-reveal>
+              <h3>{p.title}</h3>
+              <p>{p.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
   <section class="section credibility-section">
     <div class="container">
       <div class="section-header" data-reveal>
@@ -137,6 +209,22 @@ const schema = {
       </div>
     </div>
   </section>
+
+  {e.commitmentItems && (
+    <section class="section commitment-section">
+      <div class="container">
+        <div class="section-header commitment-header" data-reveal>
+          <p class="eyebrow">{e.commitmentEyebrow}</p>
+          <h2>{e.commitmentTitle}</h2>
+          <p class="lead">{e.commitmentLead}</p>
+        </div>
+        <ul class="commitment-list">
+          {e.commitmentItems.map((c) => <li data-reveal>{c}</li>)}
+        </ul>
+        <p class="commitment-close" data-reveal>{e.commitmentClose}</p>
+      </div>
+    </section>
+  )}
 
   <section class="section final-cta">
     <div class="container final-cta-inner" data-reveal>
@@ -204,6 +292,65 @@ const schema = {
   .unit-card h3 { margin-top: var(--space-2); font-size: var(--fs-lg); }
   .unit-card p { margin-top: var(--space-2); font-size: var(--fs-sm); color: var(--color-text-muted); }
 
+  /* Razão de existir */
+  .purpose-section { background: var(--color-bg); }
+  .purpose-inner { max-width: 840px; }
+  .purpose-inner h2 { margin-top: var(--space-4); font-size: var(--fs-3xl); max-width: 18ch; }
+  .purpose-body { margin-top: var(--space-8); display: grid; gap: var(--space-5); }
+  .purpose-body p { font-size: var(--fs-lg); color: var(--color-text-muted); max-width: 68ch; line-height: 1.6; }
+
+  /* Nosso diferencial */
+  .differential-section { background: var(--color-bg-alt); }
+  .differential-inner { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: var(--space-16); align-items: start; }
+  .differential-copy h2 { margin-top: var(--space-4); font-size: var(--fs-3xl); }
+  .differential-body { display: grid; gap: var(--space-5); }
+  .differential-body p { font-size: var(--fs-base); color: var(--color-text-muted); }
+
+  /* Missão & Visão */
+  .mv-section { background: var(--color-bg); }
+  .mv-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-6); }
+  .mv-card {
+    padding: var(--space-8);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-top: 3px solid var(--color-primary);
+  }
+  .mv-text { margin-top: var(--space-4); font-size: var(--fs-lg); color: var(--color-text); line-height: 1.5; }
+
+  /* Nossos valores */
+  .principles-section { background: var(--color-bg); }
+  .principles-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); }
+  .principle-card {
+    padding: var(--space-6) var(--space-6) var(--space-8);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--color-primary);
+  }
+  .principle-card h3 { font-size: var(--fs-lg); }
+  .principle-card p { margin-top: var(--space-3); font-size: var(--fs-sm); color: var(--color-text-muted); }
+
+  /* Compromisso com a sociedade */
+  .commitment-section { background: var(--navy-900); }
+  .commitment-header { max-width: 720px; margin-bottom: var(--space-8); }
+  .commitment-header h2 { margin-top: var(--space-4); font-size: var(--fs-3xl); color: var(--white); }
+  .commitment-header .lead { color: rgba(255,255,255,0.75); }
+  .commitment-list { display: grid; gap: var(--space-4); max-width: 860px; }
+  .commitment-list li {
+    position: relative; padding-left: var(--space-8);
+    font-size: var(--fs-base); color: rgba(255,255,255,0.85); line-height: 1.5;
+  }
+  .commitment-list li::before {
+    content: ""; position: absolute; left: 0; top: 0.5em;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--red-500); box-shadow: 0 0 0 4px rgba(226,8,29,0.18);
+  }
+  .commitment-close {
+    margin-top: var(--space-12); max-width: 780px;
+    font-size: var(--fs-lg); font-weight: 600; color: var(--white); line-height: 1.5;
+  }
+
   .final-cta {
     background: linear-gradient(135deg, var(--navy-900), var(--navy-800));
     color: var(--white);
@@ -216,8 +363,11 @@ const schema = {
   @media (max-width: 980px) {
     .story-grid { grid-template-columns: 1fr; }
     .values-grid, .units-grid, .timeline-grid, .credibility-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .differential-inner, .mv-grid { grid-template-columns: 1fr; gap: var(--space-8); }
+    .principles-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   }
   @media (max-width: 640px) {
     .values-grid, .units-grid, .stats-mini, .timeline-grid, .credibility-grid { grid-template-columns: 1fr; }
+    .principles-grid { grid-template-columns: 1fr; }
   }
 </style>

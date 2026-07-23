@@ -98,6 +98,45 @@ export const translations = {
       platformText:
         "Plataforma unificada e integrada de IA, Analytics e Visão Computacional, para centralização e gestão inteligente de todas as operações — com equipes especializadas dedicadas a cada área de atuação.",
       platformCta: "Ver a Plataforma Proc AI",
+      // Bloco "Uma Plataforma. Múltiplas Soluções." — as 6 capacidades da
+      // plataforma (recorte do comercial). Só em PT por enquanto; a home guarda
+      // a seção, então EN/ES seguem sem ela até traduzir.
+      capEyebrow: "Plataforma Proc AI",
+      capTitle: "Uma plataforma. Múltiplas soluções.",
+      capLead:
+        "Tecnologia desenvolvida para conectar todo o seu ecossistema. A Proc AI Platform reúne Inteligência Artificial, Visão Computacional, Analytics e Infraestrutura de TI em uma plataforma única, preparada para integrar diferentes tecnologias, automatizar processos e transformar dados em inteligência para apoiar decisões estratégicas.",
+      capabilities: [
+        {
+          icon: "ai",
+          name: "Inteligência Artificial",
+          desc: "Algoritmos avançados para automação, criação de modelos, alertas inteligentes, análise de dados e tomada de decisões estratégicas.",
+        },
+        {
+          icon: "vision",
+          name: "Visão Computacional",
+          desc: "Reconhecimento facial, leitura de placas, inspeção industrial, contagem e separação de produtos, controle de qualidade e análise inteligente de imagens.",
+        },
+        {
+          icon: "integration",
+          name: "Integração Total 4.0",
+          desc: "Conecte câmeras, cancelas, balanças, catracas, portas, sensores, ERPs, CRMs, sistemas legados e dispositivos IoT em um único ambiente automatizado.",
+        },
+        {
+          icon: "analytics",
+          name: "Analytics em Tempo Real",
+          desc: "Dashboards inteligentes com indicadores, alertas e informações para decisões rápidas e precisas.",
+        },
+        {
+          icon: "infra",
+          name: "Infraestrutura Robusta",
+          desc: "Cloud, backup, firewall e antivírus corporativos, gestão de ambientes locais ou em nuvem, suporte e monitoramento 24×7 e alta disponibilidade para operações críticas.",
+        },
+        {
+          icon: "scale",
+          name: "Plataforma Escalável",
+          desc: "Comece com uma solução e expanda para novas aplicações utilizando a mesma plataforma tecnológica.",
+        },
+      ],
       unitLink: "Ver soluções →",
       cards: {
         "cidades-inteligentes": {
@@ -126,6 +165,18 @@ export const translations = {
         { title: "Integração Aberta", desc: "APIs para conectar sistemas legados, sensores e plataformas de terceiros." },
         { title: "Especialistas Certificados", desc: "Equipes dedicadas por segmento, não generalistas." },
         { title: "Edge AI", desc: "Processamento de IA na borda para respostas em tempo real." },
+      ],
+      // Teaser de Cases na home (guardado — só PT por enquanto). Destaques vêm
+      // do case real Pato 360°, já registrado em cases.astro.
+      casesEyebrow: "Cases de sucesso",
+      casesTitle: "Resultados reais em operações críticas",
+      casesText:
+        "Do Pato 360° — rede de videomonitoramento inteligente levada a cinco municípios via CPSI — à inspeção industrial automatizada, veja como a Proc AI Platform resolve desafios concretos de segurança pública, empresas e indústria.",
+      casesCta: "Ver cases de sucesso",
+      casesStats: [
+        { value: "700+", label: "câmeras com IA em Pato Branco" },
+        { value: "5", label: "municípios atendidos via CPSI" },
+        { value: "24×7", label: "monitoramento em tempo real" },
       ],
       blogEyebrow: "Do nosso blog",
       blogTitle: "Ideias e bastidores da Proc AI Platform",
@@ -349,6 +400,42 @@ export const translations = {
       platformText:
         "A unified, integrated platform of AI, Analytics and Computer Vision for centralizing and intelligently managing every operation — with dedicated specialist teams for each area.",
       platformCta: "See the Proc AI Platform",
+      capEyebrow: "Proc AI Platform",
+      capTitle: "One platform. Multiple solutions.",
+      capLead:
+        "Technology built to connect your entire ecosystem. The Proc AI Platform brings together Artificial Intelligence, Computer Vision, Analytics and IT Infrastructure in a single platform — ready to integrate different technologies, automate processes and turn data into intelligence to support strategic decisions.",
+      capabilities: [
+        {
+          icon: "ai",
+          name: "Artificial Intelligence",
+          desc: "Advanced algorithms for automation, model building, smart alerts, data analysis and strategic decision-making.",
+        },
+        {
+          icon: "vision",
+          name: "Computer Vision",
+          desc: "Facial recognition, license-plate reading, industrial inspection, product counting and sorting, quality control and intelligent image analysis.",
+        },
+        {
+          icon: "integration",
+          name: "Full 4.0 Integration",
+          desc: "Connect cameras, barriers, scales, turnstiles, doors, sensors, ERPs, CRMs, legacy systems and IoT devices in a single automated environment.",
+        },
+        {
+          icon: "analytics",
+          name: "Real-Time Analytics",
+          desc: "Smart dashboards with indicators, alerts and information for fast, accurate decisions.",
+        },
+        {
+          icon: "infra",
+          name: "Robust Infrastructure",
+          desc: "Cloud, backup, corporate firewall and antivirus, management of on-premises or cloud environments, 24×7 support and monitoring, and high availability for mission-critical operations.",
+        },
+        {
+          icon: "scale",
+          name: "Scalable Platform",
+          desc: "Start with one solution and expand to new applications using the same technology platform.",
+        },
+      ],
       unitLink: "See solutions →",
       cards: {
         "cidades-inteligentes": {
@@ -377,6 +464,16 @@ export const translations = {
         { title: "Open Integration", desc: "APIs to connect legacy systems, sensors and third-party platforms." },
         { title: "Certified Specialists", desc: "Dedicated teams per segment, not generalists." },
         { title: "Edge AI", desc: "On-the-edge AI processing for real-time responses." },
+      ],
+      casesEyebrow: "Success cases",
+      casesTitle: "Real results in mission-critical operations",
+      casesText:
+        "From Pato 360° — an intelligent video-surveillance network rolled out to five municipalities via CPSI — to automated industrial inspection, see how the Proc AI Platform solves concrete challenges in public safety, business and industry.",
+      casesCta: "See success cases",
+      casesStats: [
+        { value: "700+", label: "AI cameras in Pato Branco" },
+        { value: "5", label: "municipalities served via CPSI" },
+        { value: "24×7", label: "real-time monitoring" },
       ],
       blogEyebrow: "From our blog",
       blogTitle: "Ideas and behind-the-scenes of the Proc AI Platform",
@@ -600,6 +697,42 @@ export const translations = {
       platformText:
         "Plataforma unificada e integrada de IA, Analytics y Visión Artificial, para la centralización y gestión inteligente de todas las operaciones — con equipos especializados dedicados a cada área.",
       platformCta: "Ver la Plataforma Proc AI",
+      capEyebrow: "Plataforma Proc AI",
+      capTitle: "Una plataforma. Múltiples soluciones.",
+      capLead:
+        "Tecnología desarrollada para conectar todo tu ecosistema. La Proc AI Platform reúne Inteligencia Artificial, Visión Artificial, Analytics e Infraestructura de TI en una plataforma única — preparada para integrar diferentes tecnologías, automatizar procesos y transformar datos en inteligencia para apoyar decisiones estratégicas.",
+      capabilities: [
+        {
+          icon: "ai",
+          name: "Inteligencia Artificial",
+          desc: "Algoritmos avanzados para automatización, creación de modelos, alertas inteligentes, análisis de datos y toma de decisiones estratégicas.",
+        },
+        {
+          icon: "vision",
+          name: "Visión Artificial",
+          desc: "Reconocimiento facial, lectura de placas, inspección industrial, conteo y separación de productos, control de calidad y análisis inteligente de imágenes.",
+        },
+        {
+          icon: "integration",
+          name: "Integración Total 4.0",
+          desc: "Conecta cámaras, barreras, balanzas, torniquetes, puertas, sensores, ERPs, CRMs, sistemas heredados y dispositivos IoT en un único entorno automatizado.",
+        },
+        {
+          icon: "analytics",
+          name: "Analytics en Tiempo Real",
+          desc: "Dashboards inteligentes con indicadores, alertas e información para decisiones rápidas y precisas.",
+        },
+        {
+          icon: "infra",
+          name: "Infraestructura Robusta",
+          desc: "Cloud, backup, firewall y antivirus corporativos, gestión de entornos locales o en la nube, soporte y monitoreo 24×7 y alta disponibilidad para operaciones críticas.",
+        },
+        {
+          icon: "scale",
+          name: "Plataforma Escalable",
+          desc: "Comienza con una solución y expande a nuevas aplicaciones utilizando la misma plataforma tecnológica.",
+        },
+      ],
       unitLink: "Ver soluciones →",
       cards: {
         "cidades-inteligentes": {
@@ -628,6 +761,16 @@ export const translations = {
         { title: "Integración Abierta", desc: "APIs para conectar sistemas heredados, sensores y plataformas de terceros." },
         { title: "Especialistas Certificados", desc: "Equipos dedicados por segmento, no generalistas." },
         { title: "Edge AI", desc: "Procesamiento de IA en el borde para respuestas en tiempo real." },
+      ],
+      casesEyebrow: "Casos de éxito",
+      casesTitle: "Resultados reales en operaciones críticas",
+      casesText:
+        "Del Pato 360° — red de videovigilancia inteligente llevada a cinco municipios vía CPSI — a la inspección industrial automatizada, mira cómo la Proc AI Platform resuelve desafíos concretos de seguridad pública, empresas e industria.",
+      casesCta: "Ver casos de éxito",
+      casesStats: [
+        { value: "700+", label: "cámaras con IA en Pato Branco" },
+        { value: "5", label: "municipios atendidos vía CPSI" },
+        { value: "24×7", label: "monitoreo en tiempo real" },
       ],
       blogEyebrow: "De nuestro blog",
       blogTitle: "Ideas y detrás de escena de la Proc AI Platform",

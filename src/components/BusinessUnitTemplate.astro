@@ -3,6 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
 import Button from "../components/Button.astro";
 import { getBusinessUnit, getBusinessUnits } from "../data/businessUnits";
+import { getSolutionRich } from "../data/solutionContent";
 import { WHATSAPP_DEMO } from "../data/contact";
 import { getLangFromUrl, useTranslations, localePath, localizePath } from "../i18n/utils";
 
@@ -44,6 +45,10 @@ const tr = useTranslations(lang);
 const t = tr.solutions;
 const unit = getBusinessUnit(slug, lang)!;
 const otherUnits = getBusinessUnits(lang).filter((u) => u.slug !== unit.slug);
+
+// Conteúdo longo (recorte do comercial). Existe só em PT por enquanto; quando
+// undefined (EN/ES), a página cai no template enxuto — chips + time.
+const rich = getSolutionRich(slug, lang);
 
 const schema = [
   {
@@ -89,35 +94,220 @@ const schema = [
     </div>
   </section>
 
-  <section class="section solutions-section" data-theme="light" style={`--unit-color: ${unit.color}`}>
-    <div class="container">
-      <div class="section-header" data-reveal>
-        <p class="eyebrow">{t.solutionsEyebrow}</p>
-        <h2>{solutionsHeading}</h2>
-      </div>
-      <div class="solutions-grid">
-        {unit.solutions.map((sol) => (
-          <div class="solution-card" data-reveal>
-            <span class="solution-dot"></span>
-            <p>{sol}</p>
+  {rich ? (
+    <>
+      {/* --- Desafios --- */}
+      {rich.challenges && (
+        <section class="section rich-sec" data-theme="light">
+          <div class="container">
+            <div class="rich-head" data-reveal>
+              <h2>{rich.challengesTitle}</h2>
+              {rich.challengesIntro?.map((p) => <p class="rich-lead">{p}</p>)}
+            </div>
+            <div class="rich-panel" data-reveal>
+              {rich.challengesListTitle && <h3 class="rich-sub">{rich.challengesListTitle}</h3>}
+              <ul class="check-list negative two-col">
+                {rich.challenges.map((c) => <li>{c}</li>)}
+              </ul>
+            </div>
           </div>
-        ))}
-      </div>
-    </div>
-  </section>
+        </section>
+      )}
+
+      {/* --- Por que investir + tabela comparativa --- */}
+      {rich.whyTitle && (
+        <section class="section rich-sec">
+          <div class="container">
+            <div class="rich-head" data-reveal>
+              <h2>{rich.whyTitle}</h2>
+              {rich.whyIntro?.map((p) => <p class="rich-lead">{p}</p>)}
+            </div>
+            {rich.comparison && (
+              <div class="compare" data-reveal>
+                <div class="compare-head compare-without">{rich.comparisonLeftHead}</div>
+                <div class="compare-head compare-with">{rich.comparisonRightHead}</div>
+                {rich.comparison.map((row) => (
+                  <Fragment>
+                    <div class="compare-cell without">{row.without}</div>
+                    <div class="compare-cell with">{row.with}</div>
+                  </Fragment>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* --- Como a Proc resolve + fluxo --- */}
+      {rich.resolveTitle && (
+        <section class="section rich-sec" data-theme="light">
+          <div class="container">
+            <div class="rich-head" data-reveal>
+              <h2>{rich.resolveTitle}</h2>
+              {rich.resolveIntro?.map((p) => <p class="rich-lead">{p}</p>)}
+            </div>
+            {rich.flow && (
+              <ol class="flow" data-reveal>
+                {rich.flow.map((step, i) => (
+                  <li class="flow-step">
+                    <span class="flow-num">{String(i + 1).padStart(2, "0")}</span>
+                    <span class="flow-label">{step}</span>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* --- Como funciona (passos) --- */}
+      {rich.how && (
+        <section class="section rich-sec">
+          <div class="container">
+            <div class="rich-head" data-reveal><h2>{rich.howTitle}</h2></div>
+            <div class="how-grid">
+              {rich.how.map((s, i) => (
+                <div class="how-card" data-reveal>
+                  <span class="how-num">{String(i + 1).padStart(2, "0")}</span>
+                  <h3>{s.title}</h3>
+                  <p>{s.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* --- Soluções da plataforma (grupos de recursos) --- */}
+      {rich.featureGroups && (
+        <section class="section rich-sec" data-theme="light">
+          <div class="container">
+            <div class="rich-head" data-reveal>
+              <h2>{rich.featuresTitle}</h2>
+              {rich.featuresIntro && <p class="rich-lead">{rich.featuresIntro}</p>}
+            </div>
+            <div class="feature-groups">
+              {rich.featureGroups.map((g) => (
+                <div class="feature-group" data-reveal style={`--unit-color: ${unit.color}`}>
+                  <h3>{g.title}</h3>
+                  {g.intro && <p class="feature-group-intro">{g.intro}</p>}
+                  <ul class="chip-list">
+                    {g.items.map((it) => <li>{it}</li>)}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* --- Aplicações / segmentos --- */}
+      {rich.applications && (
+        <section class="section rich-sec">
+          <div class="container">
+            <div class="rich-head" data-reveal>
+              <h2>{rich.applicationsTitle}</h2>
+              {rich.applicationsIntro && <p class="rich-lead">{rich.applicationsIntro}</p>}
+            </div>
+            <div class="apps-grid">
+              {rich.applications.map((a) => (
+                <div class="app-card" data-reveal>
+                  <h3>{a.name}</h3>
+                  <p>{a.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* --- Benefícios --- */}
+      {rich.benefits && (
+        <section class="section rich-sec" data-theme="light">
+          <div class="container">
+            <div class="rich-head" data-reveal><h2>{rich.benefitsTitle}</h2></div>
+            <ul class="check-list positive two-col" data-reveal>
+              {rich.benefits.map((b) => <li>{b}</li>)}
+            </ul>
+          </div>
+        </section>
+      )}
+
+      {/* --- Indicadores gerenciais --- */}
+      {rich.kpis && (
+        <section class="section rich-sec">
+          <div class="container">
+            <div class="rich-head" data-reveal>
+              <h2>{rich.kpisTitle}</h2>
+              {rich.kpisIntro && <p class="rich-lead">{rich.kpisIntro}</p>}
+            </div>
+            <ul class="pill-list" data-reveal>
+              {rich.kpis.map((k) => <li>{k}</li>)}
+            </ul>
+          </div>
+        </section>
+      )}
+
+      {/* --- Integração --- */}
+      {rich.integration && (
+        <section class="section rich-sec" data-theme="light">
+          <div class="container">
+            <div class="rich-head" data-reveal>
+              <h2>{rich.integrationTitle}</h2>
+              {rich.integrationIntro && <p class="rich-lead">{rich.integrationIntro}</p>}
+            </div>
+            <ul class="pill-list" data-reveal>
+              {rich.integration.map((i) => <li>{i}</li>)}
+            </ul>
+          </div>
+        </section>
+      )}
+
+      {/* --- Por que escolher a Proc --- */}
+      {rich.whyProc && (
+        <section class="section rich-whyproc">
+          <div class="container rich-whyproc-inner" data-reveal>
+            <h2>{rich.whyProcTitle}</h2>
+            <div class="rich-whyproc-body">
+              {rich.whyProc.map((p) => <p>{p}</p>)}
+            </div>
+          </div>
+        </section>
+      )}
+    </>
+  ) : (
+    <>
+      <section class="section solutions-section" data-theme="light" style={`--unit-color: ${unit.color}`}>
+        <div class="container">
+          <div class="section-header" data-reveal>
+            <p class="eyebrow">{t.solutionsEyebrow}</p>
+            <h2>{solutionsHeading}</h2>
+          </div>
+          <div class="solutions-grid">
+            {unit.solutions.map((sol) => (
+              <div class="solution-card" data-reveal>
+                <span class="solution-dot"></span>
+                <p>{sol}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section class="section team-section">
+        <div class="container team-grid">
+          <div data-reveal>
+            <p class="eyebrow">{t.teamEyebrow}</p>
+            <h2>{unit.team}</h2>
+            <p class="lead">{teamDescription}</p>
+          </div>
+          <div class="team-visual" data-reveal style={`--unit-color: ${unit.color}`}></div>
+        </div>
+      </section>
+    </>
+  )}
 
   <slot name="case-study" />
-
-  <section class="section team-section">
-    <div class="container team-grid">
-      <div data-reveal>
-        <p class="eyebrow">{t.teamEyebrow}</p>
-        <h2>{unit.team}</h2>
-        <p class="lead">{teamDescription}</p>
-      </div>
-      <div class="team-visual" data-reveal style={`--unit-color: ${unit.color}`}></div>
-    </div>
-  </section>
 
   <section class="section faq-section" data-theme="light">
     <div class="container">
@@ -173,6 +363,98 @@ const schema = [
   .section-header { max-width: 680px; margin-bottom: var(--space-12); }
   .section-header h2 { margin-top: var(--space-4); font-size: var(--fs-3xl); }
 
+  /* =============== Seções ricas (conteúdo do comercial) =============== */
+  .rich-sec { background: var(--color-bg); }
+  .rich-head { max-width: 760px; margin-bottom: var(--space-12); }
+  .rich-head h2 { font-size: var(--fs-3xl); }
+  .rich-lead { margin-top: var(--space-4); font-size: var(--fs-base); color: var(--color-text-muted); max-width: 70ch; line-height: 1.6; }
+  .rich-sub { font-size: var(--fs-lg); margin-bottom: var(--space-6); }
+  .rich-panel { max-width: 920px; }
+
+  /* Listas com marcador (desafios / benefícios) */
+  .check-list { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--space-3); }
+  .check-list.two-col { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-3) var(--space-8); }
+  .check-list li { position: relative; padding-left: 28px; font-size: var(--fs-sm); color: var(--color-text-muted); line-height: 1.5; }
+  .check-list.positive li::before {
+    content: "✓"; position: absolute; left: 0; top: -1px;
+    color: var(--color-success); font-weight: 800;
+  }
+  .check-list.negative li::before {
+    content: ""; position: absolute; left: 3px; top: 0.5em;
+    width: 8px; height: 8px; border-radius: 2px;
+    background: color-mix(in srgb, var(--color-primary), transparent 20%);
+  }
+
+  /* Tabela comparativa Sem X / Com Proc */
+  .compare {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 1px; background: var(--color-border);
+    border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden;
+  }
+  .compare-head {
+    padding: var(--space-4) var(--space-6); background: var(--color-surface);
+    font-weight: 700; font-size: var(--fs-sm); text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  .compare-head.compare-with { color: var(--color-eyebrow); }
+  .compare-cell { padding: var(--space-4) var(--space-6); background: var(--color-bg-alt); font-size: var(--fs-sm); }
+  .compare-cell.without { color: var(--color-text-muted); }
+  .compare-cell.with { color: var(--color-text); font-weight: 600; }
+
+  /* Fluxo da solução */
+  .flow { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: var(--space-3); }
+  .flow-step {
+    display: flex; align-items: center; gap: var(--space-3);
+    padding: var(--space-4) var(--space-5);
+    background: var(--color-surface); border: 1px solid var(--color-border);
+    border-radius: var(--radius-md); font-size: var(--fs-sm); font-weight: 600; color: var(--color-text);
+  }
+  .flow-num { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-lg); color: var(--color-eyebrow); line-height: 1; }
+
+  /* Como funciona */
+  .how-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-4); }
+  .how-card { padding: var(--space-6); border-radius: var(--radius-md); background: var(--color-surface); border: 1px solid var(--color-border); }
+  .how-num { font-family: var(--font-display); font-size: var(--fs-xl); font-weight: 800; color: var(--color-eyebrow); }
+  .how-card h3 { margin-top: var(--space-2); font-size: var(--fs-base); }
+  .how-card p { margin-top: var(--space-2); font-size: var(--fs-sm); color: var(--color-text-muted); }
+
+  /* Grupos de recursos */
+  .feature-groups { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-6); }
+  .feature-group {
+    padding: var(--space-8); border-radius: var(--radius-md);
+    background: var(--color-surface); border: 1px solid var(--color-border);
+    border-top: 3px solid color-mix(in srgb, var(--unit-color), white 20%);
+  }
+  .feature-group h3 { font-size: var(--fs-lg); }
+  .feature-group-intro { margin-top: var(--space-3); font-size: var(--fs-sm); color: var(--color-text-muted); line-height: 1.5; }
+  .chip-list { list-style: none; padding: 0; margin: var(--space-5) 0 0; display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .chip-list li {
+    font-size: var(--fs-xs); font-weight: 600; padding: 6px 12px;
+    border-radius: var(--radius-pill); background: var(--color-bg-alt);
+    border: 1px solid var(--color-border); color: var(--color-text);
+  }
+
+  /* Aplicações */
+  .apps-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-6); }
+  .app-card { padding: var(--space-6); border-radius: var(--radius-md); background: var(--color-surface); border: 1px solid var(--color-border); }
+  .app-card h3 { font-size: var(--fs-base); }
+  .app-card p { margin-top: var(--space-2); font-size: var(--fs-sm); color: var(--color-text-muted); line-height: 1.5; }
+
+  /* Indicadores / integração (pills) */
+  .pill-list { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: var(--space-3); }
+  .pill-list li {
+    font-size: var(--fs-sm); font-weight: 600; padding: 10px 16px;
+    border-radius: var(--radius-pill); background: var(--color-surface);
+    border: 1px solid var(--color-border); color: var(--color-text);
+  }
+
+  /* Por que escolher a Proc */
+  .rich-whyproc { background: linear-gradient(135deg, var(--navy-900), var(--navy-800)); color: var(--white); }
+  .rich-whyproc-inner { max-width: 840px; }
+  .rich-whyproc h2 { font-size: var(--fs-3xl); color: var(--white); }
+  .rich-whyproc-body { margin-top: var(--space-8); display: grid; gap: var(--space-5); }
+  .rich-whyproc-body p { font-size: var(--fs-lg); color: rgba(255,255,255,0.8); line-height: 1.55; }
+
+  /* =============== Template enxuto (fallback EN/ES) =============== */
   .solutions-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); }
   .solution-card {
     display: flex; align-items: center; gap: var(--space-3);
@@ -194,9 +476,6 @@ const schema = [
   .team-visual {
     aspect-ratio: 4/3;
     border-radius: var(--radius-lg);
-    /* On the navy-900 team section, navy units (navy-900/navy-700) blended into
-       the background and looked like a broken image. Lighten the start stop and
-       end on navy-600 + add a border so the panel always reads as a shape. */
     background: linear-gradient(135deg, var(--unit-color), var(--navy-800));
     background: linear-gradient(135deg, color-mix(in srgb, var(--unit-color), white 16%), var(--navy-600));
     border: 1px solid var(--color-border-strong);
@@ -219,8 +498,6 @@ const schema = [
     font-weight: 700; cursor: pointer; color: var(--color-text);
   }
   .faq-item summary::-webkit-details-marker { display: none; }
-  /* Chevron drawn from borders instead of the default disclosure triangle;
-     rotates down when the item is open. */
   .faq-item summary::after {
     content: ""; flex: none; width: 10px; height: 10px; margin-top: -3px;
     border-right: 2px solid var(--color-text-faint);
@@ -231,6 +508,7 @@ const schema = [
   .faq-item[open] summary::after { transform: rotate(-135deg); margin-top: 3px; }
   .faq-item p { margin: 0; padding: 0 var(--space-6) var(--space-5); color: var(--color-text-muted); font-size: var(--fs-sm); max-width: 64ch; }
 
+  .other-units { background: var(--color-bg); }
   .units-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); }
   .unit-card {
     position: relative;
@@ -245,7 +523,6 @@ const schema = [
   .unit-card::before {
     content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px;
     background: var(--unit-color);
-    /* Navy units match the dark card surface and vanish; lighten the bar. */
     background: color-mix(in srgb, var(--unit-color), white 24%);
   }
   .unit-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); border-color: color-mix(in srgb, var(--unit-color), white 36%); }
@@ -266,8 +543,13 @@ const schema = [
     .solutions-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
     .team-grid { grid-template-columns: 1fr; }
     .units-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .feature-groups { grid-template-columns: 1fr; }
+    .apps-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   }
   @media (max-width: 640px) {
     .solutions-grid, .units-grid { grid-template-columns: 1fr; }
+    .check-list.two-col { grid-template-columns: 1fr; }
+    .apps-grid { grid-template-columns: 1fr; }
+    .compare-head, .compare-cell { padding: var(--space-3) var(--space-4); }
   }
 </style>
