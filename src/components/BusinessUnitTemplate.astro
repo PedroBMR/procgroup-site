@@ -2,8 +2,10 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
 import Button from "../components/Button.astro";
+import MediaPlaceholder from "../components/MediaPlaceholder.astro";
 import { getBusinessUnit, getBusinessUnits } from "../data/businessUnits";
 import { getSolutionRich } from "../data/solutionContent";
+import { solutionMedia } from "../data/mediaBriefs";
 import { WHATSAPP_DEMO } from "../data/contact";
 import { getLangFromUrl, useTranslations, localePath, localizePath } from "../i18n/utils";
 
@@ -50,6 +52,9 @@ const otherUnits = getBusinessUnits(lang).filter((u) => u.slug !== unit.slug);
 // undefined (EN/ES), a página cai no template enxuto — chips + time.
 const rich = getSolutionRich(slug, lang);
 
+// Briefing de mídia do hero (placeholder até o asset real existir).
+const media = solutionMedia[slug];
+
 const schema = [
   {
     "@context": "https://schema.org",
@@ -93,6 +98,14 @@ const schema = [
       </div>
     </div>
   </section>
+
+  {media && (
+    <section class="media-band">
+      <div class="container">
+        <MediaPlaceholder kind={media.kind} caption={media.caption[lang]} prompt={media.prompt} lang={lang} color={unit.color} />
+      </div>
+    </section>
+  )}
 
   {rich ? (
     <>
@@ -358,6 +371,8 @@ const schema = [
   .hero-page h1 { font-size: var(--fs-4xl); margin-top: var(--space-4); max-width: 780px; }
   .lead { margin-top: var(--space-6); font-size: var(--fs-lg); color: var(--color-text-muted); max-width: 640px; }
   .hero-actions { display: flex; gap: var(--space-4); margin-top: var(--space-8); flex-wrap: wrap; }
+
+  .media-band { padding-block: 0 var(--space-12); }
 
   .section { padding-block: var(--space-16); }
   .section-header { max-width: 680px; margin-bottom: var(--space-12); }
