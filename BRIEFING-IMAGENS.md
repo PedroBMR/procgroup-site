@@ -84,12 +84,13 @@ Mesmo **sistema de ícones** das 4 áreas (seção 5).
 
 ---
 
-## 4. Cases
+## 4. Cases — placeholders ATIVOS
 
-Cada card de case ganha uma **foto** (topo do card, 16:9). Prioridade para o case
-real **Pato 360°**: foto da sala de operações / video wall / viatura integrada
-(com autorização). Nos ilustrativos, foto genérica do segmento (indústria,
-recepção corporativa, data center) até haver case real.
+Cada card de case já mostra um **placeholder de foto** (topo do card, 16:9) com o
+briefing por segmento embutido. Prioridade para o case real **Pato 360°**: foto
+da sala de operações / video wall / viatura integrada (com autorização). Nos
+ilustrativos, foto genérica do segmento (indústria, recepção corporativa, data
+center) até haver case real.
 
 ---
 
@@ -132,10 +133,12 @@ Problemas observados e como resolver:
 1. **Melhor (regravar):** ensaio no **blue hour** com luzes acesas, letreiro
    iluminado, varanda limpa, ângulo 3/4 levemente baixo, câmera profissional.
    Um take **aéreo/drone** 3/4 do prédio no contexto também fica excelente.
-2. **Sem regravar (só tratamento):** endireitar verticais → cortar mais fechado
-   (menos céu e calçada) → retocar reflexos/fiação → **regrade navy** + mais
-   contraste → leve vinheta → opcional gradiente navy embaixo para texto legível.
-   *Posso aplicar esse tratamento na imagem atual se você quiser — é rápido.*
+2. **Sem regravar (só tratamento) — ✅ FEITO:** já existe
+   `hq-pato-branco-enhanced.webp` (em uso na Home e na Empresa) com corte mais
+   fechado, **faixa vinho neutralizada** (sem o roxo), grade navy, mais
+   contraste, vinheta e gradiente navy na base. **Ainda falta** (exige retoque
+   manual ou reshoot): remover os **reflexos** no vidro (fotógrafo, carros,
+   fiação, placa) e corrigir verticais.
 3. **Alternativa de mensagem:** para "empresa de tecnologia", uma foto **interna**
    (equipe / sala de monitoramento / NOC) comunica mais do que a fachada. Vale
    considerar trocar o papel principal do prédio por uma cena de operação.
