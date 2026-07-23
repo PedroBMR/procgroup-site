@@ -3,6 +3,7 @@ import { Image } from "astro:assets";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Breadcrumb from "../../components/Breadcrumb.astro";
 import Button from "../../components/Button.astro";
+import UnitIcon from "../../components/UnitIcon.astro";
 import { homeStats } from "../../data/stats";
 import { getBusinessUnits } from "../../data/businessUnits";
 import hqPhoto from "../../assets/images/hq-pato-branco-enhanced.webp";
@@ -201,6 +202,7 @@ const schema = {
       <div class="units-grid">
         {businessUnits.map((unit) => (
           <a href={localizePath(unit.href, lang)} class="unit-card" data-reveal style={`--unit-color: ${unit.color}`}>
+            <span class="unit-icon-wrap"><UnitIcon slug={unit.slug} /></span>
             <span class="unit-badge">{unit.shortName}</span>
             <h3>{unit.name}</h3>
             <p>{unit.tagline}</p>
@@ -288,6 +290,14 @@ const schema = {
   }
   .unit-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--unit-color); }
   .unit-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); border-color: color-mix(in srgb, var(--unit-color), white 36%); }
+  .unit-icon-wrap {
+    display: flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px; margin-bottom: var(--space-4);
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--unit-color), transparent 85%);
+    color: color-mix(in srgb, var(--unit-color), black 8%);
+  }
+  .unit-icon-wrap :global(.unit-icon) { width: 24px; height: 24px; }
   .unit-badge { font-size: var(--fs-xs); font-weight: 700; color: var(--unit-color); text-transform: uppercase; letter-spacing: 0.08em; }
   .unit-card h3 { margin-top: var(--space-2); font-size: var(--fs-lg); }
   .unit-card p { margin-top: var(--space-2); font-size: var(--fs-sm); color: var(--color-text-muted); }

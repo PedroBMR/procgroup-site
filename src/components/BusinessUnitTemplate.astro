@@ -3,6 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
 import Button from "../components/Button.astro";
 import MediaPlaceholder from "../components/MediaPlaceholder.astro";
+import UnitIcon from "../components/UnitIcon.astro";
 import { getBusinessUnit, getBusinessUnits } from "../data/businessUnits";
 import { getSolutionRich } from "../data/solutionContent";
 import { solutionMedia } from "../data/mediaBriefs";
@@ -348,6 +349,7 @@ const schema = [
       <div class="units-grid">
         {otherUnits.map((u) => (
           <a href={localizePath(u.href, lang)} class="unit-card" data-reveal style={`--unit-color: ${u.color}`}>
+            <span class="unit-icon-wrap"><UnitIcon slug={u.slug} /></span>
             <span class="unit-badge">{u.shortName}</span>
             <h3>{u.name}</h3>
             <p>{u.tagline}</p>
@@ -541,6 +543,14 @@ const schema = [
     background: color-mix(in srgb, var(--unit-color), white 24%);
   }
   .unit-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); border-color: color-mix(in srgb, var(--unit-color), white 36%); }
+  .unit-icon-wrap {
+    display: flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px; margin-bottom: var(--space-4);
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--unit-color), transparent 82%);
+    color: color-mix(in srgb, var(--unit-color), white 40%);
+  }
+  .unit-icon-wrap :global(.unit-icon) { width: 24px; height: 24px; }
   .unit-badge { font-size: var(--fs-xs); font-weight: 700; color: var(--white); text-transform: uppercase; letter-spacing: 0.08em; }
   .unit-card h3 { margin-top: var(--space-2); font-size: var(--fs-lg); }
   .unit-card p { margin-top: var(--space-2); font-size: var(--fs-sm); color: var(--color-text-muted); }

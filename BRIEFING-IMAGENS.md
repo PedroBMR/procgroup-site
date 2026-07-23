@@ -94,11 +94,11 @@ center) até haver case real.
 
 ---
 
-## 5. Sistema de ícones das 4 áreas de negócio
+## 5. Sistema de ícones das 4 áreas de negócio — ✅ FEITO
 
-Conjunto **coeso** (mesmo traço, grid, peso) — usado em cards na Home, Soluções e
-Empresa. Estilo: linha, 2px, cantos levemente arredondados, monocromático
-(herda a cor da unidade). Cada um em SVG:
+Implementado em `src/components/UnitIcon.astro` e plugado nos cards de área da
+Home, das Soluções e da Empresa (herda a cor da unidade). Conjunto **coeso**
+(linha, mesmo traço/peso), no estilo dos 6 ícones das capacidades. Ícones atuais:
 
 - **Cidades Inteligentes / Proc City** — câmera urbana + mapa/pino, ou skyline
   com sinal.

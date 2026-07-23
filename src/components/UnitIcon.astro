@@ -1,0 +1,27 @@
+---
+// Ícone de linha por unidade de negócio, coeso com os 6 ícones das capacidades
+// (Home). Herda a cor via currentColor. Usado nos cards de área da Home,
+// das páginas de solução e da Empresa.
+interface Props {
+  slug: string;
+  class?: string;
+}
+const { slug, class: className = "" } = Astro.props;
+
+const icons: Record<string, string> = {
+  // Skyline de cidade (segurança pública / Proc City)
+  "cidades-inteligentes":
+    '<line x1="3" y1="21" x2="21" y2="21"/><path d="M6 21V10l4-2.5V21"/><path d="M14 21V7l4 2.5V21"/><circle cx="8" cy="12.5" r=".55"/><circle cx="8" cy="15.5" r=".55"/><circle cx="16" cy="11.5" r=".55"/><circle cx="16" cy="14.5" r=".55"/>',
+  // Escudo + pessoa (proteção de pessoas / controle de acesso)
+  "seguranca-corporativa":
+    '<path d="M12 3l7 3v5c0 4.5-3 7.6-7 9-4-1.4-7-4.5-7-9V6z"/><circle cx="12" cy="10" r="1.9"/><path d="M8.6 15.4c.5-1.7 1.9-2.7 3.4-2.7s2.9 1 3.4 2.7"/>',
+  // Racks de servidor (infraestrutura de TI)
+  "infraestrutura-de-ti":
+    '<rect x="3" y="4" width="18" height="7" rx="1.6"/><rect x="3" y="13" width="18" height="7" rx="1.6"/><circle cx="6.5" cy="7.5" r=".6"/><circle cx="6.5" cy="16.5" r=".6"/><line x1="9.5" y1="7.5" x2="17" y2="7.5"/><line x1="9.5" y1="16.5" x2="17" y2="16.5"/>',
+  // Engrenagem + lente (IA industrial / visão computacional)
+  "ia-industrial":
+    '<circle cx="12" cy="12" r="3.4"/><circle cx="12" cy="12" r=".9" fill="currentColor" stroke="none"/><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.1 5.1l1.8 1.8M17.1 17.1l1.8 1.8M18.9 5.1l-1.8 1.8M7 17.1l-1.9 1.8"/>',
+};
+const inner = icons[slug] ?? "";
+---
+<svg class={`unit-icon ${className}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={inner} />
