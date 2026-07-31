@@ -1128,3 +1128,31 @@ Base de qualidade que já existe e vale proteger em qualquer refatoração:
 - **Labels do formulário** usam associação implícita por envolvimento — válida, não precisa de `for`/`id`.
 - **Sem `tabindex` positivo** em lugar nenhum; os 4 `tabindex="-1"` são honeypots, uso correto.
 - **FAQ usa `<details>`/`<summary>` nativos** — teclado e estado expandido funcionam sem JS.
+
+---
+
+## Checklist de virada de domínio (go-live procgroup.com.br)
+
+Fazer **na ordem**, quando decidir tirar do preview e publicar no domínio real.
+Contexto: hoje o site roda em `pedrobmr.github.io` (preview, `noindex` de
+propósito); o `robots.txt` e o `canonical` se ajustam sozinhos pelo host.
+
+1. **Trocar `site` no `astro.config.mjs`** de `https://pedrobmr.github.io` para
+   `https://www.procgroup.com.br` (e revisar/remover o `base: '/procgroup-site'`,
+   que só existe por causa do GitHub Pages). Isso sozinho faz o `robots.txt`
+   virar `Allow: /` + Sitemap e os `canonical`/`hreflang`/`og:url` apontarem para
+   o domínio certo — ver `src/pages/robots.txt.ts` e `HOSTS_DE_PRODUCAO`.
+2. **Definir `WP_API_URL`** no ambiente de build antes da virada, se o WordPress
+   sair de `procgroup.com.br` (senão o loader do blog busca `/wp-json` no próprio
+   site estático e congela o blog em silêncio). Ver `content.config.ts`.
+3. **Publicar na Hostinger** (cPanel/PHP) — o `.htaccess` e o `contact.php` já
+   estão preparados. Confirmar `ErrorDocument 404` ativo e HTTPS forçado.
+4. **Validar no ar:** abrir `/robots.txt` (deve dizer `Allow: /` + Sitemap),
+   `/sitemap-index.xml` e um card social (WhatsApp/LinkedIn) para conferir o
+   `og:image`.
+5. **Cadastrar no Google Search Console** (domínio `procgroup.com.br`), enviar o
+   sitemap e pedir indexação. Só faz sentido depois do passo 1 (antes disso o
+   site é `noindex`). Dica do "doidão da internet", e procede.
+
+**Não fazer:** `llms.txt` — padrão que a indústria não adotou, bots não acessam.
+O `robots.txt` + `sitemap` + Open Graph já cobrem Google, Bing, ChatGPT e Gemini.
