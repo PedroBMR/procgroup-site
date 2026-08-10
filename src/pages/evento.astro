@@ -28,6 +28,9 @@ interface UnitView {
 }
 interface EventoView {
   langName: string;
+  docTitle: string;
+  metaDescription: string;
+  skipLink: string;
   eyebrow: string;
   titulo: string;
   subtitulo: string;
@@ -86,12 +89,23 @@ const heroPt = {
   waMsg: evento.whatsappMsg || eventoUI.pt.waMsg,
 };
 
+// Com cidade definida em events.ts, o <title> a cita em cada idioma; sem
+// cidade, cai no genérico de eventoUI. O SSR usa o PT; o applyLang troca.
+const cityTitles: Record<Locale, string> = {
+  pt: `Proc em ${evento.cidade}`,
+  en: `Proc in ${evento.cidade}`,
+  es: `Proc en ${evento.cidade}`,
+};
+
 const content = {} as Record<Locale, EventoView>;
 for (const lang of locales) {
   const ui = eventoUI[lang];
   const hero = lang === "pt" ? heroPt : { eyebrow: ui.eyebrow, titulo: ui.titulo, subtitulo: ui.subtitulo, waMsg: ui.waMsg };
   content[lang] = {
     langName: ui.langName,
+    docTitle: evento.cidade ? cityTitles[lang] : ui.docTitle,
+    metaDescription: ui.metaDescription,
+    skipLink: ui.skipLink,
     eyebrow: hero.eyebrow,
     titulo: hero.titulo,
     subtitulo: hero.subtitulo,
@@ -122,16 +136,14 @@ for (const lang of locales) {
 
 const d = content[defaultLocale]; // SSR default (pt)
 const formEvent = evento.cidade || "Evento";
-const pageTitle = evento.cidade
-  ? `Proc em ${evento.cidade}`
-  : "Proc — Soluções de IA, Segurança e Infraestrutura";
+const pageTitle = d.docTitle;
 
 // Card social (WhatsApp/LinkedIn/etc). Esta página monta o próprio <head> (não
 // usa o BaseLayout), então as tags OG vivem aqui. Sem elas o WhatsApp chutava um
 // logo solto da página. og:image e og:url são absolutos e apontam para a origem
 // real de deploy — o domínio futuro ainda dá 404 nesses arquivos. Mesma nota em
 // BaseLayout.astro.
-const ogDescription = "Conheça as soluções da Proc e fale com um especialista.";
+const ogDescription = d.metaDescription;
 const socialOrigin = Astro.site ?? new URL("https://www.procgroup.com.br");
 const ogImageUrl = new URL(withBase("/og-default.png"), socialOrigin).toString();
 const ogUrl = new URL(withBase("/evento/"), socialOrigin).toString();
@@ -171,11 +183,16 @@ const WA_ICON =
       href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Space+Grotesk:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
-    <script id="ev-i18n" type="application/json" set:html={JSON.stringify(content)} />
+    <!-- <: um "</script>" literal num texto (ex.: cidade em events.ts) fecharia a tag aqui. -->
+    <script id="ev-i18n" type="application/json" set:html={JSON.stringify(content).replace(/</g, "\\u003c")} />
   </head>
   <body class="ev-body">
-    <main class="ev-main">
-      <header class="ev-hero">
+    <a class="visually-hidden" href="#ev-content" data-t="skipLink">{d.skipLink}</a>
+    <!-- Wrapper é <div>: header/footer dentro de <main> não mapeiam para os
+         landmarks banner/contentinfo (dentro de <div> mapeiam). O hero fica no
+         <main> — só a barra de marca/idiomas é chrome. -->
+    <div class="ev-main">
+      <header class="ev-top">
         <div class="ev-topbar">
           <div class="ev-brand">
             <ProcMark size={20} color="var(--red-500)" />
@@ -196,6 +213,10 @@ const WA_ICON =
             </button>
           </div>
         </div>
+      </header>
+
+      <main id="ev-content" tabindex="-1">
+      <section class="ev-hero">
         <p class="ev-eyebrow" data-t="eyebrow">{d.eyebrow}</p>
         <h1 data-t="titulo">{d.titulo}</h1>
         <p class="ev-sub" data-t="subtitulo">{d.subtitulo}</p>
@@ -206,10 +227,10 @@ const WA_ICON =
           </a>
           <a class="ev-btn ev-btn-ghost" data-t="ghostBtn" href="#ev-form">{d.ghostBtn}</a>
         </div>
-      </header>
+      </section>
 
       <section class="ev-section">
-        <p class="ev-kicker" data-t="solutionsKicker">{d.solutionsKicker}</p>
+        <h2 class="ev-kicker" data-t="solutionsKicker">{d.solutionsKicker}</h2>
         <div class="ev-solutions" id="ev-solutions">
           {d.units.map((u) => (
             <article class="ev-sol" style={`--u: ${u.color}`}>
@@ -258,6 +279,7 @@ const WA_ICON =
           <p class="ev-status" data-ev-status role="status" aria-live="polite" hidden></p>
         </form>
       </section>
+      </main>
 
       <footer class="ev-footer">
         <div class="ev-brand ev-brand-sm">
@@ -266,7 +288,7 @@ const WA_ICON =
         <p><a href="tel:+554632243532">+55 46 3224-3532</a> · <a href="mailto:comercial@procgroup.com.br">comercial@procgroup.com.br</a></p>
         <p class="ev-fine" data-t="footerFine">{d.footerFine}</p>
       </footer>
-    </main>
+    </div>
 
     <a class="ev-sticky" data-wa href={d.waHref} rel="noopener" target="_blank">
       <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d={WA_ICON}/></svg>
@@ -346,6 +368,9 @@ const WA_ICON =
           if (!v) return;
           current = lang;
           document.documentElement.lang = HTML_LANG[lang] || lang;
+          document.title = v.docTitle;
+          var md = document.querySelector('meta[name="description"]');
+          if (md) md.setAttribute("content", v.metaDescription);
 
           document.querySelectorAll("[data-t]").forEach(function (el) {
             var key = el.getAttribute("data-t");
@@ -434,7 +459,10 @@ const WA_ICON =
       .ev-body { background: var(--navy-950); color: var(--color-text); padding-bottom: 84px; }
       .ev-main { max-width: 560px; margin-inline: auto; }
 
-      .ev-hero { padding: var(--space-6) var(--space-6) var(--space-12); }
+      /* O padding do antigo .ev-hero (que englobava a topbar) foi dividido:
+         topo na .ev-top, laterais/fundo na .ev-hero — visual idêntico. */
+      .ev-top { padding: var(--space-6) var(--space-6) 0; }
+      .ev-hero { padding: 0 var(--space-6) var(--space-12); }
       .ev-topbar { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); }
       .ev-brand { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-display); font-weight: 800; font-size: 1.25rem; letter-spacing: 0.06em; color: var(--white); }
       .ev-mark { width: 22px; height: 22px; flex: none; border-radius: 50%; background: radial-gradient(circle at 50% 60%, var(--red-500) 0 30%, transparent 32%); }
@@ -460,7 +488,9 @@ const WA_ICON =
       .ev-btn-primary { background: var(--color-primary); color: var(--white); width: 100%; border: none; box-shadow: var(--glow-red); }
 
       .ev-section { padding: var(--space-8) var(--space-6); }
-      .ev-kicker { font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--red-400); margin-bottom: var(--space-5); }
+      /* Usada em <p> e em <h2> (o kicker de soluções é h2 para o outline não
+         saltar h1→h3); font-family/line-height neutralizam o estilo de h2 do base.css. */
+      .ev-kicker { font-family: var(--font-sans); font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.14em; line-height: var(--lh-normal); text-transform: uppercase; color: var(--red-400); margin-bottom: var(--space-5); }
 
       .ev-solutions { display: grid; gap: var(--space-4); }
       /* --u é a cor de marca da unidade, e duas das quatro são navy
