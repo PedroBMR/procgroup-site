@@ -8,6 +8,12 @@ import { getLangFromUrl, useTranslations, logicalPath, localePath, isSingleVersi
 import { locales, defaultLocale, htmlLangAttr, ogLocaleAttr } from "../i18n/config";
 import "../styles/tokens.css";
 import "../styles/base.css";
+import "../styles/fonts.css";
+// URLs com hash dos arquivos que valem preload: o peso 800 da display (todo
+// h1/h2) e a variável Space Grotesk (corpo inteiro). O Vite dedupe com o
+// url() do fonts.css — não duplica o asset.
+import barlow800Url from "../assets/fonts/barlow-condensed-800.woff2?url";
+import spaceGroteskUrl from "../assets/fonts/space-grotesk-var.woff2?url";
 
 interface Props {
   title: string;
@@ -137,15 +143,11 @@ const schemaList = Array.isArray(schema) ? schema : schema ? [schema] : [];
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    {/* Pesos pedidos = pesos usados. Barlow 900 e Space Grotesk 500 não
-        aparecem em lugar nenhum do CSS (conferido por varredura de
-        font-weight em src/), então eram dois arquivos baixados à toa. */}
-    <link
-      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Space+Grotesk:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
+    {/* Fontes self-hosted (ver src/styles/fonts.css) — sem render-blocking do
+        Google e sem IP de visitante saindo do site. crossorigin é obrigatório
+        em preload de fonte mesmo same-origin (fetch em modo CORS). */}
+    <link rel="preload" href={barlow800Url} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={spaceGroteskUrl} as="font" type="font/woff2" crossorigin />
 
     <script type="application/ld+json" set:html={ldjson(organizationSchema)} />
     {schemaList.map((s) => <script type="application/ld+json" set:html={ldjson(s)} />)}

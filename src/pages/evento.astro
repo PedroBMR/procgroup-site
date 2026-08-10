@@ -9,6 +9,9 @@
 // e memoriza a escolha do visitante.
 import "../styles/tokens.css";
 import "../styles/base.css";
+import "../styles/fonts.css";
+import barlow800Url from "../assets/fonts/barlow-condensed-800.woff2?url";
+import spaceGroteskUrl from "../assets/fonts/space-grotesk-var.woff2?url";
 import { businessUnits } from "../data/businessUnits";
 import { evento } from "../data/events";
 import { whatsapp } from "../data/contact";
@@ -177,12 +180,8 @@ const WA_ICON =
     <meta name="twitter:description" content={ogDescription} />
     <meta name="twitter:image" content={ogImageUrl} />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Space+Grotesk:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="preload" href={barlow800Url} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={spaceGroteskUrl} as="font" type="font/woff2" crossorigin />
     <!-- <: um "</script>" literal num texto (ex.: cidade em events.ts) fecharia a tag aqui. -->
     <script id="ev-i18n" type="application/json" set:html={JSON.stringify(content).replace(/</g, "\\u003c")} />
   </head>

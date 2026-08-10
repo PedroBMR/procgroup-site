@@ -152,9 +152,16 @@ A parte de `vh` foi feita. A consolidação dos 9 valores (`480, 520, 560, 640, 
 4. **HSTS está comentado.** Só ativar depois de confirmar que todos os subdomínios servem HTTPS: o navegador passa a recusar HTTP por um ano e não há volta rápida.
 5. **Redirect apex↔www não foi habilitado.** O hPanel da Hostinger pode já estar redirecionando; duas regras na mesma direção geram loop. Confirmar antes de descomentar.
 
-### [ ] Fontes: falta o self-hosting
+### [x] Fontes: self-hosting — FEITO (2026-08-10, decisão do Pedro)
 
-Os pesos supérfluos já saíram, mas o `<link rel="stylesheet">` do Google continua **render-blocking** e custa 2 RTTs até `fonts.gstatic.com` antes do primeiro texto pintado — além de enviar o IP do visitante ao Google a cada pageview (LGPD). O ganho real exige baixar os `.woff2` para `public/fonts/` e declarar `@font-face` local, o que significa versionar binários de fonte no repositório. **Pendente de decisão sua** — não foi feito por conta própria.
+4 arquivos woff2 do subset latin (~89 KB total) versionados em `src/assets/fonts/` — não em
+`public/`: importados via `src/styles/fonts.css` com url() relativa, o Vite os emite em `/_astro/`
+com hash, herdando o cache imutável do `.htaccess` e o prefixo de base automaticamente. Space
+Grotesk veio como **fonte variável** (1 arquivo cobre 400–700); Barlow Condensed são 3 estáticos
+(600/700/800). `unicode-range` idêntico ao que o Google servia (fallback igual). Preload dos 2
+críticos (Barlow 800 + SG var) no `BaseLayout` e na `/evento`; `preconnect`/`<link>` do Google
+removidos dos dois. Verificado: **0 referências a googleapis/gstatic nos 74 arquivos do dist**,
+fontes carregam da própria origem, h1 renderiza Barlow Condensed. Licença SIL OFL 1.1.
 
 ---
 
@@ -411,7 +418,7 @@ e reavaliar `isSmall` (e a contagem de partículas) quando a largura cruzar o li
 
 ---
 
-### [~] Fontes do Google bloqueiam a renderização — pesos supérfluos removidos (P3); self-hosting pendente de decisão
+### [x] Fontes do Google bloqueiam a renderização — RESOLVIDO por completo em 2026-08-10 (self-hosting; ver item na P3)
 
 `BaseLayout.astro:109-114`. Os `preconnect` estão certos e o `display=swap` está presente, mas o
 `<link rel="stylesheet">` continua render-blocking e adiciona 2 RTTs até `fonts.gstatic.com` antes
