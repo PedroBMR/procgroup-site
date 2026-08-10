@@ -1,7 +1,7 @@
 ---
 import { getLangFromUrl } from "../i18n/utils";
 import { usePages } from "../i18n/pages";
-import { whatsapp, whatsappDisplay, WHATSAPP_NUMBER } from "../data/contact";
+import { whatsapp, whatsappDisplay, WHATSAPP_NUMBER, MAPS_URL } from "../data/contact";
 
 interface Props {
   title?: string;
@@ -21,7 +21,7 @@ const waHref = whatsappMsg ? whatsapp(whatsappMsg, whatsappNumber) : `https://wa
   <p><strong>{c.email}:</strong> <a href="mailto:comercial@procgroup.com.br">comercial@procgroup.com.br</a></p>
   <p><strong>{c.phone}:</strong> <a href="tel:+554632243532">+55 46 3224-3532</a></p>
   <p><strong>{c.whatsapp}:</strong> <a href={waHref} target="_blank" rel="noopener noreferrer">{whatsappDisplay(whatsappNumber)}</a></p>
-  <p><strong>{c.address}:</strong> {c.addressValue}</p>
+  <p><strong>{c.address}:</strong> {c.addressValue} · <a href={MAPS_URL} target="_blank" rel="noopener noreferrer">{c.mapLink}</a></p>
   <p><strong>{c.hours}:</strong> {c.hoursValue}</p>
   <p><strong>{c.alsoIn}:</strong> {c.alsoInValue}</p>
 </aside>
