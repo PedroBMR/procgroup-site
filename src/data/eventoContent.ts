@@ -7,6 +7,12 @@ import type { Locale } from "../i18n/config";
 /** Textos da interface da landing (hero + seções + formulário), por idioma. */
 export interface EventoUI {
   langName: string;
+  /** <title> do documento quando events.ts não define cidade (o caso com cidade é montado em evento.astro). */
+  docTitle: string;
+  /** meta[name=description]; também é a og:description do SSR (PT). */
+  metaDescription: string;
+  /** Texto do skip link (acessibilidade). */
+  skipLink: string;
   eyebrow: string;
   titulo: string;
   subtitulo: string;
@@ -39,6 +45,9 @@ export interface EventoUI {
 export const eventoUI: Record<Locale, EventoUI> = {
   pt: {
     langName: "Português",
+    docTitle: "Proc — Soluções de IA, Segurança e Infraestrutura",
+    metaDescription: "Conheça as soluções da Proc e fale com um especialista.",
+    skipLink: "Pular para o conteúdo",
     eyebrow: "Proc no evento",
     titulo: "Tecnologia inteligente para proteger, conectar e transformar",
     subtitulo:
@@ -70,6 +79,9 @@ export const eventoUI: Record<Locale, EventoUI> = {
   },
   en: {
     langName: "English",
+    docTitle: "Proc — AI, Security & IT Infrastructure Solutions",
+    metaDescription: "Explore Proc's solutions and talk to a specialist.",
+    skipLink: "Skip to content",
     eyebrow: "Proc at the event",
     titulo: "Intelligent technology to protect, connect, and transform",
     subtitulo:
@@ -101,6 +113,9 @@ export const eventoUI: Record<Locale, EventoUI> = {
   },
   es: {
     langName: "Español",
+    docTitle: "Proc — Soluciones de IA, Seguridad e Infraestructura",
+    metaDescription: "Conoce las soluciones de Proc y habla con un especialista.",
+    skipLink: "Saltar al contenido",
     eyebrow: "Proc en el evento",
     titulo: "Tecnología inteligente para proteger, conectar y transformar",
     subtitulo:

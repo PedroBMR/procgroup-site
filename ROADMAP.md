@@ -793,18 +793,17 @@ Levantamento pedido no fim do dia. **Nada abaixo foi implementado** — está tu
   (2 imagens, 5 SVGs).
 - Não chama mais serviço externo de geolocalização por IP (removido na P6).
 
-### [ ] `<title>` e `meta description` não acompanham o idioma
+### [x] `<title>` e `meta description` não acompanham o idioma — FEITO (2026-08-10)
 
-Ficam sempre em português, mesmo quando o script troca para `<html lang="en">`. Quem abre em inglês
-vê a aba em português. O script mexe no corpo mas não toca no `<head>` — verificado: 0 ocorrências
-de `document.title` no HTML publicado.
+Exatamente a solução sugerida: `docTitle` e `metaDescription` por idioma em `eventoContent.ts`,
+embutidos no JSON `#ev-i18n`; `applyLang` atualiza `document.title` e a `meta[name=description]`.
+Com `cidade` definida em `events.ts`, o título a cita por idioma ("Proc em/in/en {cidade}") —
+montado em `evento.astro`. Verificado no navegador: EN/ES/PT trocam título, meta e `<html lang>`.
 
-**Solução sugerida:** incluir `title` e `description` por idioma no JSON já embutido (`#ev-i18n`) e
-atualizá-los junto com o resto em `applyLang`.
+### [x] Nenhuma tag `og:` ou `twitter:` — FEITO (commit `1ad71a2`, antes de 2026-08-10)
 
-### [ ] Nenhuma tag `og:` ou `twitter:` — zero
-
-Confirmado no build: a página não tem `og:image`, `og:title` nem equivalentes do Twitter.
+Resolvido junto com o og:image do site todo: a página emite `og:` completo (type, site_name,
+title, description, url, image com dimensões) e `twitter:card` — conferido no fonte em 2026-08-10.
 
 **Por que importa mais aqui que no resto do site:** é, por natureza, **a página mais compartilhada**.
 A pessoa encosta o celular no chaveiro na feira e manda o link para colegas no WhatsApp — e hoje ele
@@ -815,13 +814,18 @@ de maior custo da lista.
 emitir `og:`/`twitter:` no `<head>` do `evento.astro` — que não usa o `BaseLayout`, então precisa das
 tags explicitamente.
 
-### [ ] Salto de heading `h1 → h3`
+### [x] Salto de heading `h1 → h3` — FEITO (2026-08-10)
 
-Os quatro cards de unidade usam `h3` sem um `h2` de seção antes. Outline medido: `h1` → `h3` ×4 → `h2`.
+O kicker "O que a Proc traz para você" virou `<h2 class="ev-kicker">` (a classe ganhou
+`font-family`/`line-height` para neutralizar o estilo de h2 do `base.css` — visual idêntico).
+Outline medido no navegador: `h1 → h2 → h3×4 → h2`.
 
-### [ ] `header` e `footer` estão dentro do `main`
+### [x] `header` e `footer` estão dentro do `main` — FEITO (2026-08-10)
 
-Assim não mapeiam para os landmarks `banner` e `contentinfo`. A página também não tem skip link.
+O wrapper `.ev-main` virou `<div>`; o `<header>` ficou só com a topbar (marca + idiomas), o hero
+foi para dentro do `<main id="ev-content">` e o `<footer>` é irmão. Árvore de acessibilidade
+confirma `banner`/`main`/`contentinfo`. Skip link traduzido (`data-t="skipLink"`) adicionado,
+usando o `.visually-hidden:focus-visible` que já existia no `base.css`.
 
 ### [ ] Configuração está genérica — decisão de conteúdo
 
