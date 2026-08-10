@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Breadcrumb from "../components/Breadcrumb.astro";
 import Button from "../components/Button.astro";
@@ -53,7 +54,8 @@ const otherUnits = getBusinessUnits(lang).filter((u) => u.slug !== unit.slug);
 // undefined (EN/ES), a página cai no template enxuto — chips + time.
 const rich = getSolutionRich(slug, lang);
 
-// Briefing de mídia do hero (placeholder até o asset real existir).
+// Mídia do hero: imagem real quando `asset` existe, senão o placeholder com o
+// briefing. A caption vira o alt — ela já descreve a cena em cada idioma.
 const media = solutionMedia[slug];
 
 const schema = [
@@ -103,7 +105,19 @@ const schema = [
   {media && (
     <section class="media-band">
       <div class="container">
-        <MediaPlaceholder kind={media.kind} caption={media.caption[lang]} prompt={media.prompt} lang={lang} color={unit.color} />
+        {media.asset ? (
+          <Image
+            class="media-hero"
+            src={media.asset}
+            alt={media.caption[lang]}
+            widths={[640, 960, 1232]}
+            sizes="(max-width: 1280px) calc(100vw - 3rem), 1232px"
+            loading="eager"
+            fetchpriority="high"
+          />
+        ) : (
+          <MediaPlaceholder kind={media.kind} caption={media.caption[lang]} prompt={media.prompt} lang={lang} color={unit.color} />
+        )}
       </div>
     </section>
   )}
@@ -375,6 +389,16 @@ const schema = [
   .hero-actions { display: flex; gap: var(--space-4); margin-top: var(--space-8); flex-wrap: wrap; }
 
   .media-band { padding-block: 0 var(--space-12); }
+  /* Mesmo enquadramento do placeholder que esta imagem substitui: 16:9 e canto
+     arredondado. A borda sutil evita que a arte, que é escura, se dissolva no
+     fundo escuro da página. */
+  .media-hero {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+  }
 
   .section { padding-block: var(--space-16); }
   .section-header { max-width: 680px; margin-bottom: var(--space-12); }

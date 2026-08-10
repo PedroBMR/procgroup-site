@@ -62,9 +62,19 @@ uniforme) — sujeito a autorização de uso de cada marca.
 
 ---
 
-## 3. Páginas de Solução — hero (placeholders ATIVOS)
+## 3. Páginas de Solução — hero — ✅ FEITO (2026-08-10)
 
-Já aparecem como placeholder logo abaixo do hero, com o briefing embutido.
+As quatro imagens foram geradas pelo Pedro no Google AI Studio (Nano Banana 2,
+1376×768) a partir dos prompts de `PROMPTS-IMAGENS.md`, e estão em
+`src/assets/images/solucoes/`. O `BusinessUnitTemplate` agora renderiza
+`<Image>` do `astro:assets` quando `solutionMedia[slug].asset` existe, caindo no
+`MediaPlaceholder` quando não — que é o estado da página de Cases.
+
+Foram entregues como **imagem**, não vídeo (decisão registrada em
+`PROMPTS-IMAGENS.md`): autoplay no topo de quatro páginas desfaria o ganho de
+performance das fontes locais e do JS enxuto.
+
+Briefing original de cada uma, mantido como referência:
 
 - **IA Industrial** (`/solucoes/ia-industrial`, vídeo): linha de produção com
   câmeras industriais, overlays de visão computacional (bounding boxes),
