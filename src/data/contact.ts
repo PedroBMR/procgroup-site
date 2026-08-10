@@ -11,6 +11,12 @@ export function whatsapp(message: string, numero: string = WHATSAPP_NUMBER): str
   return `https://wa.me/${numero}?text=${encodeURIComponent(message)}`;
 }
 
+/** Link "como chegar" no Google Maps. É um <a> comum: nenhum request externo
+    acontece antes do clique, então o site segue sem chamadas de terceiros. */
+export const MAPS_URL =
+  "https://www.google.com/maps/search/?api=1&query=" +
+  encodeURIComponent("Proc Group, Caetano Munhoz da Rocha, 480, Pato Branco, PR, Brasil");
+
 /** Formata um número armazenado ("5546991230911") para exibição ("+55 46 99123-0911"). */
 export function whatsappDisplay(numero: string): string {
   const ddd = numero.slice(2, 4);
