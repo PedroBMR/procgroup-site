@@ -5,6 +5,7 @@ import ContactChannels from "../../components/ContactChannels.astro";
 import { useTranslations, localePath } from "../../i18n/utils";
 import { usePages } from "../../i18n/pages";
 import { defaultLocale, type Locale } from "../../i18n/config";
+import { WHATSAPP_SUPORTE } from "../../data/contact";
 
 export function getStaticPaths() {
   return [{ params: { lang: undefined } }, { params: { lang: "en" } }, { params: { lang: "es" } }];
@@ -29,7 +30,9 @@ const t = usePages(lang).suporte;
 
   <section class="section">
     <div class="container">
-      <ContactChannels title={t.channelsTitle} />
+      {/* Número de SUPORTE, não o comercial — a página é de suporte técnico
+          (o WhatsApp da TopBar já usa este mesmo número). */}
+      <ContactChannels title={t.channelsTitle} whatsappNumber={WHATSAPP_SUPORTE} whatsappMsg={tr.topbar.suporteMsg} />
     </div>
   </section>
 </BaseLayout>

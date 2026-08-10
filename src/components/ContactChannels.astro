@@ -1,20 +1,26 @@
 ---
 import { getLangFromUrl } from "../i18n/utils";
 import { usePages } from "../i18n/pages";
+import { whatsapp, whatsappDisplay, WHATSAPP_NUMBER } from "../data/contact";
 
 interface Props {
   title?: string;
+  /** Número de WhatsApp (dígitos, ex.: WHATSAPP_SUPORTE). Padrão: comercial. */
+  whatsappNumber?: string;
+  /** Mensagem pré-preenchida ao abrir o WhatsApp. Sem ela, abre a conversa vazia. */
+  whatsappMsg?: string;
 }
 const lang = getLangFromUrl(Astro.url);
 const c = usePages(lang).contactChannels;
-const { title = c.defaultTitle } = Astro.props;
+const { title = c.defaultTitle, whatsappNumber = WHATSAPP_NUMBER, whatsappMsg } = Astro.props;
+const waHref = whatsappMsg ? whatsapp(whatsappMsg, whatsappNumber) : `https://wa.me/${whatsappNumber}`;
 ---
 
 <aside class="contact-info">
   <h2>{title}</h2>
-  <p><strong>{c.email}:</strong> comercial@procgroup.com.br</p>
-  <p><strong>{c.phone}:</strong> +55 46 3224-3532</p>
-  <p><strong>{c.whatsapp}:</strong> +55 46 99141-1324</p>
+  <p><strong>{c.email}:</strong> <a href="mailto:comercial@procgroup.com.br">comercial@procgroup.com.br</a></p>
+  <p><strong>{c.phone}:</strong> <a href="tel:+554632243532">+55 46 3224-3532</a></p>
+  <p><strong>{c.whatsapp}:</strong> <a href={waHref} target="_blank" rel="noopener noreferrer">{whatsappDisplay(whatsappNumber)}</a></p>
   <p><strong>{c.address}:</strong> {c.addressValue}</p>
   <p><strong>{c.hours}:</strong> {c.hoursValue}</p>
   <p><strong>{c.alsoIn}:</strong> {c.alsoInValue}</p>
@@ -24,4 +30,6 @@ const { title = c.defaultTitle } = Astro.props;
   .contact-info { background: var(--color-bg-alt); border-radius: var(--radius-md); padding: var(--space-8); max-width: 420px; }
   .contact-info h2 { font-size: var(--fs-lg); }
   .contact-info p { margin-top: var(--space-3); font-size: var(--fs-sm); color: var(--color-text-muted); }
+  .contact-info a { text-decoration: underline; text-underline-offset: 2px; transition: color var(--dur-fast) ease; }
+  .contact-info a:hover { color: var(--color-text); }
 </style>
