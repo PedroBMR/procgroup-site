@@ -1025,22 +1025,14 @@ Pedido do usuário no fim do dia. O item "Suporte Técnico" da barra superior le
 
 Verificado no build: o link sai correto nos três idiomas.
 
-### ⚠️ [ ] Decorrência: a página `/suporte` ficou órfã e mostra o número errado
+### [x] Decorrência: a página `/suporte` ficou órfã e mostrava o número errado — FEITO (2026-08-10, opção 2)
 
-**A TopBar era o único link para `/suporte`.** Agora são **zero links**, mas as três versões
-(`/suporte`, `/en/suporte`, `/es/suporte`) continuam sendo geradas **e estão no sitemap** — o
-buscador vai indexar uma página que ninguém alcança navegando.
-
-Pior: o conteúdo dela lista o WhatsApp **+55 46 99141-1324**, que é o **comercial**. Quem chegar
-pela busca procurando suporte recebe o número de vendas.
-
-Três saídas, pendentes de decisão:
-1. **Apagar a página** e tirá-la do sitemap, se o WhatsApp a substitui de vez.
-2. **Manter e corrigir**: trocar o número exibido para o de suporte e voltar a linká-la de algum
-   lugar (rodapé, por exemplo), deixando o WhatsApp como atalho rápido na barra.
-3. **Manter só para busca**: corrigir o número e aceitar que só se chega por link direto.
-
-Enquanto não se decide, o site publica uma página invisível com o telefone errado.
+Decisão do Pedro: **manter e corrigir**. O `ContactChannels` ganhou props `whatsappNumber`/
+`whatsappMsg` — `/suporte` passa `WHATSAPP_SUPORTE` com a mensagem traduzida (`topbar.suporteMsg`);
+`/contato` segue no comercial por padrão. E-mail, telefone e WhatsApp do card viraram links
+(`mailto:`/`tel:`/`wa.me`, novo helper `whatsappDisplay()` em `contact.ts` formata a exibição).
+O rodapé ganhou o link "Suporte técnico" (`footer.suporteLink`, PT/EN/ES) — a página saiu de
+0 para 86 links de entrada no build. A TopBar continua com o atalho direto de WhatsApp.
 
 ### [x] Links de redes sociais — FEITO (2026-07-20)
 
