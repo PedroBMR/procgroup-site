@@ -834,14 +834,15 @@ foi para dentro do `<main id="ev-content">` e o `<footer>` é irmão. Árvore de
 confirma `banner`/`main`/`contentinfo`. Skip link traduzido (`data-t="skipLink"`) adicionado,
 usando o `.visually-hidden:focus-visible` que já existia no `base.css`.
 
-### [ ] Configuração está genérica — decisão de conteúdo
+### [x] Configuração está genérica — DECISÃO TOMADA (2026-08-10): fica genérico
 
-`events.ts` tem `cidade: ""` e eyebrow "Proc no evento". Enquanto a cidade estiver vazia, o campo
-oculto `event` do formulário vai como **"Evento"**, então o lead que chega no e-mail **não diz de qual
-feira veio**.
+Decisão do Pedro: a cidade depende do evento, então `cidade: ""` fica assim **de propósito** até
+haver uma feira concreta. Não é pendência — é o estado neutro do arquivo entre eventos.
 
-O arquivo foi feito para ser editado a cada evento: preencher `cidade` faz o título citar a cidade,
-pré-preenche o campo de cidade do formulário e identifica a origem no assunto do e-mail.
+**Checklist a cada evento novo** (editar `src/data/events.ts`): preencher `cidade` — isso faz o
+título citar a cidade nos 3 idiomas (desde 2026-08-10 também no `<title>`), pré-preenche o campo
+de cidade do formulário e identifica a feira no assunto do e-mail do lead. Opcional: ajustar
+`eyebrow`/`titulo`/`whatsappMsg` e reduzir `unidades` às áreas relevantes.
 
 ### [ ] `/evento` usa uma terceira arquitetura de i18n
 
