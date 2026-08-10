@@ -3,6 +3,7 @@ import TopBar from "../components/TopBar.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import { withBase } from "../utils/url";
+import { socialProfiles } from "../data/social";
 import { getLangFromUrl, useTranslations, logicalPath, localePath, isSingleVersionPath } from "../i18n/utils";
 import { locales, defaultLocale, htmlLangAttr, ogLocaleAttr } from "../i18n/config";
 import "../styles/tokens.css";
@@ -91,7 +92,12 @@ const organizationSchema = {
     addressRegion: "PR",
     addressCountry: "BR",
   },
+  sameAs: socialProfiles.map((s) => s.href),
 };
+
+// Escapar `<` evita que um "</script>" literal em qualquer texto do schema
+// (títulos de post vêm do WordPress) feche a tag e injete markup no head.
+const ldjson = (s: Record<string, unknown>) => JSON.stringify(s).replace(/</g, "\\u003c");
 
 const schemaList = Array.isArray(schema) ? schema : schema ? [schema] : [];
 ---
@@ -141,8 +147,8 @@ const schemaList = Array.isArray(schema) ? schema : schema ? [schema] : [];
       rel="stylesheet"
     />
 
-    <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
-    {schemaList.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
+    <script type="application/ld+json" set:html={ldjson(organizationSchema)} />
+    {schemaList.map((s) => <script type="application/ld+json" set:html={ldjson(s)} />)}
   </head>
   <body>
     <a href="#main" class="visually-hidden">{t.common.skipLink}</a>
