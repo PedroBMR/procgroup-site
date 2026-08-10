@@ -1,0 +1,48 @@
+/* Fontes self-hosted (antes: Google Fonts via <link>, render-blocking + 2 RTTs
+   até fonts.gstatic.com + IP do visitante indo ao Google a cada pageview/LGPD).
+   Arquivos woff2 do subset latin em src/assets/fonts/ — o Vite os emite em
+   /_astro/ com hash, então herdam o cache imutável do .htaccess e o prefixo de
+   base do deploy. O unicode-range é o mesmo que o Google servia: caracteres
+   fora dele (ex.: "✓") caem na fonte de sistema, comportamento idêntico.
+
+   Space Grotesk é fonte VARIÁVEL: um arquivo cobre os pesos 300–700 (o site
+   usa 400/600/700). Barlow Condensed são estáticos, um por peso.
+
+   Licença: ambas sob SIL Open Font License 1.1 — self-hosting permitido.
+   Origem: fonts.google.com (Barlow Condensed v13, Space Grotesk v22). */
+
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url("../assets/fonts/space-grotesk-var.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Barlow Condensed";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../assets/fonts/barlow-condensed-600.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Barlow Condensed";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../assets/fonts/barlow-condensed-700.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Barlow Condensed";
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("../assets/fonts/barlow-condensed-800.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
