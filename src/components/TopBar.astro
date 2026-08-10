@@ -1,6 +1,7 @@
 ---
 import { withBase } from "../utils/url";
 import { whatsapp, WHATSAPP_SUPORTE } from "../data/contact";
+import { socialProfiles as socialLinks } from "../data/social";
 import { getLangFromUrl, useTranslations, localizePath, localeAlternates } from "../i18n/utils";
 import { localeLabels, localeNames, htmlLangAttr } from "../i18n/config";
 import { flagSvg } from "../i18n/flags";
@@ -50,18 +51,6 @@ const utilityLinks: UtilityLink[] = [
   { label: t.topbar.trabalhe, href: localizePath("/trabalhe-conosco", lang), icon: "briefcase" },
 ];
 
-// Perfis reais da Proc. Antes estes links apontavam para a home de cada rede
-// (facebook.com, instagram.com…), enquanto o aria-label prometia o perfil da
-// empresa — o rótulo dizia uma coisa e o link levava a outra.
-//
-// URLs sem parâmetro de rastreamento: o `?trk=` do LinkedIn e o `?locale=pt_BR`
-// do Facebook vêm de copiar o endereço logado. O locale fixo é especialmente
-// indesejado num site trilíngue.
-const socialLinks = [
-  { label: "Facebook", href: "https://www.facebook.com/procgroupbrasil/", icon: "facebook" },
-  { label: "Instagram", href: "https://www.instagram.com/procgroup/", icon: "instagram" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/company/procgroupti", icon: "linkedin" },
-];
 ---
 
 <div class="topbar">
