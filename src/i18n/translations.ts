@@ -79,7 +79,7 @@ export const translations = {
     home: {
       metaTitle: "Proc Group — IA, Visão Computacional e Infraestrutura de TI",
       metaDescription:
-        "A Proc desenvolve uma plataforma própria de Inteligência Artificial, Visão Computacional e Infraestrutura de TI para tornar cidades, empresas e indústrias mais seguras, eficientes e inteligentes.",
+        "Plataforma própria de IA, Visão Computacional e Infraestrutura de TI que torna cidades, empresas e indústrias mais seguras, eficientes e inteligentes.",
       heroEyebrow: "Plataforma Proc AI",
       heroTitle: "Tecnologia inteligente para um mundo mais seguro, conectado e eficiente.",
       heroSubtitle:
@@ -383,7 +383,7 @@ export const translations = {
     home: {
       metaTitle: "Proc Group — AI, Computer Vision and IT Infrastructure",
       metaDescription:
-        "Proc builds its own Artificial Intelligence, Computer Vision and IT Infrastructure platform to make cities, companies and industries safer, more efficient and smarter.",
+        "Proc's own AI, Computer Vision and IT Infrastructure platform makes cities, companies and industries safer, smarter and more efficient.",
       heroEyebrow: "Proc AI Platform",
       heroTitle: "Intelligent technology for a safer, more connected, more efficient world.",
       heroSubtitle:
@@ -682,7 +682,7 @@ export const translations = {
     home: {
       metaTitle: "Proc Group — IA, Visión Artificial e Infraestructura de TI",
       metaDescription:
-        "Proc desarrolla su propia plataforma de Inteligencia Artificial, Visión Artificial e Infraestructura de TI para hacer que ciudades, empresas e industrias sean más seguras, eficientes e inteligentes.",
+        "Plataforma propia de IA, Visión Artificial e Infraestructura de TI que hace más seguras, eficientes e inteligentes a ciudades, empresas e industrias.",
       heroEyebrow: "Plataforma Proc AI",
       heroTitle: "Tecnología inteligente para un mundo más seguro, conectado y eficiente.",
       heroSubtitle:

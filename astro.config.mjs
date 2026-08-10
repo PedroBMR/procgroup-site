@@ -8,8 +8,10 @@ export default defineConfig({
   base: '/procgroup-site',
   integrations: [
     sitemap({
-      // A página 404 não deve ser indexada, e é a única com noIndex.
-      filter: (page) => !page.includes('/404'),
+      // Páginas noindex ficam fora do sitemap (sinal contraditório): a 404 e
+      // a landing /evento (chaveiro NFC, acesso direto). O endsWith preserva
+      // /eventos/, que é a agenda pública e deve continuar no sitemap.
+      filter: (page) => !page.includes('/404') && !page.endsWith('/evento/'),
     }),
   ],
   image: {
