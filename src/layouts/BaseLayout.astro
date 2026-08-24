@@ -23,6 +23,14 @@ interface Props {
   ogImage?: string;
   schema?: Record<string, unknown> | Record<string, unknown>[];
   /**
+   * Página sem o chrome do site: sem TopBar, Header nem Footer. Para páginas
+   * que existem para uma decisão só e trazem a própria barra de marca — hoje
+   * /comecar. Não confundir com uma landing solta: o <head> continua vindo
+   * daqui, então canonical, hreflang, OG, schema e o noindex de preview seguem
+   * corretos.
+   */
+  bare?: boolean;
+  /**
    * Força `noindex,nofollow` numa página específica (404, /evento). Fora isso
    * NÃO precisa ser passado: enquanto o build não sai no domínio da Proc, o
    * padrão já é `true` — ver o cálculo de `bloquearIndexacao` abaixo.
@@ -40,6 +48,7 @@ const {
   ogImage = "/og-default.png",
   schema,
   noIndex,
+  bare = false,
 } = Astro.props;
 
 // Enquanto o site é preview no github.io, TODA página sai com noindex.
@@ -176,12 +185,12 @@ const schemaList = Array.isArray(schema) ? schema : schema ? [schema] : [];
   </head>
   <body>
     <a href="#main" class="visually-hidden">{t.common.skipLink}</a>
-    <TopBar />
-    <Header />
+    {!bare && <TopBar />}
+    {!bare && <Header />}
     <main id="main" tabindex="-1">
       <slot />
     </main>
-    <Footer />
+    {!bare && <Footer />}
 
     <script>
       import "../scripts/motion.ts";
