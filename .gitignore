@@ -22,3 +22,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# trabalho arquivado — código parado que não entra no build nem no repo
+_arquivo/
