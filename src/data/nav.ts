@@ -30,7 +30,7 @@ export function getMainNav(lang: Locale): NavItem[] {
       href: L("/solucoes"),
       children: [
         { label: t.sol.cidades.label, href: L("/solucoes/cidades-inteligentes"), description: t.sol.cidades.desc },
-        { label: t.sol.seguranca.label, href: L("/solucoes/seguranca-corporativa"), description: t.sol.seguranca.desc },
+        { label: t.sol.seguranca.label, href: L("/solucoes/ambientes-inteligentes"), description: t.sol.seguranca.desc },
         { label: t.sol.ti.label, href: L("/solucoes/infraestrutura-de-ti"), description: t.sol.ti.desc },
         { label: t.sol.ia.label, href: L("/solucoes/ia-industrial"), description: t.sol.ia.desc },
       ],
@@ -42,7 +42,7 @@ export function getMainNav(lang: Locale): NavItem[] {
       href: L("/solucoes"),
       children: [
         { label: t.seg.governo.label, href: L("/solucoes/cidades-inteligentes"), description: t.seg.governo.desc },
-        { label: t.seg.empresas.label, href: L("/solucoes/seguranca-corporativa"), description: t.seg.empresas.desc },
+        { label: t.seg.empresas.label, href: L("/solucoes/ambientes-inteligentes"), description: t.seg.empresas.desc },
         { label: t.seg.industria.label, href: L("/solucoes/ia-industrial"), description: t.seg.industria.desc },
       ],
     },

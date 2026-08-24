@@ -21,13 +21,13 @@ export interface EventConfig {
 
 // ▼▼▼ EDITE AQUI A CADA EVENTO ▼▼▼
 // Para destacar só algumas áreas, deixe em `unidades` apenas os slugs desejados:
-//   "cidades-inteligentes" · "seguranca-corporativa" · "infraestrutura-de-ti" · "ia-industrial"
+//   "cidades-inteligentes" · "ambientes-inteligentes" · "infraestrutura-de-ti" · "ia-industrial"
 export const evento: EventConfig = {
   cidade: "",
   eyebrow: "Proc no evento",
   titulo: "Tecnologia inteligente para proteger, conectar e transformar",
   subtitulo:
     "IA, Visão Computacional, Segurança e Infraestrutura de TI numa única plataforma. Conheça as soluções da Proc e fale com um especialista.",
-  unidades: ["cidades-inteligentes", "seguranca-corporativa", "infraestrutura-de-ti", "ia-industrial"],
+  unidades: ["cidades-inteligentes", "ambientes-inteligentes", "infraestrutura-de-ti", "ia-industrial"],
   whatsappMsg: "Olá! Conheci a Proc num evento e quero saber mais sobre as soluções de vocês.",
 };

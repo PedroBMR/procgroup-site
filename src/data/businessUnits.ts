@@ -22,7 +22,7 @@ interface UnitBase {
 
 const unitsBase: UnitBase[] = [
   { slug: "cidades-inteligentes", href: "/solucoes/cidades-inteligentes", color: "var(--red-500)", shortName: "Smart Cities" },
-  { slug: "seguranca-corporativa", href: "/solucoes/seguranca-corporativa", color: "var(--navy-900)", shortName: "Corporate Security" },
+  { slug: "ambientes-inteligentes", href: "/solucoes/ambientes-inteligentes", color: "var(--navy-900)", shortName: "Smart Environments" },
   { slug: "infraestrutura-de-ti", href: "/solucoes/infraestrutura-de-ti", color: "var(--red-600)", shortName: "IT Infrastructure" },
   { slug: "ia-industrial", href: "/solucoes/ia-industrial", color: "var(--navy-700)", shortName: "Industrial AI" },
 ];
@@ -57,8 +57,8 @@ const unitsCopy: Record<Locale, Record<string, UnitCopy>> = {
         "Monitoramento Escolar",
       ],
     },
-    "seguranca-corporativa": {
-      name: "Segurança Corporativa",
+    "ambientes-inteligentes": {
+      name: "Ambientes Inteligentes",
       tagline: "Proteção inteligente para empresas e indústrias",
       description:
         "Soluções de videomonitoramento com IA, controle de acesso facial e gestão de alarmes para proteger patrimônio, pessoas e operações corporativas com monitoramento remoto 24x7.",
@@ -131,8 +131,8 @@ const unitsCopy: Record<Locale, Record<string, UnitCopy>> = {
         "School Monitoring",
       ],
     },
-    "seguranca-corporativa": {
-      name: "Corporate Security",
+    "ambientes-inteligentes": {
+      name: "Smart Environments",
       tagline: "Intelligent protection for businesses and industries",
       description:
         "AI-powered video surveillance, facial access control and alarm management to protect assets, people and corporate operations with 24x7 remote monitoring.",
@@ -205,8 +205,8 @@ const unitsCopy: Record<Locale, Record<string, UnitCopy>> = {
         "Monitoreo Escolar",
       ],
     },
-    "seguranca-corporativa": {
-      name: "Seguridad Corporativa",
+    "ambientes-inteligentes": {
+      name: "Ambientes Inteligentes",
       tagline: "Protección inteligente para empresas e industrias",
       description:
         "Soluciones de videovigilancia con IA, control de acceso facial y gestión de alarmas para proteger patrimonio, personas y operaciones corporativas con monitoreo remoto 24x7.",

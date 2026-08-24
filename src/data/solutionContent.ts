@@ -178,7 +178,7 @@ const pt: Record<string, SolutionRich> = {
     ],
   },
 
-  "seguranca-corporativa": {
+  "ambientes-inteligentes": {
     challengesTitle: "Os desafios da segurança corporativa moderna",
     challengesIntro: [
       "A proteção de pessoas e patrimônios vai muito além da instalação de câmeras. Empresas modernas precisam identificar riscos antes que incidentes aconteçam, controlar acessos de forma inteligente e transformar milhares de imagens em informações capazes de apoiar decisões rápidas.",
@@ -195,7 +195,7 @@ const pt: Record<string, SolutionRich> = {
       "Estacionamentos sem gestão inteligente.",
       "Alto tempo gasto na investigação de ocorrências.",
     ],
-    whyTitle: "Por que investir em Segurança Corporativa Inteligente?",
+    whyTitle: "Por que investir em Ambientes Inteligentes?",
     whyIntro: [
       "A Inteligência Artificial permite que a segurança deixe de atuar apenas após um incidente e passe a identificar comportamentos suspeitos e situações de risco enquanto eles acontecem.",
       "Cada câmera se torna um sensor inteligente, capaz de reconhecer pessoas, veículos e objetos e gerar alertas automáticos sempre que uma situação exigir atenção.",
@@ -225,7 +225,7 @@ const pt: Record<string, SolutionRich> = {
       "Dashboards Gerenciais",
       "Tomada de Decisão",
     ],
-    featuresTitle: "Soluções da Plataforma de Segurança Corporativa",
+    featuresTitle: "Soluções da Plataforma de Ambientes Inteligentes",
     featureGroups: [
       {
         title: "Videomonitoramento Inteligente com IA",
@@ -813,7 +813,7 @@ const en: Record<string, SolutionRich> = {
     ],
   },
 
-  "seguranca-corporativa": {
+  "ambientes-inteligentes": {
     challengesTitle: "The challenges of modern corporate security",
     challengesIntro: [
       "Protecting people and assets goes far beyond installing cameras. Modern companies need to identify risks before incidents happen, control access intelligently and turn thousands of images into information that supports fast decisions.",
@@ -830,7 +830,7 @@ const en: Record<string, SolutionRich> = {
       "Parking areas without intelligent management.",
       "High time spent investigating incidents.",
     ],
-    whyTitle: "Why invest in Intelligent Corporate Security?",
+    whyTitle: "Why invest in Smart Environments?",
     whyIntro: [
       "Artificial Intelligence lets security stop acting only after an incident and start identifying suspicious behavior and risk situations as they happen.",
       "Each camera becomes an intelligent sensor, able to recognize people, vehicles and objects and generate automatic alerts whenever a situation requires attention.",
@@ -851,7 +851,7 @@ const en: Record<string, SolutionRich> = {
       "Every event is processed by AI algorithms that continuously analyze images, access and movement to identify relevant situations, generate alerts and support decisions.",
     ],
     flow: ["Cameras • Controllers • Sensors • Barriers", "Computer Vision", "Artificial Intelligence", "People and Vehicle Recognition", "Event Analysis", "Intelligent Alerts", "Management Dashboards", "Decision-Making"],
-    featuresTitle: "Corporate Security Platform solutions",
+    featuresTitle: "Smart Environments Platform solutions",
     featureGroups: [
       { title: "Intelligent AI Video Surveillance", intro: "Far beyond recording: the platform continuously analyzes footage to identify suspicious behavior and risk situations.", items: ["Quick search through footage", "Search by people and by vehicles", "Search by physical traits, clothing and objects", "Dwell time in specific areas", "Queue and crowd monitoring", "Restricted-area monitoring", "Automatic alerts"] },
       { title: "Preventive Monitoring", intro: "AI automatically identifies events that may pose risks to the operation.", items: ["People in restricted areas", "Perimeter intrusion", "Dwell time above the allowed limit", "Abandoned or removed objects", "People running", "Movement during unauthorized hours", "Unauthorized vehicles"] },
@@ -1182,7 +1182,7 @@ const es: Record<string, SolutionRich> = {
     ],
   },
 
-  "seguranca-corporativa": {
+  "ambientes-inteligentes": {
     challengesTitle: "Los desafíos de la seguridad corporativa moderna",
     challengesIntro: [
       "La protección de personas y patrimonios va mucho más allá de la instalación de cámaras. Las empresas modernas necesitan identificar riesgos antes de que ocurran los incidentes, controlar accesos de forma inteligente y transformar miles de imágenes en información capaz de apoyar decisiones rápidas.",
@@ -1199,7 +1199,7 @@ const es: Record<string, SolutionRich> = {
       "Estacionamientos sin gestión inteligente.",
       "Alto tiempo dedicado a la investigación de ocurrencias.",
     ],
-    whyTitle: "¿Por qué invertir en Seguridad Corporativa Inteligente?",
+    whyTitle: "¿Por qué invertir en Ambientes Inteligentes?",
     whyIntro: [
       "La Inteligencia Artificial permite que la seguridad deje de actuar solo después de un incidente y pase a identificar comportamientos sospechosos y situaciones de riesgo mientras ocurren.",
       "Cada cámara se convierte en un sensor inteligente, capaz de reconocer personas, vehículos y objetos y generar alertas automáticas siempre que una situación requiera atención.",
@@ -1220,7 +1220,7 @@ const es: Record<string, SolutionRich> = {
       "Todos los eventos son procesados por algoritmos de IA que analizan continuamente imágenes, accesos y movimientos para identificar situaciones relevantes, generar alertas y apoyar la decisión.",
     ],
     flow: ["Cámaras • Controladores • Sensores • Barreras", "Visión Artificial", "Inteligencia Artificial", "Reconocimiento de Personas y Vehículos", "Análisis de Eventos", "Alertas Inteligentes", "Dashboards Gerenciales", "Toma de Decisión"],
-    featuresTitle: "Soluciones de la Plataforma de Seguridad Corporativa",
+    featuresTitle: "Soluciones de la Plataforma de Ambientes Inteligentes",
     featureGroups: [
       { title: "Videovigilancia Inteligente con IA", intro: "Mucho más que grabación: la plataforma analiza continuamente los videos para identificar comportamientos sospechosos y situaciones de riesgo.", items: ["Búsqueda rápida en grabaciones", "Búsqueda por personas y por vehículos", "Búsqueda por rasgos físicos, ropa y objetos", "Permanencia en áreas específicas", "Monitoreo de filas y aglomeraciones", "Monitoreo de áreas restringidas", "Alertas automáticas"] },
       { title: "Monitoreo Preventivo", intro: "La IA identifica automáticamente eventos que pueden representar riesgos para la operación.", items: ["Personas en áreas restringidas", "Invasión de perímetro", "Permanencia por encima del tiempo permitido", "Objetos abandonados o retirados", "Personas corriendo", "Circulación en horarios no autorizados", "Vehículos no autorizados"] },

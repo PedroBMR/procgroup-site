@@ -151,19 +151,19 @@ export const eventoUI: Record<Locale, EventoUI> = {
 export const unitTags: Record<Locale, Record<string, string>> = {
   pt: {
     "cidades-inteligentes": "Cidades",
-    "seguranca-corporativa": "Corporativo",
+    "ambientes-inteligentes": "Ambientes",
     "infraestrutura-de-ti": "Infra TI",
     "ia-industrial": "Indústria",
   },
   en: {
     "cidades-inteligentes": "Smart Cities",
-    "seguranca-corporativa": "Corporate",
+    "ambientes-inteligentes": "Environments",
     "infraestrutura-de-ti": "IT Infra",
     "ia-industrial": "Industry",
   },
   es: {
     "cidades-inteligentes": "Ciudades",
-    "seguranca-corporativa": "Corporativo",
+    "ambientes-inteligentes": "Ambientes",
     "infraestrutura-de-ti": "Infra TI",
     "ia-industrial": "Industria",
   },
@@ -196,8 +196,8 @@ export const eventoUnitsI18n: Record<"en" | "es", Record<string, UnitI18n>> = {
         "School Monitoring",
       ],
     },
-    "seguranca-corporativa": {
-      name: "Corporate Security",
+    "ambientes-inteligentes": {
+      name: "Smart Environments",
       tagline: "Intelligent protection for businesses and industries",
       description:
         "AI-powered video surveillance, facial access control and alarm management to protect assets, people and corporate operations with 24x7 remote monitoring.",
@@ -266,8 +266,8 @@ export const eventoUnitsI18n: Record<"en" | "es", Record<string, UnitI18n>> = {
         "Monitoreo Escolar",
       ],
     },
-    "seguranca-corporativa": {
-      name: "Seguridad Corporativa",
+    "ambientes-inteligentes": {
+      name: "Ambientes Inteligentes",
       tagline: "Protección inteligente para empresas e industrias",
       description:
         "Soluciones de videovigilancia con IA, control de acceso facial y gestión de alarmas para proteger patrimonio, personas y operaciones corporativas con monitoreo remoto 24x7.",

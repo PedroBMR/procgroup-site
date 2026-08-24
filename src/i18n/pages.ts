@@ -17,7 +17,7 @@ export const pages = {
       storyEyebrow: "Nossa história",
       storyTitle: "Uma plataforma. Múltiplas soluções. Uma única inteligência.",
       storyText:
-        "Desde o primeiro projeto, acreditamos que inovação de verdade acontece quando a tecnologia serve às pessoas — melhorando processos, garantindo segurança, fortalecendo negócios e contribuindo para o bem comum. Em 2019 ampliamos nossa atuação para o setor público, criando soluções que hoje fazem parte da rotina de prefeituras, forças de segurança e aeroportos. Hoje a Proc não é apenas uma integradora de tecnologias — é uma empresa que desenvolve sua própria plataforma de Inteligência Artificial, com equipes especializadas em Cidades Inteligentes, Segurança Corporativa, Infraestrutura de TI e IA Industrial.",
+        "Desde o primeiro projeto, acreditamos que inovação de verdade acontece quando a tecnologia serve às pessoas — melhorando processos, garantindo segurança, fortalecendo negócios e contribuindo para o bem comum. Em 2019 ampliamos nossa atuação para o setor público, criando soluções que hoje fazem parte da rotina de prefeituras, forças de segurança e aeroportos. Hoje a Proc não é apenas uma integradora de tecnologias — é uma empresa que desenvolve sua própria plataforma de Inteligência Artificial, com equipes especializadas em Cidades Inteligentes, Ambientes Inteligentes, Infraestrutura de TI e IA Industrial.",
       timelineEyebrow: "Nossa trajetória",
       timelineTitle: "Mais de uma década construindo tecnologia com propósito",
       timeline: [
@@ -220,7 +220,7 @@ export const pages = {
       storyEyebrow: "Our story",
       storyTitle: "One platform. Multiple solutions. A single intelligence.",
       storyText:
-        "From the very first project, we've believed that real innovation happens when technology serves people — improving processes, ensuring safety, strengthening businesses and contributing to the common good. In 2019 we expanded into the public sector, creating solutions that are now part of the daily routine of city halls, security forces and airports. Today Proc is not just a technology integrator — it's a company that builds its own Artificial Intelligence platform, with teams specialized in Smart Cities, Corporate Security, IT Infrastructure and Industrial AI.",
+        "From the very first project, we've believed that real innovation happens when technology serves people — improving processes, ensuring safety, strengthening businesses and contributing to the common good. In 2019 we expanded into the public sector, creating solutions that are now part of the daily routine of city halls, security forces and airports. Today Proc is not just a technology integrator — it's a company that builds its own Artificial Intelligence platform, with teams specialized in Smart Cities, Smart Environments, IT Infrastructure and Industrial AI.",
       timelineEyebrow: "Our journey",
       timelineTitle: "Over a decade building technology with purpose",
       timeline: [
@@ -420,7 +420,7 @@ export const pages = {
       storyEyebrow: "Nuestra historia",
       storyTitle: "Una plataforma. Múltiples soluciones. Una única inteligencia.",
       storyText:
-        "Desde el primer proyecto, creemos que la verdadera innovación ocurre cuando la tecnología sirve a las personas — mejorando procesos, garantizando seguridad, fortaleciendo negocios y contribuyendo al bien común. En 2019 ampliamos nuestra actuación al sector público, creando soluciones que hoy forman parte de la rutina de municipios, fuerzas de seguridad y aeropuertos. Hoy Proc no es solo una integradora de tecnologías — es una empresa que desarrolla su propia plataforma de Inteligencia Artificial, con equipos especializados en Ciudades Inteligentes, Seguridad Corporativa, Infraestructura de TI e IA Industrial.",
+        "Desde el primer proyecto, creemos que la verdadera innovación ocurre cuando la tecnología sirve a las personas — mejorando procesos, garantizando seguridad, fortaleciendo negocios y contribuyendo al bien común. En 2019 ampliamos nuestra actuación al sector público, creando soluciones que hoy forman parte de la rutina de municipios, fuerzas de seguridad y aeropuertos. Hoy Proc no es solo una integradora de tecnologías — es una empresa que desarrolla su propia plataforma de Inteligencia Artificial, con equipos especializados en Ciudades Inteligentes, Ambientes Inteligentes, Infraestructura de TI e IA Industrial.",
       timelineEyebrow: "Nuestra trayectoria",
       timelineTitle: "Más de una década construyendo tecnología con propósito",
       timeline: [

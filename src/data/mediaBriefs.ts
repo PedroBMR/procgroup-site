@@ -1,6 +1,6 @@
 import type { Locale } from "../i18n/config";
 import heroIaIndustrial from "../assets/images/solucoes/hero-ia-industrial.jpg";
-import heroSegurancaCorporativa from "../assets/images/solucoes/hero-seguranca-corporativa.jpg";
+import heroAmbientesInteligentes from "../assets/images/solucoes/hero-ambientes-inteligentes.jpg";
 import heroInfraestruturaDeTi from "../assets/images/solucoes/hero-infraestrutura-de-ti.jpg";
 import heroCidadesInteligentes from "../assets/images/solucoes/hero-cidades-inteligentes.jpg";
 
@@ -35,7 +35,7 @@ export const solutionMedia: Record<string, MediaBrief> = {
       "Vídeo/imagem de uma linha de produção industrial moderna e limpa, com câmeras industriais monitorando o processo. Overlays de visão computacional destacando peças e defeitos (bounding boxes), contagem automática e indicadores de qualidade em dashboards ao lado. Iluminação fria e tecnológica; paleta navy (#0b1730) + vermelho (#e2081d) como cor de destaque; tom sóbrio e profissional. Proporção 16:9. Se vídeo: 10–15s em loop, com movimento sutil de câmera.",
     asset: heroIaIndustrial,
   },
-  "seguranca-corporativa": {
+  "ambientes-inteligentes": {
     kind: "video",
     caption: {
       pt: "Recepção corporativa com controle de acesso facial, câmeras inteligentes e central de monitoramento ao fundo.",
@@ -44,7 +44,7 @@ export const solutionMedia: Record<string, MediaBrief> = {
     },
     prompt:
       "Recepção corporativa moderna; pessoas passando por controle de acesso facial em catraca/terminal; câmeras inteligentes com overlays de detecção de pessoas e objetos; ao fundo, uma central de monitoramento com operador acompanhando várias unidades em telas. Tom seguro e sóbrio; paleta navy + vermelho de destaque. Proporção 16:9. Se vídeo: passagem fluida de uma pessoa pelo acesso facial e corte para a central.",
-    asset: heroSegurancaCorporativa,
+    asset: heroAmbientesInteligentes,
   },
   "infraestrutura-de-ti": {
     kind: "image",

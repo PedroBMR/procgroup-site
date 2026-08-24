@@ -36,7 +36,7 @@ export const translations = {
       cta: "Solicitar Demonstração",
       sol: {
         cidades: { label: "Cidades Inteligentes", desc: "Segurança pública e mobilidade urbana com IA" },
-        seguranca: { label: "Segurança Corporativa", desc: "Videomonitoramento e controle de acesso para empresas" },
+        seguranca: { label: "Ambientes Inteligentes", desc: "Videomonitoramento e controle de acesso para empresas" },
         ti: { label: "Infraestrutura de TI", desc: "Cloud, NOC, backup e governança de TI" },
         ia: { label: "IA Industrial", desc: "Visão computacional para indústria 4.0" },
       },
@@ -83,7 +83,7 @@ export const translations = {
       heroEyebrow: "Plataforma Proc AI",
       heroTitle: "Tecnologia inteligente para um mundo mais seguro, conectado e eficiente.",
       heroSubtitle:
-        "A Proc desenvolve soluções de Inteligência Artificial, Visão Computacional, Segurança Corporativa e Infraestrutura de TI que transformam dados em decisões inteligentes, protegendo pessoas e conectando cidades, empresas e indústrias em um único ecossistema tecnológico.",
+        "A Proc desenvolve soluções de Inteligência Artificial, Visão Computacional, Ambientes Inteligentes e Infraestrutura de TI que transformam dados em decisões inteligentes, protegendo pessoas e conectando cidades, empresas e indústrias em um único ecossistema tecnológico.",
       heroCtaPrimary: "Conheça a Plataforma Proc AI",
       heroCtaSecondary: "Solicite uma Demonstração",
       statsLabels: ["Clientes atendidos", "Anos de experiência", "Satisfação dos clientes"],
@@ -145,8 +145,8 @@ export const translations = {
           name: "Cidades Inteligentes",
           desc: "Soluções inteligentes para melhorar a vida da população na segurança pública e na mobilidade urbana das cidades.",
         },
-        "seguranca-corporativa": {
-          name: "Segurança Corporativa",
+        "ambientes-inteligentes": {
+          name: "Ambientes Inteligentes",
           desc: "Videomonitoramento e controle de acesso com IA para pessoas e veículos, com alertas para ações suspeitas.",
         },
         "infraestrutura-de-ti": {
@@ -226,8 +226,8 @@ export const translations = {
             },
           ],
         },
-        "seguranca-corporativa": {
-          metaTitle: "Segurança Corporativa — Proteção Inteligente",
+        "ambientes-inteligentes": {
+          metaTitle: "Ambientes Inteligentes — Segurança e Eficiência para Empresas",
           metaDescription:
             "Videomonitoramento com IA, controle de acesso facial, gestão de alarmes e monitoramento remoto para proteger patrimônio, pessoas e operações.",
           heroTitle: "Protegemos pessoas, patrimônios e operações com Inteligência Artificial.",
@@ -237,7 +237,7 @@ export const translations = {
           teamDescription:
             "Profissionais dedicados a projetos de segurança eletrônica corporativa, com experiência em controle de acesso, videomonitoramento com IA e resposta a incidentes em tempo real.",
           finalCtaTitle: "Pronto para proteger sua operação com inteligência artificial?",
-          finalCtaText: "Fale com um especialista em Segurança Corporativa da Proc.",
+          finalCtaText: "Fale com um especialista em Ambientes Inteligentes da Proc.",
           faqs: [
             {
               q: "A solução funciona para condomínios, indústrias e escritórios?",
@@ -341,7 +341,7 @@ export const translations = {
       cta: "Request a Demo",
       sol: {
         cidades: { label: "Smart Cities", desc: "Public safety and urban mobility powered by AI" },
-        seguranca: { label: "Corporate Security", desc: "Video surveillance and access control for businesses" },
+        seguranca: { label: "Smart Environments", desc: "Video surveillance and access control for businesses" },
         ti: { label: "IT Infrastructure", desc: "Cloud, NOC, backup and IT governance" },
         ia: { label: "Industrial AI", desc: "Computer vision for Industry 4.0" },
       },
@@ -387,7 +387,7 @@ export const translations = {
       heroEyebrow: "Proc AI Platform",
       heroTitle: "Intelligent technology for a safer, more connected, more efficient world.",
       heroSubtitle:
-        "Proc builds Artificial Intelligence, Computer Vision, Corporate Security and IT Infrastructure solutions that turn data into smart decisions — protecting people and connecting cities, companies and industries in a single technology ecosystem.",
+        "Proc builds Artificial Intelligence, Computer Vision, Smart Environments and IT Infrastructure solutions that turn data into smart decisions — protecting people and connecting cities, companies and industries in a single technology ecosystem.",
       heroCtaPrimary: "Explore the Proc AI Platform",
       heroCtaSecondary: "Request a Demo",
       statsLabels: ["Clients served", "Years of experience", "Customer satisfaction"],
@@ -446,8 +446,8 @@ export const translations = {
           name: "Smart Cities",
           desc: "Intelligent solutions to improve people's lives through public safety and urban mobility in cities.",
         },
-        "seguranca-corporativa": {
-          name: "Corporate Security",
+        "ambientes-inteligentes": {
+          name: "Smart Environments",
           desc: "AI video surveillance and access control for people and vehicles, with alerts for suspicious activity.",
         },
         "infraestrutura-de-ti": {
@@ -525,8 +525,8 @@ export const translations = {
             },
           ],
         },
-        "seguranca-corporativa": {
-          metaTitle: "Corporate Security — Intelligent Protection",
+        "ambientes-inteligentes": {
+          metaTitle: "Smart Environments — Security and Efficiency for Business",
           metaDescription:
             "AI video surveillance, facial access control, alarm management and remote monitoring to protect assets, people and operations.",
           heroTitle: "We protect people, assets and operations with Artificial Intelligence.",
@@ -536,7 +536,7 @@ export const translations = {
           teamDescription:
             "Specialists dedicated to corporate electronic-security projects, experienced in access control, AI video surveillance and real-time incident response.",
           finalCtaTitle: "Ready to protect your operation with artificial intelligence?",
-          finalCtaText: "Talk to a Proc Corporate Security specialist.",
+          finalCtaText: "Talk to a Proc Smart Environments specialist.",
           faqs: [
             {
               q: "Does the solution work for residential complexes, industries and offices?",
@@ -640,7 +640,7 @@ export const translations = {
       cta: "Solicitar Demostración",
       sol: {
         cidades: { label: "Ciudades Inteligentes", desc: "Seguridad pública y movilidad urbana con IA" },
-        seguranca: { label: "Seguridad Corporativa", desc: "Videovigilancia y control de acceso para empresas" },
+        seguranca: { label: "Ambientes Inteligentes", desc: "Videovigilancia y control de acceso para empresas" },
         ti: { label: "Infraestructura de TI", desc: "Cloud, NOC, backup y gobernanza de TI" },
         ia: { label: "IA Industrial", desc: "Visión artificial para la industria 4.0" },
       },
@@ -686,7 +686,7 @@ export const translations = {
       heroEyebrow: "Plataforma Proc AI",
       heroTitle: "Tecnología inteligente para un mundo más seguro, conectado y eficiente.",
       heroSubtitle:
-        "Proc desarrolla soluciones de Inteligencia Artificial, Visión Artificial, Seguridad Corporativa e Infraestructura de TI que transforman datos en decisiones inteligentes, protegiendo personas y conectando ciudades, empresas e industrias en un único ecosistema tecnológico.",
+        "Proc desarrolla soluciones de Inteligencia Artificial, Visión Artificial, Ambientes Inteligentes e Infraestructura de TI que transforman datos en decisiones inteligentes, protegiendo personas y conectando ciudades, empresas e industrias en un único ecosistema tecnológico.",
       heroCtaPrimary: "Conoce la Plataforma Proc AI",
       heroCtaSecondary: "Solicita una Demostración",
       statsLabels: ["Clientes atendidos", "Años de experiencia", "Satisfacción de clientes"],
@@ -745,8 +745,8 @@ export const translations = {
           name: "Ciudades Inteligentes",
           desc: "Soluciones inteligentes para mejorar la vida de la población en la seguridad pública y la movilidad urbana de las ciudades.",
         },
-        "seguranca-corporativa": {
-          name: "Seguridad Corporativa",
+        "ambientes-inteligentes": {
+          name: "Ambientes Inteligentes",
           desc: "Videovigilancia y control de acceso con IA para personas y vehículos, con alertas para acciones sospechosas.",
         },
         "infraestrutura-de-ti": {
@@ -824,8 +824,8 @@ export const translations = {
             },
           ],
         },
-        "seguranca-corporativa": {
-          metaTitle: "Seguridad Corporativa — Protección Inteligente",
+        "ambientes-inteligentes": {
+          metaTitle: "Ambientes Inteligentes — Seguridad y Eficiencia para Empresas",
           metaDescription:
             "Videovigilancia con IA, control de acceso facial, gestión de alarmas y monitoreo remoto para proteger patrimonio, personas y operaciones.",
           heroTitle: "Protegemos personas, patrimonios y operaciones con Inteligencia Artificial.",
@@ -835,7 +835,7 @@ export const translations = {
           teamDescription:
             "Profesionales dedicados a proyectos de seguridad electrónica corporativa, con experiencia en control de acceso, videovigilancia con IA y respuesta a incidentes en tiempo real.",
           finalCtaTitle: "¿Listo para proteger tu operación con inteligencia artificial?",
-          finalCtaText: "Habla con un especialista en Seguridad Corporativa de Proc.",
+          finalCtaText: "Habla con un especialista en Ambientes Inteligentes de Proc.",
           faqs: [
             {
               q: "¿La solución funciona para condominios, industrias y oficinas?",
