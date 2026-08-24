@@ -86,8 +86,7 @@ export const translations = {
         "A Proc desenvolve soluções de Inteligência Artificial, Visão Computacional, Ambientes Inteligentes e Infraestrutura de TI que transformam dados em decisões inteligentes, protegendo pessoas e conectando cidades, empresas e indústrias em um único ecossistema tecnológico.",
       heroCtaPrimary: "Conheça a Plataforma Proc AI",
       heroCtaSecondary: "Solicite uma Demonstração",
-      statsLabels: ["Clientes atendidos", "Anos de experiência", "Satisfação dos clientes"],
-      supportLabel: "Monitoramento contínuo",
+      statsLabels: ["Clientes atendidos", "Anos de experiência"],
       aboutEyebrow: "O que a Proc faz?",
       aboutTitle:
         "Tecnologia que conecta Inteligência Artificial, Visão Computacional e Infraestrutura de TI para transformar operações.",
@@ -229,7 +228,7 @@ export const translations = {
         "ambientes-inteligentes": {
           metaTitle: "Ambientes Inteligentes — Segurança e Eficiência para Empresas",
           metaDescription:
-            "Videomonitoramento com IA, controle de acesso facial, gestão de alarmes e monitoramento remoto para proteger patrimônio, pessoas e operações.",
+            "Videomonitoramento com IA, controle de acesso facial e gestão de alarmes para proteger patrimônio, pessoas e operações.",
           heroTitle: "Protegemos pessoas, patrimônios e operações com Inteligência Artificial.",
           heroLead:
             "Integre videomonitoramento inteligente com IA, controle de acesso facial, monitoramento perimetral com alertas e analytics em uma única plataforma, para elevar o nível do controle de acesso, da segurança e da eficiência da sua empresa.",
@@ -246,10 +245,6 @@ export const translations = {
             {
               q: "É possível integrar com câmeras e catracas já instaladas?",
               a: "Sim, a Proc AI Platform possui APIs abertas para integração com equipamentos de terceiros já instalados, evitando troca completa de infraestrutura.",
-            },
-            {
-              q: "Como funciona o monitoramento remoto?",
-              a: "Uma equipe especializada acompanha eventos e alarmes em tempo real a partir do Centro de Operações da Proc, acionando protocolos de resposta conforme a criticidade.",
             },
           ],
         },
@@ -300,10 +295,6 @@ export const translations = {
             {
               q: "As soluções se integram a sistemas já existentes no município?",
               a: "Sim. A Proc AI Platform possui APIs abertas para integração com câmeras, sensores e sistemas de gestão já utilizados pelo município.",
-            },
-            {
-              q: "É possível monitorar escolas e mobilidade urbana na mesma plataforma?",
-              a: "Sim, o monitoramento escolar e a mobilidade urbana fazem parte do mesmo ecossistema de Cidades Inteligentes, com dashboards unificados.",
             },
           ],
         },
@@ -390,8 +381,7 @@ export const translations = {
         "Proc builds Artificial Intelligence, Computer Vision, Smart Environments and IT Infrastructure solutions that turn data into smart decisions — protecting people and connecting cities, companies and industries in a single technology ecosystem.",
       heroCtaPrimary: "Explore the Proc AI Platform",
       heroCtaSecondary: "Request a Demo",
-      statsLabels: ["Clients served", "Years of experience", "Customer satisfaction"],
-      supportLabel: "Continuous monitoring",
+      statsLabels: ["Clients served", "Years of experience"],
       aboutEyebrow: "What does Proc do?",
       aboutTitle:
         "Technology that connects Artificial Intelligence, Computer Vision and IT Infrastructure to transform operations.",
@@ -528,7 +518,7 @@ export const translations = {
         "ambientes-inteligentes": {
           metaTitle: "Smart Environments — Security and Efficiency for Business",
           metaDescription:
-            "AI video surveillance, facial access control, alarm management and remote monitoring to protect assets, people and operations.",
+            "AI video surveillance, facial access control and alarm management to protect assets, people and operations.",
           heroTitle: "We protect people, assets and operations with Artificial Intelligence.",
           heroLead:
             "Bring intelligent AI video surveillance, facial access control, alerted perimeter monitoring and analytics together on a single platform to raise the bar for your company's access control, security and efficiency.",
@@ -545,10 +535,6 @@ export const translations = {
             {
               q: "Can it integrate with cameras and turnstiles already installed?",
               a: "Yes, the Proc AI Platform has open APIs to integrate with third-party equipment already installed, avoiding a full infrastructure replacement.",
-            },
-            {
-              q: "How does remote monitoring work?",
-              a: "A specialist team follows events and alarms in real time from Proc's Operations Center, triggering response protocols according to criticality.",
             },
           ],
         },
@@ -599,10 +585,6 @@ export const translations = {
             {
               q: "Do the solutions integrate with systems the municipality already has?",
               a: "Yes. The Proc AI Platform has open APIs to integrate with cameras, sensors and management systems already used by the municipality.",
-            },
-            {
-              q: "Can schools and urban mobility be monitored on the same platform?",
-              a: "Yes — school monitoring and urban mobility are part of the same Smart Cities ecosystem, with unified dashboards.",
             },
           ],
         },
@@ -689,8 +671,7 @@ export const translations = {
         "Proc desarrolla soluciones de Inteligencia Artificial, Visión Artificial, Ambientes Inteligentes e Infraestructura de TI que transforman datos en decisiones inteligentes, protegiendo personas y conectando ciudades, empresas e industrias en un único ecosistema tecnológico.",
       heroCtaPrimary: "Conoce la Plataforma Proc AI",
       heroCtaSecondary: "Solicita una Demostración",
-      statsLabels: ["Clientes atendidos", "Años de experiencia", "Satisfacción de clientes"],
-      supportLabel: "Monitoreo continuo",
+      statsLabels: ["Clientes atendidos", "Años de experiencia"],
       aboutEyebrow: "¿Qué hace Proc?",
       aboutTitle:
         "Tecnología que conecta Inteligencia Artificial, Visión Artificial e Infraestructura de TI para transformar operaciones.",
@@ -827,7 +808,7 @@ export const translations = {
         "ambientes-inteligentes": {
           metaTitle: "Ambientes Inteligentes — Seguridad y Eficiencia para Empresas",
           metaDescription:
-            "Videovigilancia con IA, control de acceso facial, gestión de alarmas y monitoreo remoto para proteger patrimonio, personas y operaciones.",
+            "Videovigilancia con IA, control de acceso facial y gestión de alarmas para proteger patrimonio, personas y operaciones.",
           heroTitle: "Protegemos personas, patrimonios y operaciones con Inteligencia Artificial.",
           heroLead:
             "Integra videovigilancia inteligente con IA, control de acceso facial, monitoreo perimetral con alertas y analytics en una única plataforma, para elevar el nivel del control de acceso, la seguridad y la eficiencia de tu empresa.",
@@ -844,10 +825,6 @@ export const translations = {
             {
               q: "¿Es posible integrar con cámaras y torniquetes ya instalados?",
               a: "Sí, la Proc AI Platform tiene APIs abiertas para integrar con equipos de terceros ya instalados, evitando el cambio completo de infraestructura.",
-            },
-            {
-              q: "¿Cómo funciona el monitoreo remoto?",
-              a: "Un equipo especializado sigue eventos y alarmas en tiempo real desde el Centro de Operaciones de Proc, activando protocolos de respuesta según la criticidad.",
             },
           ],
         },
@@ -898,10 +875,6 @@ export const translations = {
             {
               q: "¿Las soluciones se integran con sistemas ya existentes en el municipio?",
               a: "Sí. La Proc AI Platform tiene APIs abiertas para integrar con cámaras, sensores y sistemas de gestión ya utilizados por el municipio.",
-            },
-            {
-              q: "¿Es posible monitorear escuelas y movilidad urbana en la misma plataforma?",
-              a: "Sí, el monitoreo escolar y la movilidad urbana forman parte del mismo ecosistema de Ciudades Inteligentes, con dashboards unificados.",
             },
           ],
         },

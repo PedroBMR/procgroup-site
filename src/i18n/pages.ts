@@ -156,7 +156,7 @@ export const pages = {
       channelsTitle: "Canais de suporte",
     },
     trabalhe: {
-      metaDescription: "Envie seu currículo para a Proc Group e faça parte da nossa equipe em Pato Branco e Curitiba.",
+      metaDescription: "Envie seu currículo para a Proc Group e faça parte da nossa equipe em Pato Branco / PR.",
       heroEyebrow: "Carreiras",
       heroTitle: "Trabalhe Conosco",
       lead: "Não há vagas abertas publicadas no momento. Uma página com posições e cultura da equipe está prevista para uma próxima fase — enquanto isso, envie seu currículo e conte um pouco sobre você.",
@@ -191,8 +191,6 @@ export const pages = {
       mapLink: "Ver no mapa",
       hours: "Horário",
       hoursValue: "Seg a Sex, 8h às 18h",
-      alsoIn: "Também em",
-      alsoInValue: "Curitiba / PR",
     },
     flow: {
       ariaLabel: "Fluxo de um evento do hub central da Proc AI Platform até as quatro unidades de negócio",
@@ -357,7 +355,7 @@ export const pages = {
       channelsTitle: "Support channels",
     },
     trabalhe: {
-      metaDescription: "Send your résumé to Proc Group and join our team in Pato Branco and Curitiba.",
+      metaDescription: "Send your résumé to Proc Group and join our team in Pato Branco / PR, Brazil.",
       heroEyebrow: "Careers",
       heroTitle: "Work With Us",
       lead: "There are no open positions published at the moment. A page with roles and team culture is planned for a future phase — in the meantime, send your résumé and tell us a bit about yourself.",
@@ -391,8 +389,6 @@ export const pages = {
       mapLink: "View on map",
       hours: "Hours",
       hoursValue: "Mon–Fri, 8am to 6pm",
-      alsoIn: "Also in",
-      alsoInValue: "Curitiba / PR",
     },
     flow: {
       ariaLabel: "Flow of an event from the Proc AI Platform central hub to the four business units",
@@ -557,7 +553,7 @@ export const pages = {
       channelsTitle: "Canales de soporte",
     },
     trabalhe: {
-      metaDescription: "Envía tu currículum a Proc Group y forma parte de nuestro equipo en Pato Branco y Curitiba.",
+      metaDescription: "Envía tu currículum a Proc Group y forma parte de nuestro equipo en Pato Branco / PR.",
       heroEyebrow: "Carreras",
       heroTitle: "Trabaja con Nosotros",
       lead: "No hay vacantes publicadas en este momento. Una página con posiciones y cultura del equipo está prevista para una próxima fase — mientras tanto, envía tu currículum y cuéntanos un poco sobre ti.",
@@ -591,8 +587,6 @@ export const pages = {
       mapLink: "Ver en el mapa",
       hours: "Horario",
       hoursValue: "Lun a Vie, 8h a 18h",
-      alsoIn: "También en",
-      alsoInValue: "Curitiba / PR",
     },
     flow: {
       ariaLabel: "Flujo de un evento desde el núcleo de la Proc AI Platform hasta las cuatro unidades de negocio",

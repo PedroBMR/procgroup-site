@@ -8,7 +8,7 @@ import StatCounter from "../../components/StatCounter.astro";
 import PostCard from "../../components/PostCard.astro";
 import ConnectedTicker from "../../components/ConnectedTicker.astro";
 import UnitIcon from "../../components/UnitIcon.astro";
-import { homeStats, supportBadge } from "../../data/stats";
+import { homeStats } from "../../data/stats";
 import { businessUnits } from "../../data/businessUnits";
 import { byNewest } from "../../utils/blog";
 import hqPhoto from "../../assets/images/hq-pato-branco-enhanced.webp";
@@ -71,10 +71,6 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
     <div class="hero-stats">
       <div class="container stats-grid">
         {homeStats.map((stat, i) => <StatCounter value={stat.value} suffix={stat.suffix} label={t.statsLabels[i]} />)}
-        <div class="stat support-stat" data-reveal>
-          <p class="stat-value">{supportBadge.value}</p>
-          <p class="stat-label">{t.supportLabel}</p>
-        </div>
       </div>
     </div>
   </section>
@@ -256,13 +252,8 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
     border-top: 1px solid rgba(255,255,255,0.14);
     padding-block: var(--space-8);
   }
-  .stats-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-6); }
-  .support-stat .stat-value { color: var(--red-400); font-size: var(--fs-3xl); font-weight: 800; }
-  .support-stat .stat-label { margin-top: var(--space-1); font-size: var(--fs-sm); color: rgba(255,255,255,0.7); }
+  .stats-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6); }
 
-  @media (max-width: 980px) {
-    .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  }
   @media (max-width: 480px) {
     .stats-grid { grid-template-columns: 1fr; }
   }

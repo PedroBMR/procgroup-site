@@ -21,8 +21,8 @@ export interface EventoUI {
   /** Mensagem já preenchida no WhatsApp. */
   waMsg: string;
   solutionsKicker: string;
-  /** Rótulos das 4 provas sociais, na ordem: clientes, anos, satisfação, monitoramento. */
-  proofLabels: [string, string, string, string];
+  /** Rótulos das provas sociais, na ordem: clientes, anos. */
+  proofLabels: [string, string];
   why: [string, string, string];
   formKicker: string;
   formTitle: string;
@@ -56,11 +56,11 @@ export const eventoUI: Record<Locale, EventoUI> = {
     ghostBtn: "Deixar meu contato",
     waMsg: "Olá! Conheci a Proc num evento e quero saber mais sobre as soluções de vocês.",
     solutionsKicker: "O que a Proc traz para você",
-    proofLabels: ["Clientes atendidos", "Anos de experiência", "Satisfação dos clientes", "Monitoramento contínuo"],
+    proofLabels: ["Clientes atendidos", "Anos de experiência"],
     why: [
       "IA própria: reconhecimento facial, LPR e analytics desenvolvidos pela Proc.",
       "Equipes especializadas por segmento — não generalistas.",
-      "Alta disponibilidade e monitoramento contínuo 24/7.",
+      "Plataforma de alta disponibilidade, operando 24/7.",
     ],
     formKicker: "Quer que a gente te chame?",
     formTitle: "Deixe seu contato — retornamos rapidinho.",
@@ -90,11 +90,11 @@ export const eventoUI: Record<Locale, EventoUI> = {
     ghostBtn: "Leave my contact",
     waMsg: "Hi! I met Proc at an event and I'd like to know more about your solutions.",
     solutionsKicker: "What Proc brings to you",
-    proofLabels: ["Clients served", "Years of experience", "Customer satisfaction", "Continuous monitoring"],
+    proofLabels: ["Clients served", "Years of experience"],
     why: [
       "In-house AI: facial recognition, LPR and analytics built by Proc.",
       "Specialist teams per segment — not generalists.",
-      "High availability and 24/7 continuous monitoring.",
+      "A high-availability platform, running 24/7.",
     ],
     formKicker: "Want us to reach out?",
     formTitle: "Leave your contact — we'll get back quickly.",
@@ -124,11 +124,11 @@ export const eventoUI: Record<Locale, EventoUI> = {
     ghostBtn: "Dejar mi contacto",
     waMsg: "¡Hola! Conocí a Proc en un evento y quiero saber más sobre sus soluciones.",
     solutionsKicker: "Lo que Proc trae para ti",
-    proofLabels: ["Clientes atendidos", "Años de experiencia", "Satisfacción de clientes", "Monitoreo continuo"],
+    proofLabels: ["Clientes atendidos", "Años de experiencia"],
     why: [
       "IA propia: reconocimiento facial, LPR y analytics desarrollados por Proc.",
       "Equipos especializados por segmento — no generalistas.",
-      "Alta disponibilidad y monitoreo continuo 24/7.",
+      "Plataforma de alta disponibilidad, operando 24/7.",
     ],
     formKicker: "¿Quieres que te contactemos?",
     formTitle: "Deja tu contacto — te respondemos enseguida.",
@@ -193,14 +193,13 @@ export const eventoUnitsI18n: Record<"en" | "es", Record<string, UnitI18n>> = {
         "Analytics",
         "Panic Button",
         "Urban Mobility",
-        "School Monitoring",
       ],
     },
     "ambientes-inteligentes": {
       name: "Smart Environments",
       tagline: "Intelligent protection for businesses and industries",
       description:
-        "AI-powered video surveillance, facial access control and alarm management to protect assets, people and corporate operations with 24x7 remote monitoring.",
+        "AI-powered video surveillance, facial access control and alarm management to protect assets, people and corporate operations, with the platform running 24x7 and alerting your team.",
       solutions: [
         "AI Video Surveillance",
         "Facial Access Control",
@@ -210,7 +209,6 @@ export const eventoUnitsI18n: Record<"en" | "es", Record<string, UnitI18n>> = {
         "Facial Recognition",
         "Parking LPR",
         "Analytics",
-        "Remote Monitoring",
       ],
     },
     "infraestrutura-de-ti": {
@@ -263,14 +261,13 @@ export const eventoUnitsI18n: Record<"en" | "es", Record<string, UnitI18n>> = {
         "Analytics",
         "Botón de Seguridad",
         "Movilidad Urbana",
-        "Monitoreo Escolar",
       ],
     },
     "ambientes-inteligentes": {
       name: "Ambientes Inteligentes",
       tagline: "Protección inteligente para empresas e industrias",
       description:
-        "Soluciones de videovigilancia con IA, control de acceso facial y gestión de alarmas para proteger patrimonio, personas y operaciones corporativas con monitoreo remoto 24x7.",
+        "Soluciones de videovigilancia con IA, control de acceso facial y gestión de alarmas para proteger patrimonio, personas y operaciones corporativas, con la plataforma operando 24x7 y alertando a tu equipo.",
       solutions: [
         "Videovigilancia con IA",
         "Control de Acceso Facial",
@@ -280,7 +277,6 @@ export const eventoUnitsI18n: Record<"en" | "es", Record<string, UnitI18n>> = {
         "Reconocimiento Facial",
         "LPR para Estacionamientos",
         "Analytics",
-        "Monitoreo Remoto",
       ],
     },
     "infraestrutura-de-ti": {

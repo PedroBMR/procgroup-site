@@ -15,7 +15,7 @@ import spaceGroteskUrl from "../assets/fonts/space-grotesk-var.woff2?url";
 import { businessUnits } from "../data/businessUnits";
 import { evento } from "../data/events";
 import { whatsapp } from "../data/contact";
-import { homeStats, supportBadge } from "../data/stats";
+import { homeStats } from "../data/stats";
 import { withBase } from "../utils/url";
 import { locales, defaultLocale, type Locale } from "../i18n/config";
 import { eventoUI, eventoUnitsI18n, unitTags } from "../data/eventoContent";
@@ -64,8 +64,6 @@ interface EventoView {
 const statValues = [
   `${homeStats[0].value}${homeStats[0].suffix ?? ""}`,
   `${homeStats[1].value}${homeStats[1].suffix ?? ""}`,
-  `${homeStats[2].value}${homeStats[2].suffix ?? ""}`,
-  supportBadge.value,
 ];
 
 // PT unit copy vem de businessUnits; EN/ES de eventoUnitsI18n.

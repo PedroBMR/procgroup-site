@@ -54,14 +54,13 @@ const unitsCopy: Record<Locale, Record<string, UnitCopy>> = {
         "Analytics",
         "Botão de Segurança",
         "Mobilidade Urbana",
-        "Monitoramento Escolar",
       ],
     },
     "ambientes-inteligentes": {
       name: "Ambientes Inteligentes",
       tagline: "Proteção inteligente para empresas e indústrias",
       description:
-        "Soluções de videomonitoramento com IA, controle de acesso facial e gestão de alarmes para proteger patrimônio, pessoas e operações corporativas com monitoramento remoto 24x7.",
+        "Soluções de videomonitoramento com IA, controle de acesso facial e gestão de alarmes para proteger patrimônio, pessoas e operações corporativas, com a plataforma operando 24x7 e alertando sua equipe.",
       team: "Equipe especializada em Segurança Eletrônica",
       solutions: [
         "Videomonitoramento com IA",
@@ -72,7 +71,6 @@ const unitsCopy: Record<Locale, Record<string, UnitCopy>> = {
         "Reconhecimento Facial",
         "LPR para Estacionamentos",
         "Analytics",
-        "Monitoramento Remoto",
       ],
     },
     "infraestrutura-de-ti": {
@@ -128,14 +126,13 @@ const unitsCopy: Record<Locale, Record<string, UnitCopy>> = {
         "Analytics",
         "Panic Button",
         "Urban Mobility",
-        "School Monitoring",
       ],
     },
     "ambientes-inteligentes": {
       name: "Smart Environments",
       tagline: "Intelligent protection for businesses and industries",
       description:
-        "AI-powered video surveillance, facial access control and alarm management to protect assets, people and corporate operations with 24x7 remote monitoring.",
+        "AI-powered video surveillance, facial access control and alarm management to protect assets, people and corporate operations, with the platform running 24x7 and alerting your team.",
       team: "Electronic Security specialist team",
       solutions: [
         "AI Video Surveillance",
@@ -146,7 +143,6 @@ const unitsCopy: Record<Locale, Record<string, UnitCopy>> = {
         "Facial Recognition",
         "Parking LPR",
         "Analytics",
-        "Remote Monitoring",
       ],
     },
     "infraestrutura-de-ti": {
@@ -202,14 +198,13 @@ const unitsCopy: Record<Locale, Record<string, UnitCopy>> = {
         "Analytics",
         "Botón de Seguridad",
         "Movilidad Urbana",
-        "Monitoreo Escolar",
       ],
     },
     "ambientes-inteligentes": {
       name: "Ambientes Inteligentes",
       tagline: "Protección inteligente para empresas e industrias",
       description:
-        "Soluciones de videovigilancia con IA, control de acceso facial y gestión de alarmas para proteger patrimonio, personas y operaciones corporativas con monitoreo remoto 24x7.",
+        "Soluciones de videovigilancia con IA, control de acceso facial y gestión de alarmas para proteger patrimonio, personas y operaciones corporativas, con la plataforma operando 24x7 y alertando a tu equipo.",
       team: "Equipo especializado en Seguridad Electrónica",
       solutions: [
         "Videovigilancia con IA",
@@ -220,7 +215,6 @@ const unitsCopy: Record<Locale, Record<string, UnitCopy>> = {
         "Reconocimiento Facial",
         "LPR para Estacionamientos",
         "Analytics",
-        "Monitoreo Remoto",
       ],
     },
     "infraestrutura-de-ti": {
