@@ -3,6 +3,7 @@ import TopBar from "../components/TopBar.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import { withBase } from "../utils/url";
+import { ehProducao } from "../utils/deploy";
 import { socialProfiles } from "../data/social";
 import { getLangFromUrl, useTranslations, logicalPath, localePath, isSingleVersionPath } from "../i18n/utils";
 import { locales, defaultLocale, htmlLangAttr, ogLocaleAttr } from "../i18n/config";
@@ -21,6 +22,11 @@ interface Props {
   path?: string;
   ogImage?: string;
   schema?: Record<string, unknown> | Record<string, unknown>[];
+  /**
+   * Força `noindex,nofollow` numa página específica (404, /evento). Fora isso
+   * NÃO precisa ser passado: enquanto o build não sai no domínio da Proc, o
+   * padrão já é `true` — ver o cálculo de `bloquearIndexacao` abaixo.
+   */
   noIndex?: boolean;
 }
 
@@ -33,8 +39,24 @@ const {
   // a partir de src/assets/og-default.svg.
   ogImage = "/og-default.png",
   schema,
-  noIndex = false,
+  noIndex,
 } = Astro.props;
+
+// Enquanto o site é preview no github.io, TODA página sai com noindex.
+//
+// O robots.txt sozinho não resolve: robô lê robots.txt só na raiz da origem, e
+// com `base: '/procgroup-site'` o nosso é servido num subcaminho que ninguém
+// consulta. A meta é o que impede a entrada no índice, mesmo que alguém linke
+// a página de fora.
+//
+// Sai sozinho na virada: quando `site` virar www.procgroup.com.br no
+// astro.config.mjs (PUBLICACAO.md 3.1), `ehProducao` passa a ser true e o
+// padrão vira false. Não há nada para lembrar de reverter — de propósito, já
+// que um noindex esquecido em produção não quebra nada visualmente e faria o
+// site oficial nascer invisível no Google.
+//
+// Uma página ainda pode forçar noindex explicitamente (404, /evento).
+const bloquearIndexacao = noIndex ?? !ehProducao(Astro.site?.host);
 
 const siteName = "Proc Group";
 const siteUrl = "https://www.procgroup.com.br";
@@ -122,7 +144,7 @@ const schemaList = Array.isArray(schema) ? schema : schema ? [schema] : [];
     <link rel="canonical" href={canonical} />
     {alternates.map((a) => <link rel="alternate" hreflang={a.hrefLang} href={a.href} />)}
     {xDefault && <link rel="alternate" hreflang="x-default" href={xDefault} />}
-    {noIndex && <meta name="robots" content="noindex,nofollow" />}
+    {bloquearIndexacao && <meta name="robots" content="noindex,nofollow" />}
 
     <title>{fullTitle}</title>
     <meta name="description" content={description} />

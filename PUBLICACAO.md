@@ -90,6 +90,32 @@ base: '/',
 Sem isso, todos os links internos (`withBase()` em `src/utils/url.ts`) continuam prefixando
 `/procgroup-site/` nas URLs, e o canonical/og:image (`BaseLayout.astro`) vai gerar links errados.
 
+#### ✅ O `noindex` e o sitemap viram junto — não faça nada a mais
+
+Trocar o `site` acima **já religa a indexação sozinho**. Enquanto o host não é o da Proc, o build
+sai com `<meta name="robots" content="noindex,nofollow">` em todas as páginas e sem sitemap; com o
+domínio próprio, a meta some e o sitemap volta. A decisão está num lugar só,
+`src/utils/deploy.ts` (`ehProducao`), e alcança três arquivos:
+
+| Arquivo | O que muda |
+|---|---|
+| `src/layouts/BaseLayout.astro` | a meta `noindex` deixa de sair (404 e `/evento` continuam forçando, e devem) |
+| `astro.config.mjs` | a integração `sitemap` volta a rodar |
+| `src/pages/robots.txt.ts` | passa de `Disallow: /` para `Allow: /` + link do sitemap |
+
+⚠️ **Não adicione um passo manual de "tirar o noindex" neste checklist.** Ele seria esquecido ou
+feito duas vezes. Se alguém precisar conferir depois da virada, o teste é um só:
+
+```sh
+npm run build && grep -rc 'noindex' dist/index.html && ls dist/sitemap-index.xml
+```
+
+Esperado em produção: `0` na home e o sitemap existindo. Detalhes em `ROADMAP.md`, item 24.
+
+⚠️ **Antes da virada, checar se o preview já entrou no índice:** buscar `site:pedrobmr.github.io`
+no Google. Se houver páginas lá, pedir remoção pelo Search Console — a meta impede entradas novas,
+mas não expulsa o que já foi indexado.
+
 ### 3.2 Decidir e testar a estratégia de deploy
 
 Ainda não decidido — depende do que a investigação do Git da Hostinger mostrar (ver seção 2):

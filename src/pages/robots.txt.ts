@@ -1,4 +1,5 @@
 import type { APIRoute } from "astro";
+import { ehProducao } from "../utils/deploy";
 
 /**
  * robots.txt gerado a partir do `site` configurado, e não escrito à mão.
@@ -12,14 +13,18 @@ import type { APIRoute } from "astro";
  * Assim: qualquer host que não seja o de produção sai bloqueado; ao mudar
  * `site` em astro.config.mjs para o domínio real, o arquivo passa a liberar a
  * indexação e a apontar o sitemap, sem ninguém precisar lembrar de nada.
+ *
+ * ⚠️ ISOLADO, ESTE ARQUIVO NÃO PROTEGE NADA HOJE. Robô lê robots.txt só na raiz
+ * da origem. Com `base: '/procgroup-site'`, ele é servido em
+ * pedrobmr.github.io/procgroup-site/robots.txt, e o que vale para o domínio é
+ * pedrobmr.github.io/robots.txt — que pertence a outro repositório. Quem tira o
+ * preview da busca de verdade é a meta noindex do BaseLayout.astro. Este arquivo
+ * fica porque passa a valer sozinho na virada, quando o site servir da raiz.
  */
-const HOSTS_DE_PRODUCAO = ["www.procgroup.com.br", "procgroup.com.br"];
-
 export const GET: APIRoute = ({ site }) => {
   const host = site?.host ?? "";
-  const ehProducao = HOSTS_DE_PRODUCAO.includes(host);
 
-  const corpo = ehProducao
+  const corpo = ehProducao(host)
     ? [
         "User-agent: *",
         "Allow: /",

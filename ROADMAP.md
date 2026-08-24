@@ -186,9 +186,50 @@ registrados para não serem "corrigidos" por engano, e para não sumirem na hora
 | 1 | `base: '/procgroup-site'` e `site: 'https://pedrobmr.github.io'` em `astro.config.mjs:6-7` | **Proposital enquanto está em teste.** Trocar para `base: '/'` e `site: 'https://www.procgroup.com.br'` na virada para produção. Procedimento em `PUBLICACAO.md:78-92`. Lembrar que `siteUrl` está duplicado em `BaseLayout.astro:30` e `blog/[slug].astro:36` — os dois precisam mudar juntos. |
 | 23 | Workflow publica em GitHub Pages (`.github/workflows/deploy.yml`) | **Proposital enquanto está em teste.** Substituir por deploy para Hostinger/cPanel na virada. Atenção: `contact.php` não executa no GitHub Pages, então o formulário só pode ser testado de verdade depois dessa troca. |
 | 6 | Banner "⚠️ PLACEHOLDER" na página de Cases (`[...lang]/cases.astro:51`) | **Aguardando conteúdo.** Sai quando houver detalhe e aprovação de cada case real. Enquanto o banner estiver lá, a página não deve ir ao ar em produção. |
+| 24 | `noindex` em todas as páginas + sitemap desligado | **Proposital enquanto está em teste**, e **NÃO precisa ser revertido à mão.** Os dois se decidem pelo `site` do `astro.config.mjs` (via `src/utils/deploy.ts`): trocar `site` no item 1 já religa a indexação e o sitemap. Ver abaixo. |
 
-> ⚠️ **Checklist de virada para produção:** os três itens acima precisam ser resolvidos no mesmo
-> momento em que o site sair de teste. Nenhum deles é opcional na publicação.
+> ⚠️ **Checklist de virada para produção:** os três primeiros itens acima precisam ser resolvidos no
+> mesmo momento em que o site sair de teste. Nenhum deles é opcional na publicação. O item 24 é a
+> exceção: ele se resolve sozinho junto com o item 1.
+
+### Item 24 — como o `noindex` funciona, e por que não há nada a reverter
+
+Adicionado em 2026-08-24. Enquanto o build não sai no domínio da Proc, **todas as 64 páginas saem
+com `<meta name="robots" content="noindex,nofollow">`** e o sitemap não é gerado.
+
+Por que a meta, e não só o `robots.txt`: robô lê `robots.txt` **só na raiz da origem**. Com
+`base: '/procgroup-site'`, o nosso é servido em `pedrobmr.github.io/procgroup-site/robots.txt`, e
+quem vale para o domínio é `pedrobmr.github.io/robots.txt` — que pertence a outro repositório.
+O `robots.txt.ts` continua no projeto porque passa a valer sozinho na virada, quando o site
+servir da raiz.
+
+Três lugares, uma decisão só (`src/utils/deploy.ts` → `ehProducao(host)`):
+
+| Arquivo | Em teste | Em produção |
+|---|---|---|
+| `src/layouts/BaseLayout.astro` | meta `noindex,nofollow` em toda página | sem meta (só 404 e `/evento`, que forçam) |
+| `astro.config.mjs` | integração `sitemap` desligada | sitemap gerado |
+| `src/pages/robots.txt.ts` | `Disallow: /` | `Allow: /` + link do sitemap |
+
+**Verificado nos dois estados** em 2026-08-24, trocando `site` e rodando o build:
+
+- github.io → 64/64 páginas com a meta · nenhum sitemap · `Disallow: /`
+- www.procgroup.com.br → 2/64 com a meta (só a 404 e a `/evento`, corretas) · `sitemap-index.xml`
+  gerado · `Allow: /` + `Sitemap: https://www.procgroup.com.br/sitemap-index.xml`
+
+O automatismo é de propósito: um `noindex` esquecido em produção não quebra nada visualmente, e o
+site oficial nasceria invisível no Google — erro que costuma levar meses até alguém perceber.
+
+⚠️ **Duas coisas que isto NÃO resolve:**
+
+1. **Se o preview já foi indexado**, a meta sozinha não tira o que já está lá. Buscar
+   `site:pedrobmr.github.io` no Google e, se aparecer, pedir remoção pelo Search Console.
+   Ordem importa: a meta precisa estar no ar **antes** de qualquer bloqueio de crawl, senão o
+   Google não consegue rastrear para ver a diretiva e a página fica presa no índice.
+2. **`noindex` não é privacidade.** Tira da busca, não protege. O repositório é público e o link
+   continua acessível a qualquer um. Para preview realmente fechado com repositório privado:
+   Cloudflare Pages (Access), Netlify (senha no preview) ou Vercel (preview autenticado) —
+   GitHub Pages em conta gratuita não tem proteção por senha.
 
 ---
 
