@@ -183,7 +183,7 @@ export const eventoUnitsI18n: Record<"en" | "es", Record<string, UnitI18n>> = {
       name: "Smart Cities",
       tagline: "Public safety and urban mobility powered by AI",
       description:
-        "An intelligent video-surveillance, facial-recognition and analytics platform for integrated operations centers — named Pato 360°, a national benchmark in smart public safety, helping governments protect cities and fight crime.",
+        "An intelligent video-surveillance, facial-recognition and analytics platform for integrated operations centers — named Pato 360°, helping governments protect cities and fight crime.",
       solutions: [
         "Facial Recognition",
         "License Plate Reading (LPR)",
@@ -253,7 +253,7 @@ export const eventoUnitsI18n: Record<"en" | "es", Record<string, UnitI18n>> = {
       name: "Ciudades Inteligentes",
       tagline: "Seguridad pública y movilidad urbana con IA",
       description:
-        "Plataforma de videovigilancia inteligente, reconocimiento facial y analytics para centros de operaciones integrados — llamada Pato 360°, referencia nacional en seguridad pública inteligente, que apoya a los gobiernos en la protección de ciudades y el combate a la criminalidad.",
+        "Plataforma de videovigilancia inteligente, reconocimiento facial y analytics para centros de operaciones integrados — llamada Pato 360°, que apoya a los gobiernos en la protección de ciudades y el combate a la criminalidad.",
       solutions: [
         "Reconocimiento Facial",
         "Lectura de Placas (LPR)",

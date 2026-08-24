@@ -570,7 +570,7 @@ const pt: Record<string, SolutionRich> = {
     resolveTitle: "Como a Proc resolve esse desafio",
     resolveIntro: [
       "A Proc City conecta câmeras, sensores, sistemas e bases de dados em um ecossistema inteligente que monitora continuamente o ambiente urbano.",
-      "É a plataforma que sustenta o Pato 360° — referência nacional em segurança pública inteligente. Com algoritmos avançados de IA e Visão Computacional, analisa imagens em tempo real, identifica pessoas e veículos de interesse e disponibiliza informações para operações e planejamento urbano.",
+      "É a plataforma que sustenta o Pato 360°, a solução de videomonitoramento inteligente de Pato Branco. Com algoritmos avançados de IA e Visão Computacional, analisa imagens em tempo real, identifica pessoas e veículos de interesse e disponibiliza informações para operações e planejamento urbano.",
     ],
     flow: [
       "Câmeras • Sensores • Sistemas Integrados",
@@ -714,7 +714,7 @@ const pt: Record<string, SolutionRich> = {
     whyProcTitle: "Por que escolher a Proc?",
     whyProc: [
       "Uma cidade inteligente vai muito além da instalação de câmeras. Nosso compromisso é entregar inteligência para apoiar decisões, fortalecer a atuação das forças de segurança e melhorar a qualidade de vida da população.",
-      "A Proc City reúne, num único ecossistema, recursos avançados de IA, Visão Computacional e Analytics — e sustenta o Pato 360°, levado a diversos municípios via CPSI, integrado a sistemas estaduais e federais de segurança.",
+      "A Proc City reúne, num único ecossistema, recursos avançados de IA, Visão Computacional e Analytics — e sustenta as soluções municipais entregues via CPSI, cada uma nomeada para o seu município, como o Pato 360° em Pato Branco, integradas a sistemas estaduais e federais de segurança.",
       "Trabalhamos lado a lado com gestores públicos, do diagnóstico e implantação à evolução contínua da plataforma, garantindo resultados concretos para a administração pública e para a sociedade.",
     ],
   },
@@ -1030,7 +1030,7 @@ const en: Record<string, SolutionRich> = {
     resolveTitle: "How Proc solves this challenge",
     resolveIntro: [
       "Proc City connects cameras, sensors, systems and databases into an intelligent ecosystem that continuously monitors the urban environment.",
-      "It is the platform behind Pato 360° — a national benchmark in intelligent public safety. With advanced AI and Computer Vision algorithms, it analyzes images in real time, identifies people and vehicles of interest and provides information for operations and urban planning.",
+      "It is the platform behind Pato 360°, the intelligent video monitoring solution for the city of Pato Branco. With advanced AI and Computer Vision algorithms, it analyzes images in real time, identifies people and vehicles of interest and provides information for operations and urban planning.",
     ],
     flow: ["Cameras • Sensors • Integrated Systems", "Computer Vision", "Artificial Intelligence", "People and Vehicle Recognition", "Event Analysis", "Intelligent Alerts", "Integrated Operations Center", "Fast Decision-Making and Action"],
     featuresTitle: "Smart City Platform solutions",
@@ -1083,7 +1083,7 @@ const en: Record<string, SolutionRich> = {
     whyProcTitle: "Why choose Proc?",
     whyProc: [
       "A smart city goes far beyond installing cameras. Our commitment is to deliver intelligence that supports decisions, strengthens the work of security forces and improves people's quality of life.",
-      "Proc City brings together, in a single ecosystem, advanced AI, Computer Vision and Analytics — and powers Pato 360°, rolled out to several municipalities via CPSI, integrated with state and federal security systems.",
+      "Proc City brings together, in a single ecosystem, advanced AI, Computer Vision and Analytics — and powers the municipal solutions delivered via CPSI, each named after its own municipality, such as Pato 360° in Pato Branco, integrated with state and federal security systems.",
       "We work side by side with public managers, from diagnosis and deployment to the platform's continuous evolution, ensuring concrete results for public administration and society.",
     ],
   },
@@ -1399,7 +1399,7 @@ const es: Record<string, SolutionRich> = {
     resolveTitle: "Cómo Proc resuelve este desafío",
     resolveIntro: [
       "Proc City conecta cámaras, sensores, sistemas y bases de datos en un ecosistema inteligente que monitorea continuamente el entorno urbano.",
-      "Es la plataforma que sustenta el Pato 360° — referencia nacional en seguridad pública inteligente. Con algoritmos avanzados de IA y Visión Artificial, analiza imágenes en tiempo real, identifica personas y vehículos de interés y pone a disposición información para operaciones y planificación urbana.",
+      "Es la plataforma que sustenta el Pato 360°, la solución de videomonitoreo inteligente del municipio de Pato Branco. Con algoritmos avanzados de IA y Visión Artificial, analiza imágenes en tiempo real, identifica personas y vehículos de interés y pone a disposición información para operaciones y planificación urbana.",
     ],
     flow: ["Cámaras • Sensores • Sistemas Integrados", "Visión Artificial", "Inteligencia Artificial", "Reconocimiento de Personas y Vehículos", "Análisis de Eventos", "Alertas Inteligentes", "Centro Integrado de Operaciones", "Toma de Decisión y Acción Rápida"],
     featuresTitle: "Soluciones de la Plataforma para Ciudades Inteligentes",
@@ -1452,7 +1452,7 @@ const es: Record<string, SolutionRich> = {
     whyProcTitle: "¿Por qué elegir Proc?",
     whyProc: [
       "Una ciudad inteligente va mucho más allá de la instalación de cámaras. Nuestro compromiso es entregar inteligencia que apoye decisiones, fortalezca la actuación de las fuerzas de seguridad y mejore la calidad de vida de la población.",
-      "Proc City reúne, en un único ecosistema, recursos avanzados de IA, Visión Artificial y Analytics — y sustenta el Pato 360°, llevado a diversos municipios vía CPSI, integrado a sistemas estatales y federales de seguridad.",
+      "Proc City reúne, en un único ecosistema, recursos avanzados de IA, Visión Artificial y Analytics — y sustenta las soluciones municipales entregadas vía CPSI, cada una con el nombre de su municipio, como el Pato 360° en Pato Branco, integradas a sistemas estatales y federales de seguridad.",
       "Trabajamos codo a codo con los gestores públicos, del diagnóstico y la implementación a la evolución continua de la plataforma, garantizando resultados concretos para la administración pública y la sociedad.",
     ],
   },

@@ -43,7 +43,7 @@ const unitsCopy: Record<Locale, Record<string, UnitCopy>> = {
       name: "Cidades Inteligentes",
       tagline: "Segurança pública e mobilidade urbana com IA",
       description:
-        "Plataforma de videomonitoramento inteligente, reconhecimento facial e analytics para centros de operações integrados — batizada de Pato 360°, referência nacional em segurança pública inteligente, apoiando governos na proteção de cidades e no combate à criminalidade.",
+        "Plataforma de videomonitoramento inteligente, reconhecimento facial e analytics para centros de operações integrados — batizada de Pato 360°, apoiando governos na proteção de cidades e no combate à criminalidade.",
       team: "Equipe especializada em Segurança Pública",
       solutions: [
         "Reconhecimento Facial",
@@ -117,7 +117,7 @@ const unitsCopy: Record<Locale, Record<string, UnitCopy>> = {
       name: "Smart Cities",
       tagline: "Public safety and urban mobility powered by AI",
       description:
-        "An intelligent video-surveillance, facial-recognition and analytics platform for integrated operations centers — named Pato 360°, a national benchmark in smart public safety, helping governments protect cities and fight crime.",
+        "An intelligent video-surveillance, facial-recognition and analytics platform for integrated operations centers — named Pato 360°, helping governments protect cities and fight crime.",
       team: "Public Safety specialist team",
       solutions: [
         "Facial Recognition",
@@ -191,7 +191,7 @@ const unitsCopy: Record<Locale, Record<string, UnitCopy>> = {
       name: "Ciudades Inteligentes",
       tagline: "Seguridad pública y movilidad urbana con IA",
       description:
-        "Plataforma de videovigilancia inteligente, reconocimiento facial y analytics para centros de operaciones integrados — llamada Pato 360°, referencia nacional en seguridad pública inteligente, que apoya a los gobiernos en la protección de ciudades y el combate a la criminalidad.",
+        "Plataforma de videovigilancia inteligente, reconocimiento facial y analytics para centros de operaciones integrados — llamada Pato 360°, que apoya a los gobiernos en la protección de ciudades y el combate a la criminalidad.",
       team: "Equipo especializado en Seguridad Pública",
       solutions: [
         "Reconocimiento Facial",
