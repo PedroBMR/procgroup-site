@@ -179,7 +179,7 @@ const pt: Record<string, SolutionRich> = {
   },
 
   "ambientes-inteligentes": {
-    challengesTitle: "Os desafios da segurança corporativa moderna",
+    challengesTitle: "Os desafios de proteger um ambiente corporativo hoje",
     challengesIntro: [
       "A proteção de pessoas e patrimônios vai muito além da instalação de câmeras. Empresas modernas precisam identificar riscos antes que incidentes aconteçam, controlar acessos de forma inteligente e transformar milhares de imagens em informações capazes de apoiar decisões rápidas.",
       "Nossa plataforma foi desenvolvida para substituir o monitoramento reativo por uma operação preventiva, automatizada e orientada por Inteligência Artificial.",
@@ -814,7 +814,7 @@ const en: Record<string, SolutionRich> = {
   },
 
   "ambientes-inteligentes": {
-    challengesTitle: "The challenges of modern corporate security",
+    challengesTitle: "The challenges of protecting a corporate environment today",
     challengesIntro: [
       "Protecting people and assets goes far beyond installing cameras. Modern companies need to identify risks before incidents happen, control access intelligently and turn thousands of images into information that supports fast decisions.",
       "Our platform was built to replace reactive monitoring with a preventive, automated operation driven by Artificial Intelligence.",
@@ -1183,7 +1183,7 @@ const es: Record<string, SolutionRich> = {
   },
 
   "ambientes-inteligentes": {
-    challengesTitle: "Los desafíos de la seguridad corporativa moderna",
+    challengesTitle: "Los desafíos de proteger un entorno corporativo hoy",
     challengesIntro: [
       "La protección de personas y patrimonios va mucho más allá de la instalación de cámaras. Las empresas modernas necesitan identificar riesgos antes de que ocurran los incidentes, controlar accesos de forma inteligente y transformar miles de imágenes en información capaz de apoyar decisiones rápidas.",
       "Nuestra plataforma fue desarrollada para sustituir el monitoreo reactivo por una operación preventiva, automatizada y orientada por Inteligencia Artificial.",

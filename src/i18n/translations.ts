@@ -42,7 +42,7 @@ export const translations = {
       },
       seg: {
         governo: { label: "Governo e Segurança Pública", desc: "Prefeituras, secretarias e órgãos de segurança" },
-        empresas: { label: "Empresas", desc: "Segurança corporativa, cloud e infraestrutura de TI" },
+        empresas: { label: "Empresas", desc: "Ambientes Inteligentes, cloud e infraestrutura de TI" },
         industria: { label: "Indústria", desc: "Visão computacional para linhas de produção" },
       },
       blogMenu: {
@@ -338,7 +338,7 @@ export const translations = {
       },
       seg: {
         governo: { label: "Government & Public Safety", desc: "City halls, agencies and security forces" },
-        empresas: { label: "Enterprises", desc: "Corporate security, cloud and IT infrastructure" },
+        empresas: { label: "Enterprises", desc: "Smart Environments, cloud and IT infrastructure" },
         industria: { label: "Industry", desc: "Computer vision for production lines" },
       },
       blogMenu: {
@@ -628,7 +628,7 @@ export const translations = {
       },
       seg: {
         governo: { label: "Gobierno y Seguridad Pública", desc: "Municipios, secretarías y órganos de seguridad" },
-        empresas: { label: "Empresas", desc: "Seguridad corporativa, cloud e infraestructura de TI" },
+        empresas: { label: "Empresas", desc: "Ambientes Inteligentes, cloud e infraestructura de TI" },
         industria: { label: "Industria", desc: "Visión artificial para líneas de producción" },
       },
       blogMenu: {
