@@ -19,6 +19,7 @@
  */
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ProcMark from "../../components/ProcMark.astro";
+import CenaPorta from "../../components/CenaPorta.astro";
 import { usePages } from "../../i18n/pages";
 import { useTranslations } from "../../i18n/utils";
 import { localizePath, localeAlternates } from "../../i18n/utils";
@@ -48,9 +49,10 @@ const portas = [
 ---
 
 <BaseLayout title={th.metaTitle} description={th.metaDescription} bare>
-  <div class="painel">
+  <div class="painel" data-entrada>
     <div class="grade" aria-hidden="true"></div>
     <div class="halo" aria-hidden="true"></div>
+    <div class="varredura" aria-hidden="true"></div>
 
     <header class="barra barra--topo">
       <div class="marca">
@@ -88,7 +90,8 @@ const portas = [
       <div class="canais">
         {
           portas.map((p, i) => (
-            <a class="canal" href={p.href} data-escolha={p.chave}>
+            <a class="canal" href={p.href} data-escolha={p.chave} style={`--i: ${i}`}>
+              <CenaPorta cena={p.chave === "governo" ? "governo" : "empresas"} />
               <span class="canal-progresso" aria-hidden="true"><span class="canal-barra" /></span>
               <span class="canal-corpo">
                 <span class="canal-topo">
@@ -140,6 +143,45 @@ const portas = [
   .instituc-eyebrow { font-size: var(--fs-xs); font-weight: 600; text-transform: uppercase; letter-spacing: 0.22em; color: var(--red-400); }
   .instituc h2 { margin-top: var(--space-3); font-size: var(--fs-2xl); color: var(--color-text); }
   .instituc-texto { margin-top: var(--space-4); font-size: var(--fs-sm); line-height: var(--lh-normal); color: var(--color-text-muted); }
+
+  /* ── Entrada: o painel liga como um centro de operações ──────────────────
+     Grade e halo primeiro, título depois, portas por último e em sequência.
+     Tudo com `both`: o estado inicial vale antes do delay, senão o conteúdo
+     pisca visível e some. Quem pediu menos movimento recebe tudo já no lugar
+     (bloco no fim do arquivo). */
+  @keyframes surgir { from { opacity: 0 } to { opacity: 1 } }
+  @keyframes subir {
+    from { opacity: 0; transform: translateY(26px) }
+    to   { opacity: 1; transform: none }
+  }
+  @keyframes abrirHalo {
+    from { opacity: 0; transform: scale(.72) }
+    to   { opacity: 1; transform: none }
+  }
+  @keyframes passarLuz {
+    0%   { opacity: 0; transform: translateX(-60%) }
+    18%  { opacity: .5 }
+    100% { opacity: 0; transform: translateX(160%) }
+  }
+
+  [data-entrada] .grade { animation: surgir 1.1s ease-out both; }
+  [data-entrada] .halo { animation: abrirHalo 1.6s cubic-bezier(.16,1,.3,1) .15s both; }
+  [data-entrada] .barra--topo { animation: surgir .8s ease-out .35s both; }
+  [data-entrada] .cabecalho > div { animation: subir .9s cubic-bezier(.16,1,.3,1) .45s both; }
+  [data-entrada] .cabecalho .lead { animation: subir .9s cubic-bezier(.16,1,.3,1) .6s both; }
+  [data-entrada] .canal { animation: subir 1s cubic-bezier(.16,1,.3,1) calc(.78s + var(--i) * .14s) both; }
+  [data-entrada] .barra--rodape { animation: surgir .8s ease-out 1.3s both; }
+
+  /* Uma passada de luz, uma vez só: o monitor acordando. Repetir viraria
+     enfeite — o manual limita o glow a uso pontual. */
+  .varredura {
+    position: absolute;
+    top: 0; bottom: 0; left: 0;
+    width: 40%;
+    pointer-events: none;
+    background: linear-gradient(100deg, transparent, rgba(255, 74, 84, .07) 45%, rgba(226, 231, 245, .05) 55%, transparent);
+    animation: passarLuz 2.4s ease-out .2s both;
+  }
 
   /* A página ocupa a janela inteira: é um pedágio, não tem rolagem em desktop.
      min-height em vez de height para não cortar conteúdo quando a fonte do
@@ -263,6 +305,8 @@ const portas = [
 
   .canal {
     display: block;
+    position: relative;
+    isolation: isolate;
     background: var(--color-bg-alt);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
@@ -323,6 +367,9 @@ const portas = [
     color: var(--color-text-muted);
     text-wrap: pretty;
   }
+
+  /* O corpo sobe acima da cena. */
+  .canal-corpo, .canal-progresso { position: relative; z-index: 1; }
 
   .canal-itens {
     display: grid;
@@ -387,6 +434,11 @@ const portas = [
 
   @media (prefers-reduced-motion: reduce) {
     .canal, .canal-barra, .idioma { transition: none; }
+    /* Sem sequência de entrada: tudo já no lugar, e a luz não passa. */
+    [data-entrada] .grade, [data-entrada] .halo, [data-entrada] .barra--topo,
+    [data-entrada] .cabecalho > div, [data-entrada] .cabecalho .lead,
+    [data-entrada] .canal, [data-entrada] .barra--rodape { animation: none; }
+    .varredura { display: none; }
   }
 </style>
 

@@ -1,0 +1,279 @@
+---
+/**
+ * Cena ambiente de cada porta do seletor de público.
+ *
+ * Cada porta é uma janela para o mundo dela, não um retângulo com texto:
+ *
+ *  - governo: cidade vista de cima à noite. Vias em perspectiva, veículos como
+ *    pontos de luz e, de tempos em tempos, uma caixa de detecção trava num
+ *    deles, acompanha e solta — a leitura de placas acontecendo.
+ *  - empresas: perímetro/planta em corte. Estrutura vertical e uma varredura
+ *    horizontal descendo; cada nó que a linha cruza acende e libera.
+ *
+ * Ambas em Canvas 2D, não three.js: são duas por página, numa página que é
+ * pedágio e precisa abrir instantânea. O SSR entrega o gradiente — sem JS, sem
+ * canvas ou com prefers-reduced-motion, fica a composição estática e a página
+ * continua inteira. Decorativo, então aria-hidden.
+ *
+ * Manual de marca: "um a dois focos de luz por composição" e o glow vermelho é
+ * pontual. Por isso o vermelho só aparece no momento da detecção — se estivesse
+ * sempre aceso, perderia a força e viraria decoração.
+ */
+interface Props {
+  /** "governo" | "empresas" */
+  cena: string;
+}
+const { cena } = Astro.props;
+---
+
+<span class="cena" aria-hidden="true" data-cena={cena}>
+  <canvas></canvas>
+  <span class="cena-veu"></span>
+</span>
+
+<style>
+  .cena {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: inherit;
+    pointer-events: none;
+    /* Base estática: é o que aparece sem JS, sem canvas ou com movimento
+       reduzido. A cena nunca fica um buraco preto. */
+    background:
+      radial-gradient(120% 90% at 70% 8%, rgba(255, 74, 84, 0.09), transparent 58%),
+      linear-gradient(165deg, var(--navy-800), var(--navy-950) 78%);
+  }
+  .cena canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+  /* Véu: o texto do cartão vem por cima e precisa de contraste. A cena vive
+     no topo e à direita; o canto inferior esquerdo é onde o texto respira. */
+  .cena-veu {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(15deg, var(--navy-950) 14%, rgba(11, 23, 48, 0.72) 46%, transparent 82%),
+      radial-gradient(140% 120% at 50% 50%, transparent 52%, rgba(6, 10, 20, 0.55));
+  }
+</style>
+
+<script>
+  type Ctx = CanvasRenderingContext2D;
+
+  const RED = "255, 74, 84";
+  const reduzido = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  function iniciar(host: HTMLElement) {
+    const canvas = host.querySelector("canvas");
+    if (!(canvas instanceof HTMLCanvasElement)) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const cena = host.dataset.cena === "empresas" ? empresas : governo;
+    // O cartão é o gatilho de intensidade: passar o mouse acelera a cena.
+    const cartao = host.closest(".canal") as HTMLElement | null;
+
+    let w = 0, h = 0, dpr = 1;
+    const medir = () => {
+      const r = host.getBoundingClientRect();
+      if (!r.width || !r.height) return false;
+      // DPR travado em 2: acima disso o custo sobe e ninguém vê diferença
+      // num fundo desfocado.
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = r.width; h = r.height;
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return true;
+    };
+    if (!medir()) return;
+
+    const estado = cena.criar(w, h);
+    let t = 0, raf = 0, visivel = true, ativo = 1;
+
+    const quadro = (dt: number) => {
+      const alvo = cartao?.matches(":hover, :focus-visible") ? 2.1 : 1;
+      ativo += (alvo - ativo) * 0.06;
+      t += dt * ativo;
+      ctx.clearRect(0, 0, w, h);
+      cena.desenhar(ctx, estado, w, h, t, ativo);
+    };
+
+    // Um quadro sempre, antes de qualquer coisa: se a página carrega numa aba
+    // de segundo plano, o rAF não roda e a cena ficaria em branco até o
+    // visitante voltar — aí ele veria o cartão vazio piscar e preencher.
+    quadro(0);
+
+    // Movimento reduzido para por aqui: fica a composição em repouso.
+    if (reduzido.matches) return;
+
+    let ultimo = performance.now();
+    const laco = (agora: number) => {
+      // Clamp: aba em segundo plano acumula delta e a cena "salta" ao voltar.
+      const dt = Math.min((agora - ultimo) / 1000, 0.05);
+      ultimo = agora;
+      quadro(dt);
+      raf = requestAnimationFrame(laco);
+    };
+
+    const tocar = () => {
+      if (raf || !visivel || document.hidden) return;
+      ultimo = performance.now();
+      raf = requestAnimationFrame(laco);
+    };
+    const parar = () => { if (raf) { cancelAnimationFrame(raf); raf = 0; } };
+
+    new IntersectionObserver(([e]) => { visivel = e.isIntersecting; visivel ? tocar() : parar(); })
+      .observe(host);
+    document.addEventListener("visibilitychange", () => (document.hidden ? parar() : tocar()));
+    new ResizeObserver(() => { if (medir()) cena.redimensionar?.(estado, w, h); }).observe(host);
+    tocar();
+  }
+
+  /* ── governo: cidade de cima, veículos como luz, LPR travando ── */
+  const governo = {
+    criar(w: number, h: number) {
+      const vias = [0.3, 0.46, 0.62, 0.78].map((y, i) => ({ y, dir: i % 2 ? -1 : 1 }));
+      const carros = Array.from({ length: 22 }, () => ({
+        via: Math.floor(Math.random() * vias.length),
+        x: Math.random(),
+        v: 0.012 + Math.random() * 0.026,
+        b: 0.35 + Math.random() * 0.65,
+      }));
+      const luzes = Array.from({ length: 46 }, () => ({
+        x: Math.random(), y: Math.random() * 0.86,
+        r: 0.4 + Math.random() * 1.5, f: 0.4 + Math.random() * 1.8, p: Math.random() * 6.28,
+      }));
+      return { vias, carros, luzes, alvo: -1, trava: 0, proxima: 2.5, w, h };
+    },
+    redimensionar(s: any, w: number, h: number) { s.w = w; s.h = h; },
+    desenhar(ctx: Ctx, s: any, w: number, h: number, t: number, ativo: number) {
+      const persp = (y: number) => 0.18 + y * 0.82; // vias longe ficam estreitas
+
+      // luzes de fundo: janelas da cidade
+      for (const l of s.luzes) {
+        const brilho = 0.16 + 0.12 * Math.sin(t * l.f + l.p);
+        ctx.fillStyle = `rgba(190, 214, 246, ${brilho})`;
+        ctx.beginPath();
+        ctx.arc(l.x * w, l.y * h, l.r * persp(l.y), 0, 6.2832);
+        ctx.fill();
+      }
+
+      // vias
+      for (const via of s.vias) {
+        const y = via.y * h, e = persp(via.y);
+        ctx.strokeStyle = `rgba(255, 255, 255, ${0.05 + e * 0.05})`;
+        ctx.lineWidth = e * 1.4;
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+      }
+
+      // trava de detecção: escolhe um carro, acompanha, solta
+      s.proxima -= 0.016 * ativo;
+      if (s.proxima <= 0 && s.trava <= 0) {
+        s.alvo = Math.floor(Math.random() * s.carros.length);
+        s.trava = 1; s.proxima = 3.4 + Math.random() * 2.6;
+      }
+      if (s.trava > 0) s.trava -= 0.006 * ativo;
+
+      // carros
+      s.carros.forEach((c: any, i: number) => {
+        const via = s.vias[c.via];
+        c.x += c.v * via.dir * ativo * 0.016 * 60;
+        if (c.x > 1.1) c.x = -0.1; if (c.x < -0.1) c.x = 1.1;
+        const x = c.x * w, y = via.y * h, e = persp(via.y);
+        const eAlvo = i === s.alvo && s.trava > 0;
+
+        // rastro
+        const g = ctx.createLinearGradient(x - via.dir * 34 * e, y, x, y);
+        g.addColorStop(0, "rgba(190, 214, 246, 0)");
+        g.addColorStop(1, `rgba(190, 214, 246, ${0.3 * c.b})`);
+        ctx.strokeStyle = g; ctx.lineWidth = 1.6 * e; ctx.lineCap = "round";
+        ctx.beginPath(); ctx.moveTo(x - via.dir * 34 * e, y); ctx.lineTo(x, y); ctx.stroke();
+
+        ctx.fillStyle = eAlvo ? `rgba(${RED}, 0.95)` : `rgba(214, 231, 250, ${0.5 + c.b * 0.4})`;
+        ctx.beginPath(); ctx.arc(x, y, 1.5 * e + (eAlvo ? 1 : 0), 0, 6.2832); ctx.fill();
+
+        if (eAlvo) {
+          // a caixa nasce e some com a trava — vermelho só neste momento
+          const a = Math.min(1, s.trava * 2.2) * Math.min(1, (1 - s.trava) * 5);
+          const r = 13 * e + 3;
+          ctx.strokeStyle = `rgba(${RED}, ${a * 0.9})`;
+          ctx.lineWidth = 1.2;
+          ctx.strokeRect(x - r, y - r * 0.72, r * 2, r * 1.44);
+          ctx.beginPath();
+          const q = r * 0.42;
+          ctx.moveTo(x - r, y - r * 0.72 + q); ctx.lineTo(x - r, y - r * 0.72); ctx.lineTo(x - r + q, y - r * 0.72);
+          ctx.moveTo(x + r - q, y + r * 0.72); ctx.lineTo(x + r, y + r * 0.72); ctx.lineTo(x + r, y + r * 0.72 - q);
+          ctx.strokeStyle = `rgba(${RED}, ${a})`; ctx.lineWidth = 2; ctx.stroke();
+        }
+      });
+    },
+  };
+
+  /* ── empresas: perímetro em corte, varredura descendo, nós liberando ── */
+  const empresas = {
+    criar(w: number, h: number) {
+      const colunas = Array.from({ length: 9 }, (_, i) => ({
+        x: 0.06 + i * 0.11, alt: 0.3 + Math.random() * 0.55, o: 0.05 + Math.random() * 0.06,
+      }));
+      const nos = Array.from({ length: 13 }, () => ({
+        x: 0.08 + Math.random() * 0.86, y: 0.16 + Math.random() * 0.7, acesa: 0,
+      }));
+      return { colunas, nos, varredura: -0.15, w, h };
+    },
+    redimensionar(s: any, w: number, h: number) { s.w = w; s.h = h; },
+    desenhar(ctx: Ctx, s: any, w: number, h: number, t: number, ativo: number) {
+      // estrutura vertical
+      for (const c of s.colunas) {
+        ctx.fillStyle = `rgba(255, 255, 255, ${c.o})`;
+        ctx.fillRect(c.x * w, h * (1 - c.alt), Math.max(1, w * 0.008), h * c.alt);
+      }
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.07)";
+      ctx.lineWidth = 1;
+      for (const y of [0.28, 0.52, 0.76]) {
+        ctx.beginPath(); ctx.moveTo(0, y * h); ctx.lineTo(w, y * h); ctx.stroke();
+      }
+
+      // linha de varredura
+      s.varredura += 0.0022 * ativo * 60 * 0.016;
+      if (s.varredura > 1.15) s.varredura = -0.15;
+      const vy = s.varredura * h;
+      const faixa = ctx.createLinearGradient(0, vy - 46, 0, vy + 8);
+      faixa.addColorStop(0, `rgba(${RED}, 0)`);
+      faixa.addColorStop(1, `rgba(${RED}, 0.16)`);
+      ctx.fillStyle = faixa;
+      ctx.fillRect(0, vy - 46, w, 54);
+      ctx.strokeStyle = `rgba(${RED}, 0.5)`;
+      ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.moveTo(0, vy); ctx.lineTo(w, vy); ctx.stroke();
+
+      // nós: acendem quando a varredura passa, depois esfriam
+      for (const n of s.nos) {
+        const y = n.y * h, x = n.x * w;
+        if (Math.abs(vy - y) < 5) n.acesa = 1;
+        if (n.acesa > 0) n.acesa -= 0.008 * ativo;
+
+        const base = 0.2 + 0.1 * Math.sin(t * 1.6 + n.x * 9);
+        if (n.acesa > 0) {
+          const a = Math.max(0, n.acesa);
+          const halo = ctx.createRadialGradient(x, y, 0, x, y, 16);
+          halo.addColorStop(0, `rgba(${RED}, ${a * 0.32})`);
+          halo.addColorStop(1, `rgba(${RED}, 0)`);
+          ctx.fillStyle = halo;
+          ctx.beginPath(); ctx.arc(x, y, 16, 0, 6.2832); ctx.fill();
+          ctx.strokeStyle = `rgba(${RED}, ${a * 0.75})`;
+          ctx.lineWidth = 1.2;
+          ctx.strokeRect(x - 7, y - 7, 14, 14);
+        }
+        ctx.fillStyle = n.acesa > 0
+          ? `rgba(${RED}, ${0.55 + n.acesa * 0.4})`
+          : `rgba(190, 214, 246, ${base})`;
+        ctx.beginPath(); ctx.arc(x, y, 2.1, 0, 6.2832); ctx.fill();
+      }
+    },
+  };
+
+  const partir = () => document.querySelectorAll<HTMLElement>("[data-cena]").forEach(iniciar);
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", partir);
+  else partir();
+</script>
