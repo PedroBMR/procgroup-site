@@ -8,10 +8,31 @@ const SITE = 'https://pedrobmr.github.io';
 // checagem esta repetida aqui. Se a lista de hosts mudar la, mude aqui tambem.
 const EH_PRODUCAO = ['www.procgroup.com.br', 'procgroup.com.br'].includes(new URL(SITE).host);
 
+// Rotas que morreram quando o site foi dividido em /governo e /empresas
+// (fase 4 de ARQUITETURA-DOIS-PUBLICOS.md). As paginas de solucao apontam para
+// o novo endereco no lado certo; o resto (cases, empresa, contato, plataforma)
+// existia num recorte que nao ha mais — vai para o seletor da raiz decidir.
+const LADO_DA_SOLUCAO = {
+  'cidades-inteligentes': '/governo',
+  'ambientes-inteligentes': '/empresas',
+  'ia-industrial': '/empresas',
+  'infraestrutura-de-ti': '/empresas',
+};
+const REDIRECTS = {};
+for (const pref of ['', '/en', '/es']) {
+  for (const [slug, lado] of Object.entries(LADO_DA_SOLUCAO)) {
+    REDIRECTS[`${pref}/solucoes/${slug}`] = `${pref}${lado}/solucoes/${slug}`;
+  }
+  for (const morta of ['/comecar', '/solucoes', '/cases', '/empresa', '/contato', '/plataforma-proc-ai']) {
+    REDIRECTS[`${pref}${morta}`] = pref || '/';
+  }
+}
+
 // https://astro.build/config
 export default defineConfig({
   site: SITE,
   base: '/procgroup-site',
+  redirects: REDIRECTS,
   integrations: [
     // Sitemap so em producao. Enquanto o site e preview no github.io, todas as
     // paginas saem com meta noindex (BaseLayout.astro) — publicar um sitemap

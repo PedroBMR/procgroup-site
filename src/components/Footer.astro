@@ -32,25 +32,29 @@ const year = new Date().getFullYear();
     <nav class="footer-nav" aria-label={common.navFooter}>
       {/* h2, não h3: em páginas sem h2 no conteúdo (404, trabalhe-conosco) as
           colunas vinham logo após o h1 e criavam salto h1→h3 no outline. */}
+      {mainNav.length > 0 && (
       <div>
         <h2>{t.navHeading}</h2>
         <ul>
           {mainNav.filter((i) => i.id !== "home").map((item) => <li><a href={item.href}>{item.label}</a></li>)}
         </ul>
       </div>
+      )}
+      {solucoes.length > 0 && (
       <div>
         <h2>{t.solucoesHeading}</h2>
         <ul>
           {solucoes.map((c) => <li><a href={c.href}>{c.label}</a></li>)}
         </ul>
       </div>
+      )}
       <div>
         <h2>{t.contatoHeading}</h2>
         <ul>
           <li><a href="mailto:comercial@procgroup.com.br">comercial@procgroup.com.br</a></li>
           <li><a href="tel:+554632243532">+55 46 3224-3532</a></li>
           <li>{t.address} · <a href={MAPS_URL} target="_blank" rel="noopener noreferrer">{t.mapLink}</a></li>
-          <li><a href={localizePath(`${publico ? publicoDefs[publico].base : ""}/contato`, lang)}>{t.demoLink}</a></li>
+          {publico && <li><a href={localizePath(`${publicoDefs[publico].base}/contato`, lang)}>{t.demoLink}</a></li>}
           <li><a href={localizePath("/suporte", lang)}>{t.suporteLink}</a></li>
         </ul>
       </div>

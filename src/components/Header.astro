@@ -26,6 +26,7 @@ const homeAria = { pt: "Proc Group — página inicial", en: "Proc Group — hom
       <Logo variant="white" height={36} />
     </a>
 
+    {mainNav.length > 0 && (
     <nav class="main-nav" aria-label={common.navMain}>
       <ul>
         {mainNav.map((item) => (
@@ -48,11 +49,13 @@ const homeAria = { pt: "Proc Group — página inicial", en: "Proc Group — hom
         ))}
       </ul>
     </nav>
+    )}
 
     <div class="header-cta">
       <Button href={ctaNav.href} variant="primary" size="md">{ctaNav.label}</Button>
     </div>
 
+    {mainNav.length > 0 && (
     <button
       class="menu-toggle"
       data-menu-toggle
@@ -62,8 +65,10 @@ const homeAria = { pt: "Proc Group — página inicial", en: "Proc Group — hom
     >
       <span></span><span></span><span></span>
     </button>
+    )}
   </div>
 
+  {mainNav.length > 0 && (
   <nav id="mobile-nav" class="mobile-nav" data-mobile-nav aria-label={menuLabel}>
     <ul>
       {mainNav.map((item) => (
@@ -79,6 +84,7 @@ const homeAria = { pt: "Proc Group — página inicial", en: "Proc Group — hom
       <li><a href={ctaNav.href} class="mobile-cta">{ctaNav.label}</a></li>
     </ul>
   </nav>
+  )}
 </header>
 
 <style>

@@ -29,7 +29,7 @@ const payload = {
         ...translations[l].notFound,
         htmlLang: htmlLangAttr[l],
         home: localizePath("/", l),
-        contato: localizePath("/contato", l),
+        contato: localizePath("/suporte", l),
       },
     ]),
   ),
@@ -44,7 +44,7 @@ const payload = {
       <p class="lead" data-nf="lead">{t.lead}</p>
       <div class="actions">
         <Button href="/" variant="primary" data-nf-home>{t.ctaHome}</Button>
-        <Button href="/contato" variant="secondary" data-nf-contato>{t.ctaContato}</Button>
+        <Button href="/suporte" variant="secondary" data-nf-contato>{t.ctaContato}</Button>
       </div>
     </div>
   </section>
