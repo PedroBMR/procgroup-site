@@ -2,13 +2,23 @@
 import { getMainNav } from "../data/nav";
 import { MAPS_URL } from "../data/contact";
 import Logo from "./Logo.astro";
-import { getLangFromUrl, useTranslations, localizePath } from "../i18n/utils";
+import { getLangFromUrl, useTranslations, localizePath, logicalPath } from "../i18n/utils";
+import { publicoDaUrl, publicoDefs, publicoCopy, caminho } from "../data/audiencia";
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang).footer;
 const common = useTranslations(lang).common;
-const mainNav = getMainNav(lang);
-const solucoes = mainNav.find((i) => i.id === "solucoes")?.children ?? [];
+const publico = publicoDaUrl(logicalPath(Astro.url));
+const mainNav = getMainNav(lang, publico);
+// No lado governo o item "solucoes" e link direto (uma unidade so); a coluna
+// do rodape usa entao o proprio item como linha unica.
+const solucoesItem = mainNav.find((i) => i.id === "solucoes");
+const solucoes = solucoesItem?.children ?? (solucoesItem ? [{ label: solucoesItem.label, href: solucoesItem.href }] : []);
+// Escotilha: o UNICO link entre os dois lados. Quem clicou na porta errada sai
+// por aqui em vez de abandonar o site. Fora dos lados, nao existe.
+const escotilha = publico
+  ? { texto: publicoCopy[lang][publico].escotilha, destino: publicoCopy[lang][publicoDefs[publico].oposto].nome, href: localizePath(caminho(publicoDefs[publico].oposto), lang) }
+  : null;
 const year = new Date().getFullYear();
 ---
 
@@ -47,6 +57,12 @@ const year = new Date().getFullYear();
     </nav>
   </div>
 
+  {escotilha && (
+    <div class="container footer-escotilha">
+      <p>{escotilha.texto} <a href={escotilha.href}>{escotilha.destino} →</a></p>
+    </div>
+  )}
+
   <div class="container footer-bottom">
     <p>&copy; {year} Proc Group. {t.rights}</p>
     <div class="footer-legal">
@@ -79,6 +95,12 @@ const year = new Date().getFullYear();
   .footer-nav li { margin-bottom: var(--space-2); }
   .footer-nav a { font-size: var(--fs-sm); transition: color var(--dur-fast) ease; }
   .footer-nav a:hover { color: var(--white); }
+
+  /* Escotilha para o outro publico: discreta de proposito — e rota de fuga
+     para quem errou a porta, nao navegacao. Unico link entre os dois lados. */
+  .footer-escotilha { padding-top: var(--space-6); font-size: var(--fs-xs); color: rgba(255,255,255,0.5); }
+  .footer-escotilha a { color: rgba(255,255,255,0.75); text-decoration: underline; text-underline-offset: 2px; }
+  .footer-escotilha a:hover { color: var(--white); }
 
   .footer-bottom {
     display: flex; justify-content: space-between; align-items: center;
