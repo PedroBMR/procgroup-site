@@ -10,9 +10,13 @@ export function getStaticPaths() {
 const lang = (Astro.params.lang as Locale) || defaultLocale;
 const p = useTranslations(lang).solutions.pages["cidades-inteligentes"];
 
-// Case Pato 360° — cópia própria da página (não faz parte do template).
-// Municípios são nomes próprios (não traduzem). Números sujeitos a atualização.
-const patoCities = ["Pato Branco", "Marmeleiro", "Sulina", "Chopinzinho", "Coronel Vivida"];
+// Case Pato 360° — copia propria da pagina (nao faz parte do template).
+//
+// Os chips com os nomes dos municipios sairam em 2026-08-26. Havia decisao
+// registrada de nao citar Chopinzinho em copy publica — contrato em execucao
+// nao e autorizacao de divulgacao — e o mesmo vale para os outros tres. Pato
+// Branco continua no texto porque ja aparece publicamente em todo o site.
+// Para citar qualquer outro municipio como case: autorizacao do municipio antes.
 
 const caseI18n: Record<Locale, {
   eyebrow: string;
@@ -38,7 +42,7 @@ const caseI18n: Record<Locale, {
       { n: "03", title: "Correlação", desc: "Comparação com bases de veículos furtados e pessoas procuradas." },
       { n: "04", title: "Alerta", desc: "Notificação em tempo real à Polícia Militar, com localização e câmera de origem." },
     ],
-    source: "Fonte: dados públicos da Prefeitura e Câmara Municipal de Pato Branco/PR. Números sujeitos a atualização — confirmar com o time antes de publicar.",
+    source: "Fonte: dados públicos da Prefeitura e da Câmara Municipal de Pato Branco/PR.",
     flowAria: "Fluxo de detecção do Pato 360, da captura da câmera ao alerta para a Polícia Militar",
   },
   en: {
@@ -56,7 +60,7 @@ const caseI18n: Record<Locale, {
       { n: "03", title: "Correlation", desc: "Matching against databases of stolen vehicles and wanted people." },
       { n: "04", title: "Alert", desc: "Real-time notification to the Military Police, with location and source camera." },
     ],
-    source: "Source: public data from the City Hall and City Council of Pato Branco/PR, Brazil. Figures subject to update — confirm with the team before publishing.",
+    source: "Source: public data from the City Hall and City Council of Pato Branco/PR, Brazil.",
     flowAria: "Pato 360 detection flow, from camera capture to the alert sent to the Military Police",
   },
   es: {
@@ -74,7 +78,7 @@ const caseI18n: Record<Locale, {
       { n: "03", title: "Correlación", desc: "Comparación con bases de vehículos robados y personas buscadas." },
       { n: "04", title: "Alerta", desc: "Notificación en tiempo real a la Policía Militar, con ubicación y cámara de origen." },
     ],
-    source: "Fuente: datos públicos de la Alcaldía y el Concejo Municipal de Pato Branco/PR, Brasil. Cifras sujetas a actualización — confirmar con el equipo antes de publicar.",
+    source: "Fuente: datos públicos de la Alcaldía y del Concejo Municipal de Pato Branco/PR, Brasil.",
     flowAria: "Flujo de detección del Pato 360, de la captura de la cámara a la alerta a la Policía Militar",
   },
 };
@@ -103,9 +107,6 @@ const flowPath = `M 40 ${FLOW_Y} L ${FLOW_W - 40} ${FLOW_Y}`;
         <p class="eyebrow">{c.eyebrow}</p>
         <h2>{c.title}</h2>
         <p class="lead">{c.lead}</p>
-        <ul class="pato-cities">
-          {patoCities.map((city) => <li>{city}</li>)}
-        </ul>
       </div>
 
       <div class="pato-stats">
@@ -148,15 +149,6 @@ const flowPath = `M 40 ${FLOW_Y} L ${FLOW_W - 40} ${FLOW_Y}`;
   .pato-section { background: var(--color-bg); padding-block: var(--space-16); }
   .pato-section .lead { margin-top: var(--space-6); font-size: var(--fs-lg); color: var(--color-text-muted); max-width: 720px; }
   .pato-section .section-header { max-width: 720px; margin-bottom: var(--space-12); }
-  .pato-cities { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-6); }
-  .pato-cities li {
-    font-size: var(--fs-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;
-    padding: var(--space-2) var(--space-4);
-    border-radius: var(--radius-pill);
-    background: var(--color-bg-alt);
-    border: 1px solid var(--color-border-strong);
-    color: var(--color-text);
-  }
   .pato-stats {
     display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6);
     margin-bottom: var(--space-12);
