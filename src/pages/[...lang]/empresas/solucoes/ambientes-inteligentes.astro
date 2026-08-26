@@ -1,0 +1,10 @@
+---
+// Rota do lado empresas. E o MESMO componente da rota legada: ele detecta o
+// lado pela URL e filtra o que mostra (ARQUITETURA-DOIS-PUBLICOS.md).
+import SolucaoAmbientes from "../../../../components/paginas/SolucaoAmbientes.astro";
+
+export function getStaticPaths() {
+  return [{ params: { lang: undefined } }, { params: { lang: "en" } }, { params: { lang: "es" } }];
+}
+---
+<SolucaoAmbientes />

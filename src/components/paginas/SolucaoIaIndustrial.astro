@@ -1,0 +1,21 @@
+---
+import BusinessUnitTemplate from "../BusinessUnitTemplate.astro";
+import { getLangFromUrl, useTranslations } from "../../i18n/utils";
+import { defaultLocale, type Locale } from "../../i18n/config";
+
+const lang = getLangFromUrl(Astro.url);
+const p = useTranslations(lang).solutions.pages["ia-industrial"];
+---
+
+<BusinessUnitTemplate
+  slug="ia-industrial"
+  metaTitle={p.metaTitle}
+  metaDescription={p.metaDescription}
+  heroTitle={p.heroTitle}
+  heroLead={p.heroLead}
+  solutionsHeading={p.solutionsHeading}
+  teamDescription={p.teamDescription}
+  faqs={p.faqs}
+  finalCtaTitle={p.finalCtaTitle}
+  finalCtaText={p.finalCtaText}
+/>

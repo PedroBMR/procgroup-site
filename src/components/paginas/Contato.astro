@@ -4,22 +4,31 @@ import Breadcrumb from "../Breadcrumb.astro";
 import ContactChannels from "../ContactChannels.astro";
 import { withBase } from "../../utils/url";
 import { getBusinessUnits } from "../../data/businessUnits";
-import { getLangFromUrl, useTranslations, localePath } from "../../i18n/utils";
+import { getLangFromUrl, logicalPath, useTranslations, localePath } from "../../i18n/utils";
+import { publicoDaUrl, publicoDefs } from "../../data/audiencia";
 import { usePages } from "../../i18n/pages";
 import { defaultLocale, type Locale } from "../../i18n/config";
 
 const lang = getLangFromUrl(Astro.url);
+// De que lado do site esta instancia esta montada — sai da URL, como no
+// Header. Nas rotas legadas (fora de /governo e /empresas) publico e null:
+// base vazia e nenhum filtro, ou seja, o comportamento de sempre.
+const publico = publicoDaUrl(logicalPath(Astro.url));
+const base = publico ? publicoDefs[publico].base : "";
+const unidadesDoLado = publico ? publicoDefs[publico].unidades : null;
 const tr = useTranslations(lang);
 const t = usePages(lang).contato;
-const interests = getBusinessUnits(lang).map((u) => u.name);
+const interests = getBusinessUnits(lang)
+  .filter((u) => !unidadesDoLado || unidadesDoLado.includes(u.slug))
+  .map((u) => u.name);
 ---
 
 <BaseLayout title={tr.nav.contato} description={t.metaDescription}>
   <div class="container">
     <Breadcrumb
       items={[
-        { label: tr.nav.home, href: localePath("/", lang) },
-        { label: tr.nav.contato, href: localePath("/contato", lang) },
+        { label: tr.nav.home, href: localePath(base || "/", lang) },
+        { label: tr.nav.contato, href: localePath(`${base}/contato`, lang) },
       ]}
     />
   </div>

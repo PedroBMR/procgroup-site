@@ -50,7 +50,7 @@ const year = new Date().getFullYear();
           <li><a href="mailto:comercial@procgroup.com.br">comercial@procgroup.com.br</a></li>
           <li><a href="tel:+554632243532">+55 46 3224-3532</a></li>
           <li>{t.address} · <a href={MAPS_URL} target="_blank" rel="noopener noreferrer">{t.mapLink}</a></li>
-          <li><a href={localizePath("/contato", lang)}>{t.demoLink}</a></li>
+          <li><a href={localizePath(`${publico ? publicoDefs[publico].base : ""}/contato`, lang)}>{t.demoLink}</a></li>
           <li><a href={localizePath("/suporte", lang)}>{t.suporteLink}</a></li>
         </ul>
       </div>

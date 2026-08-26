@@ -8,15 +8,22 @@ import { homeStats } from "../../data/stats";
 import { getBusinessUnits } from "../../data/businessUnits";
 import hqPhoto from "../../assets/images/hq-pato-branco-enhanced.webp";
 import { WHATSAPP_DEMO } from "../../data/contact";
-import { getLangFromUrl, useTranslations, localePath, localizePath } from "../../i18n/utils";
+import { getLangFromUrl, logicalPath, useTranslations, localePath, localizePath } from "../../i18n/utils";
+import { publicoDaUrl, publicoDefs } from "../../data/audiencia";
 import { usePages } from "../../i18n/pages";
 import { defaultLocale, type Locale } from "../../i18n/config";
 
 const lang = getLangFromUrl(Astro.url);
+// De que lado do site esta instancia esta montada — sai da URL, como no
+// Header. Nas rotas legadas (fora de /governo e /empresas) publico e null:
+// base vazia e nenhum filtro, ou seja, o comportamento de sempre.
+const publico = publicoDaUrl(logicalPath(Astro.url));
+const base = publico ? publicoDefs[publico].base : "";
+const unidadesDoLado = publico ? publicoDefs[publico].unidades : null;
 const tr = useTranslations(lang);
 const t = usePages(lang).empresa;
 const statsLabels = tr.home.statsLabels;
-const businessUnits = getBusinessUnits(lang);
+const businessUnits = getBusinessUnits(lang).filter((u) => !unidadesDoLado || unidadesDoLado.includes(u.slug));
 
 // Blocos institucionais só-PT (Razão de Existir, Diferencial, Missão/Visão,
 // Valores, Compromisso). Guardados na renderização — EN/ES seguem sem eles.
@@ -42,8 +49,8 @@ const schema = {
   <div class="container">
     <Breadcrumb
       items={[
-        { label: tr.nav.home, href: localePath("/", lang) },
-        { label: tr.nav.empresa, href: localePath("/empresa", lang) },
+        { label: tr.nav.home, href: localePath(base || "/", lang) },
+        { label: tr.nav.empresa, href: localePath(`${base}/empresa`, lang) },
       ]}
     />
   </div>
@@ -198,7 +205,7 @@ const schema = {
       </div>
       <div class="units-grid">
         {businessUnits.map((unit) => (
-          <a href={localizePath(unit.href, lang)} class="unit-card" data-reveal style={`--unit-color: ${unit.color}`}>
+          <a href={localizePath(base + unit.href, lang)} class="unit-card" data-reveal style={`--unit-color: ${unit.color}`}>
             <span class="unit-icon-wrap"><UnitIcon slug={unit.slug} /></span>
             <span class="unit-badge">{unit.shortName}</span>
             <h3>{unit.name}</h3>

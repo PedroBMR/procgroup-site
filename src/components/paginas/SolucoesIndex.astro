@@ -2,13 +2,20 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Breadcrumb from "../Breadcrumb.astro";
 import { getBusinessUnits } from "../../data/businessUnits";
-import { getLangFromUrl, useTranslations, localePath, localizePath } from "../../i18n/utils";
+import { getLangFromUrl, logicalPath, useTranslations, localePath, localizePath } from "../../i18n/utils";
+import { publicoDaUrl, publicoDefs } from "../../data/audiencia";
 import { defaultLocale, type Locale } from "../../i18n/config";
 
 const lang = getLangFromUrl(Astro.url);
+// De que lado do site esta instancia esta montada — sai da URL, como no
+// Header. Nas rotas legadas (fora de /governo e /empresas) publico e null:
+// base vazia e nenhum filtro, ou seja, o comportamento de sempre.
+const publico = publicoDaUrl(logicalPath(Astro.url));
+const base = publico ? publicoDefs[publico].base : "";
+const unidadesDoLado = publico ? publicoDefs[publico].unidades : null;
 const tr = useTranslations(lang);
 const t = tr.solutions;
-const units = getBusinessUnits(lang);
+const units = getBusinessUnits(lang).filter((u) => !unidadesDoLado || unidadesDoLado.includes(u.slug));
 const description = {
   pt: "Conheça as quatro unidades de negócio da Proc: Cidades Inteligentes, Ambientes Inteligentes, Infraestrutura de TI e IA Industrial.",
   en: "Explore Proc's four business units: Smart Cities, Smart Environments, IT Infrastructure and Industrial AI.",
@@ -20,8 +27,8 @@ const description = {
   <div class="container">
     <Breadcrumb
       items={[
-        { label: tr.nav.home, href: localePath("/", lang) },
-        { label: tr.nav.solucoes, href: localePath("/solucoes", lang) },
+        { label: tr.nav.home, href: localePath(base || "/", lang) },
+        { label: tr.nav.solucoes, href: localePath(`${base}/solucoes`, lang) },
       ]}
     />
   </div>
@@ -34,7 +41,7 @@ const description = {
   <section class="section">
     <div class="container units-grid">
       {units.map((unit) => (
-        <a href={localizePath(unit.href, lang)} class="unit-card" data-reveal style={`--unit-color: ${unit.color}`}>
+        <a href={localizePath(base + unit.href, lang)} class="unit-card" data-reveal style={`--unit-color: ${unit.color}`}>
           <span class="unit-badge">{unit.shortName}</span>
           <h2>{unit.name}</h2>
           <p>{unit.tagline}</p>

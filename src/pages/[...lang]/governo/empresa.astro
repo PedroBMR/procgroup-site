@@ -1,0 +1,10 @@
+---
+// Rota do lado governo. E o MESMO componente da rota legada: ele detecta o
+// lado pela URL e filtra o que mostra (ARQUITETURA-DOIS-PUBLICOS.md).
+import Empresa from "../../../components/paginas/Empresa.astro";
+
+export function getStaticPaths() {
+  return [{ params: { lang: undefined } }, { params: { lang: "en" } }, { params: { lang: "es" } }];
+}
+---
+<Empresa />

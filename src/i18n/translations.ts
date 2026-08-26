@@ -177,7 +177,7 @@ export const translations = {
       casesStats: [
         { value: "700+", label: "câmeras com IA em Pato Branco" },
         { value: "5", label: "municípios atendidos via CPSI" },
-        { value: "24×7", label: "monitoramento em tempo real" },
+        { value: "24×7", label: "plataforma operando em tempo real" },
       ],
       blogEyebrow: "Do nosso blog",
       blogTitle: "Ideias e bastidores da Proc AI Platform",
@@ -467,7 +467,7 @@ export const translations = {
       casesStats: [
         { value: "700+", label: "AI cameras in Pato Branco" },
         { value: "5", label: "municipalities served via CPSI" },
-        { value: "24×7", label: "real-time monitoring" },
+        { value: "24×7", label: "platform running in real time" },
       ],
       blogEyebrow: "From our blog",
       blogTitle: "Ideas and behind-the-scenes of the Proc AI Platform",
@@ -757,7 +757,7 @@ export const translations = {
       casesStats: [
         { value: "700+", label: "cámaras con IA en Pato Branco" },
         { value: "5", label: "municipios atendidos vía CPSI" },
-        { value: "24×7", label: "monitoreo en tiempo real" },
+        { value: "24×7", label: "plataforma operando en tiempo real" },
       ],
       blogEyebrow: "De nuestro blog",
       blogTitle: "Ideas y detrás de escena de la Proc AI Platform",

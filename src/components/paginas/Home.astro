@@ -13,12 +13,19 @@ import { businessUnits } from "../../data/businessUnits";
 import { byNewest } from "../../utils/blog";
 import hqPhoto from "../../assets/images/hq-pato-branco-enhanced.webp";
 import { WHATSAPP_DEMO } from "../../data/contact";
-import { getLangFromUrl, useTranslations, localePath, localizePath } from "../../i18n/utils";
+import { getLangFromUrl, logicalPath, useTranslations, localePath, localizePath } from "../../i18n/utils";
+import { publicoDaUrl, publicoDefs } from "../../data/audiencia";
 import { defaultLocale, type Locale } from "../../i18n/config";
 
 // Uma rota, três idiomas: PT na raiz (/), EN em /en, ES em /es.
 
 const lang = getLangFromUrl(Astro.url);
+// De que lado do site esta instancia esta montada — sai da URL, como no
+// Header. Nas rotas legadas (fora de /governo e /empresas) publico e null:
+// base vazia e nenhum filtro, ou seja, o comportamento de sempre.
+const publico = publicoDaUrl(logicalPath(Astro.url));
+const base = publico ? publicoDefs[publico].base : "";
+const unidadesDoLado = publico ? publicoDefs[publico].unidades : null;
 const t = useTranslations(lang).home;
 const common = useTranslations(lang).common;
 const cards = t.cards as Record<string, { name: string; desc: string }>;
@@ -60,7 +67,7 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
       <h1>{t.heroTitle}</h1>
       <p class="hero-subtitle">{t.heroSubtitle}</p>
       <div class="hero-actions">
-        <Button href={P("/plataforma-proc-ai")} variant="primary" size="lg" data-magnetic>{t.heroCtaPrimary}</Button>
+        <Button href={P(`${base}/plataforma-proc-ai`)} variant="primary" size="lg" data-magnetic>{t.heroCtaPrimary}</Button>
         <Button href={WHATSAPP_DEMO} variant="ghost" size="lg" data-magnetic>{t.heroCtaSecondary}</Button>
       </div>
     </div>
@@ -80,7 +87,7 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
         <p class="eyebrow">{t.aboutEyebrow}</p>
         <h2>{t.aboutTitle}</h2>
         <p class="lead">{t.aboutText}</p>
-        <Button href={P("/empresa")} variant="secondary">{t.aboutCta}</Button>
+        <Button href={P(`${base}/empresa`)} variant="secondary">{t.aboutCta}</Button>
       </div>
       <div class="about-visual" data-reveal>
         <Image
@@ -128,8 +135,8 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
       </div>
 
       <div class="units-grid">
-        {businessUnits.map((unit) => (
-          <a href={localizePath(unit.href, lang)} class="unit-card" data-reveal style={`--unit-color: ${unit.color}`}>
+        {businessUnits.filter((u) => !unidadesDoLado || unidadesDoLado.includes(u.slug)).map((unit) => (
+          <a href={localizePath(base + unit.href, lang)} class="unit-card" data-reveal style={`--unit-color: ${unit.color}`}>
             <span class="unit-icon-wrap"><UnitIcon slug={unit.slug} /></span>
             <span class="unit-badge">{unit.shortName}</span>
             <h3>{cards[unit.slug]?.name ?? unit.name}</h3>
@@ -140,7 +147,7 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
       </div>
 
       <div class="platform-cta" data-reveal>
-        <Button href={P("/plataforma-proc-ai")} variant="secondary" size="lg">{t.platformCta}</Button>
+        <Button href={P(`${base}/plataforma-proc-ai`)} variant="secondary" size="lg">{t.platformCta}</Button>
       </div>
     </div>
   </section>
@@ -169,7 +176,7 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
           <p class="eyebrow">{x.casesEyebrow}</p>
           <h2>{x.casesTitle}</h2>
           <p class="lead">{x.casesText}</p>
-          <Button href={P("/cases")} variant="ghost" size="lg">{x.casesCta}</Button>
+          <Button href={P(`${base}/cases`)} variant="ghost" size="lg">{x.casesCta}</Button>
         </div>
         {x.casesStats && (
           <div class="cases-teaser-stats">
@@ -185,7 +192,7 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
     </section>
   )}
 
-  {latestPosts.length > 0 && (
+  {latestPosts.length > 0 && (!publico || publicoDefs[publico].temBlog) && (
     <section class="section blog-teaser" data-theme="light">
       <div class="container">
         <div class="blog-teaser-header" data-reveal>
