@@ -372,7 +372,7 @@ const schema = [
         <p class="eyebrow">{t.otherEyebrow}</p>
         <h2>{t.otherTitle}</h2>
       </div>
-      <div class="units-grid">
+      <div class="units-grid" style={`--unit-cols: ${Math.min(otherUnits.length, 3)}`}>
         {otherUnits.map((u) => (
           <a href={localizePath(base + u.href, lang)} class="unit-card" data-reveal style={`--unit-color: ${u.color}`}>
             <span class="unit-icon-wrap"><UnitIcon slug={u.slug} /></span>
@@ -563,7 +563,7 @@ const schema = [
   .faq-item p { margin: 0; padding: 0 var(--space-6) var(--space-5); color: var(--color-text-muted); font-size: var(--fs-sm); max-width: 64ch; }
 
   .other-units { background: var(--color-bg); }
-  .units-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); }
+  .units-grid { display: grid; grid-template-columns: repeat(var(--unit-cols, 3), minmax(0, 1fr)); gap: var(--space-6); }
   .unit-card {
     position: relative;
     padding: var(--space-8) var(--space-6);

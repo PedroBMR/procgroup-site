@@ -206,11 +206,17 @@ const portas = [
     color: var(--color-text-faint);
   }
   .saida:hover, .email:hover { color: var(--color-text); }
+  .email { display: inline-flex; align-items: center; min-height: 40px; }
   .saida { text-decoration: underline; text-underline-offset: 3px; }
 
   .idiomas { display: flex; gap: var(--space-1); }
   .idioma {
-    padding: var(--space-1) var(--space-2);
+    /* Alvo de toque: 29px de altura reprovava no celular. O padding sobe a
+       area clicavel sem mudar o visual do texto. */
+    padding: var(--space-2) var(--space-3);
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
     border-radius: var(--radius-sm);
     font-size: var(--fs-xs);
     font-weight: 600;
@@ -368,9 +374,14 @@ const portas = [
     .barra, .miolo { padding-inline: var(--space-5); }
     .cabecalho h1 { font-size: var(--fs-2xl); }
     .canal-titulo { font-size: var(--fs-xl); }
-    .canal-corpo { padding: var(--space-6); }
-    .canal-itens { grid-template-columns: minmax(0, 1fr); }
-    .canal-cta { width: 100%; justify-content: center; }
+    .canal-corpo { padding: var(--space-5); }
+    /* No celular a lista de solucoes dobrava a altura do cartao e empurrava a
+       segunda porta para fora da dobra — o visitante nem descobria que havia
+       duas. Rotulo, titulo, lead e CTA bastam para escolher; a lista completa
+       esta na home do lado, um toque adiante. */
+    .canal-itens { display: none; }
+    .canal-cta { width: 100%; justify-content: center; margin-top: var(--space-4); }
+    .miolo { gap: var(--space-6); padding-block: var(--space-6); }
     .barra--rodape { flex-direction: column; align-items: flex-start; gap: var(--space-2); }
   }
 

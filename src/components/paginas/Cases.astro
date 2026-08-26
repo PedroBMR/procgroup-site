@@ -257,7 +257,7 @@ const schema = {
 
   <section class="section cases-section" data-theme="light">
     <div class="container">
-      <div class="cases-grid">
+      <div class:list={["cases-grid", { "cases-grid--solo": itens.length === 1 }]}>
         {itens.map((c) => {
           const unit = getBusinessUnit(c.unitSlug, lang)!;
           return (
@@ -327,6 +327,8 @@ const schema = {
   .cases-section { background: var(--color-bg); }
 
   .cases-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-8); }
+  /* Um item so (lado governo): destaque centrado, nao meia pagina vazia. */
+  .cases-grid--solo { grid-template-columns: minmax(0, 760px); justify-content: center; }
   .case-card {
     position: relative;
     padding: var(--space-8);

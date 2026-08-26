@@ -26,6 +26,7 @@ const lang = getLangFromUrl(Astro.url);
 const publico = publicoDaUrl(logicalPath(Astro.url));
 const base = publico ? publicoDefs[publico].base : "";
 const unidadesDoLado = publico ? publicoDefs[publico].unidades : null;
+const unidadesVisiveis = businessUnits.filter((u) => !unidadesDoLado || unidadesDoLado.includes(u.slug));
 const t = useTranslations(lang).home;
 const common = useTranslations(lang).common;
 const cards = t.cards as Record<string, { name: string; desc: string }>;
@@ -134,8 +135,11 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
         <p class="lead">{t.platformText}</p>
       </div>
 
-      <div class="units-grid">
-        {businessUnits.filter((u) => !unidadesDoLado || unidadesDoLado.includes(u.slug)).map((unit) => (
+      {/* Colunas seguem a contagem real de unidades do lado: 4 colunas fixas
+          deixavam 3/4 da faixa vazia no governo (1 unidade) e 1 coluna morta
+          nas empresas (3). Card unico vira destaque centrado. */}
+      <div class:list={["units-grid", { "units-grid--solo": unidadesVisiveis.length === 1 }]} style={`--unit-cols: ${Math.min(unidadesVisiveis.length, 4)}`}>
+        {unidadesVisiveis.map((unit) => (
           <a href={localizePath(base + unit.href, lang)} class="unit-card" data-reveal style={`--unit-color: ${unit.color}`}>
             <span class="unit-icon-wrap"><UnitIcon slug={unit.slug} /></span>
             <span class="unit-badge">{unit.shortName}</span>
@@ -282,7 +286,8 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
   .platform-teaser-header { max-width: 680px; }
   .platform-teaser-header h2 { margin-top: var(--space-4); font-size: var(--fs-3xl); }
 
-  .units-grid { margin-top: var(--space-12); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-6); }
+  .units-grid { margin-top: var(--space-12); display: grid; grid-template-columns: repeat(var(--unit-cols, 4), minmax(0, 1fr)); gap: var(--space-6); }
+  .units-grid--solo { grid-template-columns: minmax(0, 720px); justify-content: center; }
   .unit-card {
     position: relative;
     display: flex;
@@ -387,7 +392,7 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
 
   @media (max-width: 980px) {
     .about-grid { grid-template-columns: 1fr; }
-    .units-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .units-grid:not(.units-grid--solo) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .diff-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
     .cap-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
     .cases-teaser-inner { grid-template-columns: 1fr; gap: var(--space-8); }

@@ -203,7 +203,7 @@ const schema = {
         <p class="eyebrow">{t.unitsEyebrow}</p>
         <h2>{t.unitsTitle}</h2>
       </div>
-      <div class="units-grid">
+      <div class:list={["units-grid", { "units-grid--solo": businessUnits.length === 1 }]} style={`--unit-cols: ${Math.min(businessUnits.length, 4)}`}>
         {businessUnits.map((unit) => (
           <a href={localizePath(base + unit.href, lang)} class="unit-card" data-reveal style={`--unit-color: ${unit.color}`}>
             <span class="unit-icon-wrap"><UnitIcon slug={unit.slug} /></span>
@@ -281,7 +281,8 @@ const schema = {
   .credibility-card p { margin-top: var(--space-2); font-size: var(--fs-sm); color: var(--color-text-muted); }
 
   .units-recap { background: var(--color-bg); }
-  .units-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-6); }
+  .units-grid { display: grid; grid-template-columns: repeat(var(--unit-cols, 4), minmax(0, 1fr)); gap: var(--space-6); }
+  .units-grid--solo { grid-template-columns: minmax(0, 720px); justify-content: center; }
   .unit-card {
     position: relative;
     padding: var(--space-8) var(--space-6);
