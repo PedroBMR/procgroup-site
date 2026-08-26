@@ -50,7 +50,13 @@ const highlight = t.highlight;
     padding-inline: var(--space-6);
   }
   .item.highlight { color: var(--white); }
-  .sep { color: var(--red-500); font-size: 10px; }
+  /* --red-400, nao --red-500: sobre navy o vermelho de marca da 3,63:1 e
+     reprova o AA. O manual ja manda usar o vermelho claro sobre fundo escuro
+     ("labels e enfase sobre navy") — aqui as duas regras apontam para o mesmo
+     token. O ticker inteiro e aria-hidden, entao o losango e decoracao pura,
+     mas texto visivel abaixo do AA e ruim para quem enxerga pouco de qualquer
+     jeito. */
+  .sep { color: var(--red-400); font-size: 10px; }
 
   @keyframes ticker-scroll {
     from { transform: translateX(0); }
