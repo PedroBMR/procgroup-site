@@ -27,7 +27,7 @@ export const evento: EventConfig = {
   eyebrow: "Proc no evento",
   titulo: "Tecnologia inteligente para proteger, conectar e transformar",
   subtitulo:
-    "IA, Visão Computacional, Segurança e Infraestrutura de TI numa única plataforma. Conheça as soluções da Proc e fale com um especialista.",
+    "IA, Visão Computacional, Segurança e Infraestrutura de TI com engenharia própria. Conheça as soluções da Proc e fale com um especialista.",
   unidades: ["cidades-inteligentes", "ambientes-inteligentes", "infraestrutura-de-ti", "ia-industrial"],
   whatsappMsg: "Olá! Conheci a Proc num evento e quero saber mais sobre as soluções de vocês.",
 };

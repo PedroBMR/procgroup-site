@@ -2,7 +2,8 @@
 // Faixa de scroll infinito reforçando a integração da plataforma —
 // reinterpretação do ticker "RUAS · BAIRROS · CIDADES · TODOS CONECTADOS"
 // visto em site de concorrente, usando a linguagem e o tagline que a Proc
-// já usa (ver Footer.astro: "Uma plataforma. Múltiplas soluções.").
+// já usa. O fecho NAO pode afirmar que uma plataforma atende governo e
+// corporativo ao mesmo tempo — regra dura de 2026-08-26.
 import { getLangFromUrl, useTranslations } from "../i18n/utils";
 const t = useTranslations(getLangFromUrl(Astro.url)).ticker;
 const items = t.items;

@@ -51,7 +51,7 @@ export const eventoUI: Record<Locale, EventoUI> = {
     eyebrow: "Proc no evento",
     titulo: "Tecnologia inteligente para proteger, conectar e transformar",
     subtitulo:
-      "IA, Visão Computacional, Segurança e Infraestrutura de TI numa única plataforma. Conheça as soluções da Proc e fale com um especialista.",
+      "IA, Visão Computacional, Segurança e Infraestrutura de TI com engenharia própria. Conheça as soluções da Proc e fale com um especialista.",
     waBtn: "Falar no WhatsApp",
     ghostBtn: "Deixar meu contato",
     waMsg: "Olá! Conheci a Proc num evento e quero saber mais sobre as soluções de vocês.",
@@ -85,7 +85,7 @@ export const eventoUI: Record<Locale, EventoUI> = {
     eyebrow: "Proc at the event",
     titulo: "Intelligent technology to protect, connect, and transform",
     subtitulo:
-      "AI, Computer Vision, Security, and IT Infrastructure on a single platform. Explore Proc's solutions and talk to a specialist.",
+      "AI, Computer Vision, Security and IT Infrastructure built by our own engineering. Explore Proc's solutions and talk to a specialist.",
     waBtn: "Chat on WhatsApp",
     ghostBtn: "Leave my contact",
     waMsg: "Hi! I met Proc at an event and I'd like to know more about your solutions.",
@@ -119,7 +119,7 @@ export const eventoUI: Record<Locale, EventoUI> = {
     eyebrow: "Proc en el evento",
     titulo: "Tecnología inteligente para proteger, conectar y transformar",
     subtitulo:
-      "IA, Visión Artificial, Seguridad e Infraestructura de TI en una única plataforma. Conoce las soluciones de Proc y habla con un especialista.",
+      "IA, Visión Artificial, Seguridad e Infraestructura de TI con ingeniería propia. Conoce las soluciones de Proc y habla con un especialista.",
     waBtn: "Hablar por WhatsApp",
     ghostBtn: "Dejar mi contacto",
     waMsg: "¡Hola! Conocí a Proc en un evento y quiero saber más sobre sus soluciones.",

@@ -60,10 +60,10 @@ export const translations = {
     },
     ticker: {
       items: ["Câmeras", "Sensores", "Centros de Operação", "Cidades", "Empresas", "Indústrias"],
-      highlight: "Uma plataforma. Tudo conectado.",
+      highlight: "Engenharia própria. Tudo conectado.",
     },
     footer: {
-      tagline: "Uma plataforma. Múltiplas soluções. Inteligência para um mundo mais seguro, conectado e eficiente.",
+      tagline: "Engenharia própria em IA e Visão Computacional. Inteligência para um mundo mais seguro, conectado e eficiente.",
       navHeading: "Navegação",
       solucoesHeading: "Soluções",
       contatoHeading: "Contato",
@@ -83,7 +83,7 @@ export const translations = {
       heroEyebrow: "Plataforma Proc AI",
       heroTitle: "Tecnologia inteligente para um mundo mais seguro, conectado e eficiente.",
       heroSubtitle:
-        "A Proc desenvolve soluções de Inteligência Artificial, Visão Computacional, Ambientes Inteligentes e Infraestrutura de TI que transformam dados em decisões inteligentes, protegendo pessoas e conectando cidades, empresas e indústrias em um único ecossistema tecnológico.",
+        "A Proc desenvolve soluções de Inteligência Artificial, Visão Computacional, Ambientes Inteligentes e Infraestrutura de TI que transformam dados em decisões inteligentes, protegendo pessoas e apoiando cidades, empresas e indústrias — cada operação com a sua solução.",
       heroCtaPrimary: "Conheça a Plataforma Proc AI",
       heroCtaSecondary: "Solicite uma Demonstração",
       statsLabels: ["Clientes atendidos", "Anos de experiência"],
@@ -91,21 +91,21 @@ export const translations = {
       aboutTitle:
         "Tecnologia que conecta Inteligência Artificial, Visão Computacional e Infraestrutura de TI para transformar operações.",
       aboutText:
-        "A Proc desenvolve soluções tecnológicas que unem Inteligência Artificial, Visão Computacional, Analytics e Infraestrutura de TI para atender governos, empresas e indústrias. Nossa plataforma integra dados, equipamentos e sistemas em um único ecossistema, permitindo automatizar processos, fortalecer a segurança, aumentar a produtividade e apoiar decisões estratégicas com informações em tempo real.",
+        "A Proc desenvolve soluções tecnológicas que unem Inteligência Artificial, Visão Computacional, Analytics e Infraestrutura de TI para atender governos, empresas e indústrias — cada um com a sua solução e a sua equipe. Cada solução integra dados, equipamentos e sistemas da operação que atende, permitindo automatizar processos, fortalecer a segurança, aumentar a produtividade e apoiar decisões estratégicas com informações em tempo real.",
       aboutCta: "Conheça a Proc",
       aboutPhotoAlt: "Sede da Proc Group em Pato Branco",
       platformEyebrow: "Plataforma Proc AI",
-      platformTitle: "Uma plataforma unificada, quatro áreas de negócio, um só ecossistema",
+      platformTitle: "Tecnologia própria, com equipe especializada em cada operação",
       platformText:
-        "Plataforma unificada e integrada de IA, Analytics e Visão Computacional, para centralização e gestão inteligente de todas as operações — com equipes especializadas dedicadas a cada área de atuação.",
+        "IA, Analytics e Visão Computacional desenvolvidos pela nossa engenharia, aplicados à gestão inteligente da sua operação — com equipe especializada dedicada a ela.",
       platformCta: "Ver a Plataforma Proc AI",
-      // Bloco "Uma Plataforma. Múltiplas Soluções." — as 6 capacidades da
+      // Bloco das 6 capacidades da
       // plataforma (recorte do comercial). Só em PT por enquanto; a home guarda
       // a seção, então EN/ES seguem sem ela até traduzir.
       capEyebrow: "Plataforma Proc AI",
-      capTitle: "Uma plataforma. Múltiplas soluções.",
+      capTitle: "Tecnologia própria. Especializada por operação.",
       capLead:
-        "Tecnologia desenvolvida para conectar todo o seu ecossistema. A Proc AI Platform reúne Inteligência Artificial, Visão Computacional, Analytics e Infraestrutura de TI em uma plataforma única, preparada para integrar diferentes tecnologias, automatizar processos e transformar dados em inteligência para apoiar decisões estratégicas.",
+        "Tecnologia desenvolvida para conectar o ecossistema da sua operação. Inteligência Artificial, Visão Computacional, Analytics e Infraestrutura de TI da nossa engenharia, preparada para integrar diferentes tecnologias, automatizar processos e transformar dados em inteligência para apoiar decisões estratégicas.",
       capabilities: [
         {
           icon: "ai",
@@ -135,7 +135,7 @@ export const translations = {
         {
           icon: "scale",
           name: "Plataforma Escalável",
-          desc: "Comece com uma solução e expanda para novas aplicações utilizando a mesma plataforma tecnológica.",
+          desc: "Comece com uma solução e expanda para novas aplicações dentro da mesma operação.",
         },
       ],
       unitLink: "Ver soluções →",
@@ -188,7 +188,7 @@ export const translations = {
     },
     solutions: {
       indexEyebrow: "Soluções",
-      indexTitle: "Quatro unidades de negócio. Uma única plataforma.",
+      indexTitle: "Especialistas em cada operação.",
       ctaDemo: "Solicitar Demonstração",
       ctaPlatform: "Ver a Plataforma Proc AI",
       solutionsEyebrow: "Soluções",
@@ -355,10 +355,10 @@ export const translations = {
     },
     ticker: {
       items: ["Cameras", "Sensors", "Operations Centers", "Cities", "Businesses", "Industries"],
-      highlight: "One platform. Everything connected.",
+      highlight: "In-house engineering. Everything connected.",
     },
     footer: {
-      tagline: "One platform. Multiple solutions. Intelligence for a safer, more connected, more efficient world.",
+      tagline: "In-house AI and Computer Vision engineering. Intelligence for a safer, more connected, more efficient world.",
       navHeading: "Navigation",
       solucoesHeading: "Solutions",
       contatoHeading: "Contact",
@@ -378,7 +378,7 @@ export const translations = {
       heroEyebrow: "Proc AI Platform",
       heroTitle: "Intelligent technology for a safer, more connected, more efficient world.",
       heroSubtitle:
-        "Proc builds Artificial Intelligence, Computer Vision, Smart Environments and IT Infrastructure solutions that turn data into smart decisions — protecting people and connecting cities, companies and industries in a single technology ecosystem.",
+        "Proc builds Artificial Intelligence, Computer Vision, Smart Environments and IT Infrastructure solutions that turn data into smart decisions — protecting people and supporting cities, companies and industries — each operation with its own solution.",
       heroCtaPrimary: "Explore the Proc AI Platform",
       heroCtaSecondary: "Request a Demo",
       statsLabels: ["Clients served", "Years of experience"],
@@ -386,18 +386,18 @@ export const translations = {
       aboutTitle:
         "Technology that connects Artificial Intelligence, Computer Vision and IT Infrastructure to transform operations.",
       aboutText:
-        "Proc develops technology solutions that combine Artificial Intelligence, Computer Vision, Analytics and IT Infrastructure to serve governments, companies and industries. Our platform integrates data, equipment and systems into a single ecosystem — automating processes, strengthening security, boosting productivity and supporting strategic decisions with real-time information.",
+        "Proc develops technology solutions that combine Artificial Intelligence, Computer Vision, Analytics and IT Infrastructure to serve governments, companies and industries — each with its own solution and its own team. Each solution integrates the data, equipment and systems of the operation it serves — automating processes, strengthening security, boosting productivity and supporting strategic decisions with real-time information.",
       aboutCta: "About Proc",
       aboutPhotoAlt: "Proc Group headquarters in Pato Branco, Brazil",
       platformEyebrow: "Proc AI Platform",
-      platformTitle: "One unified platform, four business units, a single ecosystem",
+      platformTitle: "In-house technology, with a specialist team for each operation",
       platformText:
         "A unified, integrated platform of AI, Analytics and Computer Vision for centralizing and intelligently managing every operation — with dedicated specialist teams for each area.",
       platformCta: "See the Proc AI Platform",
       capEyebrow: "Proc AI Platform",
-      capTitle: "One platform. Multiple solutions.",
+      capTitle: "In-house technology. Specialized by operation.",
       capLead:
-        "Technology built to connect your entire ecosystem. The Proc AI Platform brings together Artificial Intelligence, Computer Vision, Analytics and IT Infrastructure in a single platform — ready to integrate different technologies, automate processes and turn data into intelligence to support strategic decisions.",
+        "Technology built to connect your operation's ecosystem. Artificial Intelligence, Computer Vision, Analytics and IT Infrastructure from our own engineering — ready to integrate different technologies, automate processes and turn data into intelligence to support strategic decisions.",
       capabilities: [
         {
           icon: "ai",
@@ -478,7 +478,7 @@ export const translations = {
     },
     solutions: {
       indexEyebrow: "Solutions",
-      indexTitle: "Four business units. One single platform.",
+      indexTitle: "Specialists in each operation.",
       ctaDemo: "Request a Demo",
       ctaPlatform: "See the Proc AI Platform",
       solutionsEyebrow: "Solutions",
@@ -645,10 +645,10 @@ export const translations = {
     },
     ticker: {
       items: ["Cámaras", "Sensores", "Centros de Operación", "Ciudades", "Empresas", "Industrias"],
-      highlight: "Una plataforma. Todo conectado.",
+      highlight: "Ingeniería propia. Todo conectado.",
     },
     footer: {
-      tagline: "Una plataforma. Múltiples soluciones. Inteligencia para un mundo más seguro, conectado y eficiente.",
+      tagline: "Ingeniería propia en IA y Visión Artificial. Inteligencia para un mundo más seguro, conectado y eficiente.",
       navHeading: "Navegación",
       solucoesHeading: "Soluciones",
       contatoHeading: "Contacto",
@@ -668,7 +668,7 @@ export const translations = {
       heroEyebrow: "Plataforma Proc AI",
       heroTitle: "Tecnología inteligente para un mundo más seguro, conectado y eficiente.",
       heroSubtitle:
-        "Proc desarrolla soluciones de Inteligencia Artificial, Visión Artificial, Ambientes Inteligentes e Infraestructura de TI que transforman datos en decisiones inteligentes, protegiendo personas y conectando ciudades, empresas e industrias en un único ecosistema tecnológico.",
+        "Proc desarrolla soluciones de Inteligencia Artificial, Visión Artificial, Ambientes Inteligentes e Infraestructura de TI que transforman datos en decisiones inteligentes, protegiendo personas y apoyando a ciudades, empresas e industrias — cada operación con su solución.",
       heroCtaPrimary: "Conoce la Plataforma Proc AI",
       heroCtaSecondary: "Solicita una Demostración",
       statsLabels: ["Clientes atendidos", "Años de experiencia"],
@@ -676,18 +676,18 @@ export const translations = {
       aboutTitle:
         "Tecnología que conecta Inteligencia Artificial, Visión Artificial e Infraestructura de TI para transformar operaciones.",
       aboutText:
-        "Proc desarrolla soluciones tecnológicas que unen Inteligencia Artificial, Visión Artificial, Analytics e Infraestructura de TI para atender a gobiernos, empresas e industrias. Nuestra plataforma integra datos, equipos y sistemas en un único ecosistema, permitiendo automatizar procesos, fortalecer la seguridad, aumentar la productividad y apoyar decisiones estratégicas con información en tiempo real.",
+        "Proc desarrolla soluciones tecnológicas que unen Inteligencia Artificial, Visión Artificial, Analytics e Infraestructura de TI para atender a gobiernos, empresas e industrias — cada uno con su solución y su equipo. Cada solución integra los datos, equipos y sistemas de la operación que atiende, permitiendo automatizar procesos, fortalecer la seguridad, aumentar la productividad y apoyar decisiones estratégicas con información en tiempo real.",
       aboutCta: "Conoce Proc",
       aboutPhotoAlt: "Sede de Proc Group en Pato Branco, Brasil",
       platformEyebrow: "Plataforma Proc AI",
-      platformTitle: "Una plataforma unificada, cuatro áreas de negocio, un solo ecosistema",
+      platformTitle: "Tecnología propia, con equipo especializado en cada operación",
       platformText:
-        "Plataforma unificada e integrada de IA, Analytics y Visión Artificial, para la centralización y gestión inteligente de todas las operaciones — con equipos especializados dedicados a cada área.",
+        "IA, Analytics y Visión Artificial desarrollados por nuestra ingeniería, aplicados a la gestión inteligente de tu operación — con equipo especializado dedicado a ella.",
       platformCta: "Ver la Plataforma Proc AI",
       capEyebrow: "Plataforma Proc AI",
-      capTitle: "Una plataforma. Múltiples soluciones.",
+      capTitle: "Tecnología propia. Especializada por operación.",
       capLead:
-        "Tecnología desarrollada para conectar todo tu ecosistema. La Proc AI Platform reúne Inteligencia Artificial, Visión Artificial, Analytics e Infraestructura de TI en una plataforma única — preparada para integrar diferentes tecnologías, automatizar procesos y transformar datos en inteligencia para apoyar decisiones estratégicas.",
+        "Tecnología desarrollada para conectar el ecosistema de tu operación. Inteligencia Artificial, Visión Artificial, Analytics e Infraestructura de TI de nuestra ingeniería — preparada para integrar diferentes tecnologías, automatizar procesos y transformar datos en inteligencia para apoyar decisiones estratégicas.",
       capabilities: [
         {
           icon: "ai",
@@ -717,7 +717,7 @@ export const translations = {
         {
           icon: "scale",
           name: "Plataforma Escalable",
-          desc: "Comienza con una solución y expande a nuevas aplicaciones utilizando la misma plataforma tecnológica.",
+          desc: "Comienza con una solución y expande a nuevas aplicaciones dentro de la misma operación.",
         },
       ],
       unitLink: "Ver soluciones →",
@@ -768,7 +768,7 @@ export const translations = {
     },
     solutions: {
       indexEyebrow: "Soluciones",
-      indexTitle: "Cuatro unidades de negocio. Una sola plataforma.",
+      indexTitle: "Especialistas en cada operación.",
       ctaDemo: "Solicitar Demostración",
       ctaPlatform: "Ver la Plataforma Proc AI",
       solutionsEyebrow: "Soluciones",
