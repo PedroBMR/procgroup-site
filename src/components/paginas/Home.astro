@@ -9,7 +9,7 @@ import PostCard from "../PostCard.astro";
 import ConnectedTicker from "../ConnectedTicker.astro";
 import UnitIcon from "../UnitIcon.astro";
 import { homeStats } from "../../data/stats";
-import { businessUnits } from "../../data/businessUnits";
+import { getBusinessUnits } from "../../data/businessUnits";
 import { byNewest } from "../../utils/blog";
 import hqPhoto from "../../assets/images/hq-pato-branco-enhanced.webp";
 import { WHATSAPP_DEMO } from "../../data/contact";
@@ -26,7 +26,9 @@ const lang = getLangFromUrl(Astro.url);
 const publico = publicoDaUrl(logicalPath(Astro.url));
 const base = publico ? publicoDefs[publico].base : "";
 const unidadesDoLado = publico ? publicoDefs[publico].unidades : null;
-const unidadesVisiveis = businessUnits.filter((u) => !unidadesDoLado || unidadesDoLado.includes(u.slug));
+// getBusinessUnits(lang), nao o export compat `businessUnits`: o compat e
+// fixo em PT e vazava shortName/tagline em portugues nas paginas EN/ES.
+const unidadesVisiveis = getBusinessUnits(lang).filter((u) => !unidadesDoLado || unidadesDoLado.includes(u.slug));
 const t = useTranslations(lang).home;
 const common = useTranslations(lang).common;
 const cards = t.cards as Record<string, { name: string; desc: string }>;

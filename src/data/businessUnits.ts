@@ -12,7 +12,8 @@ export interface BusinessUnit {
   solutions: string[];
 }
 
-// Estrutura estável (independe do idioma): slug, cor, href e o badge curto.
+// Estrutura estável (independe do idioma): slug, cor e href. O shortName
+// daqui é só fallback — o traduzido vive em unitsCopy e vence no merge.
 interface UnitBase {
   slug: string;
   href: string;
@@ -29,6 +30,11 @@ const unitsBase: UnitBase[] = [
 
 interface UnitCopy {
   name: string;
+  /** Badge curto dos cards e eyebrow do hero da solucao. Traduzido: o valor
+      em ingles do UnitBase e so fallback de compatibilidade (o merge
+      {...base, ...copy} sobrepoe). Nao duplicar o `name`: o badge aparece
+      colado no titulo do card. */
+  shortName: string;
   tagline: string;
   description: string;
   team: string;
@@ -41,6 +47,7 @@ const unitsCopy: Record<Locale, Record<string, UnitCopy>> = {
   pt: {
     "cidades-inteligentes": {
       name: "Cidades Inteligentes",
+      shortName: "Cidades",
       tagline: "Segurança pública e mobilidade urbana com IA",
       description:
         "Plataforma de videomonitoramento inteligente, reconhecimento facial e analytics para centros de operações integrados — batizada de Pato 360°, apoiando governos na proteção de cidades e no combate à criminalidade.",
@@ -58,6 +65,7 @@ const unitsCopy: Record<Locale, Record<string, UnitCopy>> = {
     },
     "ambientes-inteligentes": {
       name: "Ambientes Inteligentes",
+      shortName: "Ambientes",
       tagline: "Proteção inteligente para empresas e indústrias",
       description:
         "Soluções de videomonitoramento com IA, controle de acesso facial e gestão de alarmes para proteger patrimônio, pessoas e operações corporativas, com a plataforma operando 24x7 e alertando sua equipe.",
@@ -75,6 +83,7 @@ const unitsCopy: Record<Locale, Record<string, UnitCopy>> = {
     },
     "infraestrutura-de-ti": {
       name: "Infraestrutura de TI",
+      shortName: "Infra TI",
       tagline: "Alta disponibilidade para operações críticas",
       description:
         "Cloud, backup, NOC e governança de infraestrutura para empresas que precisam de continuidade operacional, segurança de dados e performance em escala.",
@@ -94,6 +103,7 @@ const unitsCopy: Record<Locale, Record<string, UnitCopy>> = {
     },
     "ia-industrial": {
       name: "IA Industrial",
+      shortName: "Indústria",
       tagline: "Visão computacional para a indústria 4.0",
       description:
         "Inspeção visual automatizada, controle de qualidade e rastreabilidade com Edge AI, reduzindo perdas e aumentando a eficiência de linhas de produção.",
@@ -113,6 +123,7 @@ const unitsCopy: Record<Locale, Record<string, UnitCopy>> = {
   en: {
     "cidades-inteligentes": {
       name: "Smart Cities",
+      shortName: "Smart Cities",
       tagline: "Public safety and urban mobility powered by AI",
       description:
         "An intelligent video-surveillance, facial-recognition and analytics platform for integrated operations centers — named Pato 360°, helping governments protect cities and fight crime.",
@@ -130,6 +141,7 @@ const unitsCopy: Record<Locale, Record<string, UnitCopy>> = {
     },
     "ambientes-inteligentes": {
       name: "Smart Environments",
+      shortName: "Environments",
       tagline: "Intelligent protection for businesses and industries",
       description:
         "AI-powered video surveillance, facial access control and alarm management to protect assets, people and corporate operations, with the platform running 24x7 and alerting your team.",
@@ -147,6 +159,7 @@ const unitsCopy: Record<Locale, Record<string, UnitCopy>> = {
     },
     "infraestrutura-de-ti": {
       name: "IT Infrastructure",
+      shortName: "IT Infra",
       tagline: "High availability for mission-critical operations",
       description:
         "Cloud, backup, NOC and infrastructure governance for companies that need operational continuity, data security and performance at scale.",
@@ -166,6 +179,7 @@ const unitsCopy: Record<Locale, Record<string, UnitCopy>> = {
     },
     "ia-industrial": {
       name: "Industrial AI",
+      shortName: "Industry",
       tagline: "Computer vision for Industry 4.0",
       description:
         "Automated visual inspection, quality control and traceability with Edge AI, reducing losses and boosting production-line efficiency.",
@@ -185,6 +199,7 @@ const unitsCopy: Record<Locale, Record<string, UnitCopy>> = {
   es: {
     "cidades-inteligentes": {
       name: "Ciudades Inteligentes",
+      shortName: "Ciudades",
       tagline: "Seguridad pública y movilidad urbana con IA",
       description:
         "Plataforma de videovigilancia inteligente, reconocimiento facial y analytics para centros de operaciones integrados — llamada Pato 360°, que apoya a los gobiernos en la protección de ciudades y el combate a la criminalidad.",
@@ -202,6 +217,7 @@ const unitsCopy: Record<Locale, Record<string, UnitCopy>> = {
     },
     "ambientes-inteligentes": {
       name: "Ambientes Inteligentes",
+      shortName: "Ambientes",
       tagline: "Protección inteligente para empresas e industrias",
       description:
         "Soluciones de videovigilancia con IA, control de acceso facial y gestión de alarmas para proteger patrimonio, personas y operaciones corporativas, con la plataforma operando 24x7 y alertando a tu equipo.",
@@ -219,6 +235,7 @@ const unitsCopy: Record<Locale, Record<string, UnitCopy>> = {
     },
     "infraestrutura-de-ti": {
       name: "Infraestructura de TI",
+      shortName: "Infra TI",
       tagline: "Alta disponibilidad para operaciones críticas",
       description:
         "Cloud, backup, NOC y gobernanza de infraestructura para empresas que necesitan continuidad operativa, seguridad de datos y rendimiento a escala.",
@@ -238,6 +255,7 @@ const unitsCopy: Record<Locale, Record<string, UnitCopy>> = {
     },
     "ia-industrial": {
       name: "IA Industrial",
+      shortName: "Industria",
       tagline: "Visión artificial para la industria 4.0",
       description:
         "Inspección visual automatizada, control de calidad y trazabilidad con Edge AI, reduciendo pérdidas y aumentando la eficiencia de las líneas de producción.",
