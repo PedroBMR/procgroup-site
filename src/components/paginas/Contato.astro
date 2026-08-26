@@ -6,6 +6,7 @@ import { withBase } from "../../utils/url";
 import { getBusinessUnits } from "../../data/businessUnits";
 import { getLangFromUrl, logicalPath, useTranslations, localePath } from "../../i18n/utils";
 import { publicoDaUrl, publicoDefs } from "../../data/audiencia";
+import { metaDoLado } from "../../data/metaPorPublico";
 import { usePages } from "../../i18n/pages";
 import { defaultLocale, type Locale } from "../../i18n/config";
 
@@ -18,12 +19,13 @@ const base = publico ? publicoDefs[publico].base : "";
 const unidadesDoLado = publico ? publicoDefs[publico].unidades : null;
 const tr = useTranslations(lang);
 const t = usePages(lang).contato;
+const m = metaDoLado(publico, "contato", lang);
 const interests = getBusinessUnits(lang)
   .filter((u) => !unidadesDoLado || unidadesDoLado.includes(u.slug))
   .map((u) => u.name);
 ---
 
-<BaseLayout title={tr.nav.contato} description={t.metaDescription}>
+<BaseLayout title={m?.title ?? tr.nav.contato} description={m?.description ?? t.metaDescription}>
   <div class="container">
     <Breadcrumb
       items={[

@@ -8,6 +8,7 @@ import { getBusinessUnits } from "../../data/businessUnits";
 import { WHATSAPP_DEMO } from "../../data/contact";
 import { getLangFromUrl, logicalPath, useTranslations, localePath, localizePath } from "../../i18n/utils";
 import { publicoDaUrl, publicoDefs } from "../../data/audiencia";
+import { metaDoLado } from "../../data/metaPorPublico";
 import { usePages } from "../../i18n/pages";
 import { defaultLocale, type Locale } from "../../i18n/config";
 
@@ -20,6 +21,7 @@ const base = publico ? publicoDefs[publico].base : "";
 const unidadesDoLado = publico ? publicoDefs[publico].unidades : null;
 const tr = useTranslations(lang);
 const t = usePages(lang).plataforma;
+const m = metaDoLado(publico, "plataforma", lang);
 const businessUnits = getBusinessUnits(lang).filter((u) => !unidadesDoLado || unidadesDoLado.includes(u.slug));
 
 const schema = {
@@ -32,7 +34,7 @@ const schema = {
 };
 ---
 
-<BaseLayout title={tr.nav.plataforma} description={t.metaDescription} schema={schema}>
+<BaseLayout title={m?.title ?? tr.nav.plataforma} description={m?.description ?? t.metaDescription} schema={schema}>
   <div class="container">
     <Breadcrumb
       items={[

@@ -10,6 +10,7 @@ import hqPhoto from "../../assets/images/hq-pato-branco-enhanced.webp";
 import { WHATSAPP_DEMO } from "../../data/contact";
 import { getLangFromUrl, logicalPath, useTranslations, localePath, localizePath } from "../../i18n/utils";
 import { publicoDaUrl, publicoDefs } from "../../data/audiencia";
+import { metaDoLado } from "../../data/metaPorPublico";
 import { usePages } from "../../i18n/pages";
 import { defaultLocale, type Locale } from "../../i18n/config";
 
@@ -23,6 +24,7 @@ const unidadesDoLado = publico ? publicoDefs[publico].unidades : null;
 const tr = useTranslations(lang);
 const t = usePages(lang).empresa;
 const statsLabels = tr.home.statsLabels;
+const m = metaDoLado(publico, "empresa", lang);
 const businessUnits = getBusinessUnits(lang).filter((u) => !unidadesDoLado || unidadesDoLado.includes(u.slug));
 
 // Blocos institucionais só-PT (Razão de Existir, Diferencial, Missão/Visão,
@@ -45,7 +47,7 @@ const schema = {
 };
 ---
 
-<BaseLayout title={tr.nav.empresa} description={t.metaDescription} schema={schema}>
+<BaseLayout title={m?.title ?? tr.nav.empresa} description={m?.description ?? t.metaDescription} schema={schema}>
   <div class="container">
     <Breadcrumb
       items={[

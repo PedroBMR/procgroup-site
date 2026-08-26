@@ -7,6 +7,7 @@ import { getBusinessUnit } from "../../data/businessUnits";
 import { WHATSAPP_DEMO } from "../../data/contact";
 import { getLangFromUrl, logicalPath, useTranslations, localePath } from "../../i18n/utils";
 import { publicoDaUrl, publicoDefs } from "../../data/audiencia";
+import { metaDoLado } from "../../data/metaPorPublico";
 import { defaultLocale, type Locale } from "../../i18n/config";
 
 const lang = getLangFromUrl(Astro.url);
@@ -212,6 +213,7 @@ const casesI18n: Record<Locale, CasesCopy> = {
 const t = casesI18n[lang];
 // Cada lado ve so os blocos das suas unidades: governo fica com o case do
 // Pato 360; empresas, com as tres aplicacoes da plataforma.
+const m = metaDoLado(publico, "cases", lang);
 const itens = t.items.filter((c) => !unidadesDoLado || unidadesDoLado.includes(c.unitSlug));
 
 // Direcao de arte das fotos que ainda nao existem. Hoje os cards mostram a
@@ -240,12 +242,12 @@ const itens = t.items.filter((c) => !unidadesDoLado || unidadesDoLado.includes(c
 const schema = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
-  name: "Cases Proc Group",
-  description: t.metaDescription,
+  name: m?.title ?? "Cases Proc Group",
+  description: m?.description ?? t.metaDescription,
 };
 ---
 
-<BaseLayout title={tr.nav.cases} description={t.metaDescription} schema={schema}>
+<BaseLayout title={m?.title ?? tr.nav.cases} description={m?.description ?? t.metaDescription} schema={schema}>
   <div class="container">
     <Breadcrumb
       items={[

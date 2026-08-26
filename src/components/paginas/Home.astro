@@ -15,6 +15,7 @@ import hqPhoto from "../../assets/images/hq-pato-branco-enhanced.webp";
 import { WHATSAPP_DEMO } from "../../data/contact";
 import { getLangFromUrl, logicalPath, useTranslations, localePath, localizePath } from "../../i18n/utils";
 import { publicoDaUrl, publicoDefs } from "../../data/audiencia";
+import { metaDoLado } from "../../data/metaPorPublico";
 import { defaultLocale, type Locale } from "../../i18n/config";
 
 // Uma rota, três idiomas: PT na raiz (/), EN em /en, ES em /es.
@@ -28,6 +29,7 @@ const base = publico ? publicoDefs[publico].base : "";
 const unidadesDoLado = publico ? publicoDefs[publico].unidades : null;
 // getBusinessUnits(lang), nao o export compat `businessUnits`: o compat e
 // fixo em PT e vazava shortName/tagline em portugues nas paginas EN/ES.
+const m = metaDoLado(publico, "home", lang);
 const unidadesVisiveis = getBusinessUnits(lang).filter((u) => !unidadesDoLado || unidadesDoLado.includes(u.slug));
 const t = useTranslations(lang).home;
 const common = useTranslations(lang).common;
@@ -62,7 +64,7 @@ const capIcons: Record<string, string> = {
 const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
 ---
 
-<BaseLayout title={t.metaTitle} description={t.metaDescription}>
+<BaseLayout title={m?.title ?? t.metaTitle} description={m?.description ?? t.metaDescription}>
   <section class="hero">
     <HeroBackground />
     <div class="container hero-inner" data-hero-intro>
