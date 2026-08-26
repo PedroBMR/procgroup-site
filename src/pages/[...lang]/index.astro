@@ -26,6 +26,7 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ProcMark from "../../components/ProcMark.astro";
 import CenaPorta from "../../components/CenaPorta.astro";
+import IntroBoot from "../../components/IntroBoot.astro";
 import { usePages } from "../../i18n/pages";
 import { useTranslations } from "../../i18n/utils";
 import { localizePath, localeAlternates } from "../../i18n/utils";
@@ -55,6 +56,8 @@ const portas = [
 ---
 
 <BaseLayout title={th.metaTitle} description={th.metaDescription} bare>
+  <IntroBoot lang={lang} />
+
   <div class="painel" data-entrada>
     <header class="barra barra--topo">
       <div class="marca">
@@ -191,13 +194,20 @@ const portas = [
     pointer-events: none;
     z-index: 3;
     background: linear-gradient(100deg, transparent, rgba(255, 74, 84, .07) 45%, rgba(226, 231, 245, .05) 55%, transparent);
-    animation: passarLuz 2.4s ease-out .5s both;
+    /* A luz passa quando a cortina abre, não atrás dela. */
+    animation: passarLuz 2.4s ease-out calc(var(--t) + .35s) both;
   }
 
   /* A página ocupa a janela inteira: é um pedágio, não tem rolagem em desktop.
      min-height em vez de height para não cortar conteúdo quando a fonte do
      sistema é maior ou a janela é baixa. */
   .painel {
+    /* Quanto a página espera pela abertura (IntroBoot.astro). A entrada do
+       seletor roda ATRÁS da cortina fechada — quando ela se parte, o que
+       aparece já está assentado. Só a passada de luz espera, para acontecer
+       no momento da revelação. Sem abertura (pulada ou movimento reduzido),
+       zero. */
+    --t: 2.35s;
     position: relative;
     min-height: 100vh;
     display: flex;
@@ -501,7 +511,11 @@ const portas = [
     .canal-nome { color: var(--white); -webkit-text-stroke: 0; }
   }
 
+  /* Abertura pulada (botão, clique ou Esc): a luz não fica devendo 3s. */
+  :global(html.intro-pulada) .painel { --t: 0s; }
+
   @media (prefers-reduced-motion: reduce) {
+    .painel { --t: 0s; }
     .canal, .canal-sombra, .canal-nome, .canal-detalhe, .cabecalho, .idioma { transition: none; }
     .canal:hover, .canal:focus-visible { flex-grow: 1; }
     .canal-detalhe { opacity: 1; transform: none; }

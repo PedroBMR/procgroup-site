@@ -1,0 +1,300 @@
+---
+/**
+ * Abertura da raiz: uma retícula de calibração trava no centro, a marca
+ * resolve, o nome é revelado por corte — e então a tela se parte ao meio,
+ * entregando o seletor de público.
+ *
+ * Três atos, 3.15s:
+ *   0.00s  eixos  — dois fios finos crescem do centro e travam num ponto
+ *   0.35s  marca  — o símbolo resolve no cruzamento; o nome é revelado por
+ *                   corte lateral, e um fio de progresso corre embaixo
+ *   2.35s  abre   — as duas metades deslizam pelo eixo vertical
+ *
+ * A IDEIA: o fio vertical desta retícula É a costura do seletor. A tela não
+ * "carrega e some" — ela se abre exatamente na linha que já estava ali.
+ * Por isso nada de log de terminal, contador de porcentagem ou barra de
+ * carregamento: o que a Proc faz é medir e enquadrar, e a abertura faz isso.
+ *
+ * A abertura se desfaz SOZINHA no CSS (animação com `forwards` que zera
+ * visibilidade e ponteiro em 3.2s). Deliberado: se o JS falhar ou for
+ * bloqueado, a cortina abre do mesmo jeito e ninguém fica preso. O JS só
+ * acrescenta atalho (pular) e a remoção do nó no fim.
+ *
+ * A cortina são DUAS metades, cada uma com um palco de 100vw preso à sua
+ * borda: o conteúdo atravessa a costura como se fosse uma tela só.
+ *
+ * Decorativa: a cortina inteira é aria-hidden — "PROC GROUP" já está no
+ * conteúdo da página, e leitor de tela não deve esperar por uma animação.
+ * O botão de pular fica fora dela, e é focável.
+ */
+import ProcMark from "./ProcMark.astro";
+import { usePages } from "../i18n/pages";
+import type { Locale } from "../i18n/config";
+
+interface Props {
+  lang: Locale;
+}
+const { lang } = Astro.props;
+const t = usePages(lang).comecar.intro;
+---
+
+<div class="intro" data-intro>
+  <div class="cortina" aria-hidden="true">
+    {
+      ["esq", "dir"].map((lado) => (
+        <div class:list={["metade", `metade--${lado}`]}>
+          <div class="palco">
+            <span class="eixo eixo--v" />
+            <span class="eixo eixo--h" />
+
+            <div class="centro">
+              <div class="alvo">
+                <span class="canto canto--ne" />
+                <span class="canto canto--no" />
+                <span class="canto canto--se" />
+                <span class="canto canto--so" />
+                <div class="simbolo">
+                  <ProcMark size={58} />
+                </div>
+              </div>
+
+              <p class="saudacao">{t.saudacao}</p>
+              <p class="marca">PROC<span> GROUP</span></p>
+              <span class="fio" />
+            </div>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+
+  <button type="button" class="pular" data-pular>{t.pular}</button>
+</div>
+
+<style>
+  /* ── Linha do tempo ──────────────────────────────────────────────────────
+     0.00s  eixos crescem do centro (0.75s)
+     0.35s  cantos do alvo fecham; símbolo resolve
+     0.95s  saudação entra
+     1.15s  nome revelado por corte (0.85s)
+     1.55s  fio de progresso corre (0.8s)
+     2.30s  conteúdo sai
+     2.35s  metades se partem (0.8s)
+     3.15s  cortina fora do caminho — a página assume
+     Os tempos aqui e o `--t` do seletor (index.astro) andam juntos: mudou um,
+     muda o outro. */
+  .intro {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    animation: sumirDeVez 0.01s linear 3.2s forwards;
+  }
+  @keyframes sumirDeVez {
+    to { visibility: hidden; pointer-events: none; }
+  }
+
+  .cortina { position: absolute; inset: 0; }
+
+  /* Cada metade recorta um palco de largura total preso à sua borda: o
+     conteúdo continua alinhado através da costura. */
+  .metade {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50.5%; /* meio ponto de sobreposição: sem fresta na costura */
+    overflow: hidden;
+    background: var(--navy-950);
+  }
+  .metade--esq { left: 0; animation: abrirEsq 0.8s cubic-bezier(0.76, 0, 0.24, 1) 2.35s forwards; }
+  .metade--dir { right: 0; animation: abrirDir 0.8s cubic-bezier(0.76, 0, 0.24, 1) 2.35s forwards; }
+  @keyframes abrirEsq { to { transform: translateX(-100%) } }
+  @keyframes abrirDir { to { transform: translateX(100%) } }
+
+  .palco { position: absolute; top: 0; bottom: 0; width: 100vw; }
+  .metade--esq .palco { left: 0; }
+  .metade--dir .palco { right: 0; }
+
+  /* ── Ato 1: os eixos ──
+     O vertical é a costura do seletor, adiantada. Cresce do centro para as
+     bordas: a tela está sendo medida, não decorada. */
+  .eixo {
+    position: absolute;
+    background: rgba(226, 231, 245, 0.16);
+    transform-origin: center;
+  }
+  .eixo--v {
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    animation: crescerV 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .eixo--h {
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    animation: crescerH 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both,
+               sairSuave 0.5s ease-in 2.15s forwards;
+  }
+  @keyframes crescerV { from { transform: scaleY(0) } to { transform: scaleY(1) } }
+  @keyframes crescerH { from { transform: scaleX(0) } to { transform: scaleX(1) } }
+  @keyframes sairSuave { to { opacity: 0 } }
+
+  .centro {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-5);
+    /* O conteúdo sobe um pouco: o cruzamento dos eixos fica no símbolo, não
+       no meio geométrico do bloco de texto. */
+    padding-bottom: var(--space-12);
+  }
+
+  /* ── Ato 2: o alvo fecha e a marca resolve ──
+     Quatro cantos convergindo é o enquadramento de detecção que o site já
+     usa nas cenas e nas ilustrações de case — aqui aplicado à própria marca. */
+  .alvo {
+    position: relative;
+    width: 132px;
+    height: 132px;
+    display: grid;
+    place-items: center;
+  }
+  .canto {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    border: 1px solid var(--red-400);
+    animation: fecharCanto 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both;
+  }
+  .canto--no { top: 0; left: 0; border-right: 0; border-bottom: 0; --dx: -14px; --dy: -14px; }
+  .canto--ne { top: 0; right: 0; border-left: 0; border-bottom: 0; --dx: 14px; --dy: -14px; }
+  .canto--so { bottom: 0; left: 0; border-right: 0; border-top: 0; --dx: -14px; --dy: 14px; }
+  .canto--se { bottom: 0; right: 0; border-left: 0; border-top: 0; --dx: 14px; --dy: 14px; }
+  @keyframes fecharCanto {
+    from { opacity: 0; transform: translate(var(--dx), var(--dy)) }
+    to   { opacity: 1; transform: none }
+  }
+
+  .simbolo { animation: resolver 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both; }
+  @keyframes resolver {
+    from { opacity: 0; transform: scale(0.9) }
+    to   { opacity: 1; transform: none }
+  }
+
+  .saudacao {
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.34em;
+    /* O texto é centrado; a última letra carrega o espaçamento e desloca o
+       bloco meio caractere para a esquerda. */
+    text-indent: 0.34em;
+    color: var(--color-text-faint);
+    animation: subirSuave 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.95s both;
+  }
+  @keyframes subirSuave {
+    from { opacity: 0; transform: translateY(8px) }
+    to   { opacity: 1; transform: none }
+  }
+
+  /* Revelação por corte, não por fade: a borda do corte é uma linha limpa
+     varrendo o nome — precisão, que é o que a marca vende. */
+  .marca {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(2rem, 6.5vw, 4.4rem);
+    line-height: 1;
+    letter-spacing: 0.02em;
+    color: var(--white);
+    clip-path: inset(0 100% 0 0);
+    animation: revelar 0.85s cubic-bezier(0.76, 0, 0.24, 1) 1.15s forwards;
+  }
+  .marca span { color: var(--color-text-faint); }
+  @keyframes revelar { to { clip-path: inset(0 0 0 0) } }
+
+  /* O fio de progresso: corre embaixo do nome enquanto a página termina de
+     montar. Sem número — não há porcentagem honesta a mostrar. */
+  .fio {
+    display: block;
+    width: min(280px, 42vw);
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--red-400), transparent);
+    transform-origin: center;
+    animation: correrFio 0.8s cubic-bezier(0.4, 0, 0.2, 1) 1.55s both;
+  }
+  @keyframes correrFio {
+    from { transform: scaleX(0); opacity: 0 }
+    60%  { opacity: 1 }
+    to   { transform: scaleX(1); opacity: 1 }
+  }
+
+  /* ── Ato 3: sai de cena ── */
+  .centro { animation: sairCentro 0.45s ease-in 2.3s forwards; }
+  @keyframes sairCentro { to { opacity: 0 } }
+
+  .pular {
+    position: absolute;
+    right: var(--space-6);
+    bottom: var(--space-6);
+    padding: var(--space-2) var(--space-4);
+    min-height: 40px;
+    border: 0;
+    background: transparent;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+    cursor: pointer;
+    animation: subirSuave 0.5s ease-out 1.1s both,
+               sairSuave 0.3s ease-in 2.3s forwards;
+  }
+  .pular:hover { color: var(--color-text); }
+
+  /* Saída antecipada: some tudo de uma vez e o nó é removido pelo script. */
+  .intro.is-pulando { animation: none; opacity: 0; transition: opacity 0.28s ease; pointer-events: none; }
+
+  @media (max-width: 640px) {
+    .alvo { width: 108px; height: 108px; }
+    .pular { right: var(--space-4); bottom: var(--space-4); }
+  }
+
+  /* Quem pediu menos movimento não recebe abertura nenhuma: a página já começa
+     no seletor (o `--t` do painel também zera, em index.astro). */
+  @media (prefers-reduced-motion: reduce) {
+    .intro { display: none; }
+  }
+</style>
+
+<script>
+  const intro = document.querySelector<HTMLElement>("[data-intro]");
+  if (intro) {
+    /** Tira a abertura da frente; `agora` solta a entrada da página na hora. */
+    const encerrar = (agora: boolean) => {
+      if (agora) {
+        document.documentElement.classList.add("intro-pulada");
+        intro.classList.add("is-pulando");
+      }
+      window.setTimeout(() => intro.remove(), agora ? 300 : 0);
+    };
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.documentElement.classList.add("intro-pulada");
+      intro.remove();
+    } else {
+      // Pular: botão, clique em qualquer lugar da cortina, ou Esc.
+      const pular = () => encerrar(true);
+      intro.querySelector("[data-pular]")?.addEventListener("click", pular);
+      intro.querySelector(".cortina")?.addEventListener("click", pular);
+      document.addEventListener("keydown", (e) => e.key === "Escape" && pular(), { once: true });
+
+      // Fim natural: o CSS já tirou a cortina do caminho; isto só limpa o nó.
+      window.setTimeout(() => encerrar(false), 3400);
+    }
+  }
+</script>

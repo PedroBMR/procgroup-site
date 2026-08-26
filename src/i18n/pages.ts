@@ -174,6 +174,10 @@ export const pages = {
       lead: "Cada contexto tem a sua solução, a sua equipe e o seu jeito de contratar. Escolha o seu.",
       cta: "Entrar por aqui",
       saida: "Nenhum dos dois — ver tudo o que a Proc faz",
+      intro: {
+        saudacao: "Bem-vindo à",
+        pular: "Pular abertura",
+      },
       ariaIdioma: "Idioma",
       gov: {
         canal: "Canal 01 / Público",
@@ -398,6 +402,10 @@ export const pages = {
       lead: "Each context has its own solution, its own team and its own way of contracting. Choose yours.",
       cta: "Start here",
       saida: "Neither one — see everything Proc does",
+      intro: {
+        saudacao: "Welcome to",
+        pular: "Skip intro",
+      },
       ariaIdioma: "Language",
       gov: {
         canal: "Channel 01 / Public",
@@ -621,6 +629,10 @@ export const pages = {
       lead: "Cada contexto tiene su solución, su equipo y su forma de contratar. Elige el tuyo.",
       cta: "Entrar por aquí",
       saida: "Ninguno de los dos — ver todo lo que hace Proc",
+      intro: {
+        saudacao: "Bienvenido a",
+        pular: "Saltar apertura",
+      },
       ariaIdioma: "Idioma",
       gov: {
         canal: "Canal 01 / Público",
