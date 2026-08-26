@@ -1,0 +1,203 @@
+---
+/**
+ * Ilustração de cena para os cards de case, uma por unidade.
+ *
+ * Substitui o MediaPlaceholder nos cases. O placeholder dizia "arte em
+ * produção" e mostrava um ícone genérico; isto mostra a cena — centro de
+ * operações, acesso facial, corredor de racks, linha de inspeção — em
+ * tratamento vetorial.
+ *
+ * POR QUE VETOR E NÃO IMAGEM GERADA: "foto do case" se apresenta como registro
+ * da operação real de um cliente. Gerar isso por IA seria fabricar prova
+ * visual. O manual de marca já resolve — "sem foto real, prefira tratamento
+ * gráfico abstrato a stock". Uma ilustração declarada não finge ser fotografia,
+ * e é justamente esse o ponto.
+ *
+ * Quando existir foto autorizada (ver a pauta em BRIEFING-IMAGENS.md e o
+ * inventário de material real no cofre), trocar por <Image /> — o enquadramento
+ * de cada cena aqui é a direção de arte da sessão.
+ *
+ * Acento: --red-400 fixo, não --unit-color. O acento da unidade vale no card
+ * (a faixa do topo), mas aqui o fundo é navy escuro e duas das quatro unidades
+ * têm cor navy — ficariam invisíveis. Sobre navy o manual pede o vermelho claro.
+ */
+import type { Locale } from "../i18n/config";
+
+interface Props {
+  slug: string;
+  lang?: Locale;
+}
+const { slug, lang = "pt" } = Astro.props;
+
+/** Descrição da cena para leitor de tela. A ilustração é conteúdo, não enfeite. */
+const alt: Record<string, Record<Locale, string>> = {
+  "cidades-inteligentes": {
+    pt: "Ilustração: centro integrado de operações visto por trás de dois operadores, com painel de monitores e um alerta ativo.",
+    en: "Illustration: integrated operations center seen from behind two operators, with a monitor wall and one active alert.",
+    es: "Ilustración: centro integrado de operaciones visto detrás de dos operadores, con panel de monitores y una alerta activa.",
+  },
+  "ambientes-inteligentes": {
+    pt: "Ilustração: corredor de acesso corporativo com terminal de reconhecimento facial e detecção sobre a pessoa em passagem.",
+    en: "Illustration: corporate access corridor with a facial recognition terminal and detection over the person passing through.",
+    es: "Ilustración: pasillo de acceso corporativo con terminal de reconocimiento facial y detección sobre la persona que pasa.",
+  },
+  "infraestrutura-de-ti": {
+    pt: "Ilustração: corredor frio de data center entre duas fileiras de racks, com luzes de status.",
+    en: "Illustration: data center cold aisle between two rows of racks, with status lights.",
+    es: "Ilustración: pasillo frío de data center entre dos filas de racks, con luces de estado.",
+  },
+  "ia-industrial": {
+    pt: "Ilustração: esteira de produção com câmera de inspeção, uma peça aprovada e uma com defeito detectado.",
+    en: "Illustration: production line with an inspection camera, one approved part and one flagged as defective.",
+    es: "Ilustración: cinta de producción con cámara de inspección, una pieza aprobada y una con defecto detectado.",
+  },
+};
+
+const rotulos = {
+  pt: { ok: "OK", falha: "DEFEITO", acesso: "ACESSO" },
+  en: { ok: "OK", falha: "DEFECT", acesso: "ACCESS" },
+  es: { ok: "OK", falha: "DEFECTO", acesso: "ACCESO" },
+}[lang];
+
+// id único por instância: dois gradientes com o mesmo id na mesma página fazem
+// o segundo herdar o primeiro.
+const uid = `ci-${slug}`;
+const descricao = alt[slug]?.[lang] ?? "";
+---
+
+<figure class="case-ilu">
+  <svg viewBox="0 0 640 360" role="img" aria-label={descricao} preserveAspectRatio="xMidYMid slice">
+    <rect width="640" height="360" class="fundo" />
+
+    {slug === "cidades-inteligentes" && (
+      <>
+        <g class="painel">
+          <rect x="96" y="44" width="88" height="52" rx="2" /><rect x="190" y="44" width="88" height="52" rx="2" />
+          <rect x="284" y="44" width="88" height="52" rx="2" /><rect x="378" y="44" width="88" height="52" rx="2" />
+          <rect x="472" y="44" width="88" height="52" rx="2" />
+          <rect x="96" y="102" width="88" height="52" rx="2" /><rect x="190" y="102" width="88" height="52" rx="2" />
+          <rect x="284" y="102" width="88" height="52" rx="2" /><rect x="472" y="102" width="88" height="52" rx="2" />
+        </g>
+        <rect x="378" y="102" width="88" height="52" rx="2" class="alerta" />
+        <circle cx="422" cy="128" r="4" class="ponto" />
+        <rect x="60" y="250" width="520" height="8" rx="3" class="movel" />
+        <path d="M170 360v-58a34 34 0 0 1 68 0v58z" class="silhueta" />
+        <circle cx="204" cy="278" r="21" class="silhueta" />
+        <path d="M392 360v-52a30 30 0 0 1 60 0v52z" class="silhueta" />
+        <circle cx="422" cy="288" r="19" class="silhueta" />
+      </>
+    )}
+
+    {slug === "ambientes-inteligentes" && (
+      <>
+        <g class="fuga">
+          <path d="M0 300L300 190M640 300L340 190M0 40L300 165M640 40L340 165" />
+        </g>
+        <rect x="300" y="150" width="40" height="60" class="movel" />
+        <rect x="150" y="196" width="26" height="92" rx="4" class="equip" />
+        <rect x="464" y="196" width="26" height="92" rx="4" class="equip" />
+        <rect x="516" y="120" width="46" height="150" rx="7" class="equip destaque" />
+        <rect x="526" y="140" width="26" height="40" rx="3" class="tela" />
+        <circle cx="539" cy="200" r="7" class="anel" />
+        <path d="M286 330v-70a26 26 0 0 1 52 0v70z" class="silhueta" />
+        <circle cx="312" cy="242" r="18" class="silhueta" />
+        <rect x="288" y="220" width="48" height="48" class="deteccao" />
+        <g class="cantos"><path d="M288 232v-12h12M324 220h12v12M336 256v12h-12M300 268h-12v-12" /></g>
+        <text x="288" y="212" class="rotulo ok-cor">{rotulos.acesso}</text>
+      </>
+    )}
+
+    {slug === "infraestrutura-de-ti" && (
+      <>
+        <defs>
+          <radialGradient id={uid} cx="50%" cy="50%">
+            <stop offset="0" stop-color="var(--ilu-acento)" stop-opacity=".3" />
+            <stop offset="1" stop-color="var(--ilu-acento)" stop-opacity="0" />
+          </radialGradient>
+        </defs>
+        <path d="M0 26L286 148v64L0 334z" class="equip" />
+        <path d="M640 26L354 148v64l286 122z" class="equip" />
+        <path d="M286 148h68v64h-68z" class="tela" />
+        <g class="divisao">
+          <path d="M72 57v246M144 88v184M216 118v122M568 57v246M496 88v184M424 118v122" />
+        </g>
+        <g>
+          <circle cx="36" cy="150" r="3" class="led-ok" /><circle cx="36" cy="166" r="3" class="led-ok" />
+          <circle cx="108" cy="158" r="2.6" class="led-ok" /><circle cx="108" cy="172" r="2.6" class="led-atencao" />
+          <circle cx="180" cy="166" r="2.2" class="led-ok" />
+          <circle cx="604" cy="150" r="3" class="led-ok" /><circle cx="604" cy="166" r="3" class="led-ok" />
+          <circle cx="532" cy="158" r="2.6" class="led-ok" /><circle cx="460" cy="166" r="2.2" class="led-ok" />
+        </g>
+        <rect x="286" y="148" width="68" height="64" fill={`url(#${uid})`} />
+      </>
+    )}
+
+    {slug === "ia-industrial" && (
+      <>
+        <g class="estrutura"><path d="M80 0v210M240 0v190M400 0v190M560 0v210M0 96h640" /></g>
+        <path d="M320 40v70" class="braco" />
+        <rect x="292" y="104" width="56" height="34" rx="5" class="equip destaque" />
+        <circle cx="320" cy="121" r="9" class="lente" />
+        <path d="M320 138L214 268h212z" class="cone" />
+        <rect x="0" y="268" width="640" height="18" class="esteira" />
+        <g class="divisao"><path d="M60 268v18M140 268v18M220 268v18M300 268v18M380 268v18M460 268v18M540 268v18" /></g>
+        <g class="peca">
+          <rect x="48" y="238" width="42" height="30" rx="3" /><rect x="146" y="238" width="42" height="30" rx="3" />
+          <rect x="244" y="238" width="42" height="30" rx="3" /><rect x="342" y="238" width="42" height="30" rx="3" />
+          <rect x="440" y="238" width="42" height="30" rx="3" /><rect x="538" y="238" width="42" height="30" rx="3" />
+        </g>
+        <rect x="240" y="234" width="50" height="38" class="aprovada" />
+        <text x="240" y="228" class="rotulo ok-cor">{rotulos.ok}</text>
+        <rect x="338" y="234" width="50" height="38" class="reprovada" />
+        <text x="338" y="228" class="rotulo falha-cor">{rotulos.falha}</text>
+      </>
+    )}
+  </svg>
+</figure>
+
+<style>
+  .case-ilu { margin: 0; }
+  .case-ilu svg {
+    /* Mesmo enquadramento que o placeholder ocupava: 16:9 e canto arredondado. */
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border-strong);
+    /* Sobre navy o vermelho de marca reprova o AA e o manual pede o claro.
+       Fixo aqui: duas das quatro unidades têm cor navy e sumiriam no fundo. */
+    --ilu-acento: var(--red-400);
+  }
+
+  .fundo { fill: var(--navy-900); }
+  .painel rect { fill: var(--navy-700); stroke: rgba(255, 255, 255, 0.14); }
+  .alerta { fill: rgba(226, 8, 29, 0.22); stroke: var(--red-500); stroke-width: 1.5; }
+  .ponto { fill: var(--ilu-acento); }
+  .movel { fill: var(--navy-700); }
+  .silhueta { fill: var(--navy-950); }
+  .equip { fill: var(--navy-800); stroke: rgba(255, 255, 255, 0.16); }
+  .equip.destaque { stroke: var(--ilu-acento); stroke-width: 1.5; }
+  .tela { fill: var(--navy-950); }
+  .anel { fill: none; stroke: var(--ilu-acento); stroke-width: 1.5; }
+  .fuga path { stroke: rgba(255, 255, 255, 0.1); fill: none; }
+  .estrutura path { stroke: rgba(255, 255, 255, 0.07); fill: none; }
+  .divisao path { stroke: rgba(255, 255, 255, 0.09); }
+  .deteccao { fill: none; stroke: var(--ilu-acento); stroke-width: 1.5; }
+  .cantos path { stroke: var(--ilu-acento); stroke-width: 3; fill: none; }
+  .braco { stroke: var(--navy-700); stroke-width: 10; }
+  .lente { fill: var(--navy-950); stroke: var(--ilu-acento); }
+  .cone { fill: rgba(255, 74, 84, 0.07); stroke: rgba(255, 74, 84, 0.28); stroke-dasharray: 4 5; }
+  .esteira { fill: var(--navy-800); stroke: rgba(255, 255, 255, 0.14); }
+  .peca rect { fill: var(--navy-700); stroke: rgba(255, 255, 255, 0.16); }
+  .aprovada { fill: none; stroke: var(--color-success); stroke-width: 1.5; }
+  .reprovada { fill: none; stroke: var(--red-500); stroke-width: 1.8; }
+
+  /* Verde e âmbar aqui são LED de equipamento e status de inspeção — a função
+     original da cor de sistema, não cor institucional emprestada. */
+  .led-ok { fill: var(--color-success); }
+  .led-atencao { fill: #ffc800; }
+
+  .rotulo { font-family: ui-monospace, Consolas, monospace; font-size: 10px; }
+  .ok-cor { fill: var(--color-success); }
+  .falha-cor { fill: var(--ilu-acento); }
+</style>

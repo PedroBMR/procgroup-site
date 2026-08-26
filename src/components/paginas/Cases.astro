@@ -2,7 +2,7 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Breadcrumb from "../Breadcrumb.astro";
 import Button from "../Button.astro";
-import MediaPlaceholder from "../MediaPlaceholder.astro";
+import CaseIllustration from "../CaseIllustration.astro";
 import { getBusinessUnit } from "../../data/businessUnits";
 import { WHATSAPP_DEMO } from "../../data/contact";
 import { getLangFromUrl, logicalPath, useTranslations, localePath } from "../../i18n/utils";
@@ -214,19 +214,28 @@ const t = casesI18n[lang];
 // Pato 360; empresas, com as tres aplicacoes da plataforma.
 const itens = t.items.filter((c) => !unidadesDoLado || unidadesDoLado.includes(c.unitSlug));
 
-// Placeholder de foto por case (a produzir). Caption localizado; prompt de arte
-// em PT por segmento — consolidado em BRIEFING-IMAGENS.md.
-const caseMediaCaption = { pt: "Foto do case — a produzir", en: "Case photo — to produce", es: "Foto del caso — a producir" }[lang];
-const caseMediaPrompt: Record<string, string> = {
-  "cidades-inteligentes":
-    "Foto da operação Pato 360°: sala/Centro Integrado de Operações com video wall (mapas, alertas, reconhecimento facial, LPR), ou efetivo/viatura integrado. Navy + vermelho, tom de segurança pública. (Com autorização de uso.)",
-  "ambientes-inteligentes":
-    "Foto de controle de acesso facial em ambiente corporativo/industrial (catraca ou terminal) e câmeras inteligentes; ao fundo, operador na central. Navy + vermelho.",
-  "infraestrutura-de-ti":
-    "Foto de data center / racks de servidores (corredor frio) ou equipe de NOC diante de dashboards. Iluminação azulada, navy + vermelho.",
-  "ia-industrial":
-    "Foto de linha de produção com câmeras industriais e inspeção por visão computacional (overlays de detecção). Ambiente industrial limpo, navy + vermelho.",
-};
+// Direcao de arte das fotos que ainda nao existem. Hoje os cards mostram a
+// ilustracao vetorial da cena (CaseIllustration.astro) — decisao de 2026-08-26:
+// "foto do case" gerada por IA seria fabricar registro de operacao de cliente,
+// e o manual de marca pede tratamento grafico quando nao ha foto real.
+//
+// Estes prompts NAO sao mais renderizados (o site chegou a publicar a propria
+// direcao de arte). Ficam aqui como pauta da sessao fotografica, junto com o
+// enquadramento de cada cena, ja desenhado em CaseIllustration.astro.
+// Inventario do material real disponivel e as travas de cada cena: cofre,
+// nota "Projeto - Site institucional".
+//   cidades-inteligentes  Sala/Centro Integrado de Operacoes com video wall
+//                          (mapas, alertas). Operadores de costas. Um unico
+//                          ponto de vermelho, no alerta ativo.
+//   ambientes-inteligentes Terminal de acesso facial no terco direito, catraca
+//                          JA INSTALADA no mesmo quadro (e o argumento de venda),
+//                          deteccao sobre a pessoa em passagem.
+//   infraestrutura-de-ti   Corredor frio entre duas fileiras de racks, simetrico,
+//                          SEM PESSOAS, luz fria ao fundo. Unica sem trava: da
+//                          para fotografar em ambiente proprio.
+//   ia-industrial          Esteira no terco inferior, camera de inspecao suspensa,
+//                          e uma peca REPROVADA junto das aprovadas — sem o
+//                          defeito flagrado a foto nao prova que ha inspecao.
 
 const schema = {
   "@context": "https://schema.org",
@@ -263,7 +272,7 @@ const schema = {
           return (
             <article class="case-card" data-reveal style={`--unit-color: ${unit.color}`}>
               <div class="case-media">
-                <MediaPlaceholder kind="image" caption={caseMediaCaption} prompt={caseMediaPrompt[c.unitSlug]} lang={lang} color={unit.color} />
+                <CaseIllustration slug={c.unitSlug} lang={lang} />
               </div>
               {c.isReal ? (
                 <span class="real-tag">{t.realTag}</span>
