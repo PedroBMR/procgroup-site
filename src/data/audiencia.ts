@@ -121,5 +121,13 @@ export function publicoDaUrl(caminhoLogico: string): Publico | null {
     const b = publicoDefs[p].base;
     if (caminhoLogico === b || caminhoLogico.startsWith(`${b}/`)) return p;
   }
+  // Blog e agenda de eventos vivem fora do prefixo /empresas (o blog e
+  // PT-only vindo do WordPress e ja tem tratamento especial no i18n), mas
+  // PERTENCEM ao lado corporativo — decisao de 2026-08-26: o blog e so dele,
+  // e a agenda e uma categoria do blog. O chrome (menu, rodape, escotilha,
+  // logo) segue o dono, nao o prefixo da URL.
+  for (const prefixo of ["/blog", "/eventos"]) {
+    if (caminhoLogico === prefixo || caminhoLogico.startsWith(`${prefixo}/`)) return "empresas";
+  }
   return null;
 }
