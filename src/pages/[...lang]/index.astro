@@ -10,6 +10,12 @@
  * escolha. O <head> continua vindo do BaseLayout (canonical, hreflang, OG,
  * noindex de preview).
  *
+ * FORMATO (2026-08-26): tela dividida ao meio, padrao consagrado em paginas de
+ * escolha dupla premiadas — cada metade E a cena (canvas full-bleed), com o
+ * nome do publico em tipografia gigante contornada que preenche no hover. A
+ * metade sob o cursor expande (flex-grow) e a outra escurece; a costura entre
+ * as duas carrega um pulso de luz. Nada de "cards": a escolha ocupa a tela.
+ *
  * Abaixo do painel ha um bloco institucional curto: a raiz e a pagina que o
  * Google mais ve, e sem ele o dominio nao teria nada indexavel (decisao 6 da
  * arquitetura). O texto e o mesmo hero institucional da home — nada novo.
@@ -34,27 +40,22 @@ const c = usePages(lang).comecar;
 const th = useTranslations(lang).home;
 const alternates = localeAlternates(Astro.url);
 
+/** Primeira palavra vira o letreiro gigante; o resto fica como complemento.
+ *  Funciona nos tres idiomas: Governo/e cidades, Government/and cities,
+ *  Gobierno/y ciudades — idem para empresas. */
+function partirTitulo(title: string) {
+  const [nome, ...resto] = title.split(" ");
+  return { nome, resto: resto.join(" ") };
+}
+
 const portas = [
-  {
-    chave: "governo",
-    href: localizePath("/governo", lang),
-    ...c.gov,
-  },
-  {
-    chave: "empresa",
-    href: localizePath("/empresas", lang),
-    ...c.emp,
-  },
+  { chave: "governo", href: localizePath("/governo", lang), ...c.gov, ...partirTitulo(c.gov.title) },
+  { chave: "empresa", href: localizePath("/empresas", lang), ...c.emp, ...partirTitulo(c.emp.title) },
 ];
 ---
 
 <BaseLayout title={th.metaTitle} description={th.metaDescription} bare>
   <div class="painel" data-entrada>
-    <div class="grade" aria-hidden="true"></div>
-    <div class="halo" aria-hidden="true"></div>
-    <CenaPorta cena="fundo" />
-    <div class="varredura" aria-hidden="true"></div>
-
     <header class="barra barra--topo">
       <div class="marca">
         <ProcMark size={26} />
@@ -79,36 +80,30 @@ const portas = [
       </nav>
     </header>
 
-    <div class="miolo">
-      <div class="cabecalho">
-        <div>
-          <p class="eyebrow">{c.eyebrow}</p>
-          <h1>{c.titleA}<br />{c.titleB}</h1>
-        </div>
-        <p class="lead">{c.lead}</p>
-      </div>
+    <div class="cabecalho">
+      <p class="eyebrow">{c.eyebrow}</p>
+      <h1>{c.titleA} {c.titleB}</h1>
+      <p class="lead">{c.lead}</p>
+    </div>
 
-      <div class="canais">
-        {
-          portas.map((p, i) => (
-            <a class="canal" href={p.href} data-escolha={p.chave} style={`--i: ${i}`}>
-              <CenaPorta cena={p.chave === "governo" ? "governo" : "empresas"} />
-              <span class="canal-progresso" aria-hidden="true"><span class="canal-barra" /></span>
-              <span class="canal-corpo">
-                <span class="canal-topo">
-                  <span class="canal-rotulo">{p.canal}</span>
-                  <svg class="canal-icone" width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                    {i === 0 ? (
-                      <path d="M3 20h18M5 20V10l7-5 7 5v10M9.5 20v-5h5v5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    ) : (
-                      <path d="M3 21h18M5 21V6l7-3v18M19 21V11l-7-3.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    )}
-                  </svg>
-                </span>
-                <span class="canal-titulo">{p.title}</span>
+    <div class="divisao">
+      {
+        portas.map((p, i) => (
+          <a class="canal" href={p.href} data-escolha={p.chave} style={`--i: ${i}`}>
+            <CenaPorta cena={p.chave === "governo" ? "governo" : "empresas"} />
+            <span class="canal-sombra" aria-hidden="true" />
+            <span class="canal-conteudo">
+              <span class="canal-rotulo">{p.canal}</span>
+              <span class="canal-nome">
+                {p.nome}
+                <span class="canal-nome-resto">{p.resto}</span>
+              </span>
+              <span class="canal-detalhe">
                 <span class="canal-lead">{p.lead}</span>
                 <span class="canal-itens">
-                  {p.items.map((it) => <span class="canal-item">{it}</span>)}
+                  {p.items.map((it) => (
+                    <span class="canal-item">{it}</span>
+                  ))}
                 </span>
                 <span class="canal-cta">
                   {c.cta}
@@ -117,11 +112,14 @@ const portas = [
                   </svg>
                 </span>
               </span>
-            </a>
-          ))
-        }
-      </div>
+            </span>
+          </a>
+        ))
+      }
+      <span class="costura" aria-hidden="true"></span>
     </div>
+
+    <div class="varredura" aria-hidden="true"></div>
 
     <footer class="barra barra--rodape">
       <a class="email" href="mailto:comercial@procgroup.com.br">comercial@procgroup.com.br</a>
@@ -145,18 +143,22 @@ const portas = [
   .instituc h2 { margin-top: var(--space-3); font-size: var(--fs-2xl); color: var(--color-text); }
   .instituc-texto { margin-top: var(--space-4); font-size: var(--fs-sm); line-height: var(--lh-normal); color: var(--color-text-muted); }
 
-  /* ── Entrada: o painel liga como um centro de operações ──────────────────
-     Grade e halo primeiro, título depois, portas por último e em sequência.
-     Tudo com `both`: o estado inicial vale antes do delay, senão o conteúdo
-     pisca visível e some. Quem pediu menos movimento recebe tudo já no lugar
-     (bloco no fim do arquivo). */
+  /* ── Entrada: as duas metades se encontram na costura ────────────────────
+     Barra e título primeiro, depois cada metade desliza do seu lado até
+     fechar o painel. Tudo com `both`: o estado inicial vale antes do delay,
+     senão o conteúdo pisca visível e some. Quem pediu menos movimento recebe
+     tudo já no lugar (bloco no fim do arquivo). */
   @keyframes surgir { from { opacity: 0 } to { opacity: 1 } }
   @keyframes subir {
-    from { opacity: 0; transform: translateY(26px) }
+    from { opacity: 0; transform: translateY(22px) }
     to   { opacity: 1; transform: none }
   }
-  @keyframes abrirHalo {
-    from { opacity: 0; transform: scale(.72) }
+  @keyframes fecharEsq {
+    from { opacity: 0; transform: translateX(-32px) }
+    to   { opacity: 1; transform: none }
+  }
+  @keyframes fecharDir {
+    from { opacity: 0; transform: translateX(32px) }
     to   { opacity: 1; transform: none }
   }
   @keyframes passarLuz {
@@ -164,14 +166,20 @@ const portas = [
     18%  { opacity: .5 }
     100% { opacity: 0; transform: translateX(160%) }
   }
+  @keyframes descerPulso {
+    0%   { top: -18%; opacity: 0 }
+    12%  { opacity: .55 }
+    88%  { opacity: .55 }
+    100% { top: 104%; opacity: 0 }
+  }
 
-  [data-entrada] .grade,
-  [data-entrada] .cena--fundo { animation: surgir 1.4s ease-out both; }
-  [data-entrada] .halo { animation: abrirHalo 1.6s cubic-bezier(.16,1,.3,1) .15s both; }
-  [data-entrada] .barra--topo { animation: surgir .8s ease-out .35s both; }
-  [data-entrada] .cabecalho > div { animation: subir .9s cubic-bezier(.16,1,.3,1) .45s both; }
-  [data-entrada] .cabecalho .lead { animation: subir .9s cubic-bezier(.16,1,.3,1) .6s both; }
-  [data-entrada] .canal { animation: subir 1s cubic-bezier(.16,1,.3,1) calc(.78s + var(--i) * .14s) both; }
+  [data-entrada] .barra--topo { animation: surgir .8s ease-out .1s both; }
+  /* Cabeçalho e costura usam `backwards`, não `both`: os dois esmaecem no
+     hover via opacity, e um fill forwards venceria essa regra para sempre. */
+  [data-entrada] .cabecalho { animation: subir .9s cubic-bezier(.16,1,.3,1) .25s backwards; }
+  [data-entrada] .canal:first-child { animation: fecharEsq 1.1s cubic-bezier(.16,1,.3,1) .45s both; }
+  [data-entrada] .canal:nth-child(2) { animation: fecharDir 1.1s cubic-bezier(.16,1,.3,1) .45s both; }
+  [data-entrada] .costura { animation: surgir 1.2s ease-out 1.2s backwards; }
   [data-entrada] .barra--rodape { animation: surgir .8s ease-out 1.3s both; }
 
   /* Uma passada de luz, uma vez só: o monitor acordando. Repetir viraria
@@ -181,8 +189,9 @@ const portas = [
     top: 0; bottom: 0; left: 0;
     width: 40%;
     pointer-events: none;
+    z-index: 3;
     background: linear-gradient(100deg, transparent, rgba(255, 74, 84, .07) 45%, rgba(226, 231, 245, .05) 55%, transparent);
-    animation: passarLuz 2.4s ease-out .2s both;
+    animation: passarLuz 2.4s ease-out .5s both;
   }
 
   /* A página ocupa a janela inteira: é um pedágio, não tem rolagem em desktop.
@@ -197,41 +206,16 @@ const portas = [
     overflow: hidden;
   }
 
-  /* Grade técnica estática: fallback de quem não tem o canvas. Com a cena de
-     fundo montada ela sai, senão duas grades diferentes se sobrepõem. */
-  [data-cena-ativa] .grade { display: none; }
-
-  .grade {
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(255, 255, 255, 0.028) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.028) 1px, transparent 1px);
-    background-size: 64px 64px;
-    pointer-events: none;
-  }
-  /* Um único foco de luz — o manual limita a dois por composição. */
-  .halo {
-    position: absolute;
-    top: -18%;
-    right: 12%;
-    width: min(560px, 60vw);
-    aspect-ratio: 1;
-    border-radius: var(--radius-pill);
-    background: radial-gradient(circle, rgba(226, 8, 29, 0.2) 0%, rgba(226, 8, 29, 0.04) 48%, transparent 70%);
-    pointer-events: none;
-  }
-
   .barra {
     position: relative;
+    z-index: 2;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: var(--space-4);
-    padding: var(--space-5) var(--space-12);
+    padding: var(--space-4) var(--space-12);
   }
-  .barra--topo { border-bottom: 1px solid var(--color-border); }
-  .barra--rodape { border-top: 1px solid var(--color-border); }
+  .barra--rodape { justify-content: center; border-top: 1px solid var(--color-border); }
 
   .marca { display: flex; align-items: center; gap: var(--space-3); }
   .marca-nome {
@@ -244,7 +228,6 @@ const portas = [
   .marca-sufixo { color: var(--color-text-faint); }
 
   .status,
-  .saida,
   .email {
     font-family: ui-monospace, Consolas, monospace;
     font-size: var(--fs-xs);
@@ -252,9 +235,8 @@ const portas = [
     text-transform: uppercase;
     color: var(--color-text-faint);
   }
-  .saida:hover, .email:hover { color: var(--color-text); }
+  .email:hover { color: var(--color-text); }
   .email { display: inline-flex; align-items: center; min-height: 40px; }
-  .saida { text-decoration: underline; text-underline-offset: 3px; }
 
   .idiomas { display: flex; gap: var(--space-1); }
   .idioma {
@@ -274,121 +256,189 @@ const portas = [
   .idioma:hover { color: var(--color-text); }
   .idioma.is-ativo { background: rgba(255, 255, 255, 0.08); color: var(--color-text); }
 
-  .miolo {
+  /* ── Cabeçalho compacto e central: o protagonista é a divisão, não o h1 ── */
+  .cabecalho {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: var(--space-4) var(--space-8) var(--space-6);
+    transition: opacity var(--dur-med) ease;
+  }
+  .eyebrow {
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--red-400);
+  }
+  .cabecalho h1 { margin-top: var(--space-2); font-size: var(--fs-2xl); }
+  .lead {
+    margin-inline: auto;
+    margin-top: var(--space-2);
+    font-size: var(--fs-sm);
+    color: var(--color-text-muted);
+    max-width: 52ch;
+    text-wrap: pretty;
+  }
+  /* Com uma metade em foco, o cabeçalho sai de cena sem sair do lugar. */
+  .painel:has(.canal:hover) .cabecalho,
+  .painel:has(.canal:focus-visible) .cabecalho { opacity: 0.35; }
+
+  /* ── A divisão: duas metades que disputam a tela ─────────────────────────
+     flex-grow anima; a metade sob o cursor vai a ~63% e a outra escurece pela
+     .canal-sombra. Sem :has (navegador antigo) só a expansão acontece — a
+     página continua inteira. */
+  .divisao {
     position: relative;
     flex: 1;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: var(--space-12);
-    padding: var(--space-12) var(--space-12);
-    max-width: var(--container-max);
-    width: 100%;
-    margin-inline: auto;
-  }
-
-  .cabecalho {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: var(--space-8);
-  }
-  .cabecalho h1 { font-size: var(--fs-3xl); }
-  .lead {
-    font-size: var(--fs-base);
-    color: var(--color-text-muted);
-    max-width: 34ch;
-    text-align: right;
-    text-wrap: pretty;
-  }
-
-  .canais {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-6);
+    min-height: 0;
   }
 
   .canal {
-    display: block;
     position: relative;
     isolation: isolate;
-    background: var(--color-bg-alt);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    align-items: flex-end;
     overflow: hidden;
     color: inherit;
     text-decoration: none;
-    transition:
-      border-color var(--dur-fast) ease,
-      background var(--dur-fast) ease;
+    border-top: 1px solid var(--color-border);
+    transition: flex-grow 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .canal:hover,
-  .canal:focus-visible {
-    background: var(--color-surface-hover);
-    border-color: rgba(226, 8, 29, 0.55);
-  }
-  .canal:hover .canal-barra,
-  .canal:focus-visible .canal-barra { width: 100%; }
+  .canal:focus-visible { flex-grow: 1.7; }
 
-  .canal-progresso { display: block; height: 3px; background: rgba(255, 255, 255, 0.06); }
-  .canal-barra {
+  /* Véu extra da metade preterida — por cima da cena, por baixo do texto. */
+  .canal-sombra {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: rgba(6, 10, 20, 0.62);
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    pointer-events: none;
+  }
+  .divisao:has(.canal:hover) .canal:not(:hover) .canal-sombra,
+  .divisao:has(.canal:focus-visible) .canal:not(:focus-visible) .canal-sombra { opacity: 1; }
+
+  /* A costura: onde as duas operações se encontram. Um pulso de luz desce a
+     linha de tempos em tempos — devagar e discreto, ritmo de varredura, não
+     glow decorativo. */
+  .costura {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    z-index: 2;
+    background: rgba(226, 231, 245, 0.14);
+    pointer-events: none;
+  }
+  .costura::after {
+    content: "";
+    position: absolute;
+    left: -1px;
+    width: 3px;
+    height: 140px;
+    border-radius: 2px;
+    background: linear-gradient(180deg, transparent, var(--red-400), transparent);
+    animation: descerPulso 7s ease-in-out 2.6s infinite;
+    opacity: 0;
+  }
+  /* Com uma metade expandida a linha central mente sobre a fronteira real —
+     some junto com o cabeçalho. */
+  .divisao:has(.canal:hover) .costura,
+  .divisao:has(.canal:focus-visible) .costura { opacity: 0; transition: opacity 0.4s ease; }
+
+  .canal-conteudo {
+    position: relative;
+    z-index: 2;
     display: block;
-    height: 3px;
-    width: 34%;
-    background: var(--color-primary);
-    transition: width var(--dur-med) cubic-bezier(0.2, 0.7, 0.3, 1);
+    padding: var(--space-10) var(--space-12);
+    max-width: 640px;
   }
 
-  .canal-corpo { display: block; padding: var(--space-8); }
-
-  .canal-topo {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: var(--space-5);
-  }
   .canal-rotulo {
+    display: block;
     font-family: ui-monospace, Consolas, monospace;
     font-size: var(--fs-xs);
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--color-text-faint);
+    margin-bottom: var(--space-4);
   }
-  .canal-icone { color: var(--color-text-muted); }
 
-  .canal-titulo {
+  /* O letreiro: contorno fantasma que preenche quando a metade é a escolhida.
+     -webkit-text-stroke tem suporte real em todos os navegadores atuais; se
+     faltar, o fallback é a cor sólida direto (o @supports abaixo). */
+  .canal-nome {
     display: block;
     font-family: var(--font-display);
     font-weight: 800;
-    font-size: var(--fs-2xl);
+    font-size: clamp(3rem, 7.2vw, 7.5rem);
+    line-height: 0.94;
     text-transform: uppercase;
     letter-spacing: 0.01em;
-    line-height: var(--lh-tight);
+    color: var(--white);
+    transition: color 0.55s ease;
   }
+  @supports (-webkit-text-stroke: 1px white) {
+    .canal-nome {
+      color: transparent;
+      -webkit-text-stroke: 1.5px rgba(226, 231, 245, 0.42);
+      transition: color 0.55s ease, -webkit-text-stroke-color 0.55s ease;
+    }
+    .canal:hover .canal-nome,
+    .canal:focus-visible .canal-nome {
+      color: var(--white);
+      -webkit-text-stroke-color: transparent;
+    }
+  }
+  .canal-nome-resto {
+    display: block;
+    font-size: clamp(1.15rem, 1.9vw, 1.75rem);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    line-height: 1.3;
+    margin-top: var(--space-2);
+    color: var(--color-text-muted);
+    -webkit-text-stroke: 0;
+  }
+
+  /* O detalhe ocupa o espaço desde o início (o letreiro não pula) e só ganha
+     opacidade quando a metade está em foco. */
+  .canal-detalhe {
+    display: block;
+    margin-top: var(--space-5);
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.55s ease 0.08s, transform 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.08s;
+  }
+  .canal:hover .canal-detalhe,
+  .canal:focus-visible .canal-detalhe { opacity: 1; transform: none; }
+
   .canal-lead {
     display: block;
-    margin-top: var(--space-3);
     font-size: var(--fs-base);
     color: var(--color-text-muted);
+    max-width: 46ch;
     text-wrap: pretty;
   }
-
-  /* O corpo sobe acima da cena. */
-  .canal-corpo, .canal-progresso { position: relative; z-index: 1; }
-
   .canal-itens {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-2);
-    margin-top: var(--space-6);
-    padding-top: var(--space-5);
-    border-top: 1px solid var(--color-border);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-5);
+    margin-top: var(--space-4);
   }
   .canal-item {
     font-family: ui-monospace, Consolas, monospace;
     font-size: var(--fs-xs);
     letter-spacing: 0.06em;
     color: var(--color-text-muted);
+    white-space: nowrap;
   }
   .canal-item::before { content: "› "; color: var(--color-text-faint); }
 
@@ -396,7 +446,7 @@ const portas = [
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
-    margin-top: var(--space-8);
+    margin-top: var(--space-6);
     /* 48px de alvo de toque, não 44: a régua do projeto é múltiplo de 4. */
     min-height: 48px;
     padding-inline: var(--space-5);
@@ -411,40 +461,56 @@ const portas = [
 
   /* Cortes estruturais do manual: 1200 / 900 / 640. */
   @media (max-width: 1200px) {
-    .barra, .miolo { padding-inline: var(--space-8); }
+    .barra { padding-inline: var(--space-8); }
+    .canal-conteudo { padding: var(--space-8); }
   }
   @media (max-width: 900px) {
-    /* Empilhado, a página passa a rolar — e aí a rolagem é esperada, não um bug. */
+    /* Empilhado, a página passa a rolar — e aí a rolagem é esperada, não um
+       bug. Sem hover, cada metade nasce completa: nome preenchido e detalhe
+       visível. A expansão é gesto de cursor, não de toque. */
     .painel { min-height: 0; }
-    .cabecalho { flex-direction: column; align-items: flex-start; gap: var(--space-5); }
-    .lead { text-align: left; max-width: none; }
-    .canais { grid-template-columns: minmax(0, 1fr); }
-    .miolo { gap: var(--space-8); padding-block: var(--space-8); }
+    .divisao { flex-direction: column; }
+    /* Em coluna, a base 0 do flex zeraria a altura: o conteúdo volta a mandar. */
+    .canal { flex-basis: auto; min-height: 62vw; }
+    .canal:hover, .canal:focus-visible { flex-grow: 1; }
+    .costura { display: none; }
+    .cabecalho { text-align: left; padding-inline: var(--space-8); }
+    .lead { margin-inline: 0; }
+    .canal-detalhe { opacity: 1; transform: none; }
+    .canal-nome { color: var(--white); -webkit-text-stroke: 0; font-size: clamp(2.6rem, 9vw, 4.5rem); }
     .status { display: none; }
   }
   @media (max-width: 640px) {
-    .barra, .miolo { padding-inline: var(--space-5); }
-    .cabecalho h1 { font-size: var(--fs-2xl); }
-    .canal-titulo { font-size: var(--fs-xl); }
-    .canal-corpo { padding: var(--space-5); }
-    /* No celular a lista de solucoes dobrava a altura do cartao e empurrava a
-       segunda porta para fora da dobra — o visitante nem descobria que havia
-       duas. Rotulo, titulo, lead e CTA bastam para escolher; a lista completa
-       esta na home do lado, um toque adiante. */
+    .barra { padding-inline: var(--space-5); }
+    .cabecalho { padding-inline: var(--space-5); }
+    .cabecalho h1 { font-size: var(--fs-xl); }
+    .canal { min-height: 0; }
+    .canal-conteudo { padding: var(--space-6) var(--space-5); }
+    /* No celular a lista de solucoes dobrava a altura e empurrava a segunda
+       porta para fora da dobra — o visitante nem descobria que havia duas.
+       Rotulo, nome, lead e CTA bastam para escolher; a lista completa esta na
+       home do lado, um toque adiante. */
     .canal-itens { display: none; }
     .canal-cta { width: 100%; justify-content: center; margin-top: var(--space-4); }
-    .miolo { gap: var(--space-6); padding-block: var(--space-6); }
-    .barra--rodape { flex-direction: column; align-items: flex-start; gap: var(--space-2); }
+  }
+
+  /* Toque sem hover em tela larga (TV, tablet grande): mesmo tratamento do
+     empilhado — nome preenchido e detalhe visível, sem estados escondidos. */
+  @media (hover: none) {
+    .canal-detalhe { opacity: 1; transform: none; }
+    .canal-nome { color: var(--white); -webkit-text-stroke: 0; }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .canal, .canal-barra, .idioma { transition: none; }
-    /* Sem sequência de entrada: tudo já no lugar, e a luz não passa. */
-    [data-entrada] .grade, [data-entrada] .cena--fundo,
-    [data-entrada] .halo, [data-entrada] .barra--topo,
-    [data-entrada] .cabecalho > div, [data-entrada] .cabecalho .lead,
-    [data-entrada] .canal, [data-entrada] .barra--rodape { animation: none; }
+    .canal, .canal-sombra, .canal-nome, .canal-detalhe, .cabecalho, .idioma { transition: none; }
+    .canal:hover, .canal:focus-visible { flex-grow: 1; }
+    .canal-detalhe { opacity: 1; transform: none; }
+    /* Sem sequência de entrada: tudo já no lugar, e nenhuma luz se move. */
+    [data-entrada] .barra--topo, [data-entrada] .cabecalho,
+    [data-entrada] .canal:first-child, [data-entrada] .canal:nth-child(2),
+    [data-entrada] .costura, [data-entrada] .barra--rodape { animation: none; }
     .varredura { display: none; }
+    .costura::after { animation: none; }
   }
 </style>
 
