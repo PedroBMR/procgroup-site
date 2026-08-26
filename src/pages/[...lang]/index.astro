@@ -52,6 +52,7 @@ const portas = [
   <div class="painel" data-entrada>
     <div class="grade" aria-hidden="true"></div>
     <div class="halo" aria-hidden="true"></div>
+    <CenaPorta cena="fundo" />
     <div class="varredura" aria-hidden="true"></div>
 
     <header class="barra barra--topo">
@@ -164,7 +165,8 @@ const portas = [
     100% { opacity: 0; transform: translateX(160%) }
   }
 
-  [data-entrada] .grade { animation: surgir 1.1s ease-out both; }
+  [data-entrada] .grade,
+  [data-entrada] .cena--fundo { animation: surgir 1.4s ease-out both; }
   [data-entrada] .halo { animation: abrirHalo 1.6s cubic-bezier(.16,1,.3,1) .15s both; }
   [data-entrada] .barra--topo { animation: surgir .8s ease-out .35s both; }
   [data-entrada] .cabecalho > div { animation: subir .9s cubic-bezier(.16,1,.3,1) .45s both; }
@@ -195,7 +197,10 @@ const portas = [
     overflow: hidden;
   }
 
-  /* Grade técnica: a página se parece com a interface que a Proc entrega. */
+  /* Grade técnica estática: fallback de quem não tem o canvas. Com a cena de
+     fundo montada ela sai, senão duas grades diferentes se sobrepõem. */
+  [data-cena-ativa] .grade { display: none; }
+
   .grade {
     position: absolute;
     inset: 0;
@@ -435,7 +440,8 @@ const portas = [
   @media (prefers-reduced-motion: reduce) {
     .canal, .canal-barra, .idioma { transition: none; }
     /* Sem sequência de entrada: tudo já no lugar, e a luz não passa. */
-    [data-entrada] .grade, [data-entrada] .halo, [data-entrada] .barra--topo,
+    [data-entrada] .grade, [data-entrada] .cena--fundo,
+    [data-entrada] .halo, [data-entrada] .barra--topo,
     [data-entrada] .cabecalho > div, [data-entrada] .cabecalho .lead,
     [data-entrada] .canal, [data-entrada] .barra--rodape { animation: none; }
     .varredura { display: none; }
