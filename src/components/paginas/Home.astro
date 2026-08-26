@@ -1,0 +1,391 @@
+---
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Button from "../Button.astro";
+import HeroBackground from "../HeroBackground.astro";
+import StatCounter from "../StatCounter.astro";
+import PostCard from "../PostCard.astro";
+import ConnectedTicker from "../ConnectedTicker.astro";
+import UnitIcon from "../UnitIcon.astro";
+import { homeStats } from "../../data/stats";
+import { businessUnits } from "../../data/businessUnits";
+import { byNewest } from "../../utils/blog";
+import hqPhoto from "../../assets/images/hq-pato-branco-enhanced.webp";
+import { WHATSAPP_DEMO } from "../../data/contact";
+import { getLangFromUrl, useTranslations, localePath, localizePath } from "../../i18n/utils";
+import { defaultLocale, type Locale } from "../../i18n/config";
+
+// Uma rota, três idiomas: PT na raiz (/), EN em /en, ES em /es.
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang).home;
+const common = useTranslations(lang).common;
+const cards = t.cards as Record<string, { name: string; desc: string }>;
+const P = (path: string) => localePath(path, lang);
+
+// Campos só-PT (bloco de capacidades e teaser de cases). Enquanto EN/ES não
+// têm tradução, as seções são guardadas e simplesmente não renderizam.
+type HomeExtra = {
+  capEyebrow?: string;
+  capTitle?: string;
+  capLead?: string;
+  capabilities?: { icon: string; name: string; desc: string }[];
+  casesEyebrow?: string;
+  casesTitle?: string;
+  casesText?: string;
+  casesCta?: string;
+  casesStats?: { value: string; label: string }[];
+};
+const x = t as unknown as HomeExtra;
+
+// Ícones de linha das 6 capacidades (inline, sem dependência externa).
+const capIcons: Record<string, string> = {
+  ai: '<rect x="7" y="7" width="10" height="10" rx="2"/><circle cx="12" cy="12" r="2.2"/><path d="M10 3v2M14 3v2M10 19v2M14 19v2M3 10h2M3 14h2M19 10h2M19 14h2"/>',
+  vision: '<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/>',
+  integration: '<circle cx="12" cy="12" r="2.5"/><circle cx="4.5" cy="5" r="1.8"/><circle cx="19.5" cy="5" r="1.8"/><circle cx="4.5" cy="19" r="1.8"/><circle cx="19.5" cy="19" r="1.8"/><path d="M6 6.2l4 4.4M18 6.2l-4 4.4M6 17.8l4-4.4M18 17.8l-4-4.4"/>',
+  analytics: '<path d="M3 21h18"/><rect x="5" y="11" width="3.4" height="8" rx="0.6"/><rect x="10.3" y="6" width="3.4" height="13" rx="0.6"/><rect x="15.6" y="14" width="3.4" height="5" rx="0.6"/>',
+  infra: '<rect x="3" y="4" width="18" height="7" rx="1.6"/><rect x="3" y="13" width="18" height="7" rx="1.6"/><path d="M6.5 7.5h.01M6.5 16.5h.01M17 7.5h1.5M17 16.5h1.5"/>',
+  scale: '<path d="M9 21H3v-6M21 9V3h-6"/><path d="M3 21l7.5-7.5M21 3l-7.5 7.5"/>',
+};
+
+const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
+---
+
+<BaseLayout title={t.metaTitle} description={t.metaDescription}>
+  <section class="hero">
+    <HeroBackground />
+    <div class="container hero-inner" data-hero-intro>
+      <p class="eyebrow">{t.heroEyebrow}</p>
+      <h1>{t.heroTitle}</h1>
+      <p class="hero-subtitle">{t.heroSubtitle}</p>
+      <div class="hero-actions">
+        <Button href={P("/plataforma-proc-ai")} variant="primary" size="lg" data-magnetic>{t.heroCtaPrimary}</Button>
+        <Button href={WHATSAPP_DEMO} variant="ghost" size="lg" data-magnetic>{t.heroCtaSecondary}</Button>
+      </div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="container stats-grid">
+        {homeStats.map((stat, i) => <StatCounter value={stat.value} suffix={stat.suffix} label={t.statsLabels[i]} />)}
+      </div>
+    </div>
+  </section>
+
+  <ConnectedTicker />
+
+  <section class="section about-teaser" data-theme="light">
+    <div class="container about-grid">
+      <div data-reveal>
+        <p class="eyebrow">{t.aboutEyebrow}</p>
+        <h2>{t.aboutTitle}</h2>
+        <p class="lead">{t.aboutText}</p>
+        <Button href={P("/empresa")} variant="secondary">{t.aboutCta}</Button>
+      </div>
+      <div class="about-visual" data-reveal>
+        <Image
+          class="about-photo"
+          src={hqPhoto}
+          alt={t.aboutPhotoAlt}
+          loading="lazy"
+          width={800}
+          height={600}
+          quality={70}
+        />
+      </div>
+    </div>
+  </section>
+
+  {x.capabilities && (
+    <section class="section capabilities">
+      <div class="container">
+        <div class="section-header cap-header" data-reveal>
+          <p class="eyebrow">{x.capEyebrow}</p>
+          <h2>{x.capTitle}</h2>
+          <p class="lead">{x.capLead}</p>
+        </div>
+        <div class="cap-grid">
+          {x.capabilities.map((cap) => (
+            <div class="cap-card" data-reveal>
+              <span class="cap-icon-wrap">
+                <svg class="cap-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={capIcons[cap.icon] ?? ""} />
+              </span>
+              <h3>{cap.name}</h3>
+              <p>{cap.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="section platform-teaser">
+    <div class="container">
+      <div class="platform-teaser-header" data-reveal>
+        <p class="eyebrow">{t.platformEyebrow}</p>
+        <h2>{t.platformTitle}</h2>
+        <p class="lead">{t.platformText}</p>
+      </div>
+
+      <div class="units-grid">
+        {businessUnits.map((unit) => (
+          <a href={localizePath(unit.href, lang)} class="unit-card" data-reveal style={`--unit-color: ${unit.color}`}>
+            <span class="unit-icon-wrap"><UnitIcon slug={unit.slug} /></span>
+            <span class="unit-badge">{unit.shortName}</span>
+            <h3>{cards[unit.slug]?.name ?? unit.name}</h3>
+            <p>{cards[unit.slug]?.desc ?? unit.tagline}</p>
+            <span class="unit-link">{t.unitLink}</span>
+          </a>
+        ))}
+      </div>
+
+      <div class="platform-cta" data-reveal>
+        <Button href={P("/plataforma-proc-ai")} variant="secondary" size="lg">{t.platformCta}</Button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section differentiators" data-theme="light">
+    <div class="container">
+      <div class="section-header" data-reveal>
+        <p class="eyebrow">{t.diffEyebrow}</p>
+        <h2>{t.diffTitle}</h2>
+      </div>
+      <div class="diff-grid">
+        {t.differentiators.map((item) => (
+          <div class="diff-card" data-reveal>
+            <h3>{item.title}</h3>
+            <p>{item.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {x.casesTitle && (
+    <section class="section cases-teaser">
+      <div class="container cases-teaser-inner" data-reveal>
+        <div class="cases-teaser-copy">
+          <p class="eyebrow">{x.casesEyebrow}</p>
+          <h2>{x.casesTitle}</h2>
+          <p class="lead">{x.casesText}</p>
+          <Button href={P("/cases")} variant="ghost" size="lg">{x.casesCta}</Button>
+        </div>
+        {x.casesStats && (
+          <div class="cases-teaser-stats">
+            {x.casesStats.map((s) => (
+              <div class="cases-stat">
+                <span class="cases-stat-v">{s.value}</span>
+                <span class="cases-stat-l">{s.label}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  )}
+
+  {latestPosts.length > 0 && (
+    <section class="section blog-teaser" data-theme="light">
+      <div class="container">
+        <div class="blog-teaser-header" data-reveal>
+          <div>
+            <p class="eyebrow">{t.blogEyebrow}</p>
+            <h2>{t.blogTitle}</h2>
+            {common.blogLangNote && <p class="blog-lang-note">{common.blogLangNote}</p>}
+          </div>
+          <Button href={P("/blog")} variant="secondary">{t.blogCta}</Button>
+        </div>
+        {/* O blog vem do WordPress e só existe em português. Marcar o idioma do
+            bloco evita que o leitor de tela leia português com fonética inglesa
+            nas páginas /en e /es (WCAG 3.1.2). */}
+        <div class="blog-teaser-grid" lang={lang === defaultLocale ? undefined : "pt-BR"}>
+          {latestPosts.map((post) => <PostCard post={post} />)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="section final-cta">
+    <div class="container final-cta-inner" data-reveal>
+      <h2>{t.finalCtaTitle}</h2>
+      <p>{t.finalCtaText}</p>
+      <Button href={WHATSAPP_DEMO} variant="primary" size="lg" data-magnetic>{t.finalCtaButton}</Button>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    position: relative;
+    /* svh e não vh: no celular vh usa o viewport GRANDE, ignorando a barra de
+       endereço. Somado aos 108px de TopBar + Header fixos, o hero passava da
+       tela e o bloco de estatísticas ficava sempre cortado. */
+    min-height: 92vh;
+    min-height: 92svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: var(--white);
+    padding-top: var(--space-16);
+  }
+  .hero-inner { position: relative; z-index: 2; max-width: 920px; padding-block: var(--space-16); }
+  .hero h1 {
+    color: var(--white);
+    font-size: clamp(2.25rem, 2.2rem + 2.6vw, 4rem);
+    margin-top: var(--space-4);
+  }
+  .hero-subtitle {
+    margin-top: var(--space-6);
+    font-size: var(--fs-lg);
+    color: rgba(255,255,255,0.75);
+    max-width: 620px;
+  }
+  .hero-actions { display: flex; gap: var(--space-4); margin-top: var(--space-8); flex-wrap: wrap; }
+
+  .hero-stats {
+    position: relative;
+    z-index: 2;
+    border-top: 1px solid rgba(255,255,255,0.14);
+    padding-block: var(--space-8);
+  }
+  .stats-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6); }
+
+  @media (max-width: 480px) {
+    .stats-grid { grid-template-columns: 1fr; }
+  }
+
+  .section { padding-block: var(--space-24); }
+  .section-header { max-width: 640px; margin-bottom: var(--space-12); }
+  .lead { margin-top: var(--space-6); font-size: var(--fs-base); color: var(--color-text-muted); max-width: 560px; }
+
+  .about-teaser { background: var(--color-bg); }
+  .about-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-16); align-items: center; }
+  .about-teaser h2 { margin-top: var(--space-4); font-size: var(--fs-3xl); }
+  .about-teaser .btn { margin-top: var(--space-8); }
+  .about-photo {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .platform-teaser { background: var(--navy-900); }
+  .platform-teaser-header { max-width: 680px; }
+  .platform-teaser-header h2 { margin-top: var(--space-4); font-size: var(--fs-3xl); }
+
+  .units-grid { margin-top: var(--space-12); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-6); }
+  .unit-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-8) var(--space-6);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out), border-color var(--dur-fast) ease;
+    overflow: hidden;
+  }
+  .unit-card::before {
+    content: "";
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: var(--unit-color);
+    /* Navy units match the dark card surface and vanish; lighten the bar. */
+    background: color-mix(in srgb, var(--unit-color), white 24%);
+  }
+  .unit-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); border-color: color-mix(in srgb, var(--unit-color), white 36%); }
+  .unit-icon-wrap {
+    display: flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px; margin-bottom: var(--space-4);
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--unit-color), transparent 82%);
+    color: color-mix(in srgb, var(--unit-color), white 40%);
+  }
+  .unit-icon-wrap :global(.unit-icon) { width: 24px; height: 24px; }
+  .unit-badge { font-size: var(--fs-xs); font-weight: 700; color: var(--white); text-transform: uppercase; letter-spacing: 0.08em; }
+  .unit-card h3 { font-size: var(--fs-lg); margin-top: var(--space-2); }
+  .unit-card p { margin-top: var(--space-2); font-size: var(--fs-sm); color: var(--color-text-muted); flex: 1; }
+  .unit-link { margin-top: var(--space-4); font-size: var(--fs-xs); font-weight: 700; color: var(--color-text); }
+
+  .platform-cta { margin-top: var(--space-12); text-align: center; }
+
+  /* 6 capacidades da plataforma */
+  .capabilities { background: var(--color-bg); }
+  .cap-header { max-width: 720px; }
+  .cap-header h2 { margin-top: var(--space-4); font-size: var(--fs-3xl); }
+  .cap-grid { margin-top: var(--space-12); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); }
+  .cap-card {
+    padding: var(--space-8);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    transition: transform var(--dur-fast) var(--ease-out), border-color var(--dur-fast) ease;
+  }
+  .cap-card:hover { transform: translateY(-4px); border-color: color-mix(in srgb, var(--color-primary), transparent 40%); }
+  .cap-icon-wrap {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 48px; height: 48px; border-radius: var(--radius-sm);
+    background: var(--red-tint); color: var(--red-400);
+  }
+  .cap-icon { width: 26px; height: 26px; }
+  .cap-card h3 { margin-top: var(--space-5); font-size: var(--fs-lg); }
+  .cap-card p { margin-top: var(--space-3); font-size: var(--fs-sm); color: var(--color-text-muted); }
+
+  /* Teaser de cases */
+  .cases-teaser { background: linear-gradient(135deg, var(--navy-900), var(--navy-800)); color: var(--white); }
+  .cases-teaser-inner { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: var(--space-16); align-items: center; }
+  .cases-teaser-copy .eyebrow { color: var(--red-400); }
+  .cases-teaser-copy h2 { margin-top: var(--space-4); font-size: var(--fs-3xl); color: var(--white); }
+  .cases-teaser-copy .lead { color: rgba(255,255,255,0.75); max-width: 52ch; }
+  .cases-teaser-copy .btn { margin-top: var(--space-8); color: var(--white); }
+  .cases-teaser-stats { display: grid; gap: var(--space-4); }
+  .cases-stat { padding: var(--space-6); border-radius: var(--radius-md); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); }
+  .cases-stat-v { display: block; font-family: var(--font-display); font-size: var(--fs-2xl); font-weight: 800; color: var(--red-400); }
+  .cases-stat-l { display: block; margin-top: var(--space-1); font-size: var(--fs-sm); color: rgba(255,255,255,0.7); }
+
+  .differentiators { background: var(--color-bg); }
+  .diff-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); }
+  .diff-card {
+    padding: var(--space-8);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    transition: background var(--dur-fast) ease, border-color var(--dur-fast) ease;
+  }
+  .diff-card:hover { background: var(--color-surface-hover); border-color: var(--color-primary); }
+  .diff-card h3 { font-size: var(--fs-lg); }
+  .diff-card p { margin-top: var(--space-3); font-size: var(--fs-sm); color: var(--color-text-muted); }
+
+  .blog-teaser { background: var(--color-bg); }
+  .blog-teaser-header { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--space-6); flex-wrap: wrap; margin-bottom: var(--space-12); }
+  .blog-teaser-header h2 { margin-top: var(--space-4); font-size: var(--fs-3xl); max-width: 560px; }
+  .blog-lang-note { margin-top: var(--space-3); font-size: var(--fs-sm); color: var(--color-text-muted); }
+  .blog-teaser-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); }
+
+  @media (max-width: 900px) {
+    .blog-teaser-grid { grid-template-columns: 1fr; }
+  }
+
+  .final-cta {
+    background: linear-gradient(135deg, var(--navy-900), var(--navy-800));
+    color: var(--white);
+    text-align: center;
+  }
+  .final-cta-inner h2 { color: var(--white); font-size: var(--fs-3xl); max-width: 680px; margin-inline: auto; }
+  .final-cta-inner p { margin-top: var(--space-4); color: rgba(255,255,255,0.75); }
+  .final-cta-inner .btn { margin-top: var(--space-8); }
+
+  @media (max-width: 980px) {
+    .about-grid { grid-template-columns: 1fr; }
+    .units-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .diff-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .cap-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .cases-teaser-inner { grid-template-columns: 1fr; gap: var(--space-8); }
+  }
+  @media (max-width: 640px) {
+    .units-grid, .diff-grid, .cap-grid { grid-template-columns: 1fr; }
+  }
+</style>

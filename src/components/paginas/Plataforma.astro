@@ -1,0 +1,188 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Breadcrumb from "../Breadcrumb.astro";
+import Button from "../Button.astro";
+import PlatformMandala from "../PlatformMandala.astro";
+import AnimatedFlow from "../AnimatedFlow.astro";
+import { getBusinessUnits } from "../../data/businessUnits";
+import { WHATSAPP_DEMO } from "../../data/contact";
+import { getLangFromUrl, useTranslations, localePath, localizePath } from "../../i18n/utils";
+import { usePages } from "../../i18n/pages";
+import { defaultLocale, type Locale } from "../../i18n/config";
+
+const lang = getLangFromUrl(Astro.url);
+const tr = useTranslations(lang);
+const t = usePages(lang).plataforma;
+const businessUnits = getBusinessUnits(lang);
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Proc AI Platform",
+  applicationCategory: "BusinessApplication",
+  operatingSystem: "Cloud",
+  description: t.metaDescription,
+};
+---
+
+<BaseLayout title={tr.nav.plataforma} description={t.metaDescription} schema={schema}>
+  <div class="container">
+    <Breadcrumb
+      items={[
+        { label: tr.nav.home, href: localePath("/", lang) },
+        { label: tr.nav.plataforma, href: localePath("/plataforma-proc-ai", lang) },
+      ]}
+    />
+  </div>
+
+  <section class="hero-page">
+    <div class="container">
+      <p class="eyebrow">{t.heroEyebrow}</p>
+      <h1>{t.heroTitle}</h1>
+      <p class="lead">{t.heroLead}</p>
+    </div>
+  </section>
+
+  <section class="section flow-section" data-theme="light">
+    <div class="container">
+      <div class="section-header" data-reveal>
+        <p class="eyebrow">{t.flowEyebrow}</p>
+        <h2>{t.flowTitle}</h2>
+        <p class="lead">{t.flowLead}</p>
+      </div>
+      <AnimatedFlow />
+    </div>
+  </section>
+
+  <section class="section diagram-section" data-theme="light">
+    <div class="container">
+      <div class="section-header" data-reveal>
+        <p class="eyebrow">{t.diagramEyebrow}</p>
+        <h2>{t.diagramTitle}</h2>
+      </div>
+      <PlatformMandala />
+    </div>
+  </section>
+
+  <section class="section units-section">
+    <div class="container">
+      <div class="section-header" data-reveal>
+        <p class="eyebrow">{t.distEyebrow}</p>
+        <h2>{t.distTitle}</h2>
+        <p class="lead">{t.distLead}</p>
+      </div>
+
+      <div class="distribution">
+        <div class="distribution-core" data-reveal>Proc AI Platform</div>
+        <div class="distribution-units">
+          {businessUnits.map((unit) => (
+            <a href={localizePath(unit.href, lang)} class="distribution-unit" data-reveal style={`--unit-color: ${unit.color}`}>
+              <span class="unit-dot"></span>
+              <div>
+                <p class="unit-name">{unit.name}</p>
+                <p class="unit-team">{unit.team}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section tech-section" data-theme="light">
+    <div class="container">
+      <div class="section-header" data-reveal>
+        <p class="eyebrow">{t.techEyebrow}</p>
+        <h2>{t.techTitle}</h2>
+      </div>
+      <div class="tech-grid">
+        {t.technologies.map((tech) => (
+          <div class="tech-card" data-reveal>
+            <h3>{tech.name}</h3>
+            <p>{tech.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section final-cta">
+    <div class="container final-cta-inner" data-reveal>
+      <h2>{t.finalCtaTitle}</h2>
+      <p>{t.finalCtaText}</p>
+      <Button href={WHATSAPP_DEMO} variant="primary" size="lg" data-magnetic>{tr.solutions.ctaDemo}</Button>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero-page { padding-block: var(--space-16) var(--space-8); }
+  .hero-page h1 { font-size: var(--fs-4xl); margin-top: var(--space-4); max-width: 780px; }
+  .lead { margin-top: var(--space-6); font-size: var(--fs-lg); color: var(--color-text-muted); max-width: 640px; }
+
+  .section { padding-block: var(--space-16); }
+  .section-header { max-width: 680px; margin-bottom: var(--space-12); }
+  .section-header h2 { margin-top: var(--space-4); font-size: var(--fs-3xl); }
+  .section-header .lead { font-size: var(--fs-base); }
+
+  .flow-section { background: var(--color-bg); }
+  .flow-section .section-header { text-align: center; margin-inline: auto; }
+  .diagram-section { background: var(--color-bg-alt); }
+  .diagram-section .section-header { text-align: center; margin-inline: auto; }
+  .units-section { background: var(--navy-900); }
+  .tech-section { background: var(--color-bg); }
+  .distribution { display: flex; flex-direction: column; align-items: center; gap: var(--space-8); }
+  .distribution-core {
+    background: linear-gradient(135deg, var(--navy-900), var(--navy-700));
+    color: var(--white);
+    font-weight: 800;
+    padding: var(--space-6) var(--space-12);
+    border-radius: var(--radius-pill);
+    box-shadow: var(--shadow-md);
+  }
+  .distribution-units { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-6); width: 100%; }
+  .distribution-unit {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-6);
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out), border-color var(--dur-fast) ease;
+  }
+  .distribution-unit:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: color-mix(in srgb, var(--unit-color), white 36%); }
+  .unit-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--unit-color); margin-top: 6px; flex-shrink: 0; }
+  .unit-name { font-weight: 700; color: var(--color-text); }
+  .unit-team { margin-top: var(--space-1); font-size: var(--fs-xs); color: var(--color-text-faint); }
+
+  .tech-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-4); }
+  .tech-card {
+    padding: var(--space-6);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    transition: border-color var(--dur-fast) ease, transform var(--dur-fast) ease;
+  }
+  .tech-card:hover { border-color: var(--color-primary); transform: translateY(-4px); }
+  .tech-card h3 { font-size: var(--fs-base); }
+  .tech-card p { margin-top: var(--space-2); font-size: var(--fs-xs); color: var(--color-text-muted); }
+
+  .final-cta {
+    background: linear-gradient(135deg, var(--navy-900), var(--navy-800));
+    color: var(--white);
+    text-align: center;
+  }
+  .final-cta-inner h2 { color: var(--white); font-size: var(--fs-3xl); max-width: 680px; margin-inline: auto; }
+  .final-cta-inner p { margin-top: var(--space-4); color: rgba(255,255,255,0.75); }
+  .final-cta-inner .btn { margin-top: var(--space-8); }
+
+  @media (max-width: 980px) {
+    .distribution-units { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .tech-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .distribution-units, .tech-grid { grid-template-columns: 1fr; }
+  }
+</style>
