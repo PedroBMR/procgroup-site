@@ -1,33 +1,36 @@
 ---
 /**
- * Abertura da raiz: uma retícula de calibração trava no centro, a marca
- * resolve, o nome é revelado por corte — e então a tela se parte ao meio,
- * entregando o seletor de público.
+ * Abertura da raiz: a marca se materializa a partir de um campo de pontos e
+ * se dissolve de volta, entregando o seletor de público.
  *
- * Três atos, 3.15s:
- *   0.00s  eixos  — dois fios finos crescem do centro e travam num ponto
- *   0.35s  marca  — o símbolo resolve no cruzamento; o nome é revelado por
- *                   corte lateral, e um fio de progresso corre embaixo
- *   2.35s  abre   — as duas metades deslizam pelo eixo vertical
+ * Nuvem de pontos dispersa → converge para formar o símbolo e o nome → segura
+ * → dispersa em fade. Nada de retícula, moldura ou linha cruzando a marca: a
+ * tentativa anterior (cantos de detecção + eixos) cortava o símbolo ao meio e
+ * o Pedro reprovou. Aqui não existe geometria por cima do logo — o logo É os
+ * pontos.
  *
- * A IDEIA: o fio vertical desta retícula É a costura do seletor. A tela não
- * "carrega e some" — ela se abre exatamente na linha que já estava ali.
- * Por isso nada de log de terminal, contador de porcentagem ou barra de
- * carregamento: o que a Proc faz é medir e enquadrar, e a abertura faz isso.
+ * OS PONTOS SÃO A MARCA DE VERDADE: o script amostra os pixels de
+ * `/brand/mark-red.webp` (o mesmo arquivo do favicon, sem redesenhar) e de
+ * "PROC GROUP" na tipografia do site, e cada ponto carrega a cor que colheu.
+ * O vermelho que aparece é o vermelho do próprio símbolo, não decoração.
  *
- * A abertura se desfaz SOZINHA no CSS (animação com `forwards` que zera
- * visibilidade e ponteiro em 3.2s). Deliberado: se o JS falhar ou for
- * bloqueado, a cortina abre do mesmo jeito e ninguém fica preso. O JS só
- * acrescenta atalho (pular) e a remoção do nó no fim.
+ * O "gradiente pontilhista": a densidade dos pontos cai com a distância do
+ * foco luminoso — o miolo é sólido, as bordas rarefazem. É o gradiente que
+ * faz a imagem parecer emergir em vez de simplesmente aparecer.
  *
- * A cortina são DUAS metades, cada uma com um palco de 100vw preso à sua
- * borda: o conteúdo atravessa a costura como se fosse uma tela só.
+ * A abertura se desfaz SOZINHA no CSS (fade que zera visibilidade em 3.1s).
+ * Deliberado: se o JS falhar ou for bloqueado, o que fica é a marca estática
+ * no mesmo lugar, com o mesmo fade — ninguém trava numa tela de carregamento.
+ * O canvas só entra quando o script confirma que conseguiu montá-lo.
  *
- * Decorativa: a cortina inteira é aria-hidden — "PROC GROUP" já está no
- * conteúdo da página, e leitor de tela não deve esperar por uma animação.
- * O botão de pular fica fora dela, e é focável.
+ * Decorativa: aria-hidden — "PROC GROUP" já está no conteúdo da página, e
+ * leitor de tela não deve esperar por uma animação. O botão de pular fica
+ * fora, e é focável.
+ *
+ * (O nome do arquivo é histórico: a primeira versão era uma tela de boot.)
  */
 import ProcMark from "./ProcMark.astro";
+import { withBase } from "../utils/url";
 import { usePages } from "../i18n/pages";
 import type { Locale } from "../i18n/config";
 
@@ -38,34 +41,17 @@ const { lang } = Astro.props;
 const t = usePages(lang).comecar.intro;
 ---
 
-<div class="intro" data-intro>
-  <div class="cortina" aria-hidden="true">
-    {
-      ["esq", "dir"].map((lado) => (
-        <div class:list={["metade", `metade--${lado}`]}>
-          <div class="palco">
-            <span class="eixo eixo--v" />
-            <span class="eixo eixo--h" />
+<div class="intro" data-intro data-marca={withBase("/brand/mark-red.webp")}>
+  <div class="cena" aria-hidden="true">
+    <canvas></canvas>
 
-            <div class="centro">
-              <div class="alvo">
-                <span class="canto canto--ne" />
-                <span class="canto canto--no" />
-                <span class="canto canto--se" />
-                <span class="canto canto--so" />
-                <div class="simbolo">
-                  <ProcMark size={58} />
-                </div>
-              </div>
-
-              <p class="saudacao">{t.saudacao}</p>
-              <p class="marca">PROC<span> GROUP</span></p>
-              <span class="fio" />
-            </div>
-          </div>
-        </div>
-      ))
-    }
+    <!-- Fallback: é isto que aparece se o canvas não montar. Mesmo lugar,
+         mesmo fade — o script esconde este bloco quando assume. -->
+    <div class="estatico">
+      <ProcMark size={92} />
+      <p class="saudacao">{t.saudacao}</p>
+      <p class="marca">PROC<span> GROUP</span></p>
+    </div>
   </div>
 
   <button type="button" class="pular" data-pular>{t.pular}</button>
@@ -73,137 +59,54 @@ const t = usePages(lang).comecar.intro;
 
 <style>
   /* ── Linha do tempo ──────────────────────────────────────────────────────
-     0.00s  eixos crescem do centro (0.75s)
-     0.35s  cantos do alvo fecham; símbolo resolve
-     0.95s  saudação entra
-     1.15s  nome revelado por corte (0.85s)
-     1.55s  fio de progresso corre (0.8s)
-     2.30s  conteúdo sai
-     2.35s  metades se partem (0.8s)
-     3.15s  cortina fora do caminho — a página assume
-     Os tempos aqui e o `--t` do seletor (index.astro) andam juntos: mudou um,
-     muda o outro. */
+     0.15s  pontos surgem dispersos e começam a convergir (1.15s, escalonado)
+     1.75s  marca formada, segurando
+     2.30s  pontos dispersam
+     2.45s  a tela inteira sai em fade (0.6s)
+     3.10s  fora do caminho — a página assume
+     Estes tempos e o `--t` do seletor (index.astro) andam juntos. */
   .intro {
     position: fixed;
     inset: 0;
     z-index: 100;
-    animation: sumirDeVez 0.01s linear 3.2s forwards;
-  }
-  @keyframes sumirDeVez {
-    to { visibility: hidden; pointer-events: none; }
-  }
-
-  .cortina { position: absolute; inset: 0; }
-
-  /* Cada metade recorta um palco de largura total preso à sua borda: o
-     conteúdo continua alinhado através da costura. */
-  .metade {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 50.5%; /* meio ponto de sobreposição: sem fresta na costura */
-    overflow: hidden;
     background: var(--navy-950);
+    /* O foco luminoso por trás dos pontos: é o que dá o gradiente à nuvem. */
+    background-image: radial-gradient(58% 52% at 50% 46%, rgba(37, 56, 102, 0.5), transparent 72%);
+    animation: sairEmFade 0.65s ease-in 2.45s forwards;
   }
-  .metade--esq { left: 0; animation: abrirEsq 0.8s cubic-bezier(0.76, 0, 0.24, 1) 2.35s forwards; }
-  .metade--dir { right: 0; animation: abrirDir 0.8s cubic-bezier(0.76, 0, 0.24, 1) 2.35s forwards; }
-  @keyframes abrirEsq { to { transform: translateX(-100%) } }
-  @keyframes abrirDir { to { transform: translateX(100%) } }
+  @keyframes sairEmFade {
+    to { opacity: 0; visibility: hidden; pointer-events: none; }
+  }
 
-  .palco { position: absolute; top: 0; bottom: 0; width: 100vw; }
-  .metade--esq .palco { left: 0; }
-  .metade--dir .palco { right: 0; }
+  .cena { position: absolute; inset: 0; }
+  .cena canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 
-  /* ── Ato 1: os eixos ──
-     O vertical é a costura do seletor, adiantada. Cresce do centro para as
-     bordas: a tela está sendo medida, não decorada. */
-  .eixo {
-    position: absolute;
-    background: rgba(226, 231, 245, 0.16);
-    transform-origin: center;
-  }
-  .eixo--v {
-    left: 50%;
-    top: 0;
-    bottom: 0;
-    width: 1px;
-    animation: crescerV 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
-  .eixo--h {
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 1px;
-    animation: crescerH 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both,
-               sairSuave 0.5s ease-in 2.15s forwards;
-  }
-  @keyframes crescerV { from { transform: scaleY(0) } to { transform: scaleY(1) } }
-  @keyframes crescerH { from { transform: scaleX(0) } to { transform: scaleX(1) } }
-  @keyframes sairSuave { to { opacity: 0 } }
-
-  .centro {
+  /* ── Fallback estático (sem canvas) ── */
+  .estatico {
     position: absolute;
     inset: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: var(--space-5);
-    /* O conteúdo sobe um pouco: o cruzamento dos eixos fica no símbolo, não
-       no meio geométrico do bloco de texto. */
-    padding-bottom: var(--space-12);
+    gap: var(--space-4);
+    animation: entrarSuave 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both;
   }
-
-  /* ── Ato 2: o alvo fecha e a marca resolve ──
-     Quatro cantos convergindo é o enquadramento de detecção que o site já
-     usa nas cenas e nas ilustrações de case — aqui aplicado à própria marca. */
-  .alvo {
-    position: relative;
-    width: 132px;
-    height: 132px;
-    display: grid;
-    place-items: center;
-  }
-  .canto {
-    position: absolute;
-    width: 15px;
-    height: 15px;
-    border: 1px solid var(--red-400);
-    animation: fecharCanto 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both;
-  }
-  .canto--no { top: 0; left: 0; border-right: 0; border-bottom: 0; --dx: -14px; --dy: -14px; }
-  .canto--ne { top: 0; right: 0; border-left: 0; border-bottom: 0; --dx: 14px; --dy: -14px; }
-  .canto--so { bottom: 0; left: 0; border-right: 0; border-top: 0; --dx: -14px; --dy: 14px; }
-  .canto--se { bottom: 0; right: 0; border-left: 0; border-top: 0; --dx: 14px; --dy: 14px; }
-  @keyframes fecharCanto {
-    from { opacity: 0; transform: translate(var(--dx), var(--dy)) }
-    to   { opacity: 1; transform: none }
-  }
-
-  .simbolo { animation: resolver 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both; }
-  @keyframes resolver {
-    from { opacity: 0; transform: scale(0.9) }
+  .intro.com-canvas .estatico { display: none; }
+  @keyframes entrarSuave {
+    from { opacity: 0; transform: translateY(10px) }
     to   { opacity: 1; transform: none }
   }
 
   .saudacao {
+    margin-top: var(--space-3);
     font-size: var(--fs-xs);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.34em;
-    /* O texto é centrado; a última letra carrega o espaçamento e desloca o
-       bloco meio caractere para a esquerda. */
-    text-indent: 0.34em;
+    text-indent: 0.34em; /* o espaçamento da última letra desloca o bloco */
     color: var(--color-text-faint);
-    animation: subirSuave 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.95s both;
   }
-  @keyframes subirSuave {
-    from { opacity: 0; transform: translateY(8px) }
-    to   { opacity: 1; transform: none }
-  }
-
-  /* Revelação por corte, não por fade: a borda do corte é uma linha limpa
-     varrendo o nome — precisão, que é o que a marca vende. */
   .marca {
     font-family: var(--font-display);
     font-weight: 800;
@@ -211,31 +114,8 @@ const t = usePages(lang).comecar.intro;
     line-height: 1;
     letter-spacing: 0.02em;
     color: var(--white);
-    clip-path: inset(0 100% 0 0);
-    animation: revelar 0.85s cubic-bezier(0.76, 0, 0.24, 1) 1.15s forwards;
   }
   .marca span { color: var(--color-text-faint); }
-  @keyframes revelar { to { clip-path: inset(0 0 0 0) } }
-
-  /* O fio de progresso: corre embaixo do nome enquanto a página termina de
-     montar. Sem número — não há porcentagem honesta a mostrar. */
-  .fio {
-    display: block;
-    width: min(280px, 42vw);
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--red-400), transparent);
-    transform-origin: center;
-    animation: correrFio 0.8s cubic-bezier(0.4, 0, 0.2, 1) 1.55s both;
-  }
-  @keyframes correrFio {
-    from { transform: scaleX(0); opacity: 0 }
-    60%  { opacity: 1 }
-    to   { transform: scaleX(1); opacity: 1 }
-  }
-
-  /* ── Ato 3: sai de cena ── */
-  .centro { animation: sairCentro 0.45s ease-in 2.3s forwards; }
-  @keyframes sairCentro { to { opacity: 0 } }
 
   .pular {
     position: absolute;
@@ -251,16 +131,14 @@ const t = usePages(lang).comecar.intro;
     text-transform: uppercase;
     color: var(--color-text-faint);
     cursor: pointer;
-    animation: subirSuave 0.5s ease-out 1.1s both,
-               sairSuave 0.3s ease-in 2.3s forwards;
+    animation: entrarSuave 0.5s ease-out 1.1s both;
   }
   .pular:hover { color: var(--color-text); }
 
-  /* Saída antecipada: some tudo de uma vez e o nó é removido pelo script. */
+  /* Saída antecipada: some de uma vez e o nó é removido pelo script. */
   .intro.is-pulando { animation: none; opacity: 0; transition: opacity 0.28s ease; pointer-events: none; }
 
   @media (max-width: 640px) {
-    .alvo { width: 108px; height: 108px; }
     .pular { right: var(--space-4); bottom: var(--space-4); }
   }
 
@@ -273,6 +151,7 @@ const t = usePages(lang).comecar.intro;
 
 <script>
   const intro = document.querySelector<HTMLElement>("[data-intro]");
+
   if (intro) {
     /** Tira a abertura da frente; `agora` solta a entrada da página na hora. */
     const encerrar = (agora: boolean) => {
@@ -287,14 +166,203 @@ const t = usePages(lang).comecar.intro;
       document.documentElement.classList.add("intro-pulada");
       intro.remove();
     } else {
-      // Pular: botão, clique em qualquer lugar da cortina, ou Esc.
       const pular = () => encerrar(true);
       intro.querySelector("[data-pular]")?.addEventListener("click", pular);
-      intro.querySelector(".cortina")?.addEventListener("click", pular);
+      intro.querySelector(".cena")?.addEventListener("click", pular);
       document.addEventListener("keydown", (e) => e.key === "Escape" && pular(), { once: true });
+      // Fim natural: o CSS já tirou a tela do caminho; isto só limpa o nó.
+      window.setTimeout(() => encerrar(false), 3300);
 
-      // Fim natural: o CSS já tirou a cortina do caminho; isto só limpa o nó.
-      window.setTimeout(() => encerrar(false), 3400);
+      montarPontos(intro);
     }
+  }
+
+  interface Ponto {
+    ax: number; ay: number; // de onde vem
+    x: number; y: number;   // onde forma a imagem
+    r: number; g: number; b: number;
+    a: number;              // opacidade final (o gradiente da nuvem)
+    d: number;              // atraso próprio, em segundos
+    s: number;              // lado do ponto
+    fx: number; fy: number; // direção da dispersão
+  }
+
+  /* Tempos, em segundos — espelham o comentário da folha de estilo. */
+  const CONV_INI = 0.15, CONV_DUR = 1.15, ESCALONA = 0.45;
+  const DISP_INI = 2.3, DISP_DUR = 0.8;
+  const TETO_PONTOS = 2800;
+
+  async function montarPontos(intro: HTMLElement) {
+    const canvas = intro.querySelector("canvas");
+    if (!(canvas instanceof HTMLCanvasElement)) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const W = window.innerWidth, H = window.innerHeight;
+    if (!W || !H) return;
+
+    // A tipografia precisa estar carregada antes de virar pixel: amostrar a
+    // fonte de fallback desenharia outra marca.
+    try {
+      await document.fonts?.ready;
+    } catch {
+      // Navegador sem a API: segue com o que estiver carregado.
+    }
+
+    const marca = await carregarMarca(intro.dataset.marca);
+    const pontos = amostrar(W, H, marca);
+    if (pontos.length < 80) return; // amostragem falhou: fica o estático
+
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const inicio = performance.now();
+    let raf = 0;
+    let montado = false;
+
+    const quadro = (agora: number) => {
+      const t = (agora - inicio) / 1000;
+      ctx.clearRect(0, 0, W, H);
+
+      // A troca acontece no primeiro quadro DESENHADO, não na montagem: se o
+      // rAF nunca rodar, o estático continua no lugar em vez de sobrar uma
+      // tela vazia. E como o estático só começa a aparecer em 0.25s, a troca
+      // (um quadro depois da montagem) não pisca.
+      if (!montado) {
+        montado = true;
+        intro.classList.add("com-canvas");
+      }
+
+      const dispersao = suavizar(faixa(t, DISP_INI, DISP_DUR));
+
+      for (const p of pontos) {
+        const c = suavizar(faixa(t, CONV_INI + p.d, CONV_DUR));
+        if (c <= 0) continue;
+
+        // Converge da nuvem para a imagem; depois escapa na sua direção.
+        const x = p.ax + (p.x - p.ax) * c + p.fx * dispersao * 90;
+        const y = p.ay + (p.y - p.ay) * c + p.fy * dispersao * 90;
+        const alfa = p.a * c * (1 - dispersao);
+        if (alfa <= 0.01) continue;
+
+        ctx.fillStyle = `rgba(${p.r},${p.g},${p.b},${alfa})`;
+        ctx.fillRect(x, y, p.s, p.s);
+      }
+
+      if (t < DISP_INI + DISP_DUR) raf = requestAnimationFrame(quadro);
+    };
+
+    raf = requestAnimationFrame(quadro);
+    // O nó some com a abertura; cancelar evita um quadro órfão no meio.
+    window.setTimeout(() => cancelAnimationFrame(raf), 3300);
+  }
+
+  /** Progresso 0→1 de uma fase que começa em `ini` e dura `dur`. */
+  function faixa(t: number, ini: number, dur: number) {
+    return Math.min(Math.max((t - ini) / dur, 0), 1);
+  }
+  /** Desaceleração no fim: o mesmo easing das entradas do site. */
+  function suavizar(p: number) {
+    return 1 - Math.pow(1 - p, 3);
+  }
+
+  function carregarMarca(src?: string): Promise<HTMLImageElement | null> {
+    if (!src) return Promise.resolve(null);
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      // Sem o símbolo a nuvem forma só o nome — vale mais que travar a abertura.
+      img.onerror = () => resolve(null);
+      img.src = src;
+    });
+  }
+
+  /**
+   * Desenha a composição num canvas fora da tela, lê os pixels e transforma em
+   * pontos. Cada ponto guarda a cor que colheu: o vermelho da nuvem é o
+   * vermelho do próprio símbolo.
+   */
+  function amostrar(W: number, H: number, marca: HTMLImageElement | null): Ponto[] {
+    const off = document.createElement("canvas");
+    off.width = W;
+    off.height = H;
+    const o = off.getContext("2d", { willReadFrequently: true });
+    if (!o) return [];
+
+    const tamMarca = Math.round(Math.min(Math.max(W * 0.075, 68), 128));
+    const corpo = Math.round(Math.min(Math.max(W * 0.072, 34), 96));
+    const vao = Math.round(corpo * 0.42);
+    const alturaBloco = (marca ? tamMarca + vao : 0) + corpo;
+    const topo = Math.round(H / 2 - alturaBloco / 2);
+
+    if (marca) {
+      o.drawImage(marca, Math.round(W / 2 - tamMarca / 2), topo, tamMarca, tamMarca);
+    }
+
+    o.fillStyle = "#ffffff";
+    o.textAlign = "center";
+    o.textBaseline = "top";
+    o.font = `800 ${corpo}px "Barlow Condensed", "Space Grotesk", system-ui, sans-serif`;
+    o.fillText("PROC GROUP", W / 2, topo + (marca ? tamMarca + vao : 0));
+
+    // Recorte generoso ao redor do bloco: ler a tela inteira é desperdício.
+    const larguraTexto = Math.min(o.measureText("PROC GROUP").width + 40, W);
+    const x0 = Math.max(0, Math.round(W / 2 - larguraTexto / 2) - 10);
+    const y0 = Math.max(0, topo - 10);
+    const bw = Math.min(W - x0, Math.round(larguraTexto) + 20);
+    const bh = Math.min(H - y0, alturaBloco + 20);
+    if (bw <= 0 || bh <= 0) return [];
+
+    const dados = o.getImageData(x0, y0, bw, bh).data;
+
+    // O foco luminoso: densidade cheia no miolo, rarefeita nas bordas. É este
+    // gradiente que faz a marca emergir da nuvem em vez de piscar pronta.
+    const focoX = W / 2;
+    const focoY = topo + alturaBloco * 0.42;
+    const raio = Math.max(alturaBloco, 1) * 1.5;
+
+    const pontos: Ponto[] = [];
+    const passo = 3;
+
+    for (let y = 0; y < bh; y += passo) {
+      for (let x = 0; x < bw; x += passo) {
+        const i = (y * bw + x) * 4;
+        if (dados[i + 3] < 110) continue;
+
+        const gx = x0 + x, gy = y0 + y;
+        const dist = Math.hypot(gx - focoX, gy - focoY) / raio;
+        const densidade = Math.max(0, 1 - dist * dist * 0.8);
+        if (Math.random() > 0.3 + densidade * 0.7) continue;
+
+        // Nasce num anel largo em volta: a nuvem se fecha sobre a imagem.
+        const ang = Math.random() * Math.PI * 2;
+        const raioIni = 220 + Math.random() * 620;
+
+        pontos.push({
+          ax: gx + Math.cos(ang) * raioIni,
+          ay: gy + Math.sin(ang) * raioIni * 0.7,
+          x: gx,
+          y: gy,
+          r: dados[i], g: dados[i + 1], b: dados[i + 2],
+          a: 0.42 + densidade * 0.58,
+          // Escalonado da esquerda para a direita: a marca se escreve.
+          d: (x / bw) * ESCALONA + Math.random() * 0.12,
+          s: gy < topo + tamMarca ? 2 : 1.8,
+          fx: Math.cos(ang) * 0.5 + (Math.random() - 0.5),
+          fy: -0.7 - Math.random() * 0.6,
+        });
+      }
+    }
+
+    // Teto de segurança: telas grandes com fonte gorda passariam disso.
+    if (pontos.length > TETO_PONTOS) {
+      const salto = pontos.length / TETO_PONTOS;
+      const cortado: Ponto[] = [];
+      for (let i = 0; i < pontos.length; i += salto) cortado.push(pontos[Math.floor(i)]);
+      return cortado;
+    }
+    return pontos;
   }
 </script>
