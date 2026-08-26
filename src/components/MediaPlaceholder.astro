@@ -1,9 +1,28 @@
 ---
-// Placeholder de mídia (imagem/vídeo) para os pontos onde ainda faltam os
-// assets descritos pelo comercial. Mostra um quadro on-brand + o briefing de
-// arte (colapsável). Quando o arquivo real existir, trocar este componente por
-// <Image .../> ou <video>. Os prompts completos vivem em src/data/mediaBriefs.ts
-// e no BRIEFING-IMAGENS.md da raiz do projeto.
+// Placeholder de midia para os pontos onde ainda faltam os assets.
+//
+// DOIS ESTADOS, de proposito:
+//
+//  - `astro dev` (equipe): quadro tracejado, etiqueta "arte em producao",
+//    legenda do que falta e o briefing de arte colapsavel. E ferramenta de
+//    trabalho: quem abre a pagina ve o que precisa ser produzido.
+//  - `astro build` (publico): so o grafico de marca — gradiente navy, halo do
+//    accent e o icone. Sem tracejado, sem etiqueta, sem briefing.
+//
+// O motivo e concreto: ate 2026-08-26 o site publicava "arte em producao",
+// "a produzir" e a direcao de arte inteira, incluindo o lembrete interno
+// "(Com autorizacao de uso.)". Terceira vez que nota interna vazou para pagina
+// publica nesta base (as outras duas foram "verificar antes de publicar" em
+// cases.astro e em cidades-inteligentes.astro). A diferenca aqui e que o
+// vazamento era estrutural, nao um texto esquecido — por isso a separacao
+// virou regra do componente, nao revisao de copy.
+//
+// O manual de marca sanciona esse estado: "sem foto real, prefira tratamento
+// grafico abstrato a stock". O grafico nao finge ser fotografia de operacao —
+// e justamente o que evita fabricar prova visual de um case.
+//
+// Quando o arquivo real existir, trocar este componente por <Image .../>.
+// Prompts completos: src/data/mediaBriefs.ts e BRIEFING-IMAGENS.md.
 import type { Locale } from "../i18n/config";
 
 interface Props {
@@ -21,14 +40,18 @@ const L = {
   es: { image: "Imagen", video: "Video", ph: "arte en producción", brief: "Ver briefing del arte (PT)" },
 }[lang];
 const kindLabel = kind === "video" ? L.video : L.image;
+// Chrome de producao so no dev server. import.meta.env.DEV e false em build.
+const mostrarChromeDeProducao = import.meta.env.DEV;
 ---
 
-<figure class="media-ph" style={`--accent: ${color}`}>
-  <div class="media-ph-frame">
-    <span class="media-ph-tag">
-      <span class="media-ph-dot"></span>
-      {kindLabel} · {L.ph}
-    </span>
+<figure class="media-ph" style={`--accent: ${color}`} aria-hidden={mostrarChromeDeProducao ? undefined : "true"}>
+  <div class:list={["media-ph-frame", { "is-dev": mostrarChromeDeProducao }]}>
+    {mostrarChromeDeProducao && (
+      <span class="media-ph-tag">
+        <span class="media-ph-dot"></span>
+        {kindLabel} · {L.ph}
+      </span>
+    )}
     <span class="media-ph-icon" aria-hidden="true">
       {kind === "video" ? (
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
@@ -43,12 +66,14 @@ const kindLabel = kind === "video" ? L.video : L.image;
         </svg>
       )}
     </span>
-    <figcaption class="media-ph-caption">{caption}</figcaption>
+    {mostrarChromeDeProducao && <figcaption class="media-ph-caption">{caption}</figcaption>}
   </div>
-  <details class="media-ph-brief">
-    <summary>{L.brief}</summary>
-    <p>{prompt}</p>
-  </details>
+  {mostrarChromeDeProducao && (
+    <details class="media-ph-brief">
+      <summary>{L.brief}</summary>
+      <p>{prompt}</p>
+    </details>
+  )}
 </figure>
 
 <style>
@@ -62,13 +87,16 @@ const kindLabel = kind === "video" ? L.video : L.image;
     justify-content: center;
     gap: var(--space-4);
     border-radius: var(--radius-lg);
-    border: 1.5px dashed color-mix(in srgb, var(--accent), var(--color-border-strong) 55%);
+    /* Solida no publico: tracejado le como "pagina inacabada". */
+    border: 1px solid color-mix(in srgb, var(--accent), var(--color-border-strong) 70%);
     background:
       radial-gradient(120% 130% at 85% 10%, color-mix(in srgb, var(--accent), transparent 82%), transparent 60%),
       linear-gradient(150deg, var(--navy-900), var(--navy-950));
     overflow: hidden;
     text-align: center;
   }
+  .media-ph-frame.is-dev { border: 1.5px dashed color-mix(in srgb, var(--accent), var(--color-border-strong) 55%); }
+
   .media-ph-tag {
     position: absolute;
     top: var(--space-4);
