@@ -143,7 +143,12 @@ const utilityLinks: UtilityLink[] = [
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    padding: 3px 7px;
+    /* Era 3px: o alvo ficava com 18px de altura e reprovava o mínimo de 24x24
+       da WCAG 2.5.8. Com 8px vai a 28px — 6px medidos acima do mínimo, não
+       encostado nele — dentro de uma barra de 40, então nada é empurrado. No
+       celular, onde só a bandeira aparece, é o que separa acertar o idioma de
+       errar. */
+    padding: 8px;
     border-radius: var(--radius-pill);
     color: rgba(255, 255, 255, 0.6);
     font-weight: 700;
@@ -208,6 +213,10 @@ const utilityLinks: UtilityLink[] = [
       white-space: nowrap;
     }
     .utility-links { gap: var(--space-4); }
+    /* Só o ícone de 14px aparece aqui, e o alvo ficava com 22px de largura —
+       2px abaixo do mínimo de 24x24 da WCAG 2.5.8. Com 8px de cada lado vai a
+       30px, e os 16px de vão continuam separando um do outro. */
+    .utility-links a { padding-inline: 8px; }
   }
   @media (max-width: 520px) {
     .social-links { display: none; }

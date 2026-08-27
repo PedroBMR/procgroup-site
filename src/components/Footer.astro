@@ -96,8 +96,19 @@ const year = new Date().getFullYear();
   /* Neutraliza o estilo de h2 do base.css (display/uppercase) — o visual
      destas colunas sempre foi o de h3 (sans, sem uppercase). */
   .footer-nav h2 { color: var(--white); font-family: var(--font-sans); font-size: var(--fs-sm); font-weight: 700; letter-spacing: -0.01em; text-transform: none; margin-bottom: var(--space-4); }
-  .footer-nav li { margin-bottom: var(--space-2); }
-  .footer-nav a { font-size: var(--fs-sm); transition: color var(--dur-fast) ease; }
+  /* O alvo era uma linha de 19px com 16px de vão morto entre uma e outra:
+     reprova o mínimo de 24x24 da WCAG 2.5.8 e erra o dedo no celular. Bloco
+     com padding transforma o vão em área clicável — medido, o alvo vai de 19
+     para 40px e o vão morto some (passo de 35 para 40px, ou seja, cada coluna
+     do rodapé cresce ~30px). A margem do `li` sai porque virou padding do
+     link; sem isso o rodapé é que cresceria. */
+  .footer-nav li { margin-bottom: 0; }
+  .footer-nav a {
+    display: block;
+    padding-block: var(--space-2);
+    font-size: var(--fs-sm);
+    transition: color var(--dur-fast) ease;
+  }
   .footer-nav a:hover { color: var(--white); }
 
   /* Escotilha para o outro publico: discreta de proposito — e rota de fuga
@@ -112,6 +123,9 @@ const year = new Date().getFullYear();
     font-size: var(--fs-xs);
   }
   .footer-legal { display: flex; align-items: center; gap: var(--space-4); }
+  /* 21px de alto reprovava o mínimo de 24x24; o padding sobe para 29 sem
+     mexer na linha, que já tem folga no rodapé. */
+  .footer-legal a { display: inline-block; padding-block: var(--space-1); }
   .legal-note { color: rgba(255,255,255,0.5); }
 
   @media (max-width: 780px) {
