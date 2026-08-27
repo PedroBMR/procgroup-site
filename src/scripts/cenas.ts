@@ -1,29 +1,39 @@
 /**
- * Cenas em Canvas 2D do seletor de público — o ciclo de vida e as três cenas.
+ * A cena do herói da home: a operação do cliente, vista de dentro.
  *
- * Monta qualquer elemento com [data-cena]:
+ * Um plano só, composto — não um laço de partículas. Da esquerda para a
+ * direita, três estações que são as três unidades de negócio:
  *
- *   fundo     o painel inteiro. Grade em perspectiva correndo até um horizonte,
- *             campo de pontos com profundidade e paralaxe do mouse, dois focos
- *             de luz à deriva e, de vez em quando, um pulso subindo a grade.
- *   governo   cidade de cima à noite; uma caixa de detecção trava num veículo.
- *   empresas  perímetro em corte; varredura descendo e nós liberando.
+ *   acesso   portaria com catraca; uma pessoa passa e a caixa de detecção
+ *            trava nela, confirma e solta.
+ *   linha    esteira com peças correndo sob uma câmera de inspeção; de vez em
+ *            quando uma peça é REPROVADA.
+ *   racks    corredor de data center em perspectiva, LEDs piscando; um deles
+ *            entra em atenção e volta.
  *
- * Canvas 2D e não three.js: são três por página, e esta é a página de entrada —
- * tem que abrir instantânea. O fundo roda a ~30 fps porque seu movimento é
- * lento e ninguém distingue; as portas rodam cheias.
+ * E embaixo de tudo, a espinha de dados: cada evento das três estações emite um
+ * pulso que corre pela linha até a borda esquerda. É a narrativa inteira do
+ * site em movimento — o que acontece na operação chega à plataforma.
  *
- * Sem JS, sem canvas ou com prefers-reduced-motion, o CSS de cada host entrega
- * a composição estática e a página continua inteira. Tudo aqui é decorativo.
+ * POR QUE ISTO E NÃO O CAMPO DE PARTÍCULAS: o herói rodava uma "constelação
+ * neural" em three.js — 509 KB de JavaScript para dizer "inteligência
+ * artificial" do jeito que todo site de IA diz. Esta cena pesa uma fração
+ * disso e mostra o que a Proc realmente entrega. (A cena nasceu do motor das
+ * portas do antigo seletor de público, aposentado em 2026-08-27.)
  *
  * Manual de marca: "um a dois focos de luz por composição" e glow vermelho é
- * pontual. Por isso o vermelho só aparece no instante da detecção, do pulso ou
- * da varredura — aceso o tempo todo viraria decoração e perderia a força.
+ * PONTUAL. Por isso o vermelho só existe no instante da reprovação e no pulso
+ * que ela dispara — aceso o tempo todo viraria decoração e perderia a força.
+ * O resto da cena é luz fria.
+ *
+ * Sem JS, sem canvas ou com prefers-reduced-motion, o CSS do host entrega o
+ * gradiente e a página continua inteira. Tudo aqui é decorativo (aria-hidden).
  */
 type Ctx = CanvasRenderingContext2D;
 
 const RED = "255, 74, 84";
 const CLARO = "190, 214, 246";
+const AMBAR = "255, 200, 0";
 
 interface Cena {
   criar(w: number, h: number): any;
@@ -33,243 +43,319 @@ interface Cena {
   fps?: number;
 }
 
-/* ══ fundo: profundidade do painel ══ */
-const fundo: Cena = {
-  fps: 30,
+/** Pulso que sobe a espinha de dados depois de um evento. */
+interface Pulso {
+  /** 0 = onde nasceu, 1 = chegou na borda esquerda. */
+  p: number;
+  x0: number;
+  quente: boolean;
+}
+
+/* ── linhas de piso: onde cada camada assenta, em fração da altura ── */
+const Y_HORIZONTE = 0.46;
+const Y_PISO = 0.74;
+const Y_ESPINHA = 0.9;
+
+const operacao: Cena = {
   criar(w, h) {
-    // z alto = longe. Guardado por ponto para paralaxe e tamanho.
-    const pontos = Array.from({ length: 78 }, () => ({
-      x: Math.random(), y: Math.random() * 0.62,
-      z: 0.25 + Math.random() * 0.75,
-      f: 0.3 + Math.random() * 1.4, p: Math.random() * 6.28,
-    }));
-    // Dois focos, como manda o manual — e o vermelho e o MENOR e o mais fraco.
-    // Medido: com r .42 / i .10 ele cobria 54% do painel, que e o vermelho
-    // virando decoracao em vez de acao. Aqui ele e so uma insinuacao de calor
-    // num canto; quem carrega a luz e o foco frio.
-    const focos = [
-      { fx: 0.3, fy: 0.12, ax: 0.1, ay: 0.06, vel: 0.055, cor: RED, r: 0.2, i: 0.055 },
-      { fx: 0.05, fy: 0.24, ax: 0.22, ay: 0.13, vel: 0.037, cor: CLARO, r: 0.52, i: 0.042 },
-    ];
-    return { pontos, focos, desloc: 0, pulso: -1, proxPulso: 3, w, h };
+    return {
+      w, h,
+      pulsos: [] as Pulso[],
+      // Cada estação tem seu próprio relógio: os eventos não podem cair
+      // sincronizados, senão a cena pisca inteira de uma vez.
+      tAcesso: 1.2,
+      tLinha: 3.4,
+      tRack: 5.1,
+      travado: 0,      // 0→1: quanto a caixa de detecção está fechada
+      reprovada: -1,   // índice da peça reprovada na esteira; -1 = nenhuma
+      alerta: 0,       // brilho do LED em atenção
+      // Estrutura de fundo, sorteada uma vez: refazer por quadro faria a
+      // silhueta tremer.
+      torres: Array.from({ length: 22 }, (_, i) => ({
+        x: (i + 0.5) / 22 + (Math.random() - 0.5) * 0.02,
+        alt: 0.05 + Math.random() * 0.16,
+        larg: 0.006 + Math.random() * 0.014,
+        o: 0.03 + Math.random() * 0.05,
+      })),
+      leds: Array.from({ length: 26 }, () => ({
+        f: Math.random(),          // posição na fileira (0 perto, 1 longe)
+        lado: Math.random() < 0.5 ? -1 : 1,
+        alt: Math.random(),
+        fase: Math.random() * 6.28,
+      })),
+    };
   },
+
   redimensionar(s, w, h) { s.w = w; s.h = h; },
+
   desenhar(ctx, s, w, h, t, ativo, px, py) {
-    const horizonte = h * 0.52;
-    const prof = h * 0.48;
-    const cx = w / 2;
+    const piso = h * Y_PISO;
+    const horiz = h * Y_HORIZONTE;
+    // Paralaxe: cada camada anda um tanto. É o que dá profundidade de câmera.
+    const par = (fator: number) => px * fator * w * 0.012;
+    const parY = (fator: number) => py * fator * h * 0.008;
 
-    // ── focos de luz à deriva (lissajous lento) ──
-    for (const f of s.focos) {
-      const x = (f.fx + Math.sin(t * f.vel) * f.ax + 0.5) * w + px * 26 * f.r;
-      const y = (f.fy + Math.cos(t * f.vel * 0.83) * f.ay) * h + py * 18 * f.r;
-      const raio = Math.max(w, h) * f.r;
-      const g = ctx.createRadialGradient(x, y, 0, x, y, raio);
-      g.addColorStop(0, `rgba(${f.cor}, ${f.i})`);
-      g.addColorStop(0.55, `rgba(${f.cor}, ${f.i * 0.22})`);
-      g.addColorStop(1, `rgba(${f.cor}, 0)`);
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, w, h);
+    /* ══ camada 1: horizonte e estrutura distante ══ */
+    ctx.save();
+    ctx.translate(par(0.3), parY(0.3));
+
+    const brilho = ctx.createLinearGradient(0, horiz - h * 0.22, 0, piso);
+    brilho.addColorStop(0, "rgba(37, 56, 102, 0)");
+    brilho.addColorStop(0.6, "rgba(37, 56, 102, 0.34)");
+    brilho.addColorStop(1, "rgba(37, 56, 102, 0)");
+    ctx.fillStyle = brilho;
+    ctx.fillRect(-w * 0.1, horiz - h * 0.22, w * 1.2, h * 0.5);
+
+    for (const b of s.torres) {
+      ctx.fillStyle = `rgba(255, 255, 255, ${b.o})`;
+      const alt = h * b.alt;
+      ctx.fillRect(b.x * w, horiz - alt, w * b.larg, alt);
     }
+    ctx.restore();
 
-    // ── campo de pontos: quanto mais longe, menor, mais fraco, menos paralaxe ──
-    for (const pt of s.pontos) {
-      const e = 1 - pt.z;                       // 0 = longe, 1 = perto
-      const x = pt.x * w + px * 34 * e;
-      const y = pt.y * h + py * 22 * e;
-      const brilho = (0.06 + 0.3 * e) * (0.65 + 0.35 * Math.sin(t * pt.f + pt.p));
-      ctx.fillStyle = `rgba(${CLARO}, ${brilho})`;
-      ctx.beginPath();
-      ctx.arc(x, y, 0.5 + e * 1.5, 0, 6.2832);
-      ctx.fill();
-    }
+    /* ══ camada 2: o piso e as três estações ══ */
+    ctx.save();
+    ctx.translate(par(0.9), parY(0.6));
 
-    // ── grade em perspectiva correndo até o horizonte ──
-    s.desloc = (s.desloc + 0.00085 * ativo) % 1;
-    const py2 = py * 10;
-
+    ctx.strokeStyle = `rgba(${CLARO}, 0.16)`;
     ctx.lineWidth = 1;
-    // transversais: p² comprime perto do horizonte, como perspectiva de verdade
-    for (let i = 0; i < 15; i++) {
-      const p = ((i / 15) + s.desloc) % 1;
-      const y = horizonte + prof * p * p + py2;
-      ctx.strokeStyle = `rgba(255, 255, 255, ${0.05 * p + 0.006})`;
-      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
-    }
-    // longitudinais convergindo ao ponto de fuga
-    const fuga = cx + px * 30;
-    for (let i = -8; i <= 8; i++) {
-      if (i === 0) continue;
-      ctx.strokeStyle = `rgba(255, 255, 255, ${0.035 - Math.abs(i) * 0.0025})`;
-      ctx.beginPath();
-      ctx.moveTo(fuga, horizonte + py2);
-      ctx.lineTo(cx + i * (w * 0.19), h + py2);
-      ctx.stroke();
-    }
+    ctx.beginPath();
+    ctx.moveTo(0, piso);
+    ctx.lineTo(w, piso);
+    ctx.stroke();
 
-    // ── pulso: sobe uma longitudinal até o horizonte, raro e curto ──
-    s.proxPulso -= 0.033 * ativo;
-    if (s.proxPulso <= 0 && s.pulso < 0) {
-      s.pulso = 0;
-      s.pulsoLinha = (Math.floor(Math.random() * 16) - 8) || 3;
-      s.proxPulso = 5 + Math.random() * 5;
-    }
-    if (s.pulso >= 0) {
-      s.pulso += 0.014 * ativo;
-      if (s.pulso > 1) { s.pulso = -1; }
-      else {
-        const p = 1 - s.pulso;                 // 1 perto -> 0 no horizonte
-        const y = horizonte + prof * p * p + py2;
-        const x = fuga + (cx + s.pulsoLinha * (w * 0.19) - fuga) * p;
-        const a = Math.sin(s.pulso * Math.PI) * 0.85;
-        const g = ctx.createRadialGradient(x, y, 0, x, y, 26 * p + 6);
-        g.addColorStop(0, `rgba(${RED}, ${a * 0.5})`);
-        g.addColorStop(1, `rgba(${RED}, 0)`);
-        ctx.fillStyle = g;
-        ctx.beginPath(); ctx.arc(x, y, 26 * p + 6, 0, 6.2832); ctx.fill();
-        ctx.fillStyle = `rgba(255, 226, 228, ${a})`;
-        ctx.beginPath(); ctx.arc(x, y, 1.1 + p * 1.4, 0, 6.2832); ctx.fill();
-      }
-    }
+    desenharAcesso(ctx, s, w, h, t, ativo, piso);
+    desenharLinha(ctx, s, w, h, t, ativo, piso);
+    desenharRacks(ctx, s, w, h, t, ativo, piso);
+    ctx.restore();
+
+    /* ══ camada 3: a espinha de dados, na frente ══ */
+    ctx.save();
+    ctx.translate(par(1.6), parY(1.1));
+    desenharEspinha(ctx, s, w, h, t, ativo);
+    ctx.restore();
   },
 };
 
-/* ══ governo: cidade de cima, veículos como luz, LPR travando ══ */
-const governo: Cena = {
-  criar(w, h) {
-    const vias = [0.3, 0.46, 0.62, 0.78].map((y, i) => ({ y, dir: i % 2 ? -1 : 1 }));
-    const carros = Array.from({ length: 22 }, () => ({
-      via: Math.floor(Math.random() * vias.length),
-      x: Math.random(),
-      v: 0.012 + Math.random() * 0.026,
-      b: 0.35 + Math.random() * 0.65,
-    }));
-    const luzes = Array.from({ length: 46 }, () => ({
-      x: Math.random(), y: Math.random() * 0.86,
-      r: 0.4 + Math.random() * 1.5, f: 0.4 + Math.random() * 1.8, p: Math.random() * 6.28,
-    }));
-    return { vias, carros, luzes, alvo: -1, trava: 0, proxima: 2.5, w, h };
-  },
-  redimensionar(s, w, h) { s.w = w; s.h = h; },
-  desenhar(ctx, s, w, h, t, ativo) {
-    const persp = (y: number) => 0.18 + y * 0.82;
+/* ══════════ estação 1 · portaria ══════════ */
+function desenharAcesso(ctx: Ctx, s: any, w: number, h: number, t: number, ativo: number, piso: number) {
+  const x = w * 0.17;
+  const altP = h * 0.15;
 
-    for (const l of s.luzes) {
-      const brilho = 0.16 + 0.12 * Math.sin(t * l.f + l.p);
-      ctx.fillStyle = `rgba(${CLARO}, ${brilho})`;
-      ctx.beginPath();
-      ctx.arc(l.x * w, l.y * h, l.r * persp(l.y), 0, 6.2832);
-      ctx.fill();
-    }
+  // Relógio próprio: uma pessoa a cada ~5,5 s.
+  s.tAcesso += 0.016 * ativo;
+  const ciclo = 5.5;
+  const fase = (s.tAcesso % ciclo) / ciclo;
 
-    for (const via of s.vias) {
-      const y = via.y * h, e = persp(via.y);
-      ctx.strokeStyle = `rgba(255, 255, 255, ${0.05 + e * 0.05})`;
-      ctx.lineWidth = e * 1.4;
-      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
-    }
+  // Postes da catraca.
+  ctx.fillStyle = `rgba(${CLARO}, 0.2)`;
+  ctx.fillRect(x - w * 0.035, piso - altP, 2, altP);
+  ctx.fillRect(x + w * 0.035, piso - altP, 2, altP);
+  // Braço da catraca.
+  ctx.fillStyle = `rgba(${CLARO}, 0.12)`;
+  ctx.fillRect(x - w * 0.035, piso - altP * 0.55, w * 0.07, 1.5);
 
-    s.proxima -= 0.016 * ativo;
-    if (s.proxima <= 0 && s.trava <= 0) {
-      s.alvo = Math.floor(Math.random() * s.carros.length);
-      s.trava = 1; s.proxima = 3.4 + Math.random() * 2.6;
-    }
-    if (s.trava > 0) s.trava -= 0.006 * ativo;
+  // Terminal de leitura facial, no poste da direita.
+  ctx.fillStyle = `rgba(${CLARO}, 0.26)`;
+  ctx.fillRect(x + w * 0.035 - 3, piso - altP * 0.92, 8, altP * 0.2);
 
-    s.carros.forEach((c: any, i: number) => {
-      const via = s.vias[c.via];
-      c.x += c.v * via.dir * ativo * 0.016 * 60;
-      if (c.x > 1.1) c.x = -0.1;
-      if (c.x < -0.1) c.x = 1.1;
-      const x = c.x * w, y = via.y * h, e = persp(via.y);
-      const eAlvo = i === s.alvo && s.trava > 0;
+  // A pessoa atravessa da esquerda para a direita entre 0.15 e 0.75 do ciclo.
+  const andando = fase > 0.15 && fase < 0.75;
+  if (!andando) {
+    s.travado += (0 - s.travado) * 0.08;
+    return;
+  }
+  const avanco = (fase - 0.15) / 0.6;
+  const pxPessoa = x - w * 0.08 + avanco * w * 0.16;
+  const alturaPessoa = h * 0.11;
 
-      const g = ctx.createLinearGradient(x - via.dir * 34 * e, y, x, y);
-      g.addColorStop(0, `rgba(${CLARO}, 0)`);
-      g.addColorStop(1, `rgba(${CLARO}, ${0.3 * c.b})`);
-      ctx.strokeStyle = g; ctx.lineWidth = 1.6 * e; ctx.lineCap = "round";
-      ctx.beginPath(); ctx.moveTo(x - via.dir * 34 * e, y); ctx.lineTo(x, y); ctx.stroke();
+  // Silhueta: cabeça e corpo. Sem rosto — não é uma pessoa, é uma passagem.
+  ctx.fillStyle = `rgba(${CLARO}, 0.34)`;
+  ctx.beginPath();
+  ctx.arc(pxPessoa, piso - alturaPessoa, alturaPessoa * 0.13, 0, 6.2832);
+  ctx.fill();
+  ctx.fillRect(pxPessoa - alturaPessoa * 0.1, piso - alturaPessoa * 0.82, alturaPessoa * 0.2, alturaPessoa * 0.82);
 
-      ctx.fillStyle = eAlvo ? `rgba(${RED}, 0.95)` : `rgba(214, 231, 250, ${0.5 + c.b * 0.4})`;
-      ctx.beginPath(); ctx.arc(x, y, 1.5 * e + (eAlvo ? 1 : 0), 0, 6.2832); ctx.fill();
+  // A caixa fecha no meio da passagem e solta na saída.
+  const alvo = avanco > 0.3 && avanco < 0.8 ? 1 : 0;
+  s.travado += (alvo - s.travado) * 0.12;
+  if (s.travado < 0.02) return;
 
-      if (eAlvo) {
-        const a = Math.min(1, s.trava * 2.2) * Math.min(1, (1 - s.trava) * 5);
-        const r = 13 * e + 3;
-        ctx.strokeStyle = `rgba(${RED}, ${a * 0.9})`;
-        ctx.lineWidth = 1.2;
-        ctx.strokeRect(x - r, y - r * 0.72, r * 2, r * 1.44);
-        const q = r * 0.42;
-        ctx.beginPath();
-        ctx.moveTo(x - r, y - r * 0.72 + q); ctx.lineTo(x - r, y - r * 0.72); ctx.lineTo(x - r + q, y - r * 0.72);
-        ctx.moveTo(x + r - q, y + r * 0.72); ctx.lineTo(x + r, y + r * 0.72); ctx.lineTo(x + r, y + r * 0.72 - q);
-        ctx.strokeStyle = `rgba(${RED}, ${a})`; ctx.lineWidth = 2; ctx.stroke();
+  const a = s.travado;
+  const cx = pxPessoa, cy = piso - alturaPessoa * 0.62;
+  const lx = alturaPessoa * 0.3, ly = alturaPessoa * 0.62;
+  ctx.strokeStyle = `rgba(${CLARO}, ${a * 0.75})`;
+  ctx.lineWidth = 1.2;
+  ctx.strokeRect(cx - lx, cy - ly, lx * 2, ly * 2);
+  // Cantos: o traço grosso só nas quinas, como visor de câmera.
+  ctx.lineWidth = 2.4;
+  const q = Math.min(lx, ly) * 0.42;
+  for (const [sx, sy] of [[-1, -1], [1, -1], [1, 1], [-1, 1]] as const) {
+    ctx.beginPath();
+    ctx.moveTo(cx + sx * lx, cy + sy * ly - sy * q);
+    ctx.lineTo(cx + sx * lx, cy + sy * ly);
+    ctx.lineTo(cx + sx * lx - sx * q, cy + sy * ly);
+    ctx.stroke();
+  }
+
+  // Confirmação: dispara o pulso uma vez por passagem.
+  if (avanco > 0.74 && !s.acessoEmitido) {
+    s.acessoEmitido = true;
+    s.pulsos.push({ p: 0, x0: cx, quente: false });
+  }
+  if (avanco < 0.3) s.acessoEmitido = false;
+}
+
+/* ══════════ estação 2 · linha de inspeção ══════════ */
+function desenharLinha(ctx: Ctx, s: any, w: number, h: number, t: number, ativo: number, piso: number) {
+  const x0 = w * 0.38, x1 = w * 0.64;
+  const yEsteira = piso - h * 0.04;
+
+  // Esteira.
+  ctx.fillStyle = `rgba(${CLARO}, 0.1)`;
+  ctx.fillRect(x0, yEsteira, x1 - x0, 3);
+
+  // Câmera de inspeção, suspensa no meio do vão.
+  const xc = (x0 + x1) / 2;
+  const yc = yEsteira - h * 0.17;
+  ctx.fillStyle = `rgba(${CLARO}, 0.22)`;
+  ctx.fillRect(xc - w * 0.014, yc, w * 0.028, h * 0.032);
+  ctx.fillRect(xc - 1, yc - h * 0.05, 2, h * 0.05);
+  // Cone de visão, tracejado: é inspeção, não iluminação.
+  ctx.strokeStyle = `rgba(${CLARO}, 0.14)`;
+  ctx.setLineDash([4, 5]);
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(xc, yc + h * 0.032);
+  ctx.lineTo(xc - w * 0.05, yEsteira);
+  ctx.moveTo(xc, yc + h * 0.032);
+  ctx.lineTo(xc + w * 0.05, yEsteira);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Peças correndo. Espaçamento fixo, uma reprovada a cada volta completa.
+  s.tLinha += 0.016 * ativo;
+  const passo = w * 0.052;
+  const desloc = (s.tLinha * w * 0.026) % passo;
+  const lado = h * 0.026;
+  const quantas = Math.ceil((x1 - x0) / passo) + 1;
+
+  for (let i = 0; i < quantas; i++) {
+    const x = x0 + i * passo - desloc;
+    if (x < x0 - lado || x > x1) continue;
+
+    // Índice estável da peça no mundo: é ele que decide quem é reprovada.
+    const idx = Math.floor((s.tLinha * w * 0.026) / passo) + (quantas - i);
+    const ruim = idx % 7 === 0;
+    const sobCamera = Math.abs(x - xc) < passo * 0.5;
+
+    ctx.fillStyle = `rgba(${CLARO}, 0.2)`;
+    ctx.fillRect(x, yEsteira - lado, lado * 1.5, lado);
+
+    if (ruim && sobCamera) {
+      // A reprovação é o único vermelho do quadro — e dura um instante.
+      ctx.strokeStyle = `rgba(${RED}, 0.85)`;
+      ctx.lineWidth = 1.6;
+      ctx.strokeRect(x - 3, yEsteira - lado - 3, lado * 1.5 + 6, lado + 6);
+      const halo = ctx.createRadialGradient(x + lado * 0.75, yEsteira - lado / 2, 0, x + lado * 0.75, yEsteira - lado / 2, lado * 2.4);
+      halo.addColorStop(0, `rgba(${RED}, 0.2)`);
+      halo.addColorStop(1, `rgba(${RED}, 0)`);
+      ctx.fillStyle = halo;
+      ctx.fillRect(x - lado * 2, yEsteira - lado * 3, lado * 5, lado * 5);
+
+      if (s.reprovada !== idx) {
+        s.reprovada = idx;
+        s.pulsos.push({ p: 0, x0: x, quente: true });
       }
-    });
-  },
-};
-
-/* ══ empresas: perímetro em corte, varredura descendo, nós liberando ══ */
-const empresas: Cena = {
-  criar(w, h) {
-    const colunas = Array.from({ length: 9 }, (_, i) => ({
-      x: 0.06 + i * 0.11, alt: 0.3 + Math.random() * 0.55, o: 0.05 + Math.random() * 0.06,
-    }));
-    const nos = Array.from({ length: 13 }, () => ({
-      x: 0.08 + Math.random() * 0.86, y: 0.16 + Math.random() * 0.7, acesa: 0,
-    }));
-    return { colunas, nos, varredura: -0.15, w, h };
-  },
-  redimensionar(s, w, h) { s.w = w; s.h = h; },
-  desenhar(ctx, s, w, h, t, ativo) {
-    for (const c of s.colunas) {
-      ctx.fillStyle = `rgba(255, 255, 255, ${c.o})`;
-      ctx.fillRect(c.x * w, h * (1 - c.alt), Math.max(1, w * 0.008), h * c.alt);
     }
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.07)";
-    ctx.lineWidth = 1;
-    for (const y of [0.28, 0.52, 0.76]) {
-      ctx.beginPath(); ctx.moveTo(0, y * h); ctx.lineTo(w, y * h); ctx.stroke();
-    }
+  }
+}
 
-    s.varredura += 0.0022 * ativo * 60 * 0.016;
-    if (s.varredura > 1.15) s.varredura = -0.15;
-    const vy = s.varredura * h;
-    const faixa = ctx.createLinearGradient(0, vy - 46, 0, vy + 8);
-    faixa.addColorStop(0, `rgba(${RED}, 0)`);
-    faixa.addColorStop(1, `rgba(${RED}, 0.16)`);
-    ctx.fillStyle = faixa;
-    ctx.fillRect(0, vy - 46, w, 54);
-    ctx.strokeStyle = `rgba(${RED}, 0.5)`;
-    ctx.lineWidth = 1.2;
-    ctx.beginPath(); ctx.moveTo(0, vy); ctx.lineTo(w, vy); ctx.stroke();
+/* ══════════ estação 3 · corredor de racks ══════════ */
+function desenharRacks(ctx: Ctx, s: any, w: number, h: number, t: number, ativo: number, piso: number) {
+  const xf = w * 0.86;            // ponto de fuga do corredor
+  const yf = piso - h * 0.1;
+  const alt = h * 0.2;
 
-    for (const n of s.nos) {
-      const y = n.y * h, x = n.x * w;
-      if (Math.abs(vy - y) < 5) n.acesa = 1;
-      if (n.acesa > 0) n.acesa -= 0.008 * ativo;
+  // Duas fileiras convergindo: o corredor frio, visto de frente.
+  ctx.strokeStyle = `rgba(${CLARO}, 0.12)`;
+  ctx.lineWidth = 1;
+  for (const lado of [-1, 1]) {
+    ctx.beginPath();
+    ctx.moveTo(xf + lado * w * 0.13, piso);
+    ctx.lineTo(xf + lado * w * 0.012, yf);
+    ctx.moveTo(xf + lado * w * 0.13, piso - alt);
+    ctx.lineTo(xf + lado * w * 0.012, yf);
+    ctx.stroke();
+  }
 
-      const base = 0.2 + 0.1 * Math.sin(t * 1.6 + n.x * 9);
-      if (n.acesa > 0) {
-        const a = Math.max(0, n.acesa);
-        const halo = ctx.createRadialGradient(x, y, 0, x, y, 16);
-        halo.addColorStop(0, `rgba(${RED}, ${a * 0.32})`);
-        halo.addColorStop(1, `rgba(${RED}, 0)`);
-        ctx.fillStyle = halo;
-        ctx.beginPath(); ctx.arc(x, y, 16, 0, 6.2832); ctx.fill();
-        ctx.strokeStyle = `rgba(${RED}, ${a * 0.75})`;
-        ctx.lineWidth = 1.2;
-        ctx.strokeRect(x - 7, y - 7, 14, 14);
-      }
-      ctx.fillStyle = n.acesa > 0
-        ? `rgba(${RED}, ${0.55 + n.acesa * 0.4})`
-        : `rgba(${CLARO}, ${base})`;
-      ctx.beginPath(); ctx.arc(x, y, 2.1, 0, 6.2832); ctx.fill();
-    }
-  },
-};
+  s.tRack += 0.016 * ativo;
+  // Um LED entra em atenção a cada ~9 s e volta sozinho: operação viva, não
+  // operação em pane.
+  const emAtencao = s.tRack % 9 < 1.6;
+  s.alerta += ((emAtencao ? 1 : 0) - s.alerta) * 0.06;
+  if (emAtencao && !s.rackEmitido) {
+    s.rackEmitido = true;
+    s.pulsos.push({ p: 0, x0: xf, quente: false });
+  }
+  if (!emAtencao) s.rackEmitido = false;
 
-const CENAS: Record<string, Cena> = { fundo, governo, empresas };
+  s.leds.forEach((l: any, i: number) => {
+    // f=0 perto (grande), f=1 no fundo (pequeno).
+    const k = 1 - l.f;
+    const x = xf + l.lado * (w * 0.012 + k * w * 0.118);
+    const y = piso - alt * 0.12 - l.alt * alt * (0.35 + k * 0.55);
+    const r = 0.9 + k * 1.5;
+    const pisca = 0.28 + 0.22 * Math.sin(t * 2.4 + l.fase);
+    const esteAlerta = i === 3 && s.alerta > 0.02;
+    ctx.fillStyle = esteAlerta
+      ? `rgba(${AMBAR}, ${0.35 + s.alerta * 0.55})`
+      : `rgba(${CLARO}, ${pisca * (0.5 + k * 0.5)})`;
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, 6.2832);
+    ctx.fill();
+  });
+}
+
+/* ══════════ a espinha de dados ══════════ */
+function desenharEspinha(ctx: Ctx, s: any, w: number, h: number, t: number, ativo: number) {
+  const y = h * Y_ESPINHA;
+
+  ctx.strokeStyle = `rgba(${CLARO}, 0.14)`;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, y);
+  ctx.lineTo(w, y);
+  ctx.stroke();
+
+  // Cada pulso corre da estação até a borda esquerda — onde o texto do herói
+  // está. O evento chega à plataforma; é essa a frase da cena.
+  for (const pulso of s.pulsos) {
+    pulso.p += 0.011 * ativo;
+    const x = pulso.x0 * (1 - pulso.p);
+    const cor = pulso.quente ? RED : CLARO;
+    const forca = Math.min(1, pulso.p * 4) * (1 - pulso.p * 0.5);
+
+    const rastro = ctx.createLinearGradient(x, 0, x + w * 0.1, 0);
+    rastro.addColorStop(0, `rgba(${cor}, ${forca * 0.5})`);
+    rastro.addColorStop(1, `rgba(${cor}, 0)`);
+    ctx.strokeStyle = rastro;
+    ctx.lineWidth = 1.8;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + w * 0.1, y);
+    ctx.stroke();
+
+    ctx.fillStyle = `rgba(${cor}, ${forca * 0.85})`;
+    ctx.beginPath();
+    ctx.arc(x, y, 2, 0, 6.2832);
+    ctx.fill();
+  }
+  // Pulsos que chegaram somem — a lista não pode crescer para sempre.
+  s.pulsos = s.pulsos.filter((p: Pulso) => p.p < 1);
+}
+
+const CENAS: Record<string, Cena> = { operacao };
 
 /* ── paralaxe: um só listener para todas as cenas ── */
 let mouseX = 0, mouseY = 0, alvoX = 0, alvoY = 0;
@@ -291,8 +377,7 @@ function montar(host: HTMLElement) {
   if (!(canvas instanceof HTMLCanvasElement)) return;
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
-  const cena = CENAS[host.dataset.cena ?? ""] ?? governo;
-  const cartao = host.closest(".canal") as HTMLElement | null;
+  const cena = CENAS[host.dataset.cena ?? ""] ?? operacao;
 
   let w = 0, h = 0;
   const medir = () => {
@@ -309,23 +394,22 @@ function montar(host: HTMLElement) {
   if (!medir()) return;
 
   const estado = cena.criar(w, h);
-  let t = 0, raf = 0, visivel = true, ativo = 1, acumulado = 0;
+  let t = 0, raf = 0, visivel = true, acumulado = 0;
   const intervalo = cena.fps ? 1 / cena.fps : 0;
 
   const quadro = (dt: number) => {
-    // Só as portas aceleram no hover; o fundo mantém o ritmo.
-    const alvo = cartao?.matches(":hover, :focus-visible") ? 2.1 : 1;
-    ativo += (alvo - ativo) * 0.06;
-    t += dt * ativo;
+    t += dt;
     mouseX += (alvoX - mouseX) * 0.045;
     mouseY += (alvoY - mouseY) * 0.045;
     ctx.clearRect(0, 0, w, h);
-    cena.desenhar(ctx, estado, w, h, t, ativo, mouseX, mouseY);
+    cena.desenhar(ctx, estado, w, h, t, 1, mouseX, mouseY);
   };
 
   // Um quadro sempre: se a página carrega em aba de segundo plano o rAF não
-  // roda, e a cena ficaria em branco até o visitante voltar.
+  // roda, e a cena ficaria em branco até o visitante voltar. Também é o quadro
+  // único de quem pediu menos movimento.
   quadro(0);
+  host.setAttribute("data-cena-pronta", "");
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   ouvirMouse();
 
@@ -358,7 +442,4 @@ function montar(host: HTMLElement) {
 
 export function montarCenas() {
   document.querySelectorAll<HTMLElement>("[data-cena]").forEach(montar);
-  // Marca o painel: o CSS esconde a grade estática, que é o fallback sem JS e
-  // ficaria brigando com a grade em perspectiva do canvas.
-  document.querySelector("[data-entrada]")?.setAttribute("data-cena-ativa", "");
 }

@@ -78,7 +78,8 @@ const arcs = businessUnits.map((unit, i) => {
     fill: var(--color-text);
   }
 
-  .pm-cols { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-4); }
+  /* 3 unidades desde 2026-08-27. */
+  .pm-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); }
   .pm-col {
     /* A seção que contém estas colunas também usa --color-bg-alt, então card e
        fundo mediam 1,00:1 e as quatro colunas desapareciam. A única separação

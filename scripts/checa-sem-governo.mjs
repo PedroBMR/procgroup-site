@@ -41,6 +41,11 @@ const PROIBIDOS = [
   "setor público", "sector público", "public sector",
   "pato 360", "cidades inteligentes", "smart cities", "ciudades inteligentes",
   "córtex", "polícia militar", "polícia rodoviária",
+  // Achados pela auditoria de conteudo: sobreviveram a primeira remocao porque
+  // nao estavam nesta lista. Um deles so em EN e ES.
+  "governo federal", "federal government", "gobierno federal",
+  "poder público", "autoridades públicas", "public authorities",
+  "órgãos oficiais de segurança", "official security agencies",
 ];
 
 /** Caminhos que morreram com a remoção. */

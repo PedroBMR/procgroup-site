@@ -270,7 +270,9 @@ const schema = {
   .value-card p { margin-top: var(--space-3); font-size: var(--fs-sm); color: var(--color-text-muted); }
 
   .credibility-section { background: var(--color-bg-alt); }
-  .credibility-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-6); }
+  /* auto-fit e nao um numero fixo: esta lista ja teve 4 e hoje tem 2, e
+     encolher de novo nao pode deixar coluna morta. */
+  .credibility-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--space-6); }
   .credibility-card { padding: var(--space-6); border-radius: var(--radius-md); background: var(--color-surface); border: 1px solid var(--color-border); }
   .credibility-card h3 { font-size: var(--fs-base); }
   .credibility-card p { margin-top: var(--space-2); font-size: var(--fs-sm); color: var(--color-text-muted); }

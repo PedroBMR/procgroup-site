@@ -23,7 +23,7 @@ const meta: Record<Locale, Record<ChaveMeta, Meta>> = {
     home: {
       title: "Tecnologia para Empresas e Indústrias",
       description:
-        "Controle de acesso facial, videomonitoramento com IA, inspeção visual automatizada e infraestrutura de TI gerenciada — integrados aos equipamentos e sistemas que sua empresa já usa.",
+        "Controle de acesso facial, videomonitoramento com IA, inspeção visual e infraestrutura de TI gerenciada — integrados aos sistemas que sua empresa já usa.",
     },
     empresa: {
       title: "A Proc para Empresas e Indústrias",
@@ -50,7 +50,7 @@ const meta: Record<Locale, Record<ChaveMeta, Meta>> = {
     home: {
       title: "Technology for Business and Industry",
       description:
-        "Facial access control, AI video surveillance, automated visual inspection and managed IT infrastructure — integrated with the equipment and systems your company already uses.",
+        "Facial access control, AI video surveillance, visual inspection and managed IT infrastructure — integrated with the systems your company already uses.",
     },
     empresa: {
       title: "Proc for Business and Industry",
@@ -77,7 +77,7 @@ const meta: Record<Locale, Record<ChaveMeta, Meta>> = {
     home: {
       title: "Tecnología para Empresas e Industrias",
       description:
-        "Control de acceso facial, videovigilancia con IA, inspección visual automatizada e infraestructura de TI gestionada — integrados a los equipos y sistemas que tu empresa ya usa.",
+        "Control de acceso facial, videovigilancia con IA, inspección visual e infraestructura de TI gestionada — integrados a los sistemas que tu empresa ya usa.",
     },
     empresa: {
       title: "Proc para Empresas e Industrias",

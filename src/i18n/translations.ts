@@ -168,9 +168,6 @@ export const translations = {
       casesText:
         "Do controle de acesso que não troca as catracas à inspeção visual na linha de produção, veja como a Proc AI Platform resolve desafios concretos de empresas e indústrias.",
       casesCta: "Ver cases de sucesso",
-      casesStats: [
-        { value: "24×7", label: "plataforma operando em tempo real" },
-      ],
       blogEyebrow: "Do nosso blog",
       blogTitle: "Ideias e bastidores da Proc AI Platform",
       blogCta: "Ver todos os posts",
@@ -181,6 +178,8 @@ export const translations = {
     solutions: {
       indexEyebrow: "Soluções",
       indexTitle: "Especialistas em cada operação.",
+      indexLead:
+        "Três unidades, cada uma com engenharia e equipe próprias. A escolha começa pelo problema: liberar o acesso com controle, manter a operação de pé, ou enxergar o que a linha de produção não mostra.",
       ctaDemo: "Solicitar Demonstração",
       ctaPlatform: "Ver a Plataforma Proc AI",
       solutionsEyebrow: "Soluções",
@@ -218,7 +217,7 @@ export const translations = {
           ],
         },
         "ambientes-inteligentes": {
-          metaTitle: "Ambientes Inteligentes — Segurança e Eficiência para Empresas",
+          metaTitle: "Ambientes Inteligentes — Acesso e Segurança Corporativa",
           metaDescription:
             "Videomonitoramento com IA, controle de acesso facial e gestão de alarmes para proteger patrimônio, pessoas e operações.",
           heroTitle: "Protegemos pessoas, patrimônios e operações com Inteligência Artificial.",
@@ -427,9 +426,6 @@ export const translations = {
       casesText:
         "From access control that keeps the turnstiles you already have to visual inspection on the production line, see how the Proc AI Platform solves concrete challenges for business and industry.",
       casesCta: "See success cases",
-      casesStats: [
-        { value: "24×7", label: "platform running in real time" },
-      ],
       blogEyebrow: "From our blog",
       blogTitle: "Ideas and behind-the-scenes of the Proc AI Platform",
       blogCta: "See all posts",
@@ -440,6 +436,8 @@ export const translations = {
     solutions: {
       indexEyebrow: "Solutions",
       indexTitle: "Specialists in each operation.",
+      indexLead:
+        "Three units, each with its own engineering and team. Start from the problem: releasing access under control, keeping the operation running, or seeing what the production line does not show.",
       ctaDemo: "Request a Demo",
       ctaPlatform: "See the Proc AI Platform",
       solutionsEyebrow: "Solutions",
@@ -477,7 +475,7 @@ export const translations = {
           ],
         },
         "ambientes-inteligentes": {
-          metaTitle: "Smart Environments — Security and Efficiency for Business",
+          metaTitle: "Smart Environments — Corporate Access and Security",
           metaDescription:
             "AI video surveillance, facial access control and alarm management to protect assets, people and operations.",
           heroTitle: "We protect people, assets and operations with Artificial Intelligence.",
@@ -686,9 +684,6 @@ export const translations = {
       casesText:
         "Del control de acceso que no cambia los torniquetes a la inspección visual en la línea de producción, mira cómo la Proc AI Platform resuelve desafíos concretos de empresas e industrias.",
       casesCta: "Ver casos de éxito",
-      casesStats: [
-        { value: "24×7", label: "plataforma operando en tiempo real" },
-      ],
       blogEyebrow: "De nuestro blog",
       blogTitle: "Ideas y detrás de escena de la Proc AI Platform",
       blogCta: "Ver todas las publicaciones",
@@ -699,6 +694,8 @@ export const translations = {
     solutions: {
       indexEyebrow: "Soluciones",
       indexTitle: "Especialistas en cada operación.",
+      indexLead:
+        "Tres unidades, cada una con ingeniería y equipo propios. Empieza por el problema: liberar el acceso con control, mantener la operación en pie, o ver lo que la línea de producción no muestra.",
       ctaDemo: "Solicitar Demostración",
       ctaPlatform: "Ver la Plataforma Proc AI",
       solutionsEyebrow: "Soluciones",
@@ -711,7 +708,7 @@ export const translations = {
         "ia-industrial": {
           metaTitle: "IA Industrial — Visión Artificial",
           metaDescription:
-            "Inspección visual automatizada, control de calidad, conteo y trazabilidad con Edge AI para reducir pérdidas y aumentar la eficiencia de las líneas de producción.",
+            "Inspección visual, control de calidad, conteo y trazabilidad con Edge AI para reducir pérdidas y aumentar la eficiencia de las líneas de producción.",
           heroTitle: "IA Industrial para aumentar la productividad, la inspección de calidad y reducir pérdidas en la producción.",
           heroLead:
             "Automatiza inspecciones, control de calidad, conteo de piezas y trazabilidad con soluciones de visión artificial con IA que identifican fallas en tiempo real y hacen tu producción más eficiente.",
@@ -736,7 +733,7 @@ export const translations = {
           ],
         },
         "ambientes-inteligentes": {
-          metaTitle: "Ambientes Inteligentes — Seguridad y Eficiencia para Empresas",
+          metaTitle: "Ambientes Inteligentes — Acceso y Seguridad Corporativa",
           metaDescription:
             "Videovigilancia con IA, control de acceso facial y gestión de alarmas para proteger patrimonio, personas y operaciones.",
           heroTitle: "Protegemos personas, patrimonios y operaciones con Inteligencia Artificial.",

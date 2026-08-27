@@ -51,7 +51,7 @@ const casesI18n: Record<Locale, CasesCopy> = {
     heroLead:
       "Conheça como a Proc AI Platform resolve desafios concretos de ambientes corporativos, infraestrutura crítica e indústria.",
     legend:
-      "Abaixo, um case em operação e as aplicações que a plataforma entrega nas demais unidades. Cada bloco indica qual é qual.",
+      "Cada bloco mostra uma aplicação da Proc AI Platform: o problema que ela resolve, o desafio de implantar sem parar a operação e o que muda depois.",
     realTag: "Case em operação",
     applicationTag: "Aplicação da plataforma",
     blockProblem: "Problema",
@@ -90,7 +90,7 @@ const casesI18n: Record<Locale, CasesCopy> = {
     heroLead:
       "See how the Proc AI Platform solves concrete challenges in corporate environments, critical infrastructure and industry.",
     legend:
-      "Below, one case in operation and the applications the platform delivers in the other units. Each block says which is which.",
+      "Each block shows an application of the Proc AI Platform: the problem it solves, the challenge of deploying without stopping the operation, and what changes afterwards.",
     realTag: "Case in operation",
     applicationTag: "Platform application",
     blockProblem: "Problem",
@@ -129,7 +129,7 @@ const casesI18n: Record<Locale, CasesCopy> = {
     heroLead:
       "Conoce cómo la Proc AI Platform resuelve desafíos concretos de entornos corporativos, infraestructura crítica e industria.",
     legend:
-      "Abajo, un caso en operación y las aplicaciones que la plataforma entrega en las demás unidades. Cada bloque indica cuál es cuál.",
+      "Cada bloque muestra una aplicación de la Proc AI Platform: el problema que resuelve, el desafío de implementar sin detener la operación y lo que cambia después.",
     realTag: "Caso en operación",
     applicationTag: "Aplicación de la plataforma",
     blockProblem: "Problema",
@@ -225,11 +225,7 @@ const schema = {
               <div class="case-media">
                 <CaseIllustration slug={c.unitSlug} lang={lang} />
               </div>
-              {c.isReal ? (
-                <span class="real-tag">{t.realTag}</span>
-              ) : (
-                <span class="application-tag">{t.applicationTag}</span>
-              )}
+              <span class="application-tag">{t.applicationTag}</span>
               <span class="case-badge">{unit.shortName}</span>
               <h2>{c.title}</h2>
 

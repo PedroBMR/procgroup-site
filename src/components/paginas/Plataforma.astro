@@ -142,7 +142,8 @@ const schema = {
     border-radius: var(--radius-pill);
     box-shadow: var(--shadow-md);
   }
-  .distribution-units { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-6); width: 100%; }
+  /* 3 unidades desde 2026-08-27: com repeat(4) sobrava uma coluna vazia. */
+  .distribution-units { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); width: 100%; }
   .distribution-unit {
     display: flex;
     gap: var(--space-3);

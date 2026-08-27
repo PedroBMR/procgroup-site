@@ -10,7 +10,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "checa-sem-governo": "node scripts/checa-sem-governo.mjs"
+    "checa-sem-governo": "node scripts/checa-sem-governo.mjs",
+    "audita-conteudo": "node scripts/audita-conteudo.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
