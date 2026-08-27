@@ -1,0 +1,90 @@
+---
+/**
+ * Fundo do herói da home: a cena da operação em Canvas 2D.
+ *
+ * Substitui o HeroBackground (constelação neural em three.js). O desenho e o
+ * ciclo de vida vivem em src/scripts/cenas.ts; aqui fica só a superfície —
+ * a base estática, o canvas, o véu que segura o contraste do texto e o grão.
+ *
+ * Camadas, de trás para a frente:
+ *   1. base CSS      gradiente navy. É o que aparece sem JS, sem canvas ou com
+ *                    prefers-reduced-motion. Nunca vira buraco preto.
+ *   2. canvas        as três estações e a espinha de dados.
+ *   3. véu           escurece a esquerda, onde o h1 e o subtítulo vivem. Sem
+ *                    ele o texto branco cai sobre a cena e perde contraste.
+ *   4. grão          ruído fino, fixo. É o que separa "render de canvas" de
+ *                    "imagem de cinema" — dá textura ao gradiente e mata o
+ *                    banding das faixas de luz.
+ *
+ * Decorativo: aria-hidden. A mensagem está no texto do herói, não aqui.
+ */
+---
+
+<div class="cena-heroi" aria-hidden="true" data-parallax="-0.08" data-parallax-start="top top">
+  <span class="cena-canvas" data-cena="operacao"><canvas></canvas></span>
+  <span class="cena-veu"></span>
+  <span class="cena-grao"></span>
+</div>
+
+<style>
+  .cena-heroi {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    /* Dois focos, como manda o manual: um alto e frio ao centro-direita, e a
+       queda para o navy mais escuro embaixo, onde o conteúdo continua. */
+    background:
+      radial-gradient(90% 70% at 68% 12%, rgba(37, 56, 102, 0.55), transparent 62%),
+      radial-gradient(120% 100% at 50% 0%, var(--navy-800) 0%, var(--navy-950) 72%);
+  }
+
+  .cena-canvas { position: absolute; inset: 0; }
+  .cena-canvas canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+  /* O texto do herói ocupa a faixa esquerda: é lá que o véu pesa. À direita
+     ele abre, para as estações aparecerem. */
+  .cena-veu {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(100deg, rgba(6, 10, 20, 0.8) 0%, rgba(6, 10, 20, 0.42) 44%, transparent 72%),
+      linear-gradient(0deg, var(--navy-950) 0%, transparent 30%);
+  }
+
+  /* Grão: SVG inline em data URI, sem requisição e sem custo de JS. Opacidade
+     baixíssima de propósito — só some o banding e dá textura. */
+  .cena-grao {
+    position: absolute;
+    inset: -50%;
+    pointer-events: none;
+    opacity: 0.16;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='r'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23r)'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+  }
+
+  /* Sem o canvas montado, a base sozinha ficaria chapada: uma grade discreta
+     entrega alguma estrutura. Sai quando a cena assume. */
+  .cena-canvas::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(80% 60% at 60% 45%, black 35%, transparent 100%);
+  }
+  .cena-canvas[data-cena-pronta]::before { display: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* A cena desenha um quadro único e para (cenas.ts). O grão fica: não se
+       move, então não é movimento. */
+  }
+</style>
+
+<script>
+  import { montarCenas } from "../scripts/cenas";
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", montarCenas);
+  else montarCenas();
+</script>

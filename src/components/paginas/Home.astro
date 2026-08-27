@@ -3,7 +3,7 @@ import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Button from "../Button.astro";
-import HeroBackground from "../HeroBackground.astro";
+import CenaOperacao from "../CenaOperacao.astro";
 import StatCounter from "../StatCounter.astro";
 import PostCard from "../PostCard.astro";
 import ConnectedTicker from "../ConnectedTicker.astro";
@@ -59,7 +59,7 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
 
 <BaseLayout title={m?.title ?? t.metaTitle} description={m?.description ?? t.metaDescription}>
   <section class="hero">
-    <HeroBackground />
+    <CenaOperacao />
     <div class="container hero-inner" data-hero-intro>
       <p class="eyebrow">{t.heroEyebrow}</p>
       <h1>{t.heroTitle}</h1>

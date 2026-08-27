@@ -89,8 +89,17 @@ const operacao: Cena = {
   redimensionar(s, w, h) { s.w = w; s.h = h; },
 
   desenhar(ctx, s, w, h, t, ativo, px, py) {
-    const piso = h * Y_PISO;
-    const horiz = h * Y_HORIZONTE;
+    // A composição tem proporção própria. Numa tela alta e estreita — o herói
+    // do celular tem 1251px de altura — esticá-la pela altura da moldura
+    // deformaria tudo: piso lá embaixo, estações espremidas. Então ela vive
+    // numa BANDA de altura derivada da LARGURA, ancorada no rodapé do quadro.
+    const B = Math.min(h, w * 0.62);
+    const topo = h - B;
+    const piso = topo + B * Y_PISO;
+    const horiz = topo + B * Y_HORIZONTE;
+    // Abaixo de ~640px não cabem três estações lado a lado: o que fica é a
+    // atmosfera (horizonte, silhueta e a espinha de dados).
+    const compacto = w < 640;
     // Paralaxe: cada camada anda um tanto. É o que dá profundidade de câmera.
     const par = (fator: number) => px * fator * w * 0.012;
     const parY = (fator: number) => py * fator * h * 0.008;
@@ -99,16 +108,16 @@ const operacao: Cena = {
     ctx.save();
     ctx.translate(par(0.3), parY(0.3));
 
-    const brilho = ctx.createLinearGradient(0, horiz - h * 0.22, 0, piso);
+    const brilho = ctx.createLinearGradient(0, horiz - B * 0.22, 0, piso);
     brilho.addColorStop(0, "rgba(37, 56, 102, 0)");
     brilho.addColorStop(0.6, "rgba(37, 56, 102, 0.34)");
     brilho.addColorStop(1, "rgba(37, 56, 102, 0)");
     ctx.fillStyle = brilho;
-    ctx.fillRect(-w * 0.1, horiz - h * 0.22, w * 1.2, h * 0.5);
+    ctx.fillRect(-w * 0.1, horiz - B * 0.22, w * 1.2, B * 0.5);
 
     for (const b of s.torres) {
       ctx.fillStyle = `rgba(255, 255, 255, ${b.o})`;
-      const alt = h * b.alt;
+      const alt = B * b.alt;
       ctx.fillRect(b.x * w, horiz - alt, w * b.larg, alt);
     }
     ctx.restore();
@@ -124,22 +133,26 @@ const operacao: Cena = {
     ctx.lineTo(w, piso);
     ctx.stroke();
 
-    desenharAcesso(ctx, s, w, h, t, ativo, piso);
-    desenharLinha(ctx, s, w, h, t, ativo, piso);
-    desenharRacks(ctx, s, w, h, t, ativo, piso);
+    // As funções recebem a BANDA no lugar da altura: para elas, "h" é a
+    // altura da composição, não a da moldura.
+    if (!compacto) {
+      desenharAcesso(ctx, s, w, B, t, ativo, piso);
+      desenharLinha(ctx, s, w, B, t, ativo, piso);
+    }
+    desenharRacks(ctx, s, w, B, t, ativo, piso, compacto);
     ctx.restore();
 
     /* ══ camada 3: a espinha de dados, na frente ══ */
     ctx.save();
     ctx.translate(par(1.6), parY(1.1));
-    desenharEspinha(ctx, s, w, h, t, ativo);
+    desenharEspinha(ctx, s, w, B, t, ativo, topo + B * Y_ESPINHA);
     ctx.restore();
   },
 };
 
 /* ══════════ estação 1 · portaria ══════════ */
 function desenharAcesso(ctx: Ctx, s: any, w: number, h: number, t: number, ativo: number, piso: number) {
-  const x = w * 0.17;
+  const x = w * 0.27;
   const altP = h * 0.15;
 
   // Relógio próprio: uma pessoa a cada ~5,5 s.
@@ -208,7 +221,7 @@ function desenharAcesso(ctx: Ctx, s: any, w: number, h: number, t: number, ativo
 
 /* ══════════ estação 2 · linha de inspeção ══════════ */
 function desenharLinha(ctx: Ctx, s: any, w: number, h: number, t: number, ativo: number, piso: number) {
-  const x0 = w * 0.38, x1 = w * 0.64;
+  const x0 = w * 0.46, x1 = w * 0.7;
   const yEsteira = piso - h * 0.04;
 
   // Esteira.
@@ -272,8 +285,9 @@ function desenharLinha(ctx: Ctx, s: any, w: number, h: number, t: number, ativo:
 }
 
 /* ══════════ estação 3 · corredor de racks ══════════ */
-function desenharRacks(ctx: Ctx, s: any, w: number, h: number, t: number, ativo: number, piso: number) {
-  const xf = w * 0.86;            // ponto de fuga do corredor
+function desenharRacks(ctx: Ctx, s: any, w: number, h: number, t: number, ativo: number, piso: number, compacto = false) {
+  // No compacto o corredor vai para o centro: é a única estação que sobra.
+  const xf = compacto ? w * 0.5 : w * 0.88;   // ponto de fuga do corredor
   const yf = piso - h * 0.1;
   const alt = h * 0.2;
 
@@ -318,8 +332,7 @@ function desenharRacks(ctx: Ctx, s: any, w: number, h: number, t: number, ativo:
 }
 
 /* ══════════ a espinha de dados ══════════ */
-function desenharEspinha(ctx: Ctx, s: any, w: number, h: number, t: number, ativo: number) {
-  const y = h * Y_ESPINHA;
+function desenharEspinha(ctx: Ctx, s: any, w: number, h: number, t: number, ativo: number, y: number) {
 
   ctx.strokeStyle = `rgba(${CLARO}, 0.14)`;
   ctx.lineWidth = 1;
