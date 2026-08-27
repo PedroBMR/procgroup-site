@@ -1,3 +1,13 @@
+> **DOCUMENTO HISTÓRICO — não vale mais desde 2026-08-27.**
+>
+> O CEO decidiu tirar cidade e governo deste site: eles ganham site próprio, e
+> este passou a ser só corporativo. A divisão em dois públicos descrita abaixo
+> foi desfeita, e o lado corporativo subiu de `/empresas` para a raiz.
+>
+> O que está aqui continua útil como **base para o site de governo** e como
+> registro de por que cada decisão foi tomada. O estado do código com os dois
+> públicos está na tag `site-com-governo`.
+
 # Copy por público — RASCUNHO para aprovação
 
 Escrito em 2026-08-26, seguindo `contexto-proc`. **Nada disto está aplicado no site** — o texto

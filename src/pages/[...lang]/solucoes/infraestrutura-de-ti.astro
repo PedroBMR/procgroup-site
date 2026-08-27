@@ -1,0 +1,10 @@
+---
+// O corpo da pagina vive em components/paginas/: o wrapper so declara a rota e
+// os idiomas. Vinha da divisao em dois publicos, que acabou em 2026-08-27.
+import SolucaoInfraestrutura from "../../../components/paginas/SolucaoInfraestrutura.astro";
+
+export function getStaticPaths() {
+  return [{ params: { lang: undefined } }, { params: { lang: "en" } }, { params: { lang: "es" } }];
+}
+---
+<SolucaoInfraestrutura />

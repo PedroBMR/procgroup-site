@@ -150,19 +150,16 @@ export const eventoUI: Record<Locale, EventoUI> = {
 /** Tag curta (badge) de cada unidade, por idioma. */
 export const unitTags: Record<Locale, Record<string, string>> = {
   pt: {
-    "cidades-inteligentes": "Cidades",
     "ambientes-inteligentes": "Ambientes",
     "infraestrutura-de-ti": "Infra TI",
     "ia-industrial": "Indústria",
   },
   en: {
-    "cidades-inteligentes": "Smart Cities",
     "ambientes-inteligentes": "Environments",
     "infraestrutura-de-ti": "IT Infra",
     "ia-industrial": "Industry",
   },
   es: {
-    "cidades-inteligentes": "Ciudades",
     "ambientes-inteligentes": "Ambientes",
     "infraestrutura-de-ti": "Infra TI",
     "ia-industrial": "Industria",
@@ -179,22 +176,6 @@ export interface UnitI18n {
 
 export const eventoUnitsI18n: Record<"en" | "es", Record<string, UnitI18n>> = {
   en: {
-    "cidades-inteligentes": {
-      name: "Smart Cities",
-      tagline: "Public safety and urban mobility powered by AI",
-      description:
-        "An intelligent video-surveillance, facial-recognition and analytics platform for integrated operations centers — named Pato 360°, helping governments protect cities and fight crime.",
-      solutions: [
-        "Facial Recognition",
-        "License Plate Reading (LPR)",
-        "Intelligent Video Surveillance",
-        "Digital Wall",
-        "Integrated Operations Center",
-        "Analytics",
-        "Panic Button",
-        "Urban Mobility",
-      ],
-    },
     "ambientes-inteligentes": {
       name: "Smart Environments",
       tagline: "Intelligent protection for businesses and industries",
@@ -247,22 +228,6 @@ export const eventoUnitsI18n: Record<"en" | "es", Record<string, UnitI18n>> = {
     },
   },
   es: {
-    "cidades-inteligentes": {
-      name: "Ciudades Inteligentes",
-      tagline: "Seguridad pública y movilidad urbana con IA",
-      description:
-        "Plataforma de videovigilancia inteligente, reconocimiento facial y analytics para centros de operaciones integrados — llamada Pato 360°, que apoya a los gobiernos en la protección de ciudades y el combate a la criminalidad.",
-      solutions: [
-        "Reconocimiento Facial",
-        "Lectura de Placas (LPR)",
-        "Videovigilancia Inteligente",
-        "Muralla Digital",
-        "Centro Integrado de Operaciones",
-        "Analytics",
-        "Botón de Seguridad",
-        "Movilidad Urbana",
-      ],
-    },
     "ambientes-inteligentes": {
       name: "Ambientes Inteligentes",
       tagline: "Protección inteligente para empresas e industrias",

@@ -13,24 +13,18 @@ import { getBusinessUnits } from "../../data/businessUnits";
 import { byNewest } from "../../utils/blog";
 import hqPhoto from "../../assets/images/hq-pato-branco-enhanced.webp";
 import { WHATSAPP_DEMO } from "../../data/contact";
-import { getLangFromUrl, logicalPath, useTranslations, localePath, localizePath } from "../../i18n/utils";
-import { publicoDaUrl, publicoDefs } from "../../data/audiencia";
-import { metaDoLado } from "../../data/metaPorPublico";
+import { getLangFromUrl, useTranslations, localePath, localizePath } from "../../i18n/utils";
+import { metaDaPagina } from "../../data/metaPorPagina";
 import { defaultLocale, type Locale } from "../../i18n/config";
 
 // Uma rota, três idiomas: PT na raiz (/), EN em /en, ES em /es.
 
 const lang = getLangFromUrl(Astro.url);
 // De que lado do site esta instancia esta montada — sai da URL, como no
-// Header. Nas rotas legadas (fora de /governo e /empresas) publico e null:
-// base vazia e nenhum filtro, ou seja, o comportamento de sempre.
-const publico = publicoDaUrl(logicalPath(Astro.url));
-const base = publico ? publicoDefs[publico].base : "";
-const unidadesDoLado = publico ? publicoDefs[publico].unidades : null;
 // getBusinessUnits(lang), nao o export compat `businessUnits`: o compat e
 // fixo em PT e vazava shortName/tagline em portugues nas paginas EN/ES.
-const m = metaDoLado(publico, "home", lang);
-const unidadesVisiveis = getBusinessUnits(lang).filter((u) => !unidadesDoLado || unidadesDoLado.includes(u.slug));
+const m = metaDaPagina("home", lang);
+const unidadesVisiveis = getBusinessUnits(lang);
 const t = useTranslations(lang).home;
 const common = useTranslations(lang).common;
 const cards = t.cards as Record<string, { name: string; desc: string }>;
@@ -58,8 +52,7 @@ const capIcons: Record<string, string> = {
   integration: '<circle cx="12" cy="12" r="2.5"/><circle cx="4.5" cy="5" r="1.8"/><circle cx="19.5" cy="5" r="1.8"/><circle cx="4.5" cy="19" r="1.8"/><circle cx="19.5" cy="19" r="1.8"/><path d="M6 6.2l4 4.4M18 6.2l-4 4.4M6 17.8l4-4.4M18 17.8l-4-4.4"/>',
   analytics: '<path d="M3 21h18"/><rect x="5" y="11" width="3.4" height="8" rx="0.6"/><rect x="10.3" y="6" width="3.4" height="13" rx="0.6"/><rect x="15.6" y="14" width="3.4" height="5" rx="0.6"/>',
   infra: '<rect x="3" y="4" width="18" height="7" rx="1.6"/><rect x="3" y="13" width="18" height="7" rx="1.6"/><path d="M6.5 7.5h.01M6.5 16.5h.01M17 7.5h1.5M17 16.5h1.5"/>',
-  scale: '<path d="M9 21H3v-6M21 9V3h-6"/><path d="M3 21l7.5-7.5M21 3l-7.5 7.5"/>',
-};
+  scale: '<path d="M9 21H3v-6M21 9V3h-6"/><path d="M3 21l7.5-7.5M21 3l-7.5 7.5"/>' };
 
 const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
 ---
@@ -72,7 +65,7 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
       <h1>{t.heroTitle}</h1>
       <p class="hero-subtitle">{t.heroSubtitle}</p>
       <div class="hero-actions">
-        <Button href={P(`${base}/plataforma-proc-ai`)} variant="primary" size="lg" data-magnetic>{t.heroCtaPrimary}</Button>
+        <Button href={P(`/plataforma-proc-ai`)} variant="primary" size="lg" data-magnetic>{t.heroCtaPrimary}</Button>
         <Button href={WHATSAPP_DEMO} variant="ghost" size="lg" data-magnetic>{t.heroCtaSecondary}</Button>
       </div>
     </div>
@@ -92,7 +85,7 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
         <p class="eyebrow">{t.aboutEyebrow}</p>
         <h2>{t.aboutTitle}</h2>
         <p class="lead">{t.aboutText}</p>
-        <Button href={P(`${base}/empresa`)} variant="secondary">{t.aboutCta}</Button>
+        <Button href={P(`/empresa`)} variant="secondary">{t.aboutCta}</Button>
       </div>
       <div class="about-visual" data-reveal>
         <Image
@@ -144,7 +137,7 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
           nas empresas (3). Card unico vira destaque centrado. */}
       <div class:list={["units-grid", { "units-grid--solo": unidadesVisiveis.length === 1 }]} style={`--unit-cols: ${Math.min(unidadesVisiveis.length, 4)}`}>
         {unidadesVisiveis.map((unit) => (
-          <a href={localizePath(base + unit.href, lang)} class="unit-card" data-reveal style={`--unit-color: ${unit.color}`}>
+          <a href={localizePath(unit.href, lang)} class="unit-card" data-reveal style={`--unit-color: ${unit.color}`}>
             <span class="unit-icon-wrap"><UnitIcon slug={unit.slug} /></span>
             <span class="unit-badge">{unit.shortName}</span>
             <h3>{cards[unit.slug]?.name ?? unit.name}</h3>
@@ -155,7 +148,7 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
       </div>
 
       <div class="platform-cta" data-reveal>
-        <Button href={P(`${base}/plataforma-proc-ai`)} variant="secondary" size="lg">{t.platformCta}</Button>
+        <Button href={P(`/plataforma-proc-ai`)} variant="secondary" size="lg">{t.platformCta}</Button>
       </div>
     </div>
   </section>
@@ -184,7 +177,7 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
           <p class="eyebrow">{x.casesEyebrow}</p>
           <h2>{x.casesTitle}</h2>
           <p class="lead">{x.casesText}</p>
-          <Button href={P(`${base}/cases`)} variant="ghost" size="lg">{x.casesCta}</Button>
+          <Button href={P(`/cases`)} variant="ghost" size="lg">{x.casesCta}</Button>
         </div>
         {x.casesStats && (
           <div class="cases-teaser-stats">
@@ -200,7 +193,7 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
     </section>
   )}
 
-  {latestPosts.length > 0 && (!publico || publicoDefs[publico].temBlog) && (
+  {latestPosts.length > 0 && (
     <section class="section blog-teaser" data-theme="light">
       <div class="container">
         <div class="blog-teaser-header" data-reveal>

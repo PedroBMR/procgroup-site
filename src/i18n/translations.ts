@@ -35,13 +35,11 @@ export const translations = {
       contato: "Contato",
       cta: "Solicitar Demonstração",
       sol: {
-        cidades: { label: "Cidades Inteligentes", desc: "Segurança pública e mobilidade urbana com IA" },
         seguranca: { label: "Ambientes Inteligentes", desc: "Videomonitoramento e controle de acesso para empresas" },
         ti: { label: "Infraestrutura de TI", desc: "Cloud, NOC, backup e governança de TI" },
         ia: { label: "IA Industrial", desc: "Visão computacional para indústria 4.0" },
       },
       seg: {
-        governo: { label: "Governo e Segurança Pública", desc: "Prefeituras, secretarias e órgãos de segurança" },
         empresas: { label: "Empresas", desc: "Ambientes Inteligentes, cloud e infraestrutura de TI" },
         industria: { label: "Indústria", desc: "Visão computacional para linhas de produção" },
       },
@@ -59,7 +57,7 @@ export const translations = {
       trabalhe: "Trabalhe conosco",
     },
     ticker: {
-      items: ["Câmeras", "Sensores", "Centros de Operação", "Cidades", "Empresas", "Indústrias"],
+      items: ["Câmeras", "Sensores", "Centros de Operação", "Empresas", "Indústrias"],
       highlight: "Engenharia própria. Tudo conectado.",
     },
     footer: {
@@ -79,11 +77,11 @@ export const translations = {
     home: {
       metaTitle: "Proc Group — IA, Visão Computacional e Infraestrutura de TI",
       metaDescription:
-        "Plataforma própria de IA, Visão Computacional e Infraestrutura de TI que torna cidades, empresas e indústrias mais seguras, eficientes e inteligentes.",
+        "Plataforma própria de IA, Visão Computacional e Infraestrutura de TI que torna empresas e indústrias mais seguras, eficientes e inteligentes.",
       heroEyebrow: "Plataforma Proc AI",
       heroTitle: "Tecnologia inteligente para um mundo mais seguro, conectado e eficiente.",
       heroSubtitle:
-        "A Proc desenvolve soluções de Inteligência Artificial, Visão Computacional, Ambientes Inteligentes e Infraestrutura de TI que transformam dados em decisões inteligentes, protegendo pessoas e apoiando cidades, empresas e indústrias — cada operação com a sua solução.",
+        "A Proc desenvolve soluções de Inteligência Artificial, Visão Computacional, Ambientes Inteligentes e Infraestrutura de TI que transformam dados em decisões inteligentes, protegendo pessoas e apoiando empresas e indústrias — cada operação com a sua solução.",
       heroCtaPrimary: "Conheça a Plataforma Proc AI",
       heroCtaSecondary: "Solicite uma Demonstração",
       statsLabels: ["Clientes atendidos", "Anos de experiência"],
@@ -91,7 +89,7 @@ export const translations = {
       aboutTitle:
         "Tecnologia que conecta Inteligência Artificial, Visão Computacional e Infraestrutura de TI para transformar operações.",
       aboutText:
-        "A Proc desenvolve soluções tecnológicas que unem Inteligência Artificial, Visão Computacional, Analytics e Infraestrutura de TI para atender governos, empresas e indústrias — cada um com a sua solução e a sua equipe. Cada solução integra dados, equipamentos e sistemas da operação que atende, permitindo automatizar processos, fortalecer a segurança, aumentar a produtividade e apoiar decisões estratégicas com informações em tempo real.",
+        "A Proc desenvolve soluções tecnológicas que unem Inteligência Artificial, Visão Computacional, Analytics e Infraestrutura de TI para atender empresas e indústrias — cada uma com a sua solução e a sua equipe. Cada solução integra dados, equipamentos e sistemas da operação que atende, permitindo automatizar processos, fortalecer a segurança, aumentar a produtividade e apoiar decisões estratégicas com informações em tempo real.",
       aboutCta: "Conheça a Proc",
       aboutPhotoAlt: "Sede da Proc Group em Pato Branco",
       platformEyebrow: "Plataforma Proc AI",
@@ -140,10 +138,6 @@ export const translations = {
       ],
       unitLink: "Ver soluções →",
       cards: {
-        "cidades-inteligentes": {
-          name: "Cidades Inteligentes",
-          desc: "Soluções inteligentes para melhorar a vida da população na segurança pública e na mobilidade urbana das cidades.",
-        },
         "ambientes-inteligentes": {
           name: "Ambientes Inteligentes",
           desc: "Videomonitoramento e controle de acesso com IA para pessoas e veículos, com alertas para ações suspeitas.",
@@ -158,7 +152,7 @@ export const translations = {
         },
       },
       diffEyebrow: "Diferenciais",
-      diffTitle: "Por que empresas e governos confiam na Proc",
+      diffTitle: "Por que empresas e indústrias confiam na Proc",
       differentiators: [
         { title: "Arquitetura Escalável", desc: "Plataforma modular pronta para crescer com a operação do cliente." },
         { title: "IA Própria", desc: "Modelos de reconhecimento facial, LPR e analytics desenvolvidos internamente." },
@@ -172,11 +166,9 @@ export const translations = {
       casesEyebrow: "Cases de sucesso",
       casesTitle: "Resultados reais em operações críticas",
       casesText:
-        "Do Pato 360° — rede de videomonitoramento inteligente levada a cinco municípios via CPSI — à inspeção industrial automatizada, veja como a Proc AI Platform resolve desafios concretos de segurança pública, empresas e indústria.",
+        "Do controle de acesso que não troca as catracas à inspeção visual na linha de produção, veja como a Proc AI Platform resolve desafios concretos de empresas e indústrias.",
       casesCta: "Ver cases de sucesso",
       casesStats: [
-        { value: "700+", label: "câmeras com IA em Pato Branco" },
-        { value: "5", label: "municípios atendidos via CPSI" },
         { value: "24×7", label: "plataforma operando em tempo real" },
       ],
       blogEyebrow: "Do nosso blog",
@@ -275,29 +267,6 @@ export const translations = {
             },
           ],
         },
-        "cidades-inteligentes": {
-          metaTitle: "Cidades Inteligentes — Segurança Pública com IA",
-          metaDescription:
-            "Soluções de reconhecimento facial, leitura de placas, videomonitoramento inteligente e centro integrado de operações para governos e municípios.",
-          heroTitle: "Tecnologia para cidades mais seguras, conectadas e inteligentes.",
-          heroLead:
-            "Transforme o videomonitoramento em inteligência operacional com reconhecimento facial, leitura de placas, analytics e Centros Integrados de Operações — para apoiar decisões em tempo real, aumentar a segurança da população e a eficiência da mobilidade urbana.",
-          solutionsHeading: "Tecnologias aplicadas à segurança pública e mobilidade urbana",
-          teamDescription:
-            "Profissionais dedicados a projetos de segurança pública, com experiência em centros de operações, videomonitoramento inteligente e integração com forças de segurança.",
-          finalCtaTitle: "Vamos tornar sua cidade mais segura e inteligente?",
-          finalCtaText: "Fale com um especialista em Cidades Inteligentes da Proc.",
-          faqs: [
-            {
-              q: "Como a Proc apoia a segurança pública das cidades?",
-              a: "Com uma plataforma integrada de videomonitoramento, reconhecimento facial, leitura de placas e analytics, conectada a um Centro Integrado de Operações operado por equipe especializada em segurança pública.",
-            },
-            {
-              q: "As soluções se integram a sistemas já existentes no município?",
-              a: "Sim. A Proc AI Platform possui APIs abertas para integração com câmeras, sensores e sistemas de gestão já utilizados pelo município.",
-            },
-          ],
-        },
       },
     },
   },
@@ -331,13 +300,11 @@ export const translations = {
       contato: "Contact",
       cta: "Request a Demo",
       sol: {
-        cidades: { label: "Smart Cities", desc: "Public safety and urban mobility powered by AI" },
         seguranca: { label: "Smart Environments", desc: "Video surveillance and access control for businesses" },
         ti: { label: "IT Infrastructure", desc: "Cloud, NOC, backup and IT governance" },
         ia: { label: "Industrial AI", desc: "Computer vision for Industry 4.0" },
       },
       seg: {
-        governo: { label: "Government & Public Safety", desc: "City halls, agencies and security forces" },
         empresas: { label: "Enterprises", desc: "Smart Environments, cloud and IT infrastructure" },
         industria: { label: "Industry", desc: "Computer vision for production lines" },
       },
@@ -354,7 +321,7 @@ export const translations = {
       trabalhe: "Careers",
     },
     ticker: {
-      items: ["Cameras", "Sensors", "Operations Centers", "Cities", "Businesses", "Industries"],
+      items: ["Cameras", "Sensors", "Operations Centers", "Businesses", "Industries"],
       highlight: "In-house engineering. Everything connected.",
     },
     footer: {
@@ -374,11 +341,11 @@ export const translations = {
     home: {
       metaTitle: "Proc Group — AI, Computer Vision and IT Infrastructure",
       metaDescription:
-        "Proc's own AI, Computer Vision and IT Infrastructure platform makes cities, companies and industries safer, smarter and more efficient.",
+        "Proc's own AI, Computer Vision and IT Infrastructure platform makes companies and industries safer, smarter and more efficient.",
       heroEyebrow: "Proc AI Platform",
       heroTitle: "Intelligent technology for a safer, more connected, more efficient world.",
       heroSubtitle:
-        "Proc builds Artificial Intelligence, Computer Vision, Smart Environments and IT Infrastructure solutions that turn data into smart decisions — protecting people and supporting cities, companies and industries — each operation with its own solution.",
+        "Proc builds Artificial Intelligence, Computer Vision, Smart Environments and IT Infrastructure solutions that turn data into smart decisions — protecting people and supporting companies and industries — each operation with its own solution.",
       heroCtaPrimary: "Explore the Proc AI Platform",
       heroCtaSecondary: "Request a Demo",
       statsLabels: ["Clients served", "Years of experience"],
@@ -386,7 +353,7 @@ export const translations = {
       aboutTitle:
         "Technology that connects Artificial Intelligence, Computer Vision and IT Infrastructure to transform operations.",
       aboutText:
-        "Proc develops technology solutions that combine Artificial Intelligence, Computer Vision, Analytics and IT Infrastructure to serve governments, companies and industries — each with its own solution and its own team. Each solution integrates the data, equipment and systems of the operation it serves — automating processes, strengthening security, boosting productivity and supporting strategic decisions with real-time information.",
+        "Proc develops technology solutions that combine Artificial Intelligence, Computer Vision, Analytics and IT Infrastructure to serve companies and industries — each with its own solution and its own team. Each solution integrates the data, equipment and systems of the operation it serves — automating processes, strengthening security, boosting productivity and supporting strategic decisions with real-time information.",
       aboutCta: "About Proc",
       aboutPhotoAlt: "Proc Group headquarters in Pato Branco, Brazil",
       platformEyebrow: "Proc AI Platform",
@@ -432,10 +399,6 @@ export const translations = {
       ],
       unitLink: "See solutions →",
       cards: {
-        "cidades-inteligentes": {
-          name: "Smart Cities",
-          desc: "Intelligent solutions to improve people's lives through public safety and urban mobility in cities.",
-        },
         "ambientes-inteligentes": {
           name: "Smart Environments",
           desc: "AI video surveillance and access control for people and vehicles, with alerts for suspicious activity.",
@@ -450,7 +413,7 @@ export const translations = {
         },
       },
       diffEyebrow: "Why Proc",
-      diffTitle: "Why businesses and governments trust Proc",
+      diffTitle: "Why businesses and industries trust Proc",
       differentiators: [
         { title: "Scalable Architecture", desc: "A modular platform ready to grow alongside the customer's operation." },
         { title: "Proprietary AI", desc: "Facial recognition, LPR and analytics models built in-house." },
@@ -462,11 +425,9 @@ export const translations = {
       casesEyebrow: "Success cases",
       casesTitle: "Real results in mission-critical operations",
       casesText:
-        "From Pato 360° — an intelligent video-surveillance network rolled out to five municipalities via CPSI — to automated industrial inspection, see how the Proc AI Platform solves concrete challenges in public safety, business and industry.",
+        "From access control that keeps the turnstiles you already have to visual inspection on the production line, see how the Proc AI Platform solves concrete challenges for business and industry.",
       casesCta: "See success cases",
       casesStats: [
-        { value: "700+", label: "AI cameras in Pato Branco" },
-        { value: "5", label: "municipalities served via CPSI" },
         { value: "24×7", label: "platform running in real time" },
       ],
       blogEyebrow: "From our blog",
@@ -565,29 +526,6 @@ export const translations = {
             },
           ],
         },
-        "cidades-inteligentes": {
-          metaTitle: "Smart Cities — Public Safety with AI",
-          metaDescription:
-            "Facial recognition, license-plate reading, intelligent video surveillance and integrated operations center solutions for governments and municipalities.",
-          heroTitle: "Technology for safer, more connected, smarter cities.",
-          heroLead:
-            "Turn video surveillance into operational intelligence with facial recognition, license-plate reading, analytics and Integrated Operations Centers — to support real-time decisions, improve public safety and make urban mobility more efficient.",
-          solutionsHeading: "Technologies applied to public safety and urban mobility",
-          teamDescription:
-            "Specialists dedicated to public-safety projects, experienced in operations centers, intelligent video surveillance and integration with security forces.",
-          finalCtaTitle: "Shall we make your city safer and smarter?",
-          finalCtaText: "Talk to a Proc Smart Cities specialist.",
-          faqs: [
-            {
-              q: "How does Proc support cities' public safety?",
-              a: "With an integrated platform of video surveillance, facial recognition, license-plate reading and analytics, connected to an Integrated Operations Center run by a public-safety specialist team.",
-            },
-            {
-              q: "Do the solutions integrate with systems the municipality already has?",
-              a: "Yes. The Proc AI Platform has open APIs to integrate with cameras, sensors and management systems already used by the municipality.",
-            },
-          ],
-        },
       },
     },
   },
@@ -621,13 +559,11 @@ export const translations = {
       contato: "Contacto",
       cta: "Solicitar Demostración",
       sol: {
-        cidades: { label: "Ciudades Inteligentes", desc: "Seguridad pública y movilidad urbana con IA" },
         seguranca: { label: "Ambientes Inteligentes", desc: "Videovigilancia y control de acceso para empresas" },
         ti: { label: "Infraestructura de TI", desc: "Cloud, NOC, backup y gobernanza de TI" },
         ia: { label: "IA Industrial", desc: "Visión artificial para la industria 4.0" },
       },
       seg: {
-        governo: { label: "Gobierno y Seguridad Pública", desc: "Municipios, secretarías y órganos de seguridad" },
         empresas: { label: "Empresas", desc: "Ambientes Inteligentes, cloud e infraestructura de TI" },
         industria: { label: "Industria", desc: "Visión artificial para líneas de producción" },
       },
@@ -644,7 +580,7 @@ export const translations = {
       trabalhe: "Trabaja con Nosotros",
     },
     ticker: {
-      items: ["Cámaras", "Sensores", "Centros de Operación", "Ciudades", "Empresas", "Industrias"],
+      items: ["Cámaras", "Sensores", "Centros de Operación", "Empresas", "Industrias"],
       highlight: "Ingeniería propia. Todo conectado.",
     },
     footer: {
@@ -664,11 +600,11 @@ export const translations = {
     home: {
       metaTitle: "Proc Group — IA, Visión Artificial e Infraestructura de TI",
       metaDescription:
-        "Plataforma propia de IA, Visión Artificial e Infraestructura de TI que hace más seguras, eficientes e inteligentes a ciudades, empresas e industrias.",
+        "Plataforma propia de IA, Visión Artificial e Infraestructura de TI que hace más seguras, eficientes e inteligentes a empresas e industrias.",
       heroEyebrow: "Plataforma Proc AI",
       heroTitle: "Tecnología inteligente para un mundo más seguro, conectado y eficiente.",
       heroSubtitle:
-        "Proc desarrolla soluciones de Inteligencia Artificial, Visión Artificial, Ambientes Inteligentes e Infraestructura de TI que transforman datos en decisiones inteligentes, protegiendo personas y apoyando a ciudades, empresas e industrias — cada operación con su solución.",
+        "Proc desarrolla soluciones de Inteligencia Artificial, Visión Artificial, Ambientes Inteligentes e Infraestructura de TI que transforman datos en decisiones inteligentes, protegiendo personas y apoyando a empresas e industrias — cada operación con su solución.",
       heroCtaPrimary: "Conoce la Plataforma Proc AI",
       heroCtaSecondary: "Solicita una Demostración",
       statsLabels: ["Clientes atendidos", "Años de experiencia"],
@@ -676,7 +612,7 @@ export const translations = {
       aboutTitle:
         "Tecnología que conecta Inteligencia Artificial, Visión Artificial e Infraestructura de TI para transformar operaciones.",
       aboutText:
-        "Proc desarrolla soluciones tecnológicas que unen Inteligencia Artificial, Visión Artificial, Analytics e Infraestructura de TI para atender a gobiernos, empresas e industrias — cada uno con su solución y su equipo. Cada solución integra los datos, equipos y sistemas de la operación que atiende, permitiendo automatizar procesos, fortalecer la seguridad, aumentar la productividad y apoyar decisiones estratégicas con información en tiempo real.",
+        "Proc desarrolla soluciones tecnológicas que unen Inteligencia Artificial, Visión Artificial, Analytics e Infraestructura de TI para atender a empresas e industrias — cada una con su solución y su equipo. Cada solución integra los datos, equipos y sistemas de la operación que atiende, permitiendo automatizar procesos, fortalecer la seguridad, aumentar la productividad y apoyar decisiones estratégicas con información en tiempo real.",
       aboutCta: "Conoce Proc",
       aboutPhotoAlt: "Sede de Proc Group en Pato Branco, Brasil",
       platformEyebrow: "Plataforma Proc AI",
@@ -722,10 +658,6 @@ export const translations = {
       ],
       unitLink: "Ver soluciones →",
       cards: {
-        "cidades-inteligentes": {
-          name: "Ciudades Inteligentes",
-          desc: "Soluciones inteligentes para mejorar la vida de la población en la seguridad pública y la movilidad urbana de las ciudades.",
-        },
         "ambientes-inteligentes": {
           name: "Ambientes Inteligentes",
           desc: "Videovigilancia y control de acceso con IA para personas y vehículos, con alertas para acciones sospechosas.",
@@ -740,7 +672,7 @@ export const translations = {
         },
       },
       diffEyebrow: "Diferenciales",
-      diffTitle: "Por qué empresas y gobiernos confían en Proc",
+      diffTitle: "Por qué empresas e industrias confían en Proc",
       differentiators: [
         { title: "Arquitectura Escalable", desc: "Plataforma modular lista para crecer junto a la operación del cliente." },
         { title: "IA Propia", desc: "Modelos de reconocimiento facial, LPR y analytics desarrollados internamente." },
@@ -752,11 +684,9 @@ export const translations = {
       casesEyebrow: "Casos de éxito",
       casesTitle: "Resultados reales en operaciones críticas",
       casesText:
-        "Del Pato 360° — red de videovigilancia inteligente llevada a cinco municipios vía CPSI — a la inspección industrial automatizada, mira cómo la Proc AI Platform resuelve desafíos concretos de seguridad pública, empresas e industria.",
+        "Del control de acceso que no cambia los torniquetes a la inspección visual en la línea de producción, mira cómo la Proc AI Platform resuelve desafíos concretos de empresas e industrias.",
       casesCta: "Ver casos de éxito",
       casesStats: [
-        { value: "700+", label: "cámaras con IA en Pato Branco" },
-        { value: "5", label: "municipios atendidos vía CPSI" },
         { value: "24×7", label: "plataforma operando en tiempo real" },
       ],
       blogEyebrow: "De nuestro blog",
@@ -852,29 +782,6 @@ export const translations = {
             {
               q: "¿Qué SLAs de disponibilidad ofrecen?",
               a: "Los SLAs se definen según la criticidad de la operación del cliente, con contratos que prevén disponibilidad continua para entornos de misión crítica.",
-            },
-          ],
-        },
-        "cidades-inteligentes": {
-          metaTitle: "Ciudades Inteligentes — Seguridad Pública con IA",
-          metaDescription:
-            "Soluciones de reconocimiento facial, lectura de placas, videovigilancia inteligente y centro integrado de operaciones para gobiernos y municipios.",
-          heroTitle: "Tecnología para ciudades más seguras, conectadas e inteligentes.",
-          heroLead:
-            "Transforma la videovigilancia en inteligencia operativa con reconocimiento facial, lectura de placas, analytics y Centros Integrados de Operaciones — para apoyar decisiones en tiempo real, aumentar la seguridad de la población y la eficiencia de la movilidad urbana.",
-          solutionsHeading: "Tecnologías aplicadas a la seguridad pública y la movilidad urbana",
-          teamDescription:
-            "Profesionales dedicados a proyectos de seguridad pública, con experiencia en centros de operaciones, videovigilancia inteligente e integración con fuerzas de seguridad.",
-          finalCtaTitle: "¿Hacemos tu ciudad más segura e inteligente?",
-          finalCtaText: "Habla con un especialista en Ciudades Inteligentes de Proc.",
-          faqs: [
-            {
-              q: "¿Cómo apoya Proc la seguridad pública de las ciudades?",
-              a: "Con una plataforma integrada de videovigilancia, reconocimiento facial, lectura de placas y analytics, conectada a un Centro Integrado de Operaciones operado por un equipo especializado en seguridad pública.",
-            },
-            {
-              q: "¿Las soluciones se integran con sistemas ya existentes en el municipio?",
-              a: "Sí. La Proc AI Platform tiene APIs abiertas para integrar con cámaras, sensores y sistemas de gestión ya utilizados por el municipio.",
             },
           ],
         },

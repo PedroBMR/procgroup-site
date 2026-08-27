@@ -6,23 +6,17 @@ import PlatformMandala from "../PlatformMandala.astro";
 import AnimatedFlow from "../AnimatedFlow.astro";
 import { getBusinessUnits } from "../../data/businessUnits";
 import { WHATSAPP_DEMO } from "../../data/contact";
-import { getLangFromUrl, logicalPath, useTranslations, localePath, localizePath } from "../../i18n/utils";
-import { publicoDaUrl, publicoDefs } from "../../data/audiencia";
-import { metaDoLado } from "../../data/metaPorPublico";
+import { getLangFromUrl, useTranslations, localePath, localizePath } from "../../i18n/utils";
+import { metaDaPagina } from "../../data/metaPorPagina";
 import { usePages } from "../../i18n/pages";
 import { defaultLocale, type Locale } from "../../i18n/config";
 
 const lang = getLangFromUrl(Astro.url);
 // De que lado do site esta instancia esta montada — sai da URL, como no
-// Header. Nas rotas legadas (fora de /governo e /empresas) publico e null:
-// base vazia e nenhum filtro, ou seja, o comportamento de sempre.
-const publico = publicoDaUrl(logicalPath(Astro.url));
-const base = publico ? publicoDefs[publico].base : "";
-const unidadesDoLado = publico ? publicoDefs[publico].unidades : null;
 const tr = useTranslations(lang);
 const t = usePages(lang).plataforma;
-const m = metaDoLado(publico, "plataforma", lang);
-const businessUnits = getBusinessUnits(lang).filter((u) => !unidadesDoLado || unidadesDoLado.includes(u.slug));
+const m = metaDaPagina("plataforma", lang);
+const businessUnits = getBusinessUnits(lang);
 
 const schema = {
   "@context": "https://schema.org",
@@ -30,16 +24,15 @@ const schema = {
   name: "Proc AI Platform",
   applicationCategory: "BusinessApplication",
   operatingSystem: "Cloud",
-  description: t.metaDescription,
-};
+  description: t.metaDescription };
 ---
 
 <BaseLayout title={m?.title ?? tr.nav.plataforma} description={m?.description ?? t.metaDescription} schema={schema}>
   <div class="container">
     <Breadcrumb
       items={[
-        { label: tr.nav.home, href: localePath(base || "/", lang) },
-        { label: tr.nav.plataforma, href: localePath(`${base}/plataforma-proc-ai`, lang) },
+        { label: tr.nav.home, href: localePath("/", lang) },
+        { label: tr.nav.plataforma, href: localePath(`/plataforma-proc-ai`, lang) },
       ]}
     />
   </div>
@@ -85,7 +78,7 @@ const schema = {
         <div class="distribution-core" data-reveal>Proc AI Platform</div>
         <div class="distribution-units">
           {businessUnits.map((unit) => (
-            <a href={localizePath(base + unit.href, lang)} class="distribution-unit" data-reveal style={`--unit-color: ${unit.color}`}>
+            <a href={localizePath(unit.href, lang)} class="distribution-unit" data-reveal style={`--unit-color: ${unit.color}`}>
               <span class="unit-dot"></span>
               <div>
                 <p class="unit-name">{unit.name}</p>

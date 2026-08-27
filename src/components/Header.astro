@@ -2,20 +2,15 @@
 import { getMainNav, getCtaNav, getHomeHref } from "../data/nav";
 import Button from "./Button.astro";
 import Logo from "./Logo.astro";
-import { getLangFromUrl, logicalPath, useTranslations } from "../i18n/utils";
-import { publicoDaUrl } from "../data/audiencia";
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
 
 const lang = getLangFromUrl(Astro.url);
 const common = useTranslations(lang).common;
-// O lado (governo/empresas) sai da propria URL — nenhuma pagina precisa passar
-// prop. Fora dos dois lados (rotas legadas, blog ainda sem chrome proprio),
-// `publico` e null e o menu legado e servido.
-const publico = publicoDaUrl(logicalPath(Astro.url));
-const mainNav = getMainNav(lang, publico);
+const mainNav = getMainNav(lang);
 const ctaNav = getCtaNav(lang);
 const currentPath = Astro.url.pathname;
-// Dentro de um lado, o logo leva para a home DO LADO — a raiz e so o seletor.
-const homeHref = getHomeHref(lang, publico);
+// A raiz voltou a ser a home do site quando o lado publico saiu (2026-08-27).
+const homeHref = getHomeHref(lang);
 const menuLabel = { pt: "Abrir menu", en: "Open menu", es: "Abrir menú" }[lang];
 const homeAria = { pt: "Proc Group — página inicial", en: "Proc Group — home", es: "Proc Group — inicio" }[lang];
 ---

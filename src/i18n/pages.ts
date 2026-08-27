@@ -8,7 +8,7 @@ export const pages = {
   pt: {
     empresa: {
       metaDescription:
-        "Conheça a Proc Group: uma empresa de tecnologia que desenvolve sua própria plataforma de Inteligência Artificial para cidades, empresas e indústrias.",
+        "Conheça a Proc Group: uma empresa de tecnologia que desenvolve sua própria plataforma de Inteligência Artificial para empresas e indústrias.",
       heroEyebrow: "Empresa",
       heroTitle: "Uma empresa de tecnologia. Não uma integradora.",
       heroLead:
@@ -17,14 +17,14 @@ export const pages = {
       storyEyebrow: "Nossa história",
       storyTitle: "Engenharia própria, especializada em cada operação.",
       storyText:
-        "Desde o primeiro projeto, acreditamos que inovação de verdade acontece quando a tecnologia serve às pessoas — melhorando processos, garantindo segurança, fortalecendo negócios e contribuindo para o bem comum. Em 2019 ampliamos nossa atuação para o setor público, criando soluções que hoje fazem parte da rotina de prefeituras, forças de segurança e aeroportos. Hoje a Proc não é apenas uma integradora de tecnologias — é uma empresa que desenvolve sua própria plataforma de Inteligência Artificial, com equipes especializadas em Cidades Inteligentes, Ambientes Inteligentes, Infraestrutura de TI e IA Industrial.",
+        "Desde o primeiro projeto, acreditamos que inovação de verdade acontece quando a tecnologia serve às pessoas — melhorando processos, garantindo segurança, fortalecendo negócios e contribuindo para o bem comum. Hoje a Proc não é apenas uma integradora de tecnologias — é uma empresa que desenvolve sua própria plataforma de Inteligência Artificial, com equipes especializadas em Ambientes Inteligentes, Infraestrutura de TI e IA Industrial.",
       timelineEyebrow: "Nossa trajetória",
       timelineTitle: "Mais de uma década construindo tecnologia com propósito",
       timeline: [
         { year: "2014", title: "Fundação", desc: "Fundada em Pato Branco (PR), com foco em infraestrutura de TI para supermercados." },
         { year: "2016–2018", title: "Consolidação", desc: "Consolidação em soluções de cloud, backup e suporte completo." },
-        { year: "2019", title: "Expansão", desc: "Expansão para o setor público, com projetos pioneiros em câmeras inteligentes e reconhecimento facial." },
-        { year: "Hoje", title: "Presente", desc: "Presença crescente em todo o Sul do Brasil, evoluindo de duas frentes sólidas para quatro unidades especializadas." },
+        { year: "2019", title: "Expansão", desc: "Primeiros projetos de câmeras inteligentes e reconhecimento facial." },
+        { year: "Hoje", title: "Presente", desc: "Presença crescente em todo o Sul do Brasil, evoluindo de duas frentes sólidas para três unidades especializadas." },
       ],
       valuesEyebrow: "O que nos diferencia",
       valuesTitle: "O que guia o trabalho da Proc",
@@ -37,8 +37,6 @@ export const pages = {
       credEyebrow: "Credibilidade",
       credTitle: "Reconhecida por empresas e autoridades públicas",
       credibility: [
-        { title: "Embarque + Seguro", desc: "Parceiros oficiais do programa do Governo Federal." },
-        { title: "Órgãos de segurança", desc: "Tecnologias utilizadas por forças de segurança de diversas cidades." },
         { title: "Grandes players", desc: "Projetos realizados para grandes players, como Latam Linhas Aéreas." },
         { title: "Equipes certificadas", desc: "Operação de ambientes críticos com excelência." },
       ],
@@ -51,7 +49,7 @@ export const pages = {
       purposeParas: [
         "Vivemos em um mundo onde milhões de informações são geradas a cada segundo. Transformar esses dados em decisões inteligentes é o que permite prevenir riscos, otimizar processos, proteger patrimônios e salvar vidas.",
         "Foi com esse propósito que nasceu a Proc. Acreditamos que a Inteligência Artificial, a Visão Computacional e a transformação digital não substituem as pessoas — ampliam sua capacidade de agir, decidir e proteger aquilo que realmente importa.",
-        "Cada solução que desenvolvemos existe para gerar impacto positivo, tornando operações mais eficientes, ambientes mais seguros e cidades mais preparadas para os desafios do futuro.",
+        "Cada solução que desenvolvemos existe para gerar impacto positivo, tornando operações mais eficientes, ambientes mais seguros e negócios mais preparados para os desafios do futuro.",
       ],
       differentialEyebrow: "Nosso diferencial",
       differentialTitle: "Engenharia própria. Especialização em cada operação.",
@@ -62,10 +60,10 @@ export const pages = {
       ],
       missionEyebrow: "Missão",
       missionText:
-        "Utilizar a tecnologia para proteger pessoas, conectar operações e transformar realidades — desenvolvendo soluções inovadoras que promovam segurança, eficiência e inteligência operacional para governos, empresas e indústrias, gerando valor à sociedade e contribuindo para um futuro mais seguro, sustentável e conectado.",
+        "Utilizar a tecnologia para proteger pessoas, conectar operações e transformar realidades — desenvolvendo soluções inovadoras que promovam segurança, eficiência e inteligência operacional para empresas e indústrias, gerando valor à sociedade e contribuindo para um futuro mais seguro, sustentável e conectado.",
       visionEyebrow: "Visão",
       visionText:
-        "Ser referência nacional em plataformas inteligentes para cidades, empresas e indústrias — reconhecida pela excelência técnica, inovação contínua e capacidade de transformar desafios complexos em soluções que impactam positivamente a vida das pessoas e a evolução das organizações.",
+        "Ser referência nacional em plataformas inteligentes para empresas e indústrias — reconhecida pela excelência técnica, inovação contínua e capacidade de transformar desafios complexos em soluções que impactam positivamente a vida das pessoas e a evolução das organizações.",
       principlesEyebrow: "Nossos valores",
       principlesTitle: "O que sustenta cada decisão da Proc",
       principles: [
@@ -82,7 +80,7 @@ export const pages = {
       commitmentLead:
         "Acreditamos que inovação não deve ser medida apenas pela complexidade da tecnologia, mas pelo impacto positivo que ela gera na vida das pessoas.",
       commitmentItems: [
-        "Quando ajudamos uma cidade a responder mais rápido a uma emergência, contribuímos para proteger vidas.",
+        "Quando ajudamos uma operação a responder mais rápido a um incidente, contribuímos para proteger pessoas.",
         "Quando fortalecemos a segurança de uma empresa, preservamos pessoas, patrimônios e a continuidade dos negócios.",
         "Quando aplicamos Inteligência Artificial para reduzir desperdícios e aumentar a eficiência industrial, contribuímos para processos mais sustentáveis e competitivos.",
         "Quando garantimos a disponibilidade da infraestrutura de TI, apoiamos serviços essenciais que movimentam organizações e atendem milhões de pessoas.",
@@ -101,11 +99,11 @@ export const pages = {
         "A Proc AI Platform é a base tecnológica que sustenta todas as soluções da empresa — Inteligência Artificial, Analytics, Banco de Dados, Cloud, APIs, Dashboards e Integrações operando de forma unificada.",
       flowEyebrow: "Como funciona",
       flowTitle: "Um evento, da captura à ação.",
-      flowLead: "Veja como a Proc AI Platform leva inteligência da captura até a ação, em qualquer uma das quatro áreas de negócio.",
+      flowLead: "Veja como a Proc AI Platform leva inteligência da captura até a ação, em qualquer uma das três áreas de negócio.",
       diagramEyebrow: "Mapa completo",
       diagramTitle: "As soluções desta operação",
       distEyebrow: "Distribuição de inteligência",
-      distTitle: "A plataforma distribui inteligência para quatro áreas de negócio",
+      distTitle: "A plataforma distribui inteligência para três áreas de negócio",
       distLead: "Especialistas dedicados a cada segmento — não generalistas.",
       techEyebrow: "Tecnologias",
       techTitle: "As tecnologias por trás da Proc AI Platform",
@@ -139,8 +137,8 @@ export const pages = {
       labelName: "Nome",
       labelEmail: "E-mail corporativo",
       labelProfile: "Você é",
-      profileOptions: ["Governo / Prefeitura", "Empresa", "Indústria", "Outro"],
-      labelOrg: "Empresa / Município",
+      profileOptions: ["Empresa", "Indústria", "Condomínio ou campus", "Outro"],
+      labelOrg: "Empresa",
       labelInterest: "Área de interesse",
       labelMessage: "Mensagem",
       submit: "Enviar solicitação",
@@ -163,34 +161,9 @@ export const pages = {
       cta: "Enviar currículo por e-mail",
       mailSubject: "Currículo - Trabalhe Conosco",
     },
-    comecar: {
-      metaTitle: "Por onde começar",
-      metaDescription:
-        "Escolha o seu contexto — governo e cidades, ou empresas e indústrias — e veja as soluções da Proc para ele.",
-      status: "Proc AI Platform · Pato Branco / PR",
-      eyebrow: "Selecione o contexto",
-      titleA: "Dois contextos.",
-      titleB: "Duas soluções.",
-      lead: "Cada contexto tem a sua solução, a sua equipe e o seu jeito de contratar. Escolha o seu.",
-      cta: "Entrar por aqui",
-      saida: "Nenhum dos dois — ver tudo o que a Proc faz",
-      intro: {
-        saudacao: "Bem-vindo à",
-        pular: "Pular abertura",
-      },
-      ariaIdioma: "Idioma",
-      gov: {
-        canal: "Canal 01 / Público",
-        title: "Governo e cidades",
-        lead: "Prefeituras, guardas municipais e órgãos públicos que precisam enxergar a cidade em tempo real.",
-        items: ["Videomonitoramento com IA", "Reconhecimento facial", "Leitura de placas (LPR)", "Centro Integrado de Operações"],
-      },
-      emp: {
-        canal: "Canal 02 / Corporativo",
-        title: "Empresas e indústrias",
-        lead: "Indústria, empresa, condomínio e campus que querem liberar o acesso com controle e proteger a operação.",
-        items: ["Controle de acesso facial", "Auditoria de acesso", "Proteção perimetral", "Drones e robôs"],
-      },
+    abertura: {
+      saudacao: "Bem-vindo à",
+      pular: "Pular abertura",
     },
     eventos: {
       metaTitle: "Agenda de Eventos",
@@ -222,7 +195,7 @@ export const pages = {
       hoursValue: "Seg a Sex, 8h às 18h",
     },
     flow: {
-      ariaLabel: "Fluxo de um evento do hub central da Proc AI Platform até as quatro unidades de negócio",
+      ariaLabel: "Fluxo de um evento do hub central da Proc AI Platform até as três unidades de negócio",
       steps: [
         { n: "01", title: "Captura", desc: "Câmeras e sensores registram um evento em tempo real." },
         { n: "02", title: "Análise", desc: "A Proc AI Platform classifica e entende o contexto." },
@@ -231,14 +204,14 @@ export const pages = {
       ],
     },
     mandala: {
-      ariaLabel: "Núcleo da Proc AI Platform conectando as quatro unidades de negócio",
+      ariaLabel: "Núcleo da Proc AI Platform conectando as três unidades de negócio",
     },
   },
 
   en: {
     empresa: {
       metaDescription:
-        "Meet Proc Group: a technology company that builds its own Artificial Intelligence platform for cities, businesses and industries.",
+        "Meet Proc Group: a technology company that builds its own Artificial Intelligence platform for businesses and industries.",
       heroEyebrow: "Company",
       heroTitle: "A technology company. Not a systems integrator.",
       heroLead:
@@ -247,14 +220,14 @@ export const pages = {
       storyEyebrow: "Our story",
       storyTitle: "In-house engineering, specialized for each operation.",
       storyText:
-        "From the very first project, we've believed that real innovation happens when technology serves people — improving processes, ensuring safety, strengthening businesses and contributing to the common good. In 2019 we expanded into the public sector, creating solutions that are now part of the daily routine of city halls, security forces and airports. Today Proc is not just a technology integrator — it's a company that builds its own Artificial Intelligence platform, with teams specialized in Smart Cities, Smart Environments, IT Infrastructure and Industrial AI.",
+        "From the very first project, we've believed that real innovation happens when technology serves people — improving processes, ensuring safety, strengthening businesses and contributing to the common good. Today Proc is not just a technology integrator — it's a company that builds its own Artificial Intelligence platform, with teams specialized in Smart Environments, IT Infrastructure and Industrial AI.",
       timelineEyebrow: "Our journey",
       timelineTitle: "Over a decade building technology with purpose",
       timeline: [
         { year: "2014", title: "Founding", desc: "Founded in Pato Branco, Brazil, focused on IT infrastructure for supermarkets." },
         { year: "2016–2018", title: "Consolidation", desc: "Consolidation around cloud, backup and full support solutions." },
-        { year: "2019", title: "Expansion", desc: "Expansion into the public sector, with pioneering projects in smart cameras and facial recognition." },
-        { year: "Today", title: "Present", desc: "A growing presence across southern Brazil, evolving from two solid fronts into four specialized units." },
+        { year: "2019", title: "Expansion", desc: "First projects in smart cameras and facial recognition." },
+        { year: "Today", title: "Present", desc: "A growing presence across southern Brazil, evolving from two solid fronts into three specialized units." },
       ],
       valuesEyebrow: "What sets us apart",
       valuesTitle: "What guides Proc's work",
@@ -262,13 +235,11 @@ export const pages = {
         { title: "Consultative, preventive mindset", desc: "We act before the problem happens, not just reacting to incidents." },
         { title: "Reliable technology", desc: "Certified cloud, applied AI and integration with official security agencies." },
         { title: "End-to-end delivery", desc: "Infrastructure, monitoring, support and intelligence, delivered by one team." },
-        { title: "Social commitment", desc: "Solutions that protect communities and strengthen the public sector." },
       ],
       credEyebrow: "Credibility",
       credTitle: "Trusted by businesses and public authorities",
       credibility: [
         { title: "Embarque + Seguro", desc: "Official partners of the Brazilian Federal Government program." },
-        { title: "Security agencies", desc: "Technologies used by security forces in several cities." },
         { title: "Major players", desc: "Projects delivered for major players, such as LATAM Airlines." },
         { title: "Certified teams", desc: "Operating mission-critical environments with excellence." },
       ],
@@ -279,7 +250,7 @@ export const pages = {
       purposeParas: [
         "We live in a world where millions of pieces of information are generated every second. Turning that data into smart decisions is what makes it possible to prevent risks, optimize processes, protect assets and save lives.",
         "That's the purpose Proc was born with. We believe Artificial Intelligence, Computer Vision and digital transformation don't replace people — they expand their ability to act, decide and protect what truly matters.",
-        "Every solution we develop exists to generate positive impact, making operations more efficient, environments safer and cities better prepared for the challenges ahead.",
+        "Every solution we develop exists to generate positive impact, making operations more efficient, environments safer and businesses better prepared for the challenges ahead.",
       ],
       differentialEyebrow: "Our difference",
       differentialTitle: "In-house engineering. Specialization in every operation.",
@@ -290,10 +261,10 @@ export const pages = {
       ],
       missionEyebrow: "Mission",
       missionText:
-        "To use technology to protect people, connect operations and transform realities — developing innovative solutions that promote security, efficiency and operational intelligence for governments, companies and industries, generating value for society and contributing to a safer, more sustainable and more connected future.",
+        "To use technology to protect people, connect operations and transform realities — developing innovative solutions that promote security, efficiency and operational intelligence for companies and industries, generating value for society and contributing to a safer, more sustainable and more connected future.",
       visionEyebrow: "Vision",
       visionText:
-        "To be a national benchmark in intelligent platforms for cities, companies and industries — recognized for technical excellence, continuous innovation and the ability to turn complex challenges into solutions that positively impact people's lives and the evolution of organizations.",
+        "To be a national benchmark in intelligent platforms for companies and industries — recognized for technical excellence, continuous innovation and the ability to turn complex challenges into solutions that positively impact people's lives and the evolution of organizations.",
       principlesEyebrow: "Our values",
       principlesTitle: "What underpins every decision at Proc",
       principles: [
@@ -310,7 +281,7 @@ export const pages = {
       commitmentLead:
         "We believe innovation should be measured not by the complexity of the technology, but by the positive impact it generates in people's lives.",
       commitmentItems: [
-        "When we help a city respond faster to an emergency, we help protect lives.",
+        "When we help an operation respond faster to an incident, we help protect people.",
         "When we strengthen a company's security, we preserve people, assets and business continuity.",
         "When we apply Artificial Intelligence to cut waste and boost industrial efficiency, we contribute to more sustainable, competitive processes.",
         "When we ensure the availability of IT infrastructure, we support essential services that move organizations and serve millions of people.",
@@ -329,11 +300,11 @@ export const pages = {
         "The Proc AI Platform is the technology foundation behind every one of the company's solutions — Artificial Intelligence, Analytics, Database, Cloud, APIs, Dashboards and Integrations working as one.",
       flowEyebrow: "How it works",
       flowTitle: "One event, from capture to action.",
-      flowLead: "See how the Proc AI Platform carries intelligence from capture to action, in any of the four business areas.",
+      flowLead: "See how the Proc AI Platform carries intelligence from capture to action, in any of the three business areas.",
       diagramEyebrow: "Full map",
       diagramTitle: "The solutions for this operation",
       distEyebrow: "Intelligence distribution",
-      distTitle: "The platform distributes intelligence across four business areas",
+      distTitle: "The platform distributes intelligence across three business areas",
       distLead: "Dedicated specialists for each segment — not generalists.",
       techEyebrow: "Technologies",
       techTitle: "The technologies behind the Proc AI Platform",
@@ -367,8 +338,8 @@ export const pages = {
       labelName: "Name",
       labelEmail: "Work email",
       labelProfile: "You are",
-      profileOptions: ["Government / City Hall", "Company", "Industry", "Other"],
-      labelOrg: "Company / Municipality",
+      profileOptions: ["Company", "Industry", "Residential complex or campus", "Other"],
+      labelOrg: "Company",
       labelInterest: "Area of interest",
       labelMessage: "Message",
       submit: "Send request",
@@ -391,34 +362,9 @@ export const pages = {
       cta: "Send résumé by email",
       mailSubject: "Résumé - Careers",
     },
-    comecar: {
-      metaTitle: "Where to start",
-      metaDescription:
-        "Choose your context — government and cities, or businesses and industry — and see the Proc solutions built for it.",
-      status: "Proc AI Platform · Pato Branco / PR",
-      eyebrow: "Select your context",
-      titleA: "Two contexts.",
-      titleB: "Two solutions.",
-      lead: "Each context has its own solution, its own team and its own way of contracting. Choose yours.",
-      cta: "Start here",
-      saida: "Neither one — see everything Proc does",
-      intro: {
-        saudacao: "Welcome to",
-        pular: "Skip intro",
-      },
-      ariaIdioma: "Language",
-      gov: {
-        canal: "Channel 01 / Public",
-        title: "Government and cities",
-        lead: "City halls, municipal guards and public agencies that need to see the city in real time.",
-        items: ["AI video surveillance", "Facial recognition", "License plate reading (LPR)", "Integrated Operations Center"],
-      },
-      emp: {
-        canal: "Channel 02 / Corporate",
-        title: "Businesses and industry",
-        lead: "Industry, business, residential complex and campus that want access released under control and the operation protected.",
-        items: ["Facial access control", "Access auditing", "Perimeter protection", "Drones and robots"],
-      },
+    abertura: {
+      saudacao: "Welcome to",
+      pular: "Skip intro",
     },
     eventos: {
       metaTitle: "Events Calendar",
@@ -449,7 +395,7 @@ export const pages = {
       hoursValue: "Mon–Fri, 8am to 6pm",
     },
     flow: {
-      ariaLabel: "Flow of an event from the Proc AI Platform central hub to the four business units",
+      ariaLabel: "Flow of an event from the Proc AI Platform central hub to the three business units",
       steps: [
         { n: "01", title: "Capture", desc: "Cameras and sensors record an event in real time." },
         { n: "02", title: "Analysis", desc: "The Proc AI Platform classifies and understands the context." },
@@ -458,14 +404,14 @@ export const pages = {
       ],
     },
     mandala: {
-      ariaLabel: "The Proc AI Platform core connecting the four business units",
+      ariaLabel: "The Proc AI Platform core connecting the three business units",
     },
   },
 
   es: {
     empresa: {
       metaDescription:
-        "Conoce Proc Group: una empresa de tecnología que desarrolla su propia plataforma de Inteligencia Artificial para ciudades, empresas e industrias.",
+        "Conoce Proc Group: una empresa de tecnología que desarrolla su propia plataforma de Inteligencia Artificial para empresas e industrias.",
       heroEyebrow: "Empresa",
       heroTitle: "Una empresa de tecnología. No una integradora.",
       heroLead:
@@ -474,14 +420,14 @@ export const pages = {
       storyEyebrow: "Nuestra historia",
       storyTitle: "Ingeniería propia, especializada en cada operación.",
       storyText:
-        "Desde el primer proyecto, creemos que la verdadera innovación ocurre cuando la tecnología sirve a las personas — mejorando procesos, garantizando seguridad, fortaleciendo negocios y contribuyendo al bien común. En 2019 ampliamos nuestra actuación al sector público, creando soluciones que hoy forman parte de la rutina de municipios, fuerzas de seguridad y aeropuertos. Hoy Proc no es solo una integradora de tecnologías — es una empresa que desarrolla su propia plataforma de Inteligencia Artificial, con equipos especializados en Ciudades Inteligentes, Ambientes Inteligentes, Infraestructura de TI e IA Industrial.",
+        "Desde el primer proyecto, creemos que la verdadera innovación ocurre cuando la tecnología sirve a las personas — mejorando procesos, garantizando seguridad, fortaleciendo negocios y contribuyendo al bien común. Hoy Proc no es solo una integradora de tecnologías — es una empresa que desarrolla su propia plataforma de Inteligencia Artificial, con equipos especializados en Ambientes Inteligentes, Infraestructura de TI e IA Industrial.",
       timelineEyebrow: "Nuestra trayectoria",
       timelineTitle: "Más de una década construyendo tecnología con propósito",
       timeline: [
         { year: "2014", title: "Fundación", desc: "Fundada en Pato Branco (Brasil), con foco en infraestructura de TI para supermercados." },
         { year: "2016–2018", title: "Consolidación", desc: "Consolidación en soluciones de cloud, backup y soporte completo." },
-        { year: "2019", title: "Expansión", desc: "Expansión al sector público, con proyectos pioneros en cámaras inteligentes y reconocimiento facial." },
-        { year: "Hoy", title: "Presente", desc: "Presencia creciente en todo el sur de Brasil, evolucionando de dos frentes sólidos a cuatro unidades especializadas." },
+        { year: "2019", title: "Expansión", desc: "Primeros proyectos de cámaras inteligentes y reconocimiento facial." },
+        { year: "Hoy", title: "Presente", desc: "Presencia creciente en todo el sur de Brasil, evolucionando de dos frentes sólidos a tres unidades especializadas." },
       ],
       valuesEyebrow: "Lo que nos diferencia",
       valuesTitle: "Lo que guía el trabajo de Proc",
@@ -495,7 +441,6 @@ export const pages = {
       credTitle: "Reconocida por empresas y autoridades públicas",
       credibility: [
         { title: "Embarque + Seguro", desc: "Socios oficiales del programa del Gobierno Federal de Brasil." },
-        { title: "Órganos de seguridad", desc: "Tecnologías utilizadas por fuerzas de seguridad de varias ciudades." },
         { title: "Grandes players", desc: "Proyectos realizados para grandes players, como LATAM Airlines." },
         { title: "Equipos certificados", desc: "Operación de entornos críticos con excelencia." },
       ],
@@ -506,7 +451,7 @@ export const pages = {
       purposeParas: [
         "Vivimos en un mundo donde se generan millones de datos cada segundo. Transformar esos datos en decisiones inteligentes es lo que permite prevenir riesgos, optimizar procesos, proteger patrimonios y salvar vidas.",
         "Fue con ese propósito que nació Proc. Creemos que la Inteligencia Artificial, la Visión Artificial y la transformación digital no sustituyen a las personas — amplían su capacidad de actuar, decidir y proteger lo que realmente importa.",
-        "Cada solución que desarrollamos existe para generar impacto positivo, haciendo operaciones más eficientes, entornos más seguros y ciudades más preparadas para los desafíos del futuro.",
+        "Cada solución que desarrollamos existe para generar impacto positivo, haciendo operaciones más eficientes, entornos más seguros y negocios más preparados para los desafíos del futuro.",
       ],
       differentialEyebrow: "Nuestro diferencial",
       differentialTitle: "Ingeniería propia. Especialización en cada operación.",
@@ -517,10 +462,10 @@ export const pages = {
       ],
       missionEyebrow: "Misión",
       missionText:
-        "Utilizar la tecnología para proteger personas, conectar operaciones y transformar realidades — desarrollando soluciones innovadoras que promuevan seguridad, eficiencia e inteligencia operativa para gobiernos, empresas e industrias, generando valor para la sociedad y contribuyendo a un futuro más seguro, sostenible y conectado.",
+        "Utilizar la tecnología para proteger personas, conectar operaciones y transformar realidades — desarrollando soluciones innovadoras que promuevan seguridad, eficiencia e inteligencia operativa para empresas e industrias, generando valor para la sociedad y contribuyendo a un futuro más seguro, sostenible y conectado.",
       visionEyebrow: "Visión",
       visionText:
-        "Ser referencia nacional en plataformas inteligentes para ciudades, empresas e industrias — reconocida por la excelencia técnica, la innovación continua y la capacidad de transformar desafíos complejos en soluciones que impactan positivamente la vida de las personas y la evolución de las organizaciones.",
+        "Ser referencia nacional en plataformas inteligentes para empresas e industrias — reconocida por la excelencia técnica, la innovación continua y la capacidad de transformar desafíos complejos en soluciones que impactan positivamente la vida de las personas y la evolución de las organizaciones.",
       principlesEyebrow: "Nuestros valores",
       principlesTitle: "Lo que sustenta cada decisión de Proc",
       principles: [
@@ -537,7 +482,7 @@ export const pages = {
       commitmentLead:
         "Creemos que la innovación no debe medirse solo por la complejidad de la tecnología, sino por el impacto positivo que genera en la vida de las personas.",
       commitmentItems: [
-        "Cuando ayudamos a una ciudad a responder más rápido a una emergencia, contribuimos a proteger vidas.",
+        "Cuando ayudamos a una operación a responder más rápido a un incidente, contribuimos a proteger personas.",
         "Cuando fortalecemos la seguridad de una empresa, preservamos personas, patrimonios y la continuidad de los negocios.",
         "Cuando aplicamos Inteligencia Artificial para reducir desperdicios y aumentar la eficiencia industrial, contribuimos a procesos más sostenibles y competitivos.",
         "Cuando garantizamos la disponibilidad de la infraestructura de TI, apoyamos servicios esenciales que mueven organizaciones y atienden a millones de personas.",
@@ -556,11 +501,11 @@ export const pages = {
         "La Proc AI Platform es la base tecnológica que sustenta todas las soluciones de la empresa — Inteligencia Artificial, Analytics, Base de Datos, Cloud, APIs, Dashboards e Integraciones operando de forma unificada.",
       flowEyebrow: "Cómo funciona",
       flowTitle: "Un evento, de la captura a la acción.",
-      flowLead: "Mira cómo la Proc AI Platform lleva inteligencia desde la captura hasta la acción, en cualquiera de las cuatro áreas de negocio.",
+      flowLead: "Mira cómo la Proc AI Platform lleva inteligencia desde la captura hasta la acción, en cualquiera de las tres áreas de negocio.",
       diagramEyebrow: "Mapa completo",
       diagramTitle: "Las soluciones de esta operación",
       distEyebrow: "Distribución de inteligencia",
-      distTitle: "La plataforma distribuye inteligencia a cuatro áreas de negocio",
+      distTitle: "La plataforma distribuye inteligencia a tres áreas de negocio",
       distLead: "Especialistas dedicados a cada segmento — no generalistas.",
       techEyebrow: "Tecnologías",
       techTitle: "Las tecnologías detrás de la Proc AI Platform",
@@ -594,8 +539,8 @@ export const pages = {
       labelName: "Nombre",
       labelEmail: "Correo corporativo",
       labelProfile: "Eres",
-      profileOptions: ["Gobierno / Municipio", "Empresa", "Industria", "Otro"],
-      labelOrg: "Empresa / Municipio",
+      profileOptions: ["Empresa", "Industria", "Condominio o campus", "Otro"],
+      labelOrg: "Empresa",
       labelInterest: "Área de interés",
       labelMessage: "Mensaje",
       submit: "Enviar solicitud",
@@ -618,34 +563,9 @@ export const pages = {
       cta: "Enviar currículum por correo",
       mailSubject: "Currículum - Trabaja con Nosotros",
     },
-    comecar: {
-      metaTitle: "Por dónde empezar",
-      metaDescription:
-        "Elige tu contexto — gobierno y ciudades, o empresas e industrias — y mira las soluciones de Proc para él.",
-      status: "Proc AI Platform · Pato Branco / PR",
-      eyebrow: "Selecciona el contexto",
-      titleA: "Dos contextos.",
-      titleB: "Dos soluciones.",
-      lead: "Cada contexto tiene su solución, su equipo y su forma de contratar. Elige el tuyo.",
-      cta: "Entrar por aquí",
-      saida: "Ninguno de los dos — ver todo lo que hace Proc",
-      intro: {
-        saudacao: "Bienvenido a",
-        pular: "Saltar apertura",
-      },
-      ariaIdioma: "Idioma",
-      gov: {
-        canal: "Canal 01 / Público",
-        title: "Gobierno y ciudades",
-        lead: "Alcaldías, guardias municipales y organismos públicos que necesitan ver la ciudad en tiempo real.",
-        items: ["Videovigilancia con IA", "Reconocimiento facial", "Lectura de placas (LPR)", "Centro Integrado de Operaciones"],
-      },
-      emp: {
-        canal: "Canal 02 / Corporativo",
-        title: "Empresas e industrias",
-        lead: "Industria, empresa, condominio y campus que quieren liberar el acceso con control y proteger la operación.",
-        items: ["Control de acceso facial", "Auditoría de acceso", "Protección perimetral", "Drones y robots"],
-      },
+    abertura: {
+      saudacao: "Bienvenido a",
+      pular: "Saltar apertura",
     },
     eventos: {
       metaTitle: "Agenda de Eventos",
@@ -676,7 +596,7 @@ export const pages = {
       hoursValue: "Lun a Vie, 8h a 18h",
     },
     flow: {
-      ariaLabel: "Flujo de un evento desde el núcleo de la Proc AI Platform hasta las cuatro unidades de negocio",
+      ariaLabel: "Flujo de un evento desde el núcleo de la Proc AI Platform hasta las tres unidades de negocio",
       steps: [
         { n: "01", title: "Captura", desc: "Cámaras y sensores registran un evento en tiempo real." },
         { n: "02", title: "Análisis", desc: "La Proc AI Platform clasifica y entiende el contexto." },
@@ -685,7 +605,7 @@ export const pages = {
       ],
     },
     mandala: {
-      ariaLabel: "El núcleo de la Proc AI Platform conectando las cuatro unidades de negocio",
+      ariaLabel: "El núcleo de la Proc AI Platform conectando las tres unidades de negocio",
     },
   },
 } satisfies Record<Locale, unknown>;

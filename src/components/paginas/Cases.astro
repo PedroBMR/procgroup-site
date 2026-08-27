@@ -5,18 +5,12 @@ import Button from "../Button.astro";
 import CaseIllustration from "../CaseIllustration.astro";
 import { getBusinessUnit } from "../../data/businessUnits";
 import { WHATSAPP_DEMO } from "../../data/contact";
-import { getLangFromUrl, logicalPath, useTranslations, localePath } from "../../i18n/utils";
-import { publicoDaUrl, publicoDefs } from "../../data/audiencia";
-import { metaDoLado } from "../../data/metaPorPublico";
+import { getLangFromUrl, useTranslations, localePath } from "../../i18n/utils";
+import { metaDaPagina } from "../../data/metaPorPagina";
 import { defaultLocale, type Locale } from "../../i18n/config";
 
 const lang = getLangFromUrl(Astro.url);
 // De que lado do site esta instancia esta montada — sai da URL, como no
-// Header. Nas rotas legadas (fora de /governo e /empresas) publico e null:
-// base vazia e nenhum filtro, ou seja, o comportamento de sempre.
-const publico = publicoDaUrl(logicalPath(Astro.url));
-const base = publico ? publicoDefs[publico].base : "";
-const unidadesDoLado = publico ? publicoDefs[publico].unidades : null;
 const tr = useTranslations(lang);
 
 interface CaseItem {
@@ -55,7 +49,7 @@ const casesI18n: Record<Locale, CasesCopy> = {
     heroEyebrow: "Cases",
     heroTitle: "O que a Proc resolve em cada unidade de negócio",
     heroLead:
-      "Conheça como a Proc AI Platform resolve desafios concretos de segurança pública, ambientes corporativos, infraestrutura crítica e indústria.",
+      "Conheça como a Proc AI Platform resolve desafios concretos de ambientes corporativos, infraestrutura crítica e indústria.",
     legend:
       "Abaixo, um case em operação e as aplicações que a plataforma entrega nas demais unidades. Cada bloco indica qual é qual.",
     realTag: "Case em operação",
@@ -67,48 +61,34 @@ const casesI18n: Record<Locale, CasesCopy> = {
     finalCtaText: "Fale com um especialista Proc e descubra a solução ideal para o seu contexto.",
     items: [
       {
-        unitSlug: "cidades-inteligentes",
-        title: "Pato 360° — rede de videomonitoramento inteligente no Sudoeste do Paraná",
-        problem: "Rede municipal de câmeras crescendo rapidamente, com necessidade de reconhecimento facial, leitura de placas e análise de áudio operando em tempo real.",
-        challenge: "Integrar centenas de câmeras públicas e privadas a uma central única, replicando o modelo em outros municípios da região.",
-        solution: "A Proc desenvolve a infraestrutura de software do Pato 360°, em Pato Branco, e das demais soluções municipais entregues via CPSI (Contrato Público para Solução Inovadora, Lei 182/2021) no Sudoeste do Paraná — cada uma nomeada para o seu município, integrada ao Sistema Córtex e à Polícia Rodoviária Federal.",
-        results: ["5 municípios atendidos via CPSI", "700+ câmeras com IA em Pato Branco", "Alertas em tempo real à Polícia Militar"],
-        isReal: true,
-        source: "Fontes: dados públicos da Prefeitura e da Câmara Municipal de Pato Branco/PR.",
-      },
-      {
         unitSlug: "ambientes-inteligentes",
         title: "Controle de acesso facial sem trocar as catracas",
         problem: "Catracas com cartão de acesso gerando filas nos horários de troca de turno e vulnerabilidade a compartilhamento de credenciais.",
         challenge: "Elevar o controle de acesso sem interromper a operação nem substituir todo o parque de equipamentos já instalado.",
         solution: "Reconhecimento facial integrado às catracas existentes via API aberta da Proc AI Platform, com fallback automático para os dispositivos antigos durante a transição.",
-        results: ["Passagem sem cartão ou crachá", "Credencial que não se empresta", "Integra ao equipamento já instalado"],
-      },
+        results: ["Passagem sem cartão ou crachá", "Credencial que não se empresta", "Integra ao equipamento já instalado"] },
       {
         unitSlug: "infraestrutura-de-ti",
         title: "Migração para cloud híbrida com continuidade operacional",
         problem: "Infraestrutura local antiga, sem redundância, com risco de indisponibilidade em picos de demanda.",
         challenge: "Migrar cargas críticas para a nuvem sem interromper a operação do cliente, mantendo compliance e governança de dados.",
         solution: "Arquitetura de cloud híbrida gerenciada pelo NOC da Proc, com monitoramento 24x7, backup automatizado e plano de continuidade testado.",
-        results: ["Cargas críticas em nuvem híbrida", "Backup automatizado e testado", "Plano de continuidade documentado"],
-      },
+        results: ["Cargas críticas em nuvem híbrida", "Backup automatizado e testado", "Plano de continuidade documentado"] },
       {
         unitSlug: "ia-industrial",
         title: "Inspeção visual automatizada em linha de produção",
         problem: "Inspeção de qualidade feita manualmente, com alta variabilidade entre inspetores e baixa rastreabilidade de defeitos.",
         challenge: "Automatizar a inspeção sem reduzir a velocidade da linha, identificando defeitos sutis em tempo real.",
         solution: "Câmeras de Edge AI instaladas na linha existente, com modelos de visão computacional treinados para os defeitos específicos do processo do cliente.",
-        results: ["Detecção em tempo real na linha", "Rastreabilidade por peça", "Modelos treinados nos defeitos do processo"],
-      },
-    ],
-  },
+        results: ["Detecção em tempo real na linha", "Rastreabilidade por peça", "Modelos treinados nos defeitos do processo"] },
+    ] },
   en: {
     metaDescription:
       "Proc Group success cases: problem, challenge, solution and results in Smart Cities, Smart Environments, IT Infrastructure and Industrial AI.",
     heroEyebrow: "Cases",
     heroTitle: "What Proc solves in each business unit",
     heroLead:
-      "See how the Proc AI Platform solves concrete challenges in public safety, corporate environments, critical infrastructure and industry.",
+      "See how the Proc AI Platform solves concrete challenges in corporate environments, critical infrastructure and industry.",
     legend:
       "Below, one case in operation and the applications the platform delivers in the other units. Each block says which is which.",
     realTag: "Case in operation",
@@ -120,48 +100,34 @@ const casesI18n: Record<Locale, CasesCopy> = {
     finalCtaText: "Talk to a Proc specialist and find the right solution for your context.",
     items: [
       {
-        unitSlug: "cidades-inteligentes",
-        title: "Pato 360° — intelligent video-surveillance network in Southwest Paraná",
-        problem: "A rapidly growing municipal camera network needing facial recognition, license-plate reading and audio analysis operating in real time.",
-        challenge: "Integrating hundreds of public and private cameras into a single control center, replicating the model in other municipalities in the region.",
-        solution: "Proc builds the software infrastructure of Pato 360°, in Pato Branco, and of the other municipal solutions delivered via CPSI (Public Contract for Innovative Solutions, Law 182/2021) across Southwest Paraná — each named after its own municipality, integrated with the Córtex System and the Federal Highway Police.",
-        results: ["5 municipalities served via CPSI", "700+ AI cameras in Pato Branco", "Real-time alerts to the Military Police"],
-        isReal: true,
-        source: "Sources: public data from the Pato Branco/PR City Hall and City Council.",
-      },
-      {
         unitSlug: "ambientes-inteligentes",
         title: "Facial access control without replacing the turnstiles",
         problem: "Card-based turnstiles creating queues at shift changes and vulnerability to credential sharing.",
         challenge: "Raising the bar for access control without interrupting operations or replacing the hardware already installed.",
         solution: "Facial recognition integrated into the existing turnstiles via the Proc AI Platform's open API, with automatic fallback to the legacy devices during the transition.",
-        results: ["No card or badge to carry", "A credential that cannot be lent", "Works with the hardware already installed"],
-      },
+        results: ["No card or badge to carry", "A credential that cannot be lent", "Works with the hardware already installed"] },
       {
         unitSlug: "infraestrutura-de-ti",
         title: "Migration to hybrid cloud with operational continuity",
         problem: "Aging on-premises infrastructure, without redundancy, at risk of downtime during demand peaks.",
         challenge: "Migrating critical workloads to the cloud without interrupting the client's operation, maintaining compliance and data governance.",
         solution: "A hybrid cloud architecture managed by Proc's NOC, with 24x7 monitoring, automated backup and a tested continuity plan.",
-        results: ["Critical workloads on hybrid cloud", "Automated, tested backup", "Documented continuity plan"],
-      },
+        results: ["Critical workloads on hybrid cloud", "Automated, tested backup", "Documented continuity plan"] },
       {
         unitSlug: "ia-industrial",
         title: "Automated visual inspection on a production line",
         problem: "Quality inspection done manually, with high variability between inspectors and low defect traceability.",
         challenge: "Automating inspection without slowing the line, spotting subtle defects in real time.",
         solution: "Edge AI cameras installed on the existing line, with computer-vision models trained for the client's process-specific defects.",
-        results: ["Real-time detection on the line", "Per-part traceability", "Models trained on the process's own defects"],
-      },
-    ],
-  },
+        results: ["Real-time detection on the line", "Per-part traceability", "Models trained on the process's own defects"] },
+    ] },
   es: {
     metaDescription:
       "Casos de éxito de Proc Group: problema, desafío, solución y resultados en Ciudades Inteligentes, Ambientes Inteligentes, Infraestructura de TI e IA Industrial.",
     heroEyebrow: "Casos",
     heroTitle: "Lo que Proc resuelve en cada unidad de negocio",
     heroLead:
-      "Conoce cómo la Proc AI Platform resuelve desafíos concretos de seguridad pública, entornos corporativos, infraestructura crítica e industria.",
+      "Conoce cómo la Proc AI Platform resuelve desafíos concretos de entornos corporativos, infraestructura crítica e industria.",
     legend:
       "Abajo, un caso en operación y las aplicaciones que la plataforma entrega en las demás unidades. Cada bloque indica cuál es cuál.",
     realTag: "Caso en operación",
@@ -173,48 +139,35 @@ const casesI18n: Record<Locale, CasesCopy> = {
     finalCtaText: "Habla con un especialista Proc y descubre la solución ideal para tu contexto.",
     items: [
       {
-        unitSlug: "cidades-inteligentes",
-        title: "Pato 360° — red de videovigilancia inteligente en el Sudoeste de Paraná",
-        problem: "Red municipal de cámaras creciendo rápidamente, con necesidad de reconocimiento facial, lectura de placas y análisis de audio operando en tiempo real.",
-        challenge: "Integrar cientos de cámaras públicas y privadas en una central única, replicando el modelo en otros municipios de la región.",
-        solution: "Proc desarrolla la infraestructura de software del Pato 360°, en Pato Branco, y de las demás soluciones municipales entregadas vía CPSI (Contrato Público para Solución Innovadora, Ley 182/2021) en el Sudoeste de Paraná — cada una con el nombre de su municipio, integrada al Sistema Córtex y a la Policía Federal de Carreteras.",
-        results: ["5 municipios atendidos vía CPSI", "700+ cámaras con IA en Pato Branco", "Alertas en tiempo real a la Policía Militar"],
-        isReal: true,
-        source: "Fuentes: datos públicos de la Alcaldía y del Concejo Municipal de Pato Branco/PR.",
-      },
-      {
         unitSlug: "ambientes-inteligentes",
         title: "Control de acceso facial sin cambiar los torniquetes",
         problem: "Torniquetes con tarjeta de acceso generando filas en los cambios de turno y vulnerabilidad al uso compartido de credenciales.",
         challenge: "Elevar el control de acceso sin interrumpir la operación ni sustituir todo el parque de equipos ya instalado.",
         solution: "Reconocimiento facial integrado a los torniquetes existentes vía la API abierta de la Proc AI Platform, con fallback automático a los dispositivos antiguos durante la transición.",
-        results: ["Paso sin tarjeta ni credencial física", "Una credencial que no se presta", "Integra al equipo ya instalado"],
-      },
+        results: ["Paso sin tarjeta ni credencial física", "Una credencial que no se presta", "Integra al equipo ya instalado"] },
       {
         unitSlug: "infraestrutura-de-ti",
         title: "Migración a nube híbrida con continuidad operativa",
         problem: "Infraestructura local antigua, sin redundancia, con riesgo de indisponibilidad en picos de demanda.",
         challenge: "Migrar cargas críticas a la nube sin interrumpir la operación del cliente, manteniendo compliance y gobernanza de datos.",
         solution: "Arquitectura de nube híbrida gestionada por el NOC de Proc, con monitoreo 24x7, backup automatizado y plan de continuidad probado.",
-        results: ["Cargas críticas en nube híbrida", "Backup automatizado y probado", "Plan de continuidad documentado"],
-      },
+        results: ["Cargas críticas en nube híbrida", "Backup automatizado y probado", "Plan de continuidad documentado"] },
       {
         unitSlug: "ia-industrial",
         title: "Inspección visual automatizada en línea de producción",
         problem: "Inspección de calidad hecha manualmente, con alta variabilidad entre inspectores y baja trazabilidad de defectos.",
         challenge: "Automatizar la inspección sin reducir la velocidad de la línea, identificando defectos sutiles en tiempo real.",
         solution: "Cámaras de Edge AI instaladas en la línea existente, con modelos de visión artificial entrenados para los defectos específicos del proceso del cliente.",
-        results: ["Detección en tiempo real en la línea", "Trazabilidad por pieza", "Modelos entrenados en los defectos del proceso"],
-      },
-    ],
-  },
-};
+        results: ["Detección en tiempo real en la línea", "Trazabilidad por pieza", "Modelos entrenados en los defectos del proceso"] },
+    ] } };
 
 const t = casesI18n[lang];
-// Cada lado ve so os blocos das suas unidades: governo fica com o case do
-// Pato 360; empresas, com as tres aplicacoes da plataforma.
-const m = metaDoLado(publico, "cases", lang);
-const itens = t.items.filter((c) => !unidadesDoLado || unidadesDoLado.includes(c.unitSlug));
+// O case do Pato 360 (Pato Branco) saiu em 2026-08-27 junto com o lado
+// publico: e case municipal e vai para o site de cidades e governo. Sobram as
+// tres aplicacoes da plataforma — nenhuma com cliente nomeado. O site ficou
+// sem prova de campo com nome; ver a pauta fotografica abaixo.
+const m = metaDaPagina("cases", lang);
+const itens = t.items;
 
 // Direcao de arte das fotos que ainda nao existem. Hoje os cards mostram a
 // ilustracao vetorial da cena (CaseIllustration.astro) — decisao de 2026-08-26:
@@ -226,9 +179,6 @@ const itens = t.items.filter((c) => !unidadesDoLado || unidadesDoLado.includes(c
 // enquadramento de cada cena, ja desenhado em CaseIllustration.astro.
 // Inventario do material real disponivel e as travas de cada cena: cofre,
 // nota "Projeto - Site institucional".
-//   cidades-inteligentes  Sala/Centro Integrado de Operacoes com video wall
-//                          (mapas, alertas). Operadores de costas. Um unico
-//                          ponto de vermelho, no alerta ativo.
 //   ambientes-inteligentes Terminal de acesso facial no terco direito, catraca
 //                          JA INSTALADA no mesmo quadro (e o argumento de venda),
 //                          deteccao sobre a pessoa em passagem.
@@ -243,16 +193,15 @@ const schema = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
   name: m?.title ?? "Cases Proc Group",
-  description: m?.description ?? t.metaDescription,
-};
+  description: m?.description ?? t.metaDescription };
 ---
 
 <BaseLayout title={m?.title ?? tr.nav.cases} description={m?.description ?? t.metaDescription} schema={schema}>
   <div class="container">
     <Breadcrumb
       items={[
-        { label: tr.nav.home, href: localePath(base || "/", lang) },
-        { label: tr.nav.cases, href: localePath(`${base}/cases`, lang) },
+        { label: tr.nav.home, href: localePath("/", lang) },
+        { label: tr.nav.cases, href: localePath(`/cases`, lang) },
       ]}
     />
   </div>
@@ -262,7 +211,7 @@ const schema = {
       <p class="eyebrow">{t.heroEyebrow}</p>
       <h1>{t.heroTitle}</h1>
       <p class="lead">{t.heroLead}</p>
-      {!publico && <p class="legend">{t.legend}</p>}
+      <p class="legend">{t.legend}</p>
     </div>
   </section>
 

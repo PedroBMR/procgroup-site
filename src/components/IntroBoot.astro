@@ -1,7 +1,7 @@
 ---
 /**
  * Abertura da raiz: a marca se materializa a partir de um campo de pontos e
- * se dissolve de volta, entregando o seletor de público.
+ * se dissolve de volta, entregando a home.
  *
  * Nuvem de pontos dispersa → converge para formar o símbolo e o nome → segura
  * → dispersa em fade. Nada de retícula, moldura ou linha cruzando a marca: a
@@ -38,7 +38,7 @@ interface Props {
   lang: Locale;
 }
 const { lang } = Astro.props;
-const t = usePages(lang).comecar.intro;
+const t = usePages(lang).abertura;
 ---
 
 <div class="intro" data-intro data-marca={withBase("/brand/mark-red.webp")}>
@@ -64,7 +64,8 @@ const t = usePages(lang).comecar.intro;
      2.30s  pontos dispersam
      2.45s  a tela inteira sai em fade (0.6s)
      3.10s  fora do caminho — a página assume
-     Estes tempos e o `--t` do seletor (index.astro) andam juntos. */
+     Nasceu na página de seleção de público (morta em 2026-08-27); hoje abre
+     a home. */
   .intro {
     position: fixed;
     inset: 0;
@@ -142,8 +143,8 @@ const t = usePages(lang).comecar.intro;
     .pular { right: var(--space-4); bottom: var(--space-4); }
   }
 
-  /* Quem pediu menos movimento não recebe abertura nenhuma: a página já começa
-     no seletor (o `--t` do painel também zera, em index.astro). */
+  /* Quem pediu menos movimento não recebe abertura nenhuma: a home aparece
+     direto. */
   @media (prefers-reduced-motion: reduce) {
     .intro { display: none; }
   }

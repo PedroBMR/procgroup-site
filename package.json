@@ -10,7 +10,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "checa-divisao": "node scripts/checa-divisao.mjs"
+    "checa-sem-governo": "node scripts/checa-sem-governo.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",

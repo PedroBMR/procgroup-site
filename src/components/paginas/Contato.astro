@@ -4,24 +4,17 @@ import Breadcrumb from "../Breadcrumb.astro";
 import ContactChannels from "../ContactChannels.astro";
 import { withBase } from "../../utils/url";
 import { getBusinessUnits } from "../../data/businessUnits";
-import { getLangFromUrl, logicalPath, useTranslations, localePath } from "../../i18n/utils";
-import { publicoDaUrl, publicoDefs } from "../../data/audiencia";
-import { metaDoLado } from "../../data/metaPorPublico";
+import { getLangFromUrl, useTranslations, localePath } from "../../i18n/utils";
+import { metaDaPagina } from "../../data/metaPorPagina";
 import { usePages } from "../../i18n/pages";
 import { defaultLocale, type Locale } from "../../i18n/config";
 
 const lang = getLangFromUrl(Astro.url);
 // De que lado do site esta instancia esta montada — sai da URL, como no
-// Header. Nas rotas legadas (fora de /governo e /empresas) publico e null:
-// base vazia e nenhum filtro, ou seja, o comportamento de sempre.
-const publico = publicoDaUrl(logicalPath(Astro.url));
-const base = publico ? publicoDefs[publico].base : "";
-const unidadesDoLado = publico ? publicoDefs[publico].unidades : null;
 const tr = useTranslations(lang);
 const t = usePages(lang).contato;
-const m = metaDoLado(publico, "contato", lang);
+const m = metaDaPagina("contato", lang);
 const interests = getBusinessUnits(lang)
-  .filter((u) => !unidadesDoLado || unidadesDoLado.includes(u.slug))
   .map((u) => u.name);
 ---
 
@@ -29,8 +22,8 @@ const interests = getBusinessUnits(lang)
   <div class="container">
     <Breadcrumb
       items={[
-        { label: tr.nav.home, href: localePath(base || "/", lang) },
-        { label: tr.nav.contato, href: localePath(`${base}/contato`, lang) },
+        { label: tr.nav.home, href: localePath("/", lang) },
+        { label: tr.nav.contato, href: localePath(`/contato`, lang) },
       ]}
     />
   </div>
@@ -101,8 +94,7 @@ const interests = getBusinessUnits(lang)
   const MSG = {
     sending: form?.dataset.sending || "…",
     success: form?.dataset.success || "",
-    error: form?.dataset.error || "",
-  };
+    error: form?.dataset.error || "" };
 
   // O contact.php devolve mensagens específicas ("Informe um e-mail válido",
   // "Não foi possível enviar agora…") — bem mais úteis que um erro genérico.
@@ -139,8 +131,7 @@ const interests = getBusinessUnits(lang)
       const response = await fetch(form.action, {
         method: "POST",
         body: new FormData(form),
-        headers: { Accept: "application/json" },
-      });
+        headers: { Accept: "application/json" } });
       const result = await response.json();
       status.textContent = statusText(result);
       status.classList.add(result.ok ? "is-success" : "is-error");

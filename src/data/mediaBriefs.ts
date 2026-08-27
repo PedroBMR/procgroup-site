@@ -2,7 +2,6 @@ import type { Locale } from "../i18n/config";
 import heroIaIndustrial from "../assets/images/solucoes/hero-ia-industrial.jpg";
 import heroAmbientesInteligentes from "../assets/images/solucoes/hero-ambientes-inteligentes.jpg";
 import heroInfraestruturaDeTi from "../assets/images/solucoes/hero-infraestrutura-de-ti.jpg";
-import heroCidadesInteligentes from "../assets/images/solucoes/hero-cidades-inteligentes.jpg";
 
 // Briefings de arte dos assets de cada página de solução.
 // Com `asset` preenchido, o BusinessUnitTemplate renderiza a imagem real; sem
@@ -56,16 +55,5 @@ export const solutionMedia: Record<string, MediaBrief> = {
     prompt:
       "Data center moderno com corredor de racks de servidores (corredor frio) e luzes de status; em primeiro plano ou ao lado, equipe técnica (NOC) monitorando um grande painel de dashboards de disponibilidade, uso de CPU/rede e status de backup. Ícones sutis de cloud, backup e uptime 24×7. Iluminação azulada; paleta navy + vermelho. Proporção 16:9.",
     asset: heroInfraestruturaDeTi,
-  },
-  "cidades-inteligentes": {
-    kind: "video",
-    caption: {
-      pt: "Centro Integrado de Operações monitorando a cidade: mapas, alertas, reconhecimento facial e leitura de placas.",
-      en: "Integrated Operations Center monitoring the city: maps, alerts, facial recognition and license-plate reading.",
-      es: "Centro Integrado de Operaciones monitoreando la ciudad: mapas, alertas, reconocimiento facial y lectura de placas.",
-    },
-    prompt:
-      "Centro Integrado de Operações (CIOp) monitorando a cidade em tempo real: paredão de telas (video wall) com mapas digitais, alertas ativos, reconhecimento facial e leitura automática de placas (LPR). Ao fundo ou intercalado, cidade à noite com câmeras inteligentes e fluxo de veículos. Referência ao Pato 360°. Tom de segurança pública, sério e tecnológico; paleta navy + vermelho. Proporção 16:9.",
-    asset: heroCidadesInteligentes,
   },
 };

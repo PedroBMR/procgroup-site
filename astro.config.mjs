@@ -8,30 +8,48 @@ const SITE = 'https://pedrobmr.github.io';
 // checagem esta repetida aqui. Se a lista de hosts mudar la, mude aqui tambem.
 const EH_PRODUCAO = ['www.procgroup.com.br', 'procgroup.com.br'].includes(new URL(SITE).host);
 
-// Rotas que morreram quando o site foi dividido em /governo e /empresas
-// (fase 4 de ARQUITETURA-DOIS-PUBLICOS.md). As paginas de solucao apontam para
-// o novo endereco no lado certo; o resto (cases, empresa, contato, plataforma)
-// existia num recorte que nao ha mais — vai para o seletor da raiz decidir.
-const LADO_DA_SOLUCAO = {
-  'cidades-inteligentes': '/governo',
-  'ambientes-inteligentes': '/empresas',
-  'ia-industrial': '/empresas',
-  'infraestrutura-de-ti': '/empresas',
-};
+// Enderecos mortos, todos apontando para onde a coisa esta hoje.
+//
+// Duas mudancas se acumulam aqui:
+//   1. 2026-08-26 o site foi dividido em /governo e /empresas;
+//   2. 2026-08-27 o CEO tirou cidade e governo daqui — eles ganham site
+//      proprio — e o lado corporativo subiu de /empresas para a raiz.
+//
+// Ou seja: /empresas/* virou /*, e /governo/* nao tem equivalente neste site.
+// O que era do lado publico vai para a home; mandar para uma 404 castigaria
+// quem clicou num link que a propria Proc divulgou.
+const CORPORATIVAS = ['', '/empresa', '/contato', '/cases', '/plataforma-proc-ai',
+  '/solucoes', '/solucoes/ambientes-inteligentes', '/solucoes/ia-industrial',
+  '/solucoes/infraestrutura-de-ti'];
+const PUBLICAS = ['', '/empresa', '/contato', '/cases', '/plataforma-proc-ai',
+  '/solucoes', '/solucoes/cidades-inteligentes'];
+
+// O destino do redirect e uma URL que o navegador vai seguir: precisa do base
+// path, senao na GitHub Pages ele sai de /procgroup-site/empresas/cases para
+// /cases e cai numa 404 do dominio. (Os enderecos de ORIGEM nao levam base: o
+// Astro ja gera o arquivo dentro do base.) Quando o site for para o dominio da
+// Proc, BASE vira '' e os destinos ficam certos sozinhos.
+const BASE = '/procgroup-site';
 const REDIRECTS = {};
 for (const pref of ['', '/en', '/es']) {
-  for (const [slug, lado] of Object.entries(LADO_DA_SOLUCAO)) {
-    REDIRECTS[`${pref}/solucoes/${slug}`] = `${pref}${lado}/solucoes/${slug}`;
+  const raiz = pref || '/';
+  for (const rota of CORPORATIVAS) {
+    REDIRECTS[`${pref}/empresas${rota}`] = `${BASE}${pref}${rota}` || '/';
   }
-  for (const morta of ['/comecar', '/solucoes', '/cases', '/empresa', '/contato', '/plataforma-proc-ai']) {
-    REDIRECTS[`${pref}${morta}`] = pref || '/';
+  for (const rota of PUBLICAS) {
+    REDIRECTS[`${pref}/governo${rota}`] = `${BASE}${raiz}`;
   }
+  // A pagina de escolha entre os dois publicos e a solucao de cidades nunca
+  // mais existem: a raiz e a home, e cidades foi embora com o setor publico.
+  REDIRECTS[`${pref}/comecar`] = `${BASE}${raiz}`;
+  REDIRECTS[`${pref}/solucoes/cidades-inteligentes`] = `${BASE}${raiz}`;
 }
+
 
 // https://astro.build/config
 export default defineConfig({
   site: SITE,
-  base: '/procgroup-site',
+  base: BASE,
   redirects: REDIRECTS,
   integrations: [
     // Sitemap so em producao. Enquanto o site e preview no github.io, todas as

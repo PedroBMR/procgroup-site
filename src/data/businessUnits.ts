@@ -22,7 +22,6 @@ interface UnitBase {
 }
 
 const unitsBase: UnitBase[] = [
-  { slug: "cidades-inteligentes", href: "/solucoes/cidades-inteligentes", color: "var(--red-500)", shortName: "Smart Cities" },
   { slug: "ambientes-inteligentes", href: "/solucoes/ambientes-inteligentes", color: "var(--navy-900)", shortName: "Smart Environments" },
   { slug: "infraestrutura-de-ti", href: "/solucoes/infraestrutura-de-ti", color: "var(--red-600)", shortName: "IT Infrastructure" },
   { slug: "ia-industrial", href: "/solucoes/ia-industrial", color: "var(--navy-700)", shortName: "Industrial AI" },
@@ -45,24 +44,6 @@ interface UnitCopy {
 // home, páginas de solução, cases, evento, mandala e diagrama de fluxo.
 const unitsCopy: Record<Locale, Record<string, UnitCopy>> = {
   pt: {
-    "cidades-inteligentes": {
-      name: "Cidades Inteligentes",
-      shortName: "Cidades",
-      tagline: "Segurança pública e mobilidade urbana com IA",
-      description:
-        "Plataforma de videomonitoramento inteligente, reconhecimento facial e analytics para centros de operações integrados — batizada de Pato 360°, apoiando governos na proteção de cidades e no combate à criminalidade.",
-      team: "Equipe especializada em Segurança Pública",
-      solutions: [
-        "Reconhecimento Facial",
-        "Leitura de Placas (LPR)",
-        "Videomonitoramento Inteligente",
-        "Muralha Digital",
-        "Centro Integrado de Operações",
-        "Analytics",
-        "Botão de Segurança",
-        "Mobilidade Urbana",
-      ],
-    },
     "ambientes-inteligentes": {
       name: "Ambientes Inteligentes",
       shortName: "Ambientes",
@@ -121,24 +102,6 @@ const unitsCopy: Record<Locale, Record<string, UnitCopy>> = {
     },
   },
   en: {
-    "cidades-inteligentes": {
-      name: "Smart Cities",
-      shortName: "Smart Cities",
-      tagline: "Public safety and urban mobility powered by AI",
-      description:
-        "An intelligent video-surveillance, facial-recognition and analytics platform for integrated operations centers — named Pato 360°, helping governments protect cities and fight crime.",
-      team: "Public Safety specialist team",
-      solutions: [
-        "Facial Recognition",
-        "License Plate Reading (LPR)",
-        "Intelligent Video Surveillance",
-        "Digital Wall",
-        "Integrated Operations Center",
-        "Analytics",
-        "Panic Button",
-        "Urban Mobility",
-      ],
-    },
     "ambientes-inteligentes": {
       name: "Smart Environments",
       shortName: "Environments",
@@ -197,24 +160,6 @@ const unitsCopy: Record<Locale, Record<string, UnitCopy>> = {
     },
   },
   es: {
-    "cidades-inteligentes": {
-      name: "Ciudades Inteligentes",
-      shortName: "Ciudades",
-      tagline: "Seguridad pública y movilidad urbana con IA",
-      description:
-        "Plataforma de videovigilancia inteligente, reconocimiento facial y analytics para centros de operaciones integrados — llamada Pato 360°, que apoya a los gobiernos en la protección de ciudades y el combate a la criminalidad.",
-      team: "Equipo especializado en Seguridad Pública",
-      solutions: [
-        "Reconocimiento Facial",
-        "Lectura de Placas (LPR)",
-        "Videovigilancia Inteligente",
-        "Muralla Digital",
-        "Centro Integrado de Operaciones",
-        "Analytics",
-        "Botón de Seguridad",
-        "Movilidad Urbana",
-      ],
-    },
     "ambientes-inteligentes": {
       name: "Ambientes Inteligentes",
       shortName: "Ambientes",
