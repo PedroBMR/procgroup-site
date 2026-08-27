@@ -77,7 +77,7 @@ const opcoes = [
         <span class={`veu veu--${o.id}`} aria-hidden="true"></span>
 
         <div class="conteudo">
-          <div class="marca"><ProcMark size={22} /><span>PROC<b> GROUP</b></span></div>
+          <div class="marca"><ProcMark size={26} /><span>PROC<b> GROUP</b></span></div>
 
           <div class="texto">
             <p class="eyebrow">{t.heroEyebrow}</p>
@@ -88,6 +88,8 @@ const opcoes = [
               <span class="btn btn--g">{t.heroCtaSecondary}</span>
             </div>
           </div>
+
+          <p class="assinatura">procgroup.com.br</p>
 
           <aside class="ficha">
             <span class="ficha-n">{o.n}</span>
@@ -124,13 +126,26 @@ const opcoes = [
     margin-inline: auto;
     padding: var(--space-8) var(--space-12);
     display: grid;
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: auto minmax(0, 1fr);
     gap: var(--space-6);
   }
-  .marca { display: flex; align-items: center; gap: var(--space-3); font-family: var(--font-display); font-weight: 800; letter-spacing: 0.06em; }
+  .marca { display: flex; align-items: center; gap: var(--space-3); font-family: var(--font-display); font-weight: 800; font-size: var(--fs-lg); letter-spacing: 0.06em; }
   .marca b { color: var(--color-text-faint); font-weight: 800; }
 
-  .texto { align-self: center; max-width: 60ch; }
+  /* Assinatura: espelha a ficha no canto oposto. Quem cai numa tela solta
+     precisa saber de quem e — a marca no topo sozinha deixava dúvida. */
+  .assinatura {
+    position: absolute;
+    left: var(--space-12);
+    bottom: var(--space-8);
+    z-index: 3;
+    font-family: ui-monospace, Consolas, monospace;
+    font-size: var(--fs-xs);
+    letter-spacing: 0.14em;
+    color: rgba(255,255,255,0.45);
+  }
+
+  .texto { align-self: center; max-width: 60ch; min-height: 0; max-height: 100%; overflow: auto; scrollbar-width: none; }
   .eyebrow { font-size: var(--fs-xs); font-weight: 600; text-transform: uppercase; letter-spacing: 0.22em; color: var(--red-400); }
   .tela h1 { color: var(--white); margin-top: var(--space-4); text-wrap: balance; }
   .sub { margin-top: var(--space-5); font-size: var(--fs-lg); color: rgba(255,255,255,0.75); max-width: 46ch; text-wrap: pretty; }
@@ -141,10 +156,14 @@ const opcoes = [
 
   /* Ficha da direção: some da impressão mental depois de um tempo, mas é o
      que deixa o Pedro comparar apostas e não só imagens. */
+  /* Fora do fluxo: como linha da grade ela empurrava o conteudo e acabava
+     cortada pelo overflow do quadro em 3 das 5 telas. */
   .ficha {
-    align-self: end;
-    justify-self: end;
-    max-width: 34ch;
+    position: absolute;
+    right: var(--space-12);
+    bottom: var(--space-8);
+    z-index: 3;
+    max-width: 32ch;
     padding: var(--space-5);
     border: 1px solid rgba(255,255,255,0.14);
     border-radius: var(--radius-md);
@@ -163,22 +182,22 @@ const opcoes = [
   /* 01 · sala de controle — HUD: texto à esquerda, mono, régua fina. */
   [data-dir="controle"] .veu { background: linear-gradient(95deg, rgba(6,10,20,0.9) 0%, rgba(6,10,20,0.55) 46%, rgba(6,10,20,0.2) 100%); }
   [data-dir="controle"] .texto { max-width: 44ch; }
-  [data-dir="controle"] h1 { font-size: clamp(2rem, 3.4vw, 3.4rem); line-height: 1.04; }
+  [data-dir="controle"] h1 { font-size: clamp(1.8rem, min(3.4vw, 5vh), 3.4rem); line-height: 1.04; }
   [data-dir="controle"] .eyebrow { font-family: ui-monospace, Consolas, monospace; letter-spacing: 0.3em; }
   [data-dir="controle"] .sub { border-left: 2px solid var(--red-400); padding-left: var(--space-4); }
 
   /* 02 · corte de luz — título gigante, centrado, tudo o mais some. */
   [data-dir="corte"] .veu { background: radial-gradient(70% 55% at 50% 52%, transparent 20%, rgba(2,4,10,0.86) 78%); }
-  [data-dir="corte"] .texto { max-width: 22ch; margin-inline: auto; text-align: center; }
-  [data-dir="corte"] h1 { font-size: clamp(2.6rem, 6vw, 6rem); line-height: 0.94; letter-spacing: -0.01em; }
+  [data-dir="corte"] .texto { max-width: 30ch; margin-inline: auto; text-align: center; }
+  [data-dir="corte"] h1 { font-size: clamp(1.7rem, min(3.2vw, 4.4vh), 3.4rem); line-height: 0.98; letter-spacing: -0.01em; }
   [data-dir="corte"] .eyebrow { letter-spacing: 0.5em; text-indent: 0.5em; color: rgba(255,255,255,0.5); }
   [data-dir="corte"] .sub { margin-inline: auto; max-width: 40ch; }
-  [data-dir="corte"] .ctas { justify-content: center; }
+  [data-dir="corte"] .ctas { justify-content: center; margin-top: var(--space-6); }
 
   /* 03 · varredura — técnico: numeração, filetes, alinhamento à esquerda. */
   [data-dir="varredura"] .veu { background: linear-gradient(180deg, rgba(6,10,20,0.82) 0%, rgba(6,10,20,0.25) 46%, rgba(6,10,20,0.9) 100%); }
   [data-dir="varredura"] .texto { max-width: 50ch; }
-  [data-dir="varredura"] h1 { font-size: clamp(2.1rem, 4vw, 4rem); line-height: 1; }
+  [data-dir="varredura"] h1 { font-size: clamp(1.9rem, min(4vw, 5.4vh), 4rem); line-height: 1; }
   [data-dir="varredura"] .eyebrow::before { content: "— "; }
   [data-dir="varredura"] .sub { padding-top: var(--space-5); border-top: 1px solid rgba(255,255,255,0.16); }
 
@@ -191,11 +210,11 @@ const opcoes = [
     background: rgba(6,10,20,0.5);
     backdrop-filter: blur(4px);
   }
-  [data-dir="mesa"] h1 { font-size: clamp(1.9rem, 3vw, 3rem); line-height: 1.06; }
+  [data-dir="mesa"] h1 { font-size: clamp(1.7rem, min(3vw, 4.2vh), 3rem); line-height: 1.06; }
 
   /* 05 · lente — HUD centrado, com marcas de canto emoldurando o texto. */
   [data-dir="lente"] .veu { background: radial-gradient(60% 60% at 50% 50%, rgba(2,4,10,0.72) 40%, rgba(2,4,10,0.94) 100%); }
-  [data-dir="lente"] .texto { max-width: 34ch; margin-inline: auto; text-align: center; position: relative; padding: var(--space-8); }
+  [data-dir="lente"] .texto { max-width: 40ch; margin-inline: auto; text-align: center; position: relative; padding: var(--space-6); }
   [data-dir="lente"] .texto::before,
   [data-dir="lente"] .texto::after {
     content: "";
@@ -205,7 +224,7 @@ const opcoes = [
   }
   [data-dir="lente"] .texto::before { top: 0; left: 0; border-right: 0; border-bottom: 0; }
   [data-dir="lente"] .texto::after { bottom: 0; right: 0; border-left: 0; border-top: 0; }
-  [data-dir="lente"] h1 { font-size: clamp(2rem, 3.6vw, 3.6rem); line-height: 1.02; }
+  [data-dir="lente"] h1 { font-size: clamp(1.55rem, min(2.6vw, 3.8vh), 2.7rem); line-height: 1.04; }
   [data-dir="lente"] .eyebrow { font-family: ui-monospace, Consolas, monospace; letter-spacing: 0.28em; }
   [data-dir="lente"] .ctas { justify-content: center; }
 
@@ -223,7 +242,9 @@ const opcoes = [
   .seletor-item {
     display: flex; align-items: center; gap: var(--space-3);
     padding: var(--space-2) var(--space-3);
-    min-height: 40px;
+    min-height: 44px;
+    min-width: 44px;
+    justify-content: center;
     border-radius: var(--radius-sm);
     font-family: ui-monospace, Consolas, monospace;
     font-size: var(--fs-xs);
@@ -235,10 +256,20 @@ const opcoes = [
   .seletor-nome { max-width: 0; overflow: hidden; white-space: nowrap; transition: max-width var(--dur-med) ease; }
   .seletor-item:hover .seletor-nome { max-width: 16ch; }
 
+  /* Tela baixa (notebook de 768): o que estourava nao era so a fonte, era o
+     respiro somado entre titulo, subtitulo e botoes. */
+  @media (max-height: 820px) {
+    .tela h1 { margin-top: var(--space-3); }
+    .sub { margin-top: var(--space-4); font-size: var(--fs-base); }
+    .ctas { margin-top: var(--space-5); }
+    .ficha { display: none; }
+  }
+
   @media (max-width: 900px) {
     .conteudo { padding: var(--space-6); grid-template-rows: auto 1fr; }
     .ficha { display: none; }
     .seletor { right: var(--space-2); gap: 0; }
+    .assinatura { left: var(--space-6); bottom: var(--space-5); }
     .seletor-nome { display: none; }
     [data-dir="mesa"] .texto { padding: var(--space-5); }
   }
