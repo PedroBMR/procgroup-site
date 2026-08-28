@@ -45,7 +45,7 @@ export interface EventoUI {
 export const eventoUI: Record<Locale, EventoUI> = {
   pt: {
     langName: "Português",
-    docTitle: "Proc — Soluções de IA, Segurança e Infraestrutura",
+    docTitle: "Proc: Soluções de IA, Segurança e Infraestrutura",
     metaDescription: "Conheça as soluções da Proc e fale com um especialista.",
     skipLink: "Pular para o conteúdo",
     eyebrow: "Proc no evento",
@@ -59,11 +59,11 @@ export const eventoUI: Record<Locale, EventoUI> = {
     proofLabels: ["Clientes atendidos", "Anos de experiência"],
     why: [
       "IA própria: reconhecimento facial, LPR e analytics desenvolvidos pela Proc.",
-      "Equipes especializadas por segmento — não generalistas.",
+      "Equipes especializadas por segmento, não generalistas.",
       "Plataforma de alta disponibilidade, operando 24/7.",
     ],
     formKicker: "Quer que a gente te chame?",
-    formTitle: "Deixe seu contato — retornamos rapidinho.",
+    formTitle: "Deixe seu contato. Retornamos rapidinho.",
     fName: "Nome",
     fPhone: "Telefone / WhatsApp",
     fCity: "Cidade",
@@ -79,7 +79,7 @@ export const eventoUI: Record<Locale, EventoUI> = {
   },
   en: {
     langName: "English",
-    docTitle: "Proc — AI, Security & IT Infrastructure Solutions",
+    docTitle: "Proc: AI, Security and IT Infrastructure Solutions",
     metaDescription: "Explore Proc's solutions and talk to a specialist.",
     skipLink: "Skip to content",
     eyebrow: "Proc at the event",
@@ -93,11 +93,11 @@ export const eventoUI: Record<Locale, EventoUI> = {
     proofLabels: ["Clients served", "Years of experience"],
     why: [
       "In-house AI: facial recognition, LPR and analytics built by Proc.",
-      "Specialist teams per segment — not generalists.",
+      "Specialist teams per segment, not generalists.",
       "A high-availability platform, running 24/7.",
     ],
     formKicker: "Want us to reach out?",
-    formTitle: "Leave your contact — we'll get back quickly.",
+    formTitle: "Leave your contact. We'll get back quickly.",
     fName: "Name",
     fPhone: "Phone / WhatsApp",
     fCity: "City",
@@ -113,7 +113,7 @@ export const eventoUI: Record<Locale, EventoUI> = {
   },
   es: {
     langName: "Español",
-    docTitle: "Proc — Soluciones de IA, Seguridad e Infraestructura",
+    docTitle: "Proc: Soluciones de IA, Seguridad e Infraestructura",
     metaDescription: "Conoce las soluciones de Proc y habla con un especialista.",
     skipLink: "Saltar al contenido",
     eyebrow: "Proc en el evento",
@@ -127,11 +127,11 @@ export const eventoUI: Record<Locale, EventoUI> = {
     proofLabels: ["Clientes atendidos", "Años de experiencia"],
     why: [
       "IA propia: reconocimiento facial, LPR y analytics desarrollados por Proc.",
-      "Equipos especializados por segmento — no generalistas.",
+      "Equipos especializados por segmento, no generalistas.",
       "Plataforma de alta disponibilidad, operando 24/7.",
     ],
     formKicker: "¿Quieres que te contactemos?",
-    formTitle: "Deja tu contacto — te respondemos enseguida.",
+    formTitle: "Deja tu contacto. Te respondemos enseguida.",
     fName: "Nombre",
     fPhone: "Teléfono / WhatsApp",
     fCity: "Ciudad",

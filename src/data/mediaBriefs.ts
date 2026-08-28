@@ -31,7 +31,7 @@ export const solutionMedia: Record<string, MediaBrief> = {
       es: "Línea de producción con cámaras industriales, detección de defectos por IA y dashboards de calidad en tiempo real.",
     },
     prompt:
-      "Vídeo/imagem de uma linha de produção industrial moderna e limpa, com câmeras industriais monitorando o processo. Overlays de visão computacional destacando peças e defeitos (bounding boxes), contagem automática e indicadores de qualidade em dashboards ao lado. Iluminação fria e tecnológica; paleta navy (#0b1730) + vermelho (#e2081d) como cor de destaque; tom sóbrio e profissional. Proporção 16:9. Se vídeo: 10–15s em loop, com movimento sutil de câmera.",
+      "Vídeo/imagem de uma linha de produção industrial moderna e limpa, com câmeras industriais monitorando o processo. Overlays de visão computacional destacando peças e defeitos (bounding boxes), contagem automática e indicadores de qualidade em dashboards ao lado. Iluminação fria e tecnológica; paleta navy (#0b1730) + vermelho (#e2081d) como cor de destaque; tom sóbrio e profissional. Proporção 16:9. Se vídeo: 10-15s em loop, com movimento sutil de câmera.",
     asset: heroIaIndustrial,
   },
   "ambientes-inteligentes": {

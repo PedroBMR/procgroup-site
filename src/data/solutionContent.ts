@@ -70,7 +70,7 @@ const pt: Record<string, SolutionRich> = {
   "ia-industrial": {
     challengesTitle: "Os desafios da indústria moderna",
     challengesIntro: [
-      "A competitividade da indústria exige processos cada vez mais eficientes, produtivos e padronizados. No entanto, muitas operações ainda dependem de inspeções visuais manuais, controles descentralizados e análises baseadas em amostragens — aumentando o risco de falhas, desperdícios e retrabalho.",
+      "A competitividade da indústria exige processos cada vez mais eficientes, produtivos e padronizados. No entanto, muitas operações ainda dependem de inspeções visuais manuais, controles descentralizados e análises baseadas em amostragens, aumentando o risco de falhas, desperdícios e retrabalho.",
       "Nossa solução foi desenvolvida para enfrentar esses desafios com Inteligência Artificial, permitindo que a inspeção e o monitoramento ocorram continuamente, em tempo real e com alto nível de precisão.",
     ],
     challengesListTitle: "Principais desafios que ajudamos a resolver",
@@ -102,7 +102,7 @@ const pt: Record<string, SolutionRich> = {
     resolveTitle: "Como a Proc resolve esse desafio",
     resolveIntro: [
       "Nossa solução combina câmeras industriais, Inteligência Artificial, Visão Computacional e Analytics para monitorar continuamente cada etapa da produção.",
-      "As imagens são analisadas por algoritmos especializados que identificam padrões, reconhecem objetos, detectam anomalias e geram informações para apoiar decisões operacionais — tudo integrado à Proc AI Platform, com indicadores em tempo real.",
+      "As imagens são analisadas por algoritmos especializados que identificam padrões, reconhecem objetos, detectam anomalias e geram informações para apoiar decisões operacionais, tudo integrado à Proc AI Platform, com indicadores em tempo real.",
     ],
     flow: [
       "Linha de Produção",
@@ -351,7 +351,7 @@ const pt: Record<string, SolutionRich> = {
     whyProcTitle: "Por que escolher a Proc?",
     whyProc: [
       "Acreditamos que segurança eficiente depende da combinação entre tecnologia avançada e conhecimento especializado. Por isso, integramos todos os elementos da proteção física em um único ecossistema inteligente, eliminando ilhas de informação.",
-      "Mais do que fornecer equipamentos ou softwares isolados, entregamos projetos personalizados, alinhados à realidade de cada cliente — do diagnóstico à implantação, integração, treinamento e suporte contínuo.",
+      "Mais do que fornecer equipamentos ou softwares isolados, entregamos projetos personalizados, alinhados à realidade de cada cliente, do diagnóstico à implantação, integração, treinamento e suporte contínuo.",
     ],
   },
 
@@ -390,7 +390,7 @@ const pt: Record<string, SolutionRich> = {
     resolveTitle: "Como a Proc resolve esse desafio",
     resolveIntro: [
       "Nossa equipe gerencia toda a infraestrutura tecnológica da empresa, do ambiente local à nuvem, monitorando continuamente servidores, redes, aplicações e serviços críticos.",
-      "Usamos ferramentas de monitoramento, automação e analytics para identificar anomalias, prevenir indisponibilidades e garantir segurança e desempenho — tudo integrado à Proc AI Platform, com uma visão unificada da saúde da infraestrutura.",
+      "Usamos ferramentas de monitoramento, automação e analytics para identificar anomalias, prevenir indisponibilidades e garantir segurança e desempenho, tudo integrado à Proc AI Platform, com uma visão unificada da saúde da infraestrutura.",
     ],
     flow: [
       "Servidores • Redes • Firewalls • Cloud • Aplicações",
@@ -406,7 +406,7 @@ const pt: Record<string, SolutionRich> = {
     featureGroups: [
       {
         title: "Proc Cloud",
-        intro: "Infraestrutura própria em data center, com ambientes dedicados e gerenciados — e Oracle Cloud para projetos corporativos de maior porte, escalando recursos conforme a demanda.",
+        intro: "Infraestrutura própria em data center, com ambientes dedicados e gerenciados, e Oracle Cloud para projetos corporativos de maior porte, escalando recursos conforme a demanda.",
         items: [
           "Hospedagem de servidores e ambientes dedicados",
           "Cloud privada e híbrida",
@@ -419,7 +419,7 @@ const pt: Record<string, SolutionRich> = {
       },
       {
         title: "Backup em Nuvem",
-        intro: "Proteção de informações críticas com cópias automáticas em ambiente seguro — validando rotinas e garantindo recuperação rápida quando for necessário.",
+        intro: "Proteção de informações críticas com cópias automáticas em ambiente seguro, validando rotinas e garantindo recuperação rápida quando for necessário.",
         items: [
           "Backup automático e armazenamento seguro",
           "Criptografia",
@@ -431,7 +431,7 @@ const pt: Record<string, SolutionRich> = {
       },
       {
         title: "Checklist Inteligente de Abertura de Lojas",
-        intro: "Uma solução exclusiva da Proc: antes do início do atendimento, a plataforma verifica automaticamente se todos os sistemas e equipamentos essenciais estão funcionando — reduzindo o risco de interrupções durante o expediente.",
+        intro: "Uma solução exclusiva da Proc: antes do início do atendimento, a plataforma verifica automaticamente se todos os sistemas e equipamentos essenciais estão funcionando, reduzindo o risco de interrupções durante o expediente.",
         items: [
           "Banco de dados",
           "Carga de PDVs",
@@ -531,7 +531,7 @@ const pt: Record<string, SolutionRich> = {
     whyProc: [
       "Desde 2014, acompanhamos a evolução tecnológica de nossos clientes, administrando ambientes críticos e garantindo que suas operações permaneçam disponíveis, seguras e preparadas para crescer.",
       "Nosso diferencial está na combinação entre conhecimento técnico, monitoramento preventivo, infraestrutura própria em Cloud e uma equipe altamente especializada, capaz de atuar de forma consultiva em cada projeto.",
-      "Mais do que resolver problemas quando eles acontecem, trabalhamos para evitar que eles ocorram — protegendo a continuidade do negócio.",
+      "Mais do que resolver problemas quando eles acontecem, trabalhamos para evitar que eles ocorram, protegendo a continuidade do negócio.",
     ],
   },
 
@@ -541,7 +541,7 @@ const en: Record<string, SolutionRich> = {
   "ia-industrial": {
     challengesTitle: "The challenges of modern industry",
     challengesIntro: [
-      "Industrial competitiveness demands processes that are ever more efficient, productive and standardized. Yet many operations still rely on manual visual inspection, decentralized controls and sample-based analysis — increasing the risk of failures, waste and rework.",
+      "Industrial competitiveness demands processes that are ever more efficient, productive and standardized. Yet many operations still rely on manual visual inspection, decentralized controls and sample-based analysis, increasing the risk of failures, waste and rework.",
       "Our solution was built to tackle these challenges with Artificial Intelligence, letting inspection and monitoring run continuously, in real time and with a high level of precision.",
     ],
     challengesListTitle: "Key challenges we help solve",
@@ -573,7 +573,7 @@ const en: Record<string, SolutionRich> = {
     resolveTitle: "How Proc solves this challenge",
     resolveIntro: [
       "Our solution combines industrial cameras, Artificial Intelligence, Computer Vision and Analytics to continuously monitor every stage of production.",
-      "Images are analyzed by specialized algorithms that identify patterns, recognize objects, detect anomalies and generate information to support operational decisions — all integrated into the Proc AI Platform, with real-time indicators.",
+      "Images are analyzed by specialized algorithms that identify patterns, recognize objects, detect anomalies and generate information to support operational decisions, all integrated into the Proc AI Platform, with real-time indicators.",
     ],
     flow: ["Production Line", "Image Capture", "Computer Vision", "Artificial Intelligence", "Analysis and Classification", "Automatic Alerts", "Dashboards and Indicators", "Decision-Making"],
     howTitle: "How it works",
@@ -674,7 +674,7 @@ const en: Record<string, SolutionRich> = {
       { title: "Preventive Monitoring", intro: "AI automatically identifies events that may pose risks to the operation.", items: ["People in restricted areas", "Perimeter intrusion", "Dwell time above the allowed limit", "Abandoned or removed objects", "People running", "Movement during unauthorized hours", "Unauthorized vehicles"] },
       { title: "Intelligent Access Control", intro: "Manage all people flow through a single platform.", items: ["Facial recognition", "Registration of employees, visitors and providers", "Control by group, schedule and area", "Integration with turnstiles and barriers", "Facial terminals and credentials", "QR Code, biometrics and RFID cards"] },
       { title: "Vehicle Control", intro: "Fully automate vehicle access.", items: ["Automatic license-plate reading (LPR)", "Registration of vehicles, visitors and suppliers", "Integration with barriers and space control", "Full history and alerts", "Blacklists and whitelists"] },
-      { title: "Intelligent Parking Management", intro: "More than controlling entries and exits — strategic information on parking usage.", items: ["Automatic access control", "Real-time occupancy", "Average dwell time", "Vehicles in excessive dwell", "Entry and exit flow", "Dashboards and automatic alerts"] },
+      { title: "Intelligent Parking Management", intro: "More than controlling entries and exits, strategic information on parking usage.", items: ["Automatic access control", "Real-time occupancy", "Average dwell time", "Vehicles in excessive dwell", "Entry and exit flow", "Dashboards and automatic alerts"] },
       { title: "People-Flow Intelligence", intro: "Understand how people behave within your organization.", items: ["People counting", "Flow per environment and occupancy", "Heat maps", "Peak hours", "Average dwell time", "Usage indicators"] },
     ],
     applicationsTitle: "Applications",
@@ -718,7 +718,7 @@ const en: Record<string, SolutionRich> = {
     whyProcTitle: "Why choose Proc?",
     whyProc: [
       "We believe effective security depends on combining advanced technology with specialized knowledge. That's why we integrate every element of physical protection into a single intelligent ecosystem, eliminating information silos.",
-      "More than supplying isolated equipment or software, we deliver tailored projects aligned with each client's reality — from diagnosis to deployment, integration, training and ongoing support.",
+      "More than supplying isolated equipment or software, we deliver tailored projects aligned with each client's reality, from diagnosis to deployment, integration, training and ongoing support.",
     ],
   },
 
@@ -741,7 +741,7 @@ const en: Record<string, SolutionRich> = {
     ],
     whyTitle: "Why invest in Infrastructure Management?",
     whyIntro: [
-      "Technology is no longer just a support resource — it has become an essential part of the business. Ensuring servers, applications, networks and equipment are available, secure and running is fundamental to operational continuity.",
+      "Technology is no longer just a support resource. It has become an essential part of the business. Ensuring servers, applications, networks and equipment are available, secure and running is fundamental to operational continuity.",
       "Proc acts preventively, identifying risks before they affect the business and using continuous monitoring to keep the entire infrastructure under control.",
     ],
     comparisonLeftHead: "Traditional Management",
@@ -757,14 +757,14 @@ const en: Record<string, SolutionRich> = {
     resolveTitle: "How Proc solves this challenge",
     resolveIntro: [
       "Our team manages the company's entire technology infrastructure, from on-premises to the cloud, continuously monitoring servers, networks, applications and critical services.",
-      "We use monitoring, automation and analytics tools to identify anomalies, prevent downtime and ensure security and performance — all integrated into the Proc AI Platform, with a unified view of infrastructure health.",
+      "We use monitoring, automation and analytics tools to identify anomalies, prevent downtime and ensure security and performance, all integrated into the Proc AI Platform, with a unified view of infrastructure health.",
     ],
     flow: ["Servers • Networks • Firewalls • Cloud • Applications", "Continuous Monitoring", "Intelligent Analysis", "Preventive Detection", "Automatic Alerts", "Specialist Team", "Correction and Optimization", "Operation Availability"],
     featuresTitle: "Our solutions",
     featureGroups: [
-      { title: "Proc Cloud", intro: "Own data-center infrastructure, with dedicated managed environments — and Oracle Cloud for larger corporate projects, scaling resources on demand.", items: ["Server hosting and dedicated environments", "Private and hybrid cloud", "Oracle Cloud", "Virtualization", "High availability", "24×7 monitoring", "Scalable environments"] },
-      { title: "Cloud Backup", intro: "Protection of critical information with automatic copies in a secure environment — validating routines and ensuring fast recovery when needed.", items: ["Automatic backup and secure storage", "Encryption", "Fast recovery", "Ransomware protection", "Versioning and configurable retention", "Routine monitoring and execution reports"] },
-      { title: "Smart Store-Opening Checklist", intro: "A Proc-exclusive solution: before opening, the platform automatically checks that every essential system and device is working — cutting the risk of interruptions during business hours.", items: ["Database", "POS loading", "Scale loading", "Invoice (NF-e) transmitters", "Store–headquarters communication", "Store credit", "Internet links", "Scheduled routines and critical services"] },
+      { title: "Proc Cloud", intro: "Own data-center infrastructure, with dedicated managed environments, and Oracle Cloud for larger corporate projects, scaling resources on demand.", items: ["Server hosting and dedicated environments", "Private and hybrid cloud", "Oracle Cloud", "Virtualization", "High availability", "24×7 monitoring", "Scalable environments"] },
+      { title: "Cloud Backup", intro: "Protection of critical information with automatic copies in a secure environment, validating routines and ensuring fast recovery when needed.", items: ["Automatic backup and secure storage", "Encryption", "Fast recovery", "Ransomware protection", "Versioning and configurable retention", "Routine monitoring and execution reports"] },
+      { title: "Smart Store-Opening Checklist", intro: "A Proc-exclusive solution: before opening, the platform automatically checks that every essential system and device is working, cutting the risk of interruptions during business hours.", items: ["Database", "POS loading", "Scale loading", "Invoice (NF-e) transmitters", "Store-headquarters communication", "Store credit", "Internet links", "Scheduled routines and critical services"] },
       { title: "Complete Infrastructure Management", intro: "Our team continuously oversees every component of the IT environment.", items: ["Server administration", "Network, switch, router and corporate Wi-Fi management", "Active Directory and virtualization", "Storage", "Windows Server and Linux", "Databases", "Monitoring, asset management and inventory"] },
       { title: "Information Security", intro: "Complete protection for corporate environments.", items: ["Corporate firewall", "Antivirus management", "Security policies and access control", "VPN and network segmentation", "Threat monitoring", "Server hardening", "Protection against malware and ransomware"] },
       { title: "24×7 Monitoring", intro: "We continuously watch infrastructure behavior to spot risks before they affect the business.", items: ["Servers and applications", "Internet links", "CPU, memory and disk space", "Services and processes", "Network equipment", "Databases", "System availability"] },
@@ -808,7 +808,7 @@ const en: Record<string, SolutionRich> = {
     whyProc: [
       "Since 2014, we've followed our clients' technological evolution, managing critical environments and keeping their operations available, secure and ready to grow.",
       "Our edge lies in combining technical knowledge, preventive monitoring, our own cloud infrastructure and a highly specialized team that acts as a consultant on every project.",
-      "More than solving problems when they happen, we work to prevent them — protecting business continuity.",
+      "More than solving problems when they happen, we work to prevent them, protecting business continuity.",
     ],
   },
 
@@ -818,7 +818,7 @@ const es: Record<string, SolutionRich> = {
   "ia-industrial": {
     challengesTitle: "Los desafíos de la industria moderna",
     challengesIntro: [
-      "La competitividad de la industria exige procesos cada vez más eficientes, productivos y estandarizados. Sin embargo, muchas operaciones aún dependen de inspecciones visuales manuales, controles descentralizados y análisis por muestreo — aumentando el riesgo de fallas, desperdicios y retrabajo.",
+      "La competitividad de la industria exige procesos cada vez más eficientes, productivos y estandarizados. Sin embargo, muchas operaciones aún dependen de inspecciones visuales manuales, controles descentralizados y análisis por muestreo, aumentando el riesgo de fallas, desperdicios y retrabajo.",
       "Nuestra solución fue desarrollada para enfrentar estos desafíos con Inteligencia Artificial, permitiendo que la inspección y el monitoreo ocurran de forma continua, en tiempo real y con alto nivel de precisión.",
     ],
     challengesListTitle: "Principales desafíos que ayudamos a resolver",
@@ -850,7 +850,7 @@ const es: Record<string, SolutionRich> = {
     resolveTitle: "Cómo Proc resuelve este desafío",
     resolveIntro: [
       "Nuestra solución combina cámaras industriales, Inteligencia Artificial, Visión Artificial y Analytics para monitorear continuamente cada etapa de la producción.",
-      "Las imágenes son analizadas por algoritmos especializados que identifican patrones, reconocen objetos, detectan anomalías y generan información para apoyar decisiones operativas — todo integrado a la Proc AI Platform, con indicadores en tiempo real.",
+      "Las imágenes son analizadas por algoritmos especializados que identifican patrones, reconocen objetos, detectan anomalías y generan información para apoyar decisiones operativas, todo integrado a la Proc AI Platform, con indicadores en tiempo real.",
     ],
     flow: ["Línea de Producción", "Captura de Imágenes", "Visión Artificial", "Inteligencia Artificial", "Análisis y Clasificación", "Alertas Automáticas", "Dashboards e Indicadores", "Toma de Decisión"],
     howTitle: "Cómo funciona",
@@ -951,7 +951,7 @@ const es: Record<string, SolutionRich> = {
       { title: "Monitoreo Preventivo", intro: "La IA identifica automáticamente eventos que pueden representar riesgos para la operación.", items: ["Personas en áreas restringidas", "Invasión de perímetro", "Permanencia por encima del tiempo permitido", "Objetos abandonados o retirados", "Personas corriendo", "Circulación en horarios no autorizados", "Vehículos no autorizados"] },
       { title: "Control Inteligente de Acceso", intro: "Gestiona toda la circulación de personas a través de una única plataforma.", items: ["Reconocimiento facial", "Registro de empleados, visitantes y prestadores", "Control por grupos, horarios y áreas", "Integración con torniquetes y barreras", "Terminales faciales y credenciales", "QR Code, biometría y tarjetas RFID"] },
       { title: "Control de Vehículos", intro: "Automatiza por completo el acceso de vehículos.", items: ["Lectura automática de placas (LPR)", "Registro de vehículos, visitantes y proveedores", "Integración con barreras y control de plazas", "Historial completo y alertas", "Listas negras y listas blancas"] },
-      { title: "Gestión Inteligente de Estacionamientos", intro: "Más que controlar entradas y salidas — información estratégica sobre el uso del estacionamiento.", items: ["Control automático de acceso", "Ocupación en tiempo real", "Tiempo medio de permanencia", "Vehículos en permanencia excesiva", "Flujo de entrada y salida", "Dashboards y alertas automáticas"] },
+      { title: "Gestión Inteligente de Estacionamientos", intro: "Más que controlar entradas y salidas, información estratégica sobre el uso del estacionamiento.", items: ["Control automático de acceso", "Ocupación en tiempo real", "Tiempo medio de permanencia", "Vehículos en permanencia excesiva", "Flujo de entrada y salida", "Dashboards y alertas automáticas"] },
       { title: "Inteligencia sobre Flujo de Personas", intro: "Conoce el comportamiento de las personas dentro de tu organización.", items: ["Conteo de personas", "Flujo por ambiente y ocupación", "Mapas de calor", "Horarios pico", "Tiempo medio de permanencia", "Indicadores de utilización"] },
     ],
     applicationsTitle: "Aplicaciones",
@@ -995,7 +995,7 @@ const es: Record<string, SolutionRich> = {
     whyProcTitle: "¿Por qué elegir Proc?",
     whyProc: [
       "Creemos que la seguridad eficiente depende de combinar tecnología avanzada con conocimiento especializado. Por eso integramos todos los elementos de la protección física en un único ecosistema inteligente, eliminando islas de información.",
-      "Más que suministrar equipos o software aislados, entregamos proyectos personalizados alineados con la realidad de cada cliente — del diagnóstico a la implementación, integración, capacitación y soporte continuo.",
+      "Más que suministrar equipos o software aislados, entregamos proyectos personalizados alineados con la realidad de cada cliente, del diagnóstico a la implementación, integración, capacitación y soporte continuo.",
     ],
   },
 
@@ -1034,14 +1034,14 @@ const es: Record<string, SolutionRich> = {
     resolveTitle: "Cómo Proc resuelve este desafío",
     resolveIntro: [
       "Nuestro equipo gestiona toda la infraestructura tecnológica de la empresa, del entorno local a la nube, monitoreando continuamente servidores, redes, aplicaciones y servicios críticos.",
-      "Usamos herramientas de monitoreo, automatización y analytics para identificar anomalías, prevenir indisponibilidades y garantizar seguridad y desempeño — todo integrado a la Proc AI Platform, con una visión unificada de la salud de la infraestructura.",
+      "Usamos herramientas de monitoreo, automatización y analytics para identificar anomalías, prevenir indisponibilidades y garantizar seguridad y desempeño, todo integrado a la Proc AI Platform, con una visión unificada de la salud de la infraestructura.",
     ],
     flow: ["Servidores • Redes • Firewalls • Cloud • Aplicaciones", "Monitoreo Continuo", "Análisis Inteligente", "Detección Preventiva", "Alertas Automáticas", "Equipo Especializado", "Corrección y Optimización", "Disponibilidad de la Operación"],
     featuresTitle: "Nuestras Soluciones",
     featureGroups: [
-      { title: "Proc Cloud", intro: "Infraestructura propia en data center, con entornos dedicados y gestionados — y Oracle Cloud para proyectos corporativos de mayor porte, escalando recursos según la demanda.", items: ["Alojamiento de servidores y entornos dedicados", "Cloud privada e híbrida", "Oracle Cloud", "Virtualización", "Alta disponibilidad", "Monitoreo 24×7", "Entornos escalables"] },
-      { title: "Backup en la Nube", intro: "Protección de información crítica con copias automáticas en un entorno seguro — validando rutinas y garantizando recuperación rápida cuando sea necesario.", items: ["Backup automático y almacenamiento seguro", "Cifrado", "Recuperación rápida", "Protección contra ransomware", "Versionado y retención configurable", "Monitoreo de rutinas e informes de ejecución"] },
-      { title: "Checklist Inteligente de Apertura de Tiendas", intro: "Una solución exclusiva de Proc: antes de la apertura, la plataforma verifica automáticamente que todos los sistemas y equipos esenciales funcionen — reduciendo el riesgo de interrupciones durante la jornada.", items: ["Base de datos", "Carga de PDVs", "Carga para balanzas", "Transmisores de NF-e", "Comunicación entre tiendas y matriz", "Crédito (crediario)", "Enlaces de internet", "Rutinas programadas y servicios críticos"] },
+      { title: "Proc Cloud", intro: "Infraestructura propia en data center, con entornos dedicados y gestionados, y Oracle Cloud para proyectos corporativos de mayor porte, escalando recursos según la demanda.", items: ["Alojamiento de servidores y entornos dedicados", "Cloud privada e híbrida", "Oracle Cloud", "Virtualización", "Alta disponibilidad", "Monitoreo 24×7", "Entornos escalables"] },
+      { title: "Backup en la Nube", intro: "Protección de información crítica con copias automáticas en un entorno seguro, validando rutinas y garantizando recuperación rápida cuando sea necesario.", items: ["Backup automático y almacenamiento seguro", "Cifrado", "Recuperación rápida", "Protección contra ransomware", "Versionado y retención configurable", "Monitoreo de rutinas e informes de ejecución"] },
+      { title: "Checklist Inteligente de Apertura de Tiendas", intro: "Una solución exclusiva de Proc: antes de la apertura, la plataforma verifica automáticamente que todos los sistemas y equipos esenciales funcionen, reduciendo el riesgo de interrupciones durante la jornada.", items: ["Base de datos", "Carga de PDVs", "Carga para balanzas", "Transmisores de NF-e", "Comunicación entre tiendas y matriz", "Crédito (crediario)", "Enlaces de internet", "Rutinas programadas y servicios críticos"] },
       { title: "Gestión Completa de la Infraestructura", intro: "Nuestro equipo supervisa continuamente todos los componentes del entorno de TI.", items: ["Administración de servidores", "Gestión de redes, switches, routers y Wi-Fi corporativo", "Active Directory y virtualización", "Storage", "Windows Server y Linux", "Bases de datos", "Monitoreo, gestión de activos e inventario"] },
       { title: "Seguridad de la Información", intro: "Protección completa para entornos corporativos.", items: ["Firewall corporativo", "Gestión de antivirus", "Políticas de seguridad y control de accesos", "VPN y segmentación de redes", "Monitoreo de amenazas", "Hardening de servidores", "Protección contra malware y ransomware"] },
       { title: "Monitoreo 24×7", intro: "Supervisamos continuamente el comportamiento de la infraestructura para identificar riesgos antes de que afecten al negocio.", items: ["Servidores y aplicaciones", "Enlaces de internet", "CPU, memoria y espacio en disco", "Servicios y procesos", "Equipos de red", "Bases de datos", "Disponibilidad de los sistemas"] },
@@ -1085,7 +1085,7 @@ const es: Record<string, SolutionRich> = {
     whyProc: [
       "Desde 2014, acompañamos la evolución tecnológica de nuestros clientes, administrando entornos críticos y garantizando que sus operaciones permanezcan disponibles, seguras y preparadas para crecer.",
       "Nuestro diferencial está en la combinación entre conocimiento técnico, monitoreo preventivo, infraestructura propia en Cloud y un equipo altamente especializado, capaz de actuar de forma consultiva en cada proyecto.",
-      "Más que resolver problemas cuando ocurren, trabajamos para evitar que sucedan — protegiendo la continuidad del negocio.",
+      "Más que resolver problemas cuando ocurren, trabajamos para evitar que sucedan, protegiendo la continuidad del negocio.",
     ],
   },
 

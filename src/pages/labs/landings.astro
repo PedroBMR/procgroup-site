@@ -27,7 +27,7 @@ const opcoes = [
     n: "01",
     nome: "Sala de controle",
     conceito: "O painel de monitores. Uma varredura passa pelos quadros e um deles trava a detecção.",
-    aposta: "Reconhecimento imediato — o cliente se vê na cena.",
+    aposta: "Reconhecimento imediato, o cliente se vê na cena.",
   },
   {
     id: "corte",
@@ -60,7 +60,7 @@ const opcoes = [
 ];
 ---
 
-<BaseLayout title="Cinco direções — comparador" description="Página interna de comparação visual." bare>
+<BaseLayout title="Cinco direções, comparador" description="Página interna de comparação visual." bare>
   <nav class="seletor" aria-label="Escolher direção">
     {opcoes.map((o) => (
       <a href={`#${o.id}`} class="seletor-item">
@@ -198,7 +198,7 @@ const opcoes = [
   [data-dir="varredura"] .veu { background: linear-gradient(180deg, rgba(6,10,20,0.82) 0%, rgba(6,10,20,0.25) 46%, rgba(6,10,20,0.9) 100%); }
   [data-dir="varredura"] .texto { max-width: 50ch; }
   [data-dir="varredura"] h1 { font-size: clamp(1.9rem, min(4vw, 5.4vh), 4rem); line-height: 1; }
-  [data-dir="varredura"] .eyebrow::before { content: "— "; }
+  [data-dir="varredura"] .eyebrow::before { content: ", "; }
   [data-dir="varredura"] .sub { padding-top: var(--space-5); border-top: 1px solid rgba(255,255,255,0.16); }
 
   /* 04 · mesa de operação — o texto vira um bloco de briefing no canto. */

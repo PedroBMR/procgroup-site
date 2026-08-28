@@ -69,19 +69,19 @@ export const translations = {
       suporteLink: "Suporte técnico",
       rights: "Todos os direitos reservados.",
       privacy: "Política de Privacidade",
-      address: "Caetano Munhoz da Rocha, 480 — Pato Branco / PR",
+      address: "Caetano Munhoz da Rocha, 480, Pato Branco / PR",
       mapLink: "Ver no mapa",
       lgpdNote: "Dados tratados em conformidade com a LGPD",
       staticNote: "Site com tecnologia estática, otimizado para velocidade e segurança",
     },
     home: {
-      metaTitle: "Proc Group — IA, Visão Computacional e Infraestrutura de TI",
+      metaTitle: "Proc Group, IA, Visão Computacional e Infraestrutura de TI",
       metaDescription:
         "Plataforma própria de IA, Visão Computacional e Infraestrutura de TI que torna empresas e indústrias mais seguras, eficientes e inteligentes.",
       heroEyebrow: "Plataforma Proc AI",
       heroTitle: "Tecnologia inteligente para um mundo mais seguro, conectado e eficiente.",
       heroSubtitle:
-        "A Proc desenvolve soluções de Inteligência Artificial, Visão Computacional, Ambientes Inteligentes e Infraestrutura de TI que transformam dados em decisões inteligentes, protegendo pessoas e apoiando empresas e indústrias — cada operação com a sua solução.",
+        "A Proc desenvolve soluções de Inteligência Artificial, Visão Computacional, Ambientes Inteligentes e Infraestrutura de TI que transformam dados em decisões inteligentes, protegendo pessoas e apoiando empresas e indústrias, cada operação com a sua solução.",
       heroCtaPrimary: "Conheça a Plataforma Proc AI",
       heroCtaSecondary: "Solicite uma Demonstração",
       statsLabels: ["Clientes atendidos", "Anos de experiência"],
@@ -89,13 +89,13 @@ export const translations = {
       aboutTitle:
         "Tecnologia que conecta Inteligência Artificial, Visão Computacional e Infraestrutura de TI para transformar operações.",
       aboutText:
-        "A Proc desenvolve soluções tecnológicas que unem Inteligência Artificial, Visão Computacional, Analytics e Infraestrutura de TI para atender empresas e indústrias — cada uma com a sua solução e a sua equipe. Cada solução integra dados, equipamentos e sistemas da operação que atende, permitindo automatizar processos, fortalecer a segurança, aumentar a produtividade e apoiar decisões estratégicas com informações em tempo real.",
+        "A Proc desenvolve soluções tecnológicas que unem Inteligência Artificial, Visão Computacional, Analytics e Infraestrutura de TI para atender empresas e indústrias, cada uma com a sua solução e a sua equipe. Cada solução integra dados, equipamentos e sistemas da operação que atende, permitindo automatizar processos, fortalecer a segurança, aumentar a produtividade e apoiar decisões estratégicas com informações em tempo real.",
       aboutCta: "Conheça a Proc",
       aboutPhotoAlt: "Sede da Proc Group em Pato Branco",
       platformEyebrow: "Plataforma Proc AI",
       platformTitle: "Tecnologia própria, com equipe especializada em cada operação",
       platformText:
-        "IA, Analytics e Visão Computacional desenvolvidos pela nossa engenharia, aplicados à gestão inteligente da sua operação — com equipe especializada dedicada a ela.",
+        "IA, Analytics e Visão Computacional desenvolvidos pela nossa engenharia, aplicados à gestão inteligente da sua operação, com equipe especializada dedicada a ela.",
       platformCta: "Ver a Plataforma Proc AI",
       // Bloco das 6 capacidades da
       // plataforma (recorte do comercial). Só em PT por enquanto; a home guarda
@@ -144,7 +144,7 @@ export const translations = {
         },
         "infraestrutura-de-ti": {
           name: "Infraestrutura de TI",
-          desc: "Gestão, monitoramento e sustentação de ambientes de TI — cloud, backup, firewall e antivírus para garantir performance e disponibilidade.",
+          desc: "Gestão, monitoramento e sustentação de ambientes de TI, cloud, backup, firewall e antivírus para garantir performance e disponibilidade.",
         },
         "ia-industrial": {
           name: "IA Industrial",
@@ -190,7 +190,7 @@ export const translations = {
       otherTitle: "Explore outras soluções da Proc AI Platform",
       pages: {
         "ia-industrial": {
-          metaTitle: "IA Industrial — Visão Computacional",
+          metaTitle: "IA Industrial: Visão Computacional",
           metaDescription:
             "Inspeção visual automatizada, controle de qualidade, contagem e rastreabilidade com Edge AI para reduzir perdas e aumentar a eficiência de linhas de produção.",
           heroTitle: "IA Industrial para aumentar a produtividade, a inspeção de qualidade e reduzir perdas na produção.",
@@ -217,7 +217,7 @@ export const translations = {
           ],
         },
         "ambientes-inteligentes": {
-          metaTitle: "Ambientes Inteligentes — Acesso e Segurança Corporativa",
+          metaTitle: "Ambientes Inteligentes: Acesso e Segurança Corporativa",
           metaDescription:
             "Videomonitoramento com IA, controle de acesso facial e gestão de alarmes para proteger patrimônio, pessoas e operações.",
           heroTitle: "Protegemos pessoas, patrimônios e operações com Inteligência Artificial.",
@@ -231,7 +231,7 @@ export const translations = {
           faqs: [
             {
               q: "A solução funciona para condomínios, indústrias e escritórios?",
-              a: "Sim. A plataforma se adapta a diferentes perfis de operação — de condomínios residenciais a plantas industriais — com controle de acesso, videomonitoramento e gestão de alarmes configuráveis para cada contexto.",
+              a: "Sim. A plataforma se adapta a diferentes perfis de operação, de condomínios residenciais a plantas industriais, com controle de acesso, videomonitoramento e gestão de alarmes configuráveis para cada contexto.",
             },
             {
               q: "É possível integrar com câmeras e catracas já instaladas?",
@@ -240,7 +240,7 @@ export const translations = {
           ],
         },
         "infraestrutura-de-ti": {
-          metaTitle: "Infraestrutura de TI — Alta Disponibilidade",
+          metaTitle: "Infraestrutura de TI: Alta Disponibilidade",
           metaDescription:
             "Cloud, backup, NOC, firewall, service desk e governança de infraestrutura para empresas que precisam de continuidade operacional e performance em escala.",
           heroTitle: "Infraestrutura preparada para operações críticas que não podem parar.",
@@ -332,19 +332,19 @@ export const translations = {
       suporteLink: "Technical support",
       rights: "All rights reserved.",
       privacy: "Privacy Policy",
-      address: "Caetano Munhoz da Rocha, 480 — Pato Branco / PR — Brazil",
+      address: "Caetano Munhoz da Rocha, 480, Pato Branco / PR, Brazil",
       mapLink: "View on map",
       lgpdNote: "Data processed in compliance with Brazil's LGPD",
       staticNote: "Static-tech site, optimized for speed and security",
     },
     home: {
-      metaTitle: "Proc Group — AI, Computer Vision and IT Infrastructure",
+      metaTitle: "Proc Group, AI, Computer Vision and IT Infrastructure",
       metaDescription:
         "Proc's own AI, Computer Vision and IT Infrastructure platform makes companies and industries safer, smarter and more efficient.",
       heroEyebrow: "Proc AI Platform",
       heroTitle: "Intelligent technology for a safer, more connected, more efficient world.",
       heroSubtitle:
-        "Proc builds Artificial Intelligence, Computer Vision, Smart Environments and IT Infrastructure solutions that turn data into smart decisions — protecting people and supporting companies and industries — each operation with its own solution.",
+        "Proc builds Artificial Intelligence, Computer Vision, Smart Environments and IT Infrastructure solutions that turn data into smart decisions, protecting people and supporting companies and industries, each operation with its own solution.",
       heroCtaPrimary: "Explore the Proc AI Platform",
       heroCtaSecondary: "Request a Demo",
       statsLabels: ["Clients served", "Years of experience"],
@@ -352,18 +352,18 @@ export const translations = {
       aboutTitle:
         "Technology that connects Artificial Intelligence, Computer Vision and IT Infrastructure to transform operations.",
       aboutText:
-        "Proc develops technology solutions that combine Artificial Intelligence, Computer Vision, Analytics and IT Infrastructure to serve companies and industries — each with its own solution and its own team. Each solution integrates the data, equipment and systems of the operation it serves — automating processes, strengthening security, boosting productivity and supporting strategic decisions with real-time information.",
+        "Proc develops technology solutions that combine Artificial Intelligence, Computer Vision, Analytics and IT Infrastructure to serve companies and industries, each with its own solution and its own team. Each solution integrates the data, equipment and systems of the operation it serves, automating processes, strengthening security, boosting productivity and supporting strategic decisions with real-time information.",
       aboutCta: "About Proc",
       aboutPhotoAlt: "Proc Group headquarters in Pato Branco, Brazil",
       platformEyebrow: "Proc AI Platform",
       platformTitle: "In-house technology, with a specialist team for each operation",
       platformText:
-        "A unified, integrated platform of AI, Analytics and Computer Vision for centralizing and intelligently managing every operation — with dedicated specialist teams for each area.",
+        "A unified, integrated platform of AI, Analytics and Computer Vision for centralizing and intelligently managing every operation, with dedicated specialist teams for each area.",
       platformCta: "See the Proc AI Platform",
       capEyebrow: "Proc AI Platform",
       capTitle: "In-house technology. Specialized by operation.",
       capLead:
-        "Technology built to connect your operation's ecosystem. Artificial Intelligence, Computer Vision, Analytics and IT Infrastructure from our own engineering — ready to integrate different technologies, automate processes and turn data into intelligence to support strategic decisions.",
+        "Technology built to connect your operation's ecosystem. Artificial Intelligence, Computer Vision, Analytics and IT Infrastructure from our own engineering, ready to integrate different technologies, automate processes and turn data into intelligence to support strategic decisions.",
       capabilities: [
         {
           icon: "ai",
@@ -404,7 +404,7 @@ export const translations = {
         },
         "infraestrutura-de-ti": {
           name: "IT Infrastructure",
-          desc: "Management, monitoring and support of IT environments — cloud, backup, firewall and antivirus to ensure performance and availability.",
+          desc: "Management, monitoring and support of IT environments, cloud, backup, firewall and antivirus to ensure performance and availability.",
         },
         "ia-industrial": {
           name: "Industrial AI",
@@ -448,7 +448,7 @@ export const translations = {
       otherTitle: "Explore other Proc AI Platform solutions",
       pages: {
         "ia-industrial": {
-          metaTitle: "Industrial AI — Computer Vision",
+          metaTitle: "Industrial AI: Computer Vision",
           metaDescription:
             "Automated visual inspection, quality control, counting and traceability with Edge AI to reduce losses and boost production-line efficiency.",
           heroTitle: "Industrial AI to boost productivity, quality inspection and cut production losses.",
@@ -470,12 +470,12 @@ export const translations = {
             },
             {
               q: "Can parts be traced across the whole production line?",
-              a: "Yes — traceability via OCR and analytics follows each part from entry to shipping, with a full inspection history.",
+              a: "Yes, traceability via OCR and analytics follows each part from entry to shipping, with a full inspection history.",
             },
           ],
         },
         "ambientes-inteligentes": {
-          metaTitle: "Smart Environments — Corporate Access and Security",
+          metaTitle: "Smart Environments: Corporate Access and Security",
           metaDescription:
             "AI video surveillance, facial access control and alarm management to protect assets, people and operations.",
           heroTitle: "We protect people, assets and operations with Artificial Intelligence.",
@@ -489,7 +489,7 @@ export const translations = {
           faqs: [
             {
               q: "Does the solution work for residential complexes, industries and offices?",
-              a: "Yes. The platform adapts to different operation profiles — from residential complexes to industrial plants — with access control, video surveillance and alarm management configurable for each context.",
+              a: "Yes. The platform adapts to different operation profiles, from residential complexes to industrial plants, with access control, video surveillance and alarm management configurable for each context.",
             },
             {
               q: "Can it integrate with cameras and turnstiles already installed?",
@@ -498,7 +498,7 @@ export const translations = {
           ],
         },
         "infraestrutura-de-ti": {
-          metaTitle: "IT Infrastructure — High Availability",
+          metaTitle: "IT Infrastructure: High Availability",
           metaDescription:
             "Cloud, backup, NOC, firewall, service desk and infrastructure governance for companies that need operational continuity and performance at scale.",
           heroTitle: "Infrastructure built for mission-critical operations that can't stop.",
@@ -590,19 +590,19 @@ export const translations = {
       suporteLink: "Soporte técnico",
       rights: "Todos los derechos reservados.",
       privacy: "Política de Privacidad",
-      address: "Caetano Munhoz da Rocha, 480 — Pato Branco / PR — Brasil",
+      address: "Caetano Munhoz da Rocha, 480, Pato Branco / PR, Brasil",
       mapLink: "Ver en el mapa",
       lgpdNote: "Datos tratados conforme a la LGPD de Brasil",
       staticNote: "Sitio con tecnología estática, optimizado para velocidad y seguridad",
     },
     home: {
-      metaTitle: "Proc Group — IA, Visión Artificial e Infraestructura de TI",
+      metaTitle: "Proc Group, IA, Visión Artificial e Infraestructura de TI",
       metaDescription:
         "Plataforma propia de IA, Visión Artificial e Infraestructura de TI que hace más seguras, eficientes e inteligentes a empresas e industrias.",
       heroEyebrow: "Plataforma Proc AI",
       heroTitle: "Tecnología inteligente para un mundo más seguro, conectado y eficiente.",
       heroSubtitle:
-        "Proc desarrolla soluciones de Inteligencia Artificial, Visión Artificial, Ambientes Inteligentes e Infraestructura de TI que transforman datos en decisiones inteligentes, protegiendo personas y apoyando a empresas e industrias — cada operación con su solución.",
+        "Proc desarrolla soluciones de Inteligencia Artificial, Visión Artificial, Ambientes Inteligentes e Infraestructura de TI que transforman datos en decisiones inteligentes, protegiendo personas y apoyando a empresas e industrias, cada operación con su solución.",
       heroCtaPrimary: "Conoce la Plataforma Proc AI",
       heroCtaSecondary: "Solicita una Demostración",
       statsLabels: ["Clientes atendidos", "Años de experiencia"],
@@ -610,18 +610,18 @@ export const translations = {
       aboutTitle:
         "Tecnología que conecta Inteligencia Artificial, Visión Artificial e Infraestructura de TI para transformar operaciones.",
       aboutText:
-        "Proc desarrolla soluciones tecnológicas que unen Inteligencia Artificial, Visión Artificial, Analytics e Infraestructura de TI para atender a empresas e industrias — cada una con su solución y su equipo. Cada solución integra los datos, equipos y sistemas de la operación que atiende, permitiendo automatizar procesos, fortalecer la seguridad, aumentar la productividad y apoyar decisiones estratégicas con información en tiempo real.",
+        "Proc desarrolla soluciones tecnológicas que unen Inteligencia Artificial, Visión Artificial, Analytics e Infraestructura de TI para atender a empresas e industrias, cada una con su solución y su equipo. Cada solución integra los datos, equipos y sistemas de la operación que atiende, permitiendo automatizar procesos, fortalecer la seguridad, aumentar la productividad y apoyar decisiones estratégicas con información en tiempo real.",
       aboutCta: "Conoce Proc",
       aboutPhotoAlt: "Sede de Proc Group en Pato Branco, Brasil",
       platformEyebrow: "Plataforma Proc AI",
       platformTitle: "Tecnología propia, con equipo especializado en cada operación",
       platformText:
-        "IA, Analytics y Visión Artificial desarrollados por nuestra ingeniería, aplicados a la gestión inteligente de tu operación — con equipo especializado dedicado a ella.",
+        "IA, Analytics y Visión Artificial desarrollados por nuestra ingeniería, aplicados a la gestión inteligente de tu operación, con equipo especializado dedicado a ella.",
       platformCta: "Ver la Plataforma Proc AI",
       capEyebrow: "Plataforma Proc AI",
       capTitle: "Tecnología propia. Especializada por operación.",
       capLead:
-        "Tecnología desarrollada para conectar el ecosistema de tu operación. Inteligencia Artificial, Visión Artificial, Analytics e Infraestructura de TI de nuestra ingeniería — preparada para integrar diferentes tecnologías, automatizar procesos y transformar datos en inteligencia para apoyar decisiones estratégicas.",
+        "Tecnología desarrollada para conectar el ecosistema de tu operación. Inteligencia Artificial, Visión Artificial, Analytics e Infraestructura de TI de nuestra ingeniería, preparada para integrar diferentes tecnologías, automatizar procesos y transformar datos en inteligencia para apoyar decisiones estratégicas.",
       capabilities: [
         {
           icon: "ai",
@@ -662,7 +662,7 @@ export const translations = {
         },
         "infraestrutura-de-ti": {
           name: "Infraestructura de TI",
-          desc: "Gestión, monitoreo y soporte de entornos de TI — cloud, backup, firewall y antivirus para garantizar rendimiento y disponibilidad.",
+          desc: "Gestión, monitoreo y soporte de entornos de TI, cloud, backup, firewall y antivirus para garantizar rendimiento y disponibilidad.",
         },
         "ia-industrial": {
           name: "IA Industrial",
@@ -706,7 +706,7 @@ export const translations = {
       otherTitle: "Explora otras soluciones de la Proc AI Platform",
       pages: {
         "ia-industrial": {
-          metaTitle: "IA Industrial — Visión Artificial",
+          metaTitle: "IA Industrial: Visión Artificial",
           metaDescription:
             "Inspección visual, control de calidad, conteo y trazabilidad con Edge AI para reducir pérdidas y aumentar la eficiencia de las líneas de producción.",
           heroTitle: "IA Industrial para aumentar la productividad, la inspección de calidad y reducir pérdidas en la producción.",
@@ -733,7 +733,7 @@ export const translations = {
           ],
         },
         "ambientes-inteligentes": {
-          metaTitle: "Ambientes Inteligentes — Acceso y Seguridad Corporativa",
+          metaTitle: "Ambientes Inteligentes: Acceso y Seguridad Corporativa",
           metaDescription:
             "Videovigilancia con IA, control de acceso facial y gestión de alarmas para proteger patrimonio, personas y operaciones.",
           heroTitle: "Protegemos personas, patrimonios y operaciones con Inteligencia Artificial.",
@@ -747,7 +747,7 @@ export const translations = {
           faqs: [
             {
               q: "¿La solución funciona para condominios, industrias y oficinas?",
-              a: "Sí. La plataforma se adapta a diferentes perfiles de operación — de condominios residenciales a plantas industriales — con control de acceso, videovigilancia y gestión de alarmas configurables para cada contexto.",
+              a: "Sí. La plataforma se adapta a diferentes perfiles de operación, de condominios residenciales a plantas industriales, con control de acceso, videovigilancia y gestión de alarmas configurables para cada contexto.",
             },
             {
               q: "¿Es posible integrar con cámaras y torniquetes ya instalados?",
@@ -756,7 +756,7 @@ export const translations = {
           ],
         },
         "infraestrutura-de-ti": {
-          metaTitle: "Infraestructura de TI — Alta Disponibilidad",
+          metaTitle: "Infraestructura de TI: Alta Disponibilidad",
           metaDescription:
             "Cloud, backup, NOC, firewall, service desk y gobernanza de infraestructura para empresas que necesitan continuidad operativa y rendimiento a escala.",
           heroTitle: "Infraestructura preparada para operaciones críticas que no pueden parar.",
