@@ -23,7 +23,7 @@ const meta: Record<Locale, Record<ChaveMeta, Meta>> = {
     home: {
       title: "Tecnologia para Empresas e Indústrias",
       description:
-        "Controle de acesso facial, videomonitoramento com IA, inspeção visual e infraestrutura de TI gerenciada, integrados aos sistemas que sua empresa já usa.",
+        "Controle de acesso sem contato, videomonitoramento com IA, inspeção visual e infraestrutura de TI gerenciada, integrados aos sistemas que sua empresa já usa.",
     },
     empresa: {
       title: "A Proc para Empresas e Indústrias",
@@ -43,14 +43,14 @@ const meta: Record<Locale, Record<ChaveMeta, Meta>> = {
     cases: {
       title: "Aplicações da Plataforma",
       description:
-        "O que a Proc AI Platform entrega em ambientes corporativos, indústrias e infraestrutura crítica, do acesso facial à inspeção visual na linha.",
+        "O que a Proc AI Platform entrega em ambientes corporativos, indústrias e infraestrutura crítica, do controle de acesso à inspeção visual na linha.",
     },
   },
   en: {
     home: {
       title: "Technology for Business and Industry",
       description:
-        "Facial access control, AI video surveillance, visual inspection and managed IT infrastructure, integrated with the systems your company already uses.",
+        "Contactless access control, AI video surveillance, visual inspection and managed IT infrastructure, integrated with the systems your company already uses.",
     },
     empresa: {
       title: "Proc for Business and Industry",
@@ -70,14 +70,14 @@ const meta: Record<Locale, Record<ChaveMeta, Meta>> = {
     cases: {
       title: "Platform Applications",
       description:
-        "What the Proc AI Platform delivers across corporate environments, industry and critical infrastructure, from facial access to visual inspection on the line.",
+        "What the Proc AI Platform delivers across corporate environments, industry and critical infrastructure, from access control to visual inspection on the line.",
     },
   },
   es: {
     home: {
       title: "Tecnología para Empresas e Industrias",
       description:
-        "Control de acceso facial, videovigilancia con IA, inspección visual e infraestructura de TI gestionada, integrados a los sistemas que tu empresa ya usa.",
+        "Control de acceso sin contacto, videovigilancia con IA, inspección visual e infraestructura de TI gestionada, integrados a los sistemas que tu empresa ya usa.",
     },
     empresa: {
       title: "Proc para Empresas e Industrias",
@@ -97,7 +97,7 @@ const meta: Record<Locale, Record<ChaveMeta, Meta>> = {
     cases: {
       title: "Aplicaciones de la Plataforma",
       description:
-        "Lo que la Proc AI Platform entrega en entornos corporativos, industrias e infraestructura crítica, del acceso facial a la inspección visual en la línea.",
+        "Lo que la Proc AI Platform entrega en entornos corporativos, industrias e infraestructura crítica, del control de acceso a la inspección visual en la línea.",
     },
   },
 };

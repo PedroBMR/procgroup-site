@@ -132,6 +132,9 @@ const pt: Record<string, SolutionRich> = {
       { name: "OCR Industrial", desc: "Leitura automática de etiquetas, códigos, números de série, datas de fabricação e lotes." },
       { name: "Rastreabilidade", desc: "Registro completo das inspeções e histórico de cada etapa da produção." },
       { name: "Monitoramento de Produção", desc: "Acompanhamento em tempo real do desempenho das linhas produtivas." },
+      // Capacidade do projeto de chao de fabrica ja entregue (autorizada em
+      // 2026-09-17): controle de qualidade e acompanhamento de estoque.
+      { name: "Acompanhamento de Estoque", desc: "Leitura do volume de produto em área de estoque a partir da própria imagem, sem contagem manual." },
       { name: "Detecção de Anomalias", desc: "Identificação automática de comportamentos fora do padrão operacional." },
     ],
     benefitsTitle: "Benefícios para a indústria",
@@ -212,7 +215,7 @@ const pt: Record<string, SolutionRich> = {
     ],
     resolveTitle: "Como a Proc resolve esse desafio",
     resolveIntro: [
-      "A Proc AI Platform conecta videomonitoramento inteligente, controle de acesso, reconhecimento facial, leitura de placas, monitoramento perimetral, gestão de visitantes e analytics em uma única plataforma.",
+      "A Proc AI Platform conecta videomonitoramento inteligente, controle de acesso, leitura de placas, monitoramento perimetral, gestão de visitantes e analytics em uma única plataforma.",
       "Todos os eventos são processados por algoritmos de IA que analisam continuamente imagens, acessos e movimentações para identificar situações relevantes, gerar alertas e apoiar a decisão.",
     ],
     flow: [
@@ -257,11 +260,11 @@ const pt: Record<string, SolutionRich> = {
         title: "Controle Inteligente de Acesso",
         intro: "Gerencie toda a circulação de pessoas através de uma única plataforma.",
         items: [
-          "Reconhecimento facial",
+          "Liberação automática de acesso",
           "Cadastro de funcionários, visitantes e prestadores",
           "Controle por grupos, horários e áreas",
           "Integração com catracas, torniquetes e cancelas",
-          "Terminais faciais e credenciais",
+          "Terminais de acesso e credenciais",
           "QR Code, biometria e cartões RFID",
         ],
       },
@@ -277,6 +280,12 @@ const pt: Record<string, SolutionRich> = {
         ],
       },
       {
+        // Os dois ultimos itens vem do projeto de estacionamento ja entregue
+        // (autorizado em 2026-09-17, sem nome de cliente). A recorrencia de
+        // visita SO existe para quem adere ao programa com cadastro e
+        // assinatura, e a redacao precisa dizer isso na propria linha: lida
+        // fora de contexto, "sabemos quando o cliente esta no local" vira
+        // rastreamento de pessoas e passivo de LGPD.
         title: "Gestão Inteligente de Estacionamentos",
         intro: "Mais do que controlar entradas e saídas, informações estratégicas sobre a utilização do estacionamento.",
         items: [
@@ -302,12 +311,18 @@ const pt: Record<string, SolutionRich> = {
       },
     ],
     applicationsTitle: "Aplicações",
-    applicationsIntro: "Nossa solução atende diferentes segmentos.",
+    // Era "Nossa solucao atende diferentes segmentos". A unidade ainda nao tem
+    // carteira: escreve-se a capacidade, nao o historico.
+    applicationsIntro: "A solução se adapta a diferentes segmentos.",
     applications: [
       { name: "Empresas", desc: "Proteção de escritórios, sedes administrativas e filiais." },
       { name: "Indústrias", desc: "Monitoramento de áreas produtivas, pátios e perímetros." },
       { name: "Hospitais", desc: "Controle de circulação de pessoas, visitantes e áreas críticas." },
-      { name: "Escolas e Universidades", desc: "Proteção de alunos, professores e colaboradores." },
+      // Era "Escolas e Universidades / Protecao de alunos, professores e
+      // colaboradores". Monitoramento escolar nao e produto da Proc, e a
+      // redacao anterior oferecia exatamente isso. O que se oferece a um campus
+      // e controle de acesso em area administrativa.
+      { name: "Campus e Centros Administrativos", desc: "Controle de acesso de colaboradores, visitantes e prestadores em áreas administrativas e de apoio." },
       { name: "Condomínios", desc: "Gestão inteligente de acessos e monitoramento." },
       { name: "Centros Logísticos", desc: "Controle de veículos, cargas e áreas operacionais." },
       { name: "Shopping Centers", desc: "Fluxo de visitantes, estacionamento e segurança patrimonial." },
@@ -342,7 +357,7 @@ const pt: Record<string, SolutionRich> = {
       "Câmeras IP e analógicas",
       "Controladores de acesso, catracas e torniquetes",
       "Cancelas e leitores RFID",
-      "Terminais faciais",
+      "Terminais de acesso",
       "Sensores perimetrais e alarmes",
       "Active Directory e sistemas de RH",
       "ERPs",
@@ -594,6 +609,7 @@ const en: Record<string, SolutionRich> = {
       { name: "Industrial OCR", desc: "Automatic reading of labels, codes, serial numbers, manufacturing dates and batches." },
       { name: "Traceability", desc: "Complete record of inspections and history of each production stage." },
       { name: "Production Monitoring", desc: "Real-time tracking of production-line performance." },
+      { name: "Stock Tracking", desc: "Reading product volume in the stock area from the image itself, with no manual count." },
       { name: "Anomaly Detection", desc: "Automatic identification of behavior outside the operational standard." },
     ],
     benefitsTitle: "Benefits for industry",
@@ -664,7 +680,7 @@ const en: Record<string, SolutionRich> = {
     ],
     resolveTitle: "How Proc solves this challenge",
     resolveIntro: [
-      "The Proc AI Platform connects intelligent video surveillance, access control, facial recognition, license-plate reading, perimeter monitoring, visitor management and analytics on a single platform.",
+      "The Proc AI Platform connects intelligent video surveillance, access control, license-plate reading, perimeter monitoring, visitor management and analytics on a single platform.",
       "Every event is processed by AI algorithms that continuously analyze images, access and movement to identify relevant situations, generate alerts and support decisions.",
     ],
     flow: ["Cameras • Controllers • Sensors • Barriers", "Computer Vision", "Artificial Intelligence", "People and Vehicle Recognition", "Event Analysis", "Intelligent Alerts", "Management Dashboards", "Decision-Making"],
@@ -672,18 +688,18 @@ const en: Record<string, SolutionRich> = {
     featureGroups: [
       { title: "Intelligent AI Video Surveillance", intro: "Far beyond recording: the platform continuously analyzes footage to identify suspicious behavior and risk situations.", items: ["Quick search through footage", "Search by people and by vehicles", "Search by physical traits, clothing and objects", "Dwell time in specific areas", "Queue and crowd monitoring", "Restricted-area monitoring", "Automatic alerts"] },
       { title: "Preventive Monitoring", intro: "AI automatically identifies events that may pose risks to the operation.", items: ["People in restricted areas", "Perimeter intrusion", "Dwell time above the allowed limit", "Abandoned or removed objects", "People running", "Movement during unauthorized hours", "Unauthorized vehicles"] },
-      { title: "Intelligent Access Control", intro: "Manage all people flow through a single platform.", items: ["Facial recognition", "Registration of employees, visitors and providers", "Control by group, schedule and area", "Integration with turnstiles and barriers", "Facial terminals and credentials", "QR Code, biometrics and RFID cards"] },
+      { title: "Intelligent Access Control", intro: "Manage all people flow through a single platform.", items: ["Automatic access release", "Registration of employees, visitors and providers", "Control by group, schedule and area", "Integration with turnstiles and barriers", "Access terminals and credentials", "QR Code, biometrics and RFID cards"] },
       { title: "Vehicle Control", intro: "Fully automate vehicle access.", items: ["Automatic license-plate reading (LPR)", "Registration of vehicles, visitors and suppliers", "Integration with barriers and space control", "Full history and alerts", "Blacklists and whitelists"] },
       { title: "Intelligent Parking Management", intro: "More than controlling entries and exits, strategic information on parking usage.", items: ["Automatic access control", "Real-time occupancy", "Average dwell time", "Vehicles in excessive dwell", "Entry and exit flow", "Dashboards and automatic alerts"] },
       { title: "People-Flow Intelligence", intro: "Understand how people behave within your organization.", items: ["People counting", "Flow per environment and occupancy", "Heat maps", "Peak hours", "Average dwell time", "Usage indicators"] },
     ],
     applicationsTitle: "Applications",
-    applicationsIntro: "Our solution serves different segments.",
+    applicationsIntro: "The solution adapts to different segments.",
     applications: [
       { name: "Companies", desc: "Protection of offices, headquarters and branches." },
       { name: "Industries", desc: "Monitoring of production areas, yards and perimeters." },
       { name: "Hospitals", desc: "Control of people flow, visitors and critical areas." },
-      { name: "Schools and Universities", desc: "Protection of students, teachers and staff." },
+      { name: "Campuses and Administrative Centers", desc: "Access control for staff, visitors and contractors in administrative and support areas." },
       { name: "Residential Complexes", desc: "Intelligent access management and monitoring." },
       { name: "Logistics Centers", desc: "Control of vehicles, cargo and operational areas." },
       { name: "Shopping Centers", desc: "Visitor flow, parking and asset security." },
@@ -714,7 +730,7 @@ const en: Record<string, SolutionRich> = {
     ],
     integrationTitle: "Integration with your environment",
     integrationIntro: "Open architecture that leverages investments already made.",
-    integration: ["IP and analog cameras", "Access controllers, turnstiles and barriers", "Barriers and RFID readers", "Facial terminals", "Perimeter sensors and alarms", "Active Directory and HR systems", "ERPs", "REST APIs and Cloud platforms"],
+    integration: ["IP and analog cameras", "Access controllers, turnstiles and barriers", "Barriers and RFID readers", "Access terminals", "Perimeter sensors and alarms", "Active Directory and HR systems", "ERPs", "REST APIs and Cloud platforms"],
     whyProcTitle: "Why choose Proc?",
     whyProc: [
       "We believe effective security depends on combining advanced technology with specialized knowledge. That's why we integrate every element of physical protection into a single intelligent ecosystem, eliminating information silos.",
@@ -871,6 +887,7 @@ const es: Record<string, SolutionRich> = {
       { name: "OCR Industrial", desc: "Lectura automática de etiquetas, códigos, números de serie, fechas de fabricación y lotes." },
       { name: "Trazabilidad", desc: "Registro completo de las inspecciones e historial de cada etapa de la producción." },
       { name: "Monitoreo de Producción", desc: "Seguimiento en tiempo real del desempeño de las líneas productivas." },
+      { name: "Seguimiento de Stock", desc: "Lectura del volumen de producto en el área de stock a partir de la propia imagen, sin conteo manual." },
       { name: "Detección de Anomalías", desc: "Identificación automática de comportamientos fuera del estándar operativo." },
     ],
     benefitsTitle: "Beneficios para la industria",
@@ -941,7 +958,7 @@ const es: Record<string, SolutionRich> = {
     ],
     resolveTitle: "Cómo Proc resuelve este desafío",
     resolveIntro: [
-      "La Proc AI Platform conecta videovigilancia inteligente, control de acceso, reconocimiento facial, lectura de placas, monitoreo perimetral, gestión de visitantes y analytics en una única plataforma.",
+      "La Proc AI Platform conecta videovigilancia inteligente, control de acceso, lectura de placas, monitoreo perimetral, gestión de visitantes y analytics en una única plataforma.",
       "Todos los eventos son procesados por algoritmos de IA que analizan continuamente imágenes, accesos y movimientos para identificar situaciones relevantes, generar alertas y apoyar la decisión.",
     ],
     flow: ["Cámaras • Controladores • Sensores • Barreras", "Visión Artificial", "Inteligencia Artificial", "Reconocimiento de Personas y Vehículos", "Análisis de Eventos", "Alertas Inteligentes", "Dashboards Gerenciales", "Toma de Decisión"],
@@ -949,18 +966,18 @@ const es: Record<string, SolutionRich> = {
     featureGroups: [
       { title: "Videovigilancia Inteligente con IA", intro: "Mucho más que grabación: la plataforma analiza continuamente los videos para identificar comportamientos sospechosos y situaciones de riesgo.", items: ["Búsqueda rápida en grabaciones", "Búsqueda por personas y por vehículos", "Búsqueda por rasgos físicos, ropa y objetos", "Permanencia en áreas específicas", "Monitoreo de filas y aglomeraciones", "Monitoreo de áreas restringidas", "Alertas automáticas"] },
       { title: "Monitoreo Preventivo", intro: "La IA identifica automáticamente eventos que pueden representar riesgos para la operación.", items: ["Personas en áreas restringidas", "Invasión de perímetro", "Permanencia por encima del tiempo permitido", "Objetos abandonados o retirados", "Personas corriendo", "Circulación en horarios no autorizados", "Vehículos no autorizados"] },
-      { title: "Control Inteligente de Acceso", intro: "Gestiona toda la circulación de personas a través de una única plataforma.", items: ["Reconocimiento facial", "Registro de empleados, visitantes y prestadores", "Control por grupos, horarios y áreas", "Integración con torniquetes y barreras", "Terminales faciales y credenciales", "QR Code, biometría y tarjetas RFID"] },
+      { title: "Control Inteligente de Acceso", intro: "Gestiona toda la circulación de personas a través de una única plataforma.", items: ["Liberación automática de acceso", "Registro de empleados, visitantes y prestadores", "Control por grupos, horarios y áreas", "Integración con torniquetes y barreras", "Terminales de acceso y credenciales", "QR Code, biometría y tarjetas RFID"] },
       { title: "Control de Vehículos", intro: "Automatiza por completo el acceso de vehículos.", items: ["Lectura automática de placas (LPR)", "Registro de vehículos, visitantes y proveedores", "Integración con barreras y control de plazas", "Historial completo y alertas", "Listas negras y listas blancas"] },
       { title: "Gestión Inteligente de Estacionamientos", intro: "Más que controlar entradas y salidas, información estratégica sobre el uso del estacionamiento.", items: ["Control automático de acceso", "Ocupación en tiempo real", "Tiempo medio de permanencia", "Vehículos en permanencia excesiva", "Flujo de entrada y salida", "Dashboards y alertas automáticas"] },
       { title: "Inteligencia sobre Flujo de Personas", intro: "Conoce el comportamiento de las personas dentro de tu organización.", items: ["Conteo de personas", "Flujo por ambiente y ocupación", "Mapas de calor", "Horarios pico", "Tiempo medio de permanencia", "Indicadores de utilización"] },
     ],
     applicationsTitle: "Aplicaciones",
-    applicationsIntro: "Nuestra solución atiende diferentes segmentos.",
+    applicationsIntro: "La solución se adapta a diferentes segmentos.",
     applications: [
       { name: "Empresas", desc: "Protección de oficinas, sedes administrativas y filiales." },
       { name: "Industrias", desc: "Monitoreo de áreas productivas, patios y perímetros." },
       { name: "Hospitales", desc: "Control de circulación de personas, visitantes y áreas críticas." },
-      { name: "Escuelas y Universidades", desc: "Protección de alumnos, profesores y colaboradores." },
+      { name: "Campus y Centros Administrativos", desc: "Control de acceso de colaboradores, visitantes y prestadores en áreas administrativas y de apoyo." },
       { name: "Condominios", desc: "Gestión inteligente de accesos y monitoreo." },
       { name: "Centros Logísticos", desc: "Control de vehículos, cargas y áreas operativas." },
       { name: "Shopping Centers", desc: "Flujo de visitantes, estacionamiento y seguridad patrimonial." },
@@ -991,7 +1008,7 @@ const es: Record<string, SolutionRich> = {
     ],
     integrationTitle: "Integración con tu entorno",
     integrationIntro: "Arquitectura abierta que aprovecha las inversiones ya realizadas.",
-    integration: ["Cámaras IP y analógicas", "Controladores de acceso, torniquetes y barreras", "Barreras y lectores RFID", "Terminales faciales", "Sensores perimetrales y alarmas", "Active Directory y sistemas de RR. HH.", "ERPs", "APIs REST y plataformas Cloud"],
+    integration: ["Cámaras IP y analógicas", "Controladores de acceso, torniquetes y barreras", "Barreras y lectores RFID", "Terminales de acceso", "Sensores perimetrales y alarmas", "Active Directory y sistemas de RR. HH.", "ERPs", "APIs REST y plataformas Cloud"],
     whyProcTitle: "¿Por qué elegir Proc?",
     whyProc: [
       "Creemos que la seguridad eficiente depende de combinar tecnología avanzada con conocimiento especializado. Por eso integramos todos los elementos de la protección física en un único ecosistema inteligente, eliminando islas de información.",

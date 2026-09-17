@@ -37,12 +37,12 @@ export const solutionMedia: Record<string, MediaBrief> = {
   "ambientes-inteligentes": {
     kind: "video",
     caption: {
-      pt: "Recepção corporativa com controle de acesso facial, câmeras inteligentes e central de monitoramento ao fundo.",
-      en: "Corporate reception with facial access control, smart cameras and a monitoring center in the background.",
-      es: "Recepción corporativa con control de acceso facial, cámaras inteligentes y central de monitoreo al fondo.",
+      pt: "Recepção corporativa com controle e liberação de acesso, câmeras inteligentes e central de monitoramento ao fundo.",
+      en: "Corporate reception with access control and release, smart cameras and a monitoring center in the background.",
+      es: "Recepción corporativa con control y liberación de acceso, cámaras inteligentes y central de monitoreo al fondo.",
     },
     prompt:
-      "Recepção corporativa moderna; pessoas passando por controle de acesso facial em catraca/terminal; câmeras inteligentes com overlays de detecção de pessoas e objetos; ao fundo, uma central de monitoramento com operador acompanhando várias unidades em telas. Tom seguro e sóbrio; paleta navy + vermelho de destaque. Proporção 16:9. Se vídeo: passagem fluida de uma pessoa pelo acesso facial e corte para a central.",
+      "Recepção corporativa moderna; pessoas passando por controle e liberação de acesso em catraca/terminal; câmeras inteligentes com overlays de detecção de pessoas e objetos; ao fundo, uma central de monitoramento com operador acompanhando várias unidades em telas. Tom seguro e sóbrio; paleta navy + vermelho de destaque. Proporção 16:9. Se vídeo: passagem fluida de uma pessoa pelo controle de acesso e corte para a central.",
     asset: heroAmbientesInteligentes,
   },
   "infraestrutura-de-ti": {

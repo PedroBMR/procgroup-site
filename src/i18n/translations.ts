@@ -113,7 +113,7 @@ export const translations = {
         {
           icon: "vision",
           name: "Visão Computacional",
-          desc: "Reconhecimento facial, leitura de placas, inspeção industrial, contagem e separação de produtos, controle de qualidade e análise inteligente de imagens.",
+          desc: "Leitura de placas, inspeção industrial, contagem e separação de produtos, controle de qualidade e análise inteligente de imagens.",
         },
         {
           icon: "integration",
@@ -155,19 +155,22 @@ export const translations = {
       diffTitle: "Por que empresas e indústrias confiam na Proc",
       differentiators: [
         { title: "Arquitetura Escalável", desc: "Plataforma modular pronta para crescer com a operação do cliente." },
-        { title: "IA Própria", desc: "Modelos de reconhecimento facial, LPR e analytics desenvolvidos internamente." },
+        { title: "IA Própria", desc: "Modelos de LPR e analytics desenvolvidos internamente." },
         { title: "Alta Disponibilidade", desc: "Infraestrutura redundante com SLA de disponibilidade contínua." },
         { title: "Integração Aberta", desc: "APIs para conectar sistemas legados, sensores e plataformas de terceiros." },
         { title: "Especialistas Certificados", desc: "Equipes dedicadas por segmento, não generalistas." },
         { title: "Edge AI", desc: "Processamento de IA na borda para respostas em tempo real." },
       ],
-      // Teaser de Cases na home (guardado — só PT por enquanto). Destaques vêm
-      // do case real Pato 360°, já registrado em cases.astro.
-      casesEyebrow: "Cases de sucesso",
-      casesTitle: "Resultados reais em operações críticas",
+      // Teaser da pagina /cases. Era "Cases de sucesso / Resultados reais em
+      // operacoes criticas", herdado de quando o Pato 360 estava no site. Depois
+      // de 2026-08-27 nao ha nenhum case com cliente nomeado nem resultado
+      // apurado aqui: a pagina mostra aplicacoes da plataforma e os tres
+      // projetos de visao computacional entregues. O teaser diz isso.
+      casesEyebrow: "Aplicações e projetos",
+      casesTitle: "O que a plataforma resolve em operações críticas",
       casesText:
-        "Do controle de acesso que não troca as catracas à inspeção visual na linha de produção, veja como a Proc AI Platform resolve desafios concretos de empresas e indústrias.",
-      casesCta: "Ver cases de sucesso",
+        "Do controle de acesso que não troca as catracas à inspeção de produto no chão de fábrica, veja o que a Proc AI Platform resolve em empresas e indústrias, incluindo os projetos de visão computacional que já entregamos.",
+      casesCta: "Ver aplicações e projetos",
       blogEyebrow: "Do nosso blog",
       blogTitle: "Ideias e bastidores da Proc AI Platform",
       blogCta: "Ver todos os posts",
@@ -217,15 +220,19 @@ export const translations = {
           ],
         },
         "ambientes-inteligentes": {
-          metaTitle: "Ambientes Inteligentes: Acesso e Segurança Corporativa",
+          // "Seguranca Corporativa" era o nome antigo da unidade, aposentado em
+          // 2026-08-20. Nome morto nao volta nem como palavra de titulo.
+          metaTitle: "Ambientes Inteligentes: Acesso e Segurança",
           metaDescription:
-            "Videomonitoramento com IA, controle de acesso facial e gestão de alarmes para proteger patrimônio, pessoas e operações.",
-          heroTitle: "Protegemos pessoas, patrimônios e operações com Inteligência Artificial.",
+            "Videomonitoramento com IA, controle e liberação de acesso e gestão de alarmes para proteger patrimônio, pessoas e operações.",
+          // Era "Protegemos pessoas, patrimonios e operacoes". A Proc fornece a
+          // tecnologia; quem protege e quem vigia e o cliente (fornece != opera).
+          heroTitle: "Tecnologia para proteger pessoas, patrimônio e operações com Inteligência Artificial.",
           heroLead:
-            "Integre videomonitoramento inteligente com IA, controle de acesso facial, monitoramento perimetral com alertas e analytics em uma única plataforma, para elevar o nível do controle de acesso, da segurança e da eficiência da sua empresa.",
+            "Integre videomonitoramento inteligente com IA, controle e liberação de acesso, monitoramento perimetral com alertas e analytics em uma única plataforma, para elevar o nível do controle de acesso, da segurança e da eficiência da sua empresa.",
           solutionsHeading: "Tecnologias aplicadas à proteção de empresas e indústrias",
           teamDescription:
-            "Profissionais dedicados a projetos de segurança eletrônica corporativa, com experiência em controle de acesso, videomonitoramento com IA e resposta a incidentes em tempo real.",
+            "Profissionais dedicados a projetos de segurança eletrônica corporativa, com experiência em controle de acesso, videomonitoramento com IA e geração de alertas em tempo real.",
           finalCtaTitle: "Pronto para proteger sua operação com inteligência artificial?",
           finalCtaText: "Fale com um especialista em Ambientes Inteligentes da Proc.",
           faqs: [
@@ -357,8 +364,11 @@ export const translations = {
       aboutPhotoAlt: "Proc Group headquarters in Pato Branco, Brazil",
       platformEyebrow: "Proc AI Platform",
       platformTitle: "In-house technology, with a specialist team for each operation",
+      // Era "A unified, integrated platform ... for ... every operation": a
+      // unica sobra, so em EN, da construcao "uma plataforma para tudo" que PT e
+      // ES ja tinham perdido em 2026-08-26. Alinhado aos outros dois idiomas.
       platformText:
-        "A unified, integrated platform of AI, Analytics and Computer Vision for centralizing and intelligently managing every operation, with dedicated specialist teams for each area.",
+        "AI, Analytics and Computer Vision built by our own engineering, applied to the intelligent management of your operation, with a specialist team dedicated to it.",
       platformCta: "See the Proc AI Platform",
       capEyebrow: "Proc AI Platform",
       capTitle: "In-house technology. Specialized by operation.",
@@ -373,7 +383,7 @@ export const translations = {
         {
           icon: "vision",
           name: "Computer Vision",
-          desc: "Facial recognition, license-plate reading, industrial inspection, product counting and sorting, quality control and intelligent image analysis.",
+          desc: "License-plate reading, industrial inspection, product counting and sorting, quality control and intelligent image analysis.",
         },
         {
           icon: "integration",
@@ -415,17 +425,17 @@ export const translations = {
       diffTitle: "Why businesses and industries trust Proc",
       differentiators: [
         { title: "Scalable Architecture", desc: "A modular platform ready to grow alongside the customer's operation." },
-        { title: "Proprietary AI", desc: "Facial recognition, LPR and analytics models built in-house." },
+        { title: "Proprietary AI", desc: "Automatic access release, LPR and analytics models built in-house." },
         { title: "High Availability", desc: "Redundant infrastructure with continuous-uptime SLAs." },
         { title: "Open Integration", desc: "APIs to connect legacy systems, sensors and third-party platforms." },
         { title: "Certified Specialists", desc: "Dedicated teams per segment, not generalists." },
         { title: "Edge AI", desc: "On-the-edge AI processing for real-time responses." },
       ],
-      casesEyebrow: "Success cases",
-      casesTitle: "Real results in mission-critical operations",
+      casesEyebrow: "Applications and projects",
+      casesTitle: "What the platform solves in mission-critical operations",
       casesText:
-        "From access control that keeps the turnstiles you already have to visual inspection on the production line, see how the Proc AI Platform solves concrete challenges for business and industry.",
-      casesCta: "See success cases",
+        "From access control that keeps the turnstiles you already have to product inspection on the factory floor, see what the Proc AI Platform solves for business and industry, including the computer vision projects we have already delivered.",
+      casesCta: "See applications and projects",
       blogEyebrow: "From our blog",
       blogTitle: "Ideas and behind-the-scenes of the Proc AI Platform",
       blogCta: "See all posts",
@@ -475,15 +485,15 @@ export const translations = {
           ],
         },
         "ambientes-inteligentes": {
-          metaTitle: "Smart Environments: Corporate Access and Security",
+          metaTitle: "Smart Environments: Access and Security",
           metaDescription:
-            "AI video surveillance, facial access control and alarm management to protect assets, people and operations.",
-          heroTitle: "We protect people, assets and operations with Artificial Intelligence.",
+            "AI video surveillance, access control and release and alarm management to protect assets, people and operations.",
+          heroTitle: "Technology to protect people, assets and operations with Artificial Intelligence.",
           heroLead:
-            "Bring intelligent AI video surveillance, facial access control, alerted perimeter monitoring and analytics together on a single platform to raise the bar for your company's access control, security and efficiency.",
+            "Bring intelligent AI video surveillance, access control and release, alerted perimeter monitoring and analytics together on a single platform to raise the bar for your company's access control, security and efficiency.",
           solutionsHeading: "Technologies applied to protecting businesses and industries",
           teamDescription:
-            "Specialists dedicated to corporate electronic-security projects, experienced in access control, AI video surveillance and real-time incident response.",
+            "Specialists dedicated to corporate electronic-security projects, experienced in access control, AI video surveillance and real-time alerting.",
           finalCtaTitle: "Ready to protect your operation with artificial intelligence?",
           finalCtaText: "Talk to a Proc Smart Environments specialist.",
           faqs: [
@@ -631,7 +641,7 @@ export const translations = {
         {
           icon: "vision",
           name: "Visión Artificial",
-          desc: "Reconocimiento facial, lectura de placas, inspección industrial, conteo y separación de productos, control de calidad y análisis inteligente de imágenes.",
+          desc: "Lectura de placas, inspección industrial, conteo y separación de productos, control de calidad y análisis inteligente de imágenes.",
         },
         {
           icon: "integration",
@@ -673,17 +683,17 @@ export const translations = {
       diffTitle: "Por qué empresas e industrias confían en Proc",
       differentiators: [
         { title: "Arquitectura Escalable", desc: "Plataforma modular lista para crecer junto a la operación del cliente." },
-        { title: "IA Propia", desc: "Modelos de reconocimiento facial, LPR y analytics desarrollados internamente." },
+        { title: "IA Propia", desc: "Modelos de LPR y analytics desarrollados internamente." },
         { title: "Alta Disponibilidad", desc: "Infraestructura redundante con SLA de disponibilidad continua." },
         { title: "Integración Abierta", desc: "APIs para conectar sistemas heredados, sensores y plataformas de terceros." },
         { title: "Especialistas Certificados", desc: "Equipos dedicados por segmento, no generalistas." },
         { title: "Edge AI", desc: "Procesamiento de IA en el borde para respuestas en tiempo real." },
       ],
-      casesEyebrow: "Casos de éxito",
-      casesTitle: "Resultados reales en operaciones críticas",
+      casesEyebrow: "Aplicaciones y proyectos",
+      casesTitle: "Lo que la plataforma resuelve en operaciones críticas",
       casesText:
-        "Del control de acceso que no cambia los torniquetes a la inspección visual en la línea de producción, mira cómo la Proc AI Platform resuelve desafíos concretos de empresas e industrias.",
-      casesCta: "Ver casos de éxito",
+        "Del control de acceso que no cambia los torniquetes a la inspección de producto en planta, mira lo que la Proc AI Platform resuelve en empresas e industrias, incluidos los proyectos de visión artificial que ya entregamos.",
+      casesCta: "Ver aplicaciones y proyectos",
       blogEyebrow: "De nuestro blog",
       blogTitle: "Ideas y detrás de escena de la Proc AI Platform",
       blogCta: "Ver todas las publicaciones",
@@ -733,15 +743,15 @@ export const translations = {
           ],
         },
         "ambientes-inteligentes": {
-          metaTitle: "Ambientes Inteligentes: Acceso y Seguridad Corporativa",
+          metaTitle: "Ambientes Inteligentes: Acceso y Seguridad",
           metaDescription:
-            "Videovigilancia con IA, control de acceso facial y gestión de alarmas para proteger patrimonio, personas y operaciones.",
-          heroTitle: "Protegemos personas, patrimonios y operaciones con Inteligencia Artificial.",
+            "Videovigilancia con IA, control y liberación de acceso y gestión de alarmas para proteger patrimonio, personas y operaciones.",
+          heroTitle: "Tecnología para proteger personas, patrimonio y operaciones con Inteligencia Artificial.",
           heroLead:
-            "Integra videovigilancia inteligente con IA, control de acceso facial, monitoreo perimetral con alertas y analytics en una única plataforma, para elevar el nivel del control de acceso, la seguridad y la eficiencia de tu empresa.",
+            "Integra videovigilancia inteligente con IA, control y liberación de acceso, monitoreo perimetral con alertas y analytics en una única plataforma, para elevar el nivel del control de acceso, la seguridad y la eficiencia de tu empresa.",
           solutionsHeading: "Tecnologías aplicadas a la protección de empresas e industrias",
           teamDescription:
-            "Profesionales dedicados a proyectos de seguridad electrónica corporativa, con experiencia en control de acceso, videovigilancia con IA y respuesta a incidentes en tiempo real.",
+            "Profesionales dedicados a proyectos de seguridad electrónica corporativa, con experiencia en control de acceso, videovigilancia con IA y generación de alertas en tiempo real.",
           finalCtaTitle: "¿Listo para proteger tu operación con inteligencia artificial?",
           finalCtaText: "Habla con un especialista en Ambientes Inteligentes de Proc.",
           faqs: [

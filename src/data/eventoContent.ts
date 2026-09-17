@@ -58,7 +58,7 @@ export const eventoUI: Record<Locale, EventoUI> = {
     solutionsKicker: "O que a Proc traz para você",
     proofLabels: ["Clientes atendidos", "Anos de experiência"],
     why: [
-      "IA própria: reconhecimento facial, LPR e analytics desenvolvidos pela Proc.",
+      "IA própria: LPR e analytics desenvolvidos pela Proc.",
       "Equipes especializadas por segmento, não generalistas.",
       "Plataforma de alta disponibilidade, operando 24/7.",
     ],
@@ -92,7 +92,7 @@ export const eventoUI: Record<Locale, EventoUI> = {
     solutionsKicker: "What Proc brings to you",
     proofLabels: ["Clients served", "Years of experience"],
     why: [
-      "In-house AI: facial recognition, LPR and analytics built by Proc.",
+      "In-house AI: LPR and analytics built by Proc.",
       "Specialist teams per segment, not generalists.",
       "A high-availability platform, running 24/7.",
     ],
@@ -126,7 +126,7 @@ export const eventoUI: Record<Locale, EventoUI> = {
     solutionsKicker: "Lo que Proc trae para ti",
     proofLabels: ["Clientes atendidos", "Años de experiencia"],
     why: [
-      "IA propia: reconocimiento facial, LPR y analytics desarrollados por Proc.",
+      "IA propia: LPR y analytics desarrollados por Proc.",
       "Equipos especializados por segmento, no generalistas.",
       "Plataforma de alta disponibilidad, operando 24/7.",
     ],
@@ -180,14 +180,14 @@ export const eventoUnitsI18n: Record<"en" | "es", Record<string, UnitI18n>> = {
       name: "Smart Environments",
       tagline: "Intelligent protection for businesses and industries",
       description:
-        "AI-powered video surveillance, facial access control and alarm management to protect assets, people and corporate operations, with the platform running 24x7 and alerting your team.",
+        "AI-powered video surveillance, access control and alarm management to protect assets, people and corporate operations, with the platform running 24x7 and alerting your team.",
       solutions: [
         "AI Video Surveillance",
-        "Facial Access Control",
+        "Contactless Access Control",
         "Visitor Management",
         "Perimeter Monitoring",
         "Alarm Management",
-        "Facial Recognition",
+        "Access Audit",
         "Parking LPR",
         "Analytics",
       ],
@@ -232,14 +232,14 @@ export const eventoUnitsI18n: Record<"en" | "es", Record<string, UnitI18n>> = {
       name: "Ambientes Inteligentes",
       tagline: "Protección inteligente para empresas e industrias",
       description:
-        "Soluciones de videovigilancia con IA, control de acceso facial y gestión de alarmas para proteger patrimonio, personas y operaciones corporativas, con la plataforma operando 24x7 y alertando a tu equipo.",
+        "Soluciones de videovigilancia con IA, control de acceso y gestión de alarmas para proteger patrimonio, personas y operaciones corporativas, con la plataforma operando 24x7 y alertando a tu equipo.",
       solutions: [
         "Videovigilancia con IA",
-        "Control de Acceso Facial",
+        "Control de Acceso sin Contacto",
         "Control de Visitantes",
         "Monitoreo Perimetral",
         "Gestión de Alarmas",
-        "Reconocimiento Facial",
+        "Auditoría de Acceso",
         "LPR para Estacionamientos",
         "Analytics",
       ],
