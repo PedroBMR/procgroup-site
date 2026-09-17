@@ -4,7 +4,7 @@ import { withBase } from "../utils/url";
 interface Props {
   href: string;
   variant?: "primary" | "secondary" | "ghost";
-  size?: "md" | "lg";
+  size?: "sm" | "md" | "lg";
   class?: string;
   [key: string]: unknown;
 }
@@ -26,6 +26,10 @@ const { href, variant = "primary", size = "md", class: className = "", ...rest }
     white-space: nowrap;
     transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out), background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
   }
+  /* sm existe para o CTA do cabecalho, que divide a barra com o menu e a
+     marca: no tamanho md ele competia com o logo. Mesmo aqui a altura fica
+     bem acima dos 24x24 que a WCAG 2.5.8 pede para alvo de toque. */
+  .btn-sm { padding: 0.55rem 1.2rem; font-size: var(--fs-xs); }
   .btn-md { padding: 0.8rem 1.6rem; font-size: var(--fs-sm); }
   .btn-lg { padding: 1rem 2rem; font-size: var(--fs-base); }
 
