@@ -224,18 +224,28 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
 <style>
   .hero {
     position: relative;
-    /* svh e não vh: no celular vh usa o viewport GRANDE, ignorando a barra de
-       endereço. Somado aos 108px de TopBar + Header fixos, o hero passava da
-       tela e o bloco de estatísticas ficava sempre cortado. */
-    min-height: 92vh;
-    min-height: 92svh;
+    /* A primeira tela é o herói MAIS o cabeçalho, então o cabeçalho tem que
+       ser descontado: é isso que faz a faixa do ticker, que fecha o herói,
+       caber sem rolar. Era 92svh, que somado aos 116px de TopBar + Header
+       passava da tela e cortava justamente o rodapé do herói (o mesmo defeito
+       que antes cortava o bloco de estatísticas).
+
+       svh e não vh: no celular vh usa o viewport GRANDE, ignorando a barra de
+       endereço, e o corte volta. */
+    min-height: calc(100vh - var(--topbar-h) - var(--header-h));
+    min-height: calc(100svh - var(--topbar-h) - var(--header-h));
     display: flex;
     flex-direction: column;
     justify-content: center;
     color: var(--white);
-    padding-top: var(--space-16);
+    padding-top: var(--space-12);
   }
-  .hero-inner { position: relative; z-index: 2; max-width: 920px; padding-block: var(--space-16); }
+
+  /* Abaixo de 1200px o cabeçalho encolhe (Header.astro), e a conta muda junto. */
+  @media (max-width: 1200px) {
+    .hero { min-height: calc(100svh - var(--topbar-h) - var(--header-h-mobile)); }
+  }
+  .hero-inner { position: relative; z-index: 2; max-width: 920px; padding-block: var(--space-12); }
   .hero h1 {
     color: var(--white);
     font-size: clamp(2.25rem, 2.2rem + 2.6vw, 4rem);
@@ -385,5 +395,14 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
   }
   @media (max-width: 640px) {
     .units-grid, .diff-grid, .cap-grid { grid-template-columns: 1fr; }
+
+    /* No celular o texto do herói sozinho passa de 870px e empurra a faixa do
+       ticker para longe da primeira tela. O respiro entre os blocos encolhe e
+       o subtítulo cai um degrau de tamanho: sem tocar no título nem na copy,
+       recupera cerca de 130px. */
+    .hero-inner { padding-block: var(--space-8); }
+    .hero h1 { margin-top: var(--space-3); }
+    .hero-subtitle { margin-top: var(--space-4); font-size: var(--fs-base); }
+    .hero-actions { margin-top: var(--space-6); gap: var(--space-3); }
   }
 </style>
