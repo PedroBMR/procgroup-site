@@ -1,0 +1,117 @@
+---
+/**
+ * Fundo do herói da home: a cena de telemetria em Canvas 2D.
+ *
+ * Substitui a CenaOperacao (as três estações vistas por câmera), reprovada pelo
+ * Pedro em 2026-09-17 junto com as outras quatro direções do comparador: todas
+ * diziam a mesma coisa, "o que a câmera vê", e isso deixa Infraestrutura de TI
+ * de fora. O desenho e o ciclo de vida vivem em src/scripts/cenaTelemetria.ts;
+ * aqui fica só a superfície.
+ *
+ * Camadas, de trás para a frente:
+ *   1. base CSS      gradiente navy. É o que aparece sem JS, sem canvas ou com
+ *                    prefers-reduced-motion. Nunca vira buraco preto.
+ *   2. canvas        as faixas de telemetria e a marcação do desvio.
+ *   3. véu           escurece a esquerda e o topo, onde o h1 e o subtítulo
+ *                    vivem. Sem ele o texto branco cai sobre as curvas.
+ *   4. grão          ruído fino, fixo, que mata o banding do gradiente.
+ *
+ * Os rótulos das faixas são texto, então vão daqui traduzidos: o canvas não
+ * conhece o i18n do site. Ficam em data-attributes, não em translations.ts,
+ * porque são enfeite da cena e não copy de página.
+ *
+ * Decorativo: aria-hidden. A mensagem está no texto do herói, não aqui.
+ */
+import { getLangFromUrl } from "../i18n/utils";
+
+const lang = getLangFromUrl(Astro.url);
+
+const ROTULOS = {
+  pt: ["DISPONIBILIDADE", "PEÇAS/HORA", "ACESSOS", "TEMPERATURA", "FLUXO"],
+  en: ["UPTIME", "PARTS/HOUR", "ACCESS", "TEMPERATURE", "FLOW"],
+  es: ["DISPONIBILIDAD", "PIEZAS/HORA", "ACCESOS", "TEMPERATURA", "FLUJO"],
+} as const;
+
+const CARIMBO = {
+  pt: "MARCADO ANTES DA FALHA",
+  en: "FLAGGED BEFORE FAILURE",
+  es: "MARCADO ANTES DE LA FALLA",
+} as const;
+
+const rotulos = ROTULOS[lang] ?? ROTULOS.pt;
+const carimbo = CARIMBO[lang] ?? CARIMBO.pt;
+---
+
+<div class="cena-heroi" aria-hidden="true" data-parallax="-0.08" data-parallax-start="top top">
+  <span
+    class="cena-canvas"
+    data-cena="telemetria"
+    data-rotulos={JSON.stringify(rotulos)}
+    data-carimbo={carimbo}
+  ><canvas></canvas></span>
+  <span class="cena-veu"></span>
+  <span class="cena-grao"></span>
+</div>
+
+<style>
+  .cena-heroi {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    /* Um foco só, alto e frio, puxado para a direita: é de lá que o dado novo
+       entra. O manual pede um a dois focos por composição. */
+    background:
+      radial-gradient(85% 65% at 72% 16%, rgba(37, 56, 102, 0.5), transparent 64%),
+      radial-gradient(120% 100% at 50% 0%, var(--navy-800) 0%, var(--navy-950) 74%);
+  }
+
+  .cena-canvas { position: absolute; inset: 0; }
+  .cena-canvas canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+  /* As faixas atravessam o quadro inteiro, e o texto do herói vive na esquerda
+     e no miolo. O véu pesa nesses dois lugares e abre à direita, onde ficam os
+     rótulos e a marcação. */
+  .cena-veu {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(100deg, rgba(6, 10, 20, 0.86) 0%, rgba(6, 10, 20, 0.52) 38%, rgba(6, 10, 20, 0.1) 68%, transparent 86%),
+      linear-gradient(180deg, rgba(6, 10, 20, 0.5) 0%, transparent 32%),
+      linear-gradient(0deg, var(--navy-950) 0%, transparent 22%);
+  }
+
+  /* Grão: SVG inline em data URI, sem requisição e sem custo de JS. Opacidade
+     baixíssima de propósito, só some o banding e dá textura. */
+  .cena-grao {
+    position: absolute;
+    inset: -50%;
+    pointer-events: none;
+    opacity: 0.16;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='r'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23r)'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+  }
+
+  /* Sem o canvas montado sobra o gradiente chapado: umas poucas linhas
+     horizontais entregam a ideia de painel. Saem quando a cena assume. */
+  .cena-canvas::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 100% 64px;
+    mask-image: radial-gradient(75% 55% at 70% 70%, black 30%, transparent 100%);
+  }
+  .cena-canvas[data-cena-pronta]::before { display: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* A cena desenha um quadro único e para (cenaTelemetria.ts). Esse quadro já
+       nasce com um desvio marcado: mesmo parada, ela conta a história. */
+  }
+</style>
+
+<script>
+  import { montarCenas } from "../scripts/cenas";
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", montarCenas);
+  else montarCenas();
+</script>
