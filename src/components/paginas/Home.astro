@@ -65,8 +65,8 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
       <h1>{t.heroTitle}</h1>
       <p class="hero-subtitle">{t.heroSubtitle}</p>
       <div class="hero-actions">
-        <Button href={P(`/plataforma-proc-ai`)} variant="primary" size="lg" data-magnetic>{t.heroCtaPrimary}</Button>
-        <Button href={WHATSAPP_DEMO} variant="ghost" size="lg" data-magnetic>{t.heroCtaSecondary}</Button>
+        <Button href={P(`/plataforma-proc-ai`)} variant="primary" size="md" data-magnetic>{t.heroCtaPrimary}</Button>
+        <Button href={WHATSAPP_DEMO} variant="ghost" size="md" data-magnetic>{t.heroCtaSecondary}</Button>
       </div>
     </div>
 
@@ -218,7 +218,7 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
     <div class="container final-cta-inner" data-reveal>
       <h2>{t.finalCtaTitle}</h2>
       <p>{t.finalCtaText}</p>
-      <Button href={WHATSAPP_DEMO} variant="primary" size="lg" data-magnetic>{t.finalCtaButton}</Button>
+      <Button href={WHATSAPP_DEMO} variant="primary" size="md" data-magnetic>{t.finalCtaButton}</Button>
     </div>
   </section>
 </BaseLayout>
