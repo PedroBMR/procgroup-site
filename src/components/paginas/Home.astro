@@ -61,7 +61,14 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
     <div class="container hero-inner" data-hero-intro>
       <p class="eyebrow">{t.heroEyebrow}</p>
       <h1>{t.heroTitle}</h1>
-      <p class="hero-subtitle">{t.heroSubtitle}</p>
+      <!-- Duas versoes do mesmo subtitulo, uma so aparece por vez. Ficam
+           dentro do MESMO <p> de proposito: o data-hero-intro anima os filhos
+           diretos em sequencia, e um paragrafo a mais abriria um buraco no
+           stagger para animar algo invisivel. -->
+      <p class="hero-subtitle">
+        <span class="so-tela-larga">{t.heroSubtitle}</span>
+        <span class="so-celular">{t.heroSubtitleCurto}</span>
+      </p>
       <div class="hero-actions">
         <Button href={P(`/plataforma-proc-ai`)} variant="primary" size="md" data-magnetic>{t.heroCtaPrimary}</Button>
         <Button href={WHATSAPP_DEMO} variant="ghost" size="md" data-magnetic>{t.heroCtaSecondary}</Button>
@@ -257,6 +264,7 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
     color: rgba(255,255,255,0.75);
     max-width: 620px;
   }
+  .so-celular { display: none; }
   .hero-actions { display: flex; gap: var(--space-4); margin-top: var(--space-8); flex-wrap: wrap; }
 
   /* Acima da cena, senao o canvas do heroi passa por cima da faixa. */
@@ -400,9 +408,12 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
        ticker para longe da primeira tela. O respiro entre os blocos encolhe e
        o subtítulo cai um degrau de tamanho: sem tocar no título nem na copy,
        recupera cerca de 130px. */
-    .hero-inner { padding-block: var(--space-8); }
-    .hero h1 { margin-top: var(--space-3); }
+    .hero { padding-top: var(--space-6); }
+    .hero-inner { padding-block: var(--space-6); }
+    .hero h1 { margin-top: var(--space-2); }
     .hero-subtitle { margin-top: var(--space-4); font-size: var(--fs-base); }
-    .hero-actions { margin-top: var(--space-6); gap: var(--space-3); }
+    .so-tela-larga { display: none; }
+    .so-celular { display: inline; }
+    .hero-actions { margin-top: var(--space-4); gap: var(--space-3); }
   }
 </style>

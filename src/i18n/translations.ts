@@ -82,6 +82,11 @@ export const translations = {
       heroTitle: "Tecnologia inteligente para um mundo mais seguro, conectado e eficiente.",
       heroSubtitle:
         "A Proc desenvolve soluções de Inteligência Artificial, Visão Computacional, Ambientes Inteligentes e Infraestrutura de TI que transformam dados em decisões inteligentes, protegendo pessoas e apoiando empresas e indústrias, cada operação com a sua solução.",
+      /** Versao curta, usada so abaixo de 640px. A longa ocupa sete linhas
+          num celular de 375px e empurra a faixa do ticker para fora da
+          primeira tela. Mesma promessa, sem a enumeracao completa. */
+      heroSubtitleCurto:
+        "IA, visão computacional, ambientes inteligentes e infraestrutura de TI que transformam os dados da sua operação em decisão.",
       heroCtaPrimary: "Conheça a Plataforma Proc AI",
       heroCtaSecondary: "Solicite uma Demonstração",
       statsLabels: ["Clientes atendidos", "Anos de experiência"],
@@ -352,6 +357,11 @@ export const translations = {
       heroTitle: "Intelligent technology for a safer, more connected, more efficient world.",
       heroSubtitle:
         "Proc builds Artificial Intelligence, Computer Vision, Smart Environments and IT Infrastructure solutions that turn data into smart decisions, protecting people and supporting companies and industries, each operation with its own solution.",
+      /** Versao curta, usada so abaixo de 640px. A longa ocupa sete linhas
+          num celular de 375px e empurra a faixa do ticker para fora da
+          primeira tela. Mesma promessa, sem a enumeracao completa. */
+      heroSubtitleCurto:
+        "AI, computer vision, smart environments and IT infrastructure that turn your operation’s data into decisions.",
       heroCtaPrimary: "Explore the Proc AI Platform",
       heroCtaSecondary: "Request a Demo",
       statsLabels: ["Clients served", "Years of experience"],
@@ -613,6 +623,11 @@ export const translations = {
       heroTitle: "Tecnología inteligente para un mundo más seguro, conectado y eficiente.",
       heroSubtitle:
         "Proc desarrolla soluciones de Inteligencia Artificial, Visión Artificial, Ambientes Inteligentes e Infraestructura de TI que transforman datos en decisiones inteligentes, protegiendo personas y apoyando a empresas e industrias, cada operación con su solución.",
+      /** Versao curta, usada so abaixo de 640px. A longa ocupa sete linhas
+          num celular de 375px e empurra a faixa do ticker para fora da
+          primeira tela. Mesma promessa, sem a enumeracao completa. */
+      heroSubtitleCurto:
+        "IA, visión artificial, ambientes inteligentes e infraestructura de TI que convierten los datos de tu operación en decisiones.",
       heroCtaPrimary: "Conoce la Plataforma Proc AI",
       heroCtaSecondary: "Solicita una Demostración",
       statsLabels: ["Clientes atendidos", "Años de experiencia"],
