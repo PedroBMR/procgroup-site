@@ -15,6 +15,7 @@ import "../styles/fonts.css";
 // url() do fonts.css — não duplica o asset.
 import barlow800Url from "../assets/fonts/barlow-condensed-800.woff2?url";
 import spaceGroteskUrl from "../assets/fonts/space-grotesk-var.woff2?url";
+import { metricool, pixelMetricool } from "../data/medicao";
 
 interface Props {
   title: string;
@@ -184,6 +185,20 @@ const schemaList = Array.isArray(schema) ? schema : schema ? [schema] : [];
     {schemaList.map((s) => <script type="application/ld+json" set:html={ldjson(s)} />)}
   </head>
   <body>
+    {/* Pixel de medicao de audiencia. Desligado ate a Politica de Privacidade
+        citar a ferramenta: ver src/data/medicao.ts, que explica o porque e e o
+        unico lugar onde se liga. */}
+    {metricool.ativo && (
+      <img
+        src={pixelMetricool}
+        alt=""
+        aria-hidden="true"
+        width="1"
+        height="1"
+        decoding="async"
+        style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none"
+      />
+    )}
     <a href="#main" class="visually-hidden">{t.common.skipLink}</a>
     {!bare && <TopBar />}
     {!bare && <Header />}
