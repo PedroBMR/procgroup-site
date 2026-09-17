@@ -4,11 +4,9 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Button from "../Button.astro";
 import CenaTelemetria from "../CenaTelemetria.astro";
-import StatCounter from "../StatCounter.astro";
 import PostCard from "../PostCard.astro";
 import ConnectedTicker from "../ConnectedTicker.astro";
 import UnitIcon from "../UnitIcon.astro";
-import { homeStats } from "../../data/stats";
 import { getBusinessUnits } from "../../data/businessUnits";
 import { byNewest } from "../../utils/blog";
 import hqPhoto from "../../assets/images/hq-pato-branco-enhanced.webp";
@@ -70,14 +68,14 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
       </div>
     </div>
 
-    <div class="hero-stats">
-      <div class="container stats-grid">
-        {homeStats.map((stat, i) => <StatCounter value={stat.value} suffix={stat.suffix} label={t.statsLabels[i]} />)}
-      </div>
+    <!-- O ticker fecha o heroi. Ficava depois dele, fora da primeira tela, e
+         so aparecia para quem rolava: dentro do heroi ele e visto por quem
+         chega e ainda faz de rodape da cena. No lugar dele havia o bloco de
+         estatisticas (200+ clientes, 10+ anos), retirado em 2026-09-17. -->
+    <div class="hero-ticker">
+      <ConnectedTicker />
     </div>
   </section>
-
-  <ConnectedTicker />
 
   <section class="section about-teaser" data-theme="light">
     <div class="container about-grid">
@@ -251,17 +249,8 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
   }
   .hero-actions { display: flex; gap: var(--space-4); margin-top: var(--space-8); flex-wrap: wrap; }
 
-  .hero-stats {
-    position: relative;
-    z-index: 2;
-    border-top: 1px solid rgba(255,255,255,0.14);
-    padding-block: var(--space-8);
-  }
-  .stats-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6); }
-
-  @media (max-width: 480px) {
-    .stats-grid { grid-template-columns: 1fr; }
-  }
+  /* Acima da cena, senao o canvas do heroi passa por cima da faixa. */
+  .hero-ticker { position: relative; z-index: 2; margin-top: auto; }
 
   .section { padding-block: var(--space-24); }
   .section-header { max-width: 640px; margin-bottom: var(--space-12); }

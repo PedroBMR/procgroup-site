@@ -143,7 +143,7 @@ export const telemetria: Cena = {
     const n = quantas(w);
     const estreito = w < 700;
     // No desktop a banda mora na metade de baixo: o topo do herói é do h1 e o
-    // rodapé é do bloco de estatísticas, então ela fica entre os dois.
+    // rodapé é da faixa do ticker, então ela fica entre os dois.
     //
     // No celular o herói passa de 1200px de altura e o texto ocupa quase tudo:
     // ancorar a banda no rodapé jogaria a cena para fora da primeira tela, e
@@ -160,6 +160,10 @@ export const telemetria: Cena = {
     const largura = w - x0;
     const uNoX = (x: number) => t - ((w - x) / largura) * JANELA;
     const xNoU = (u: number) => w - ((t - u) / JANELA) * largura;
+
+    // Onde as faixas terminam de se dissolver. Serve duas vezes: para apagar a
+    // esquerda do canvas no fim, e para o marcador vermelho saber onde parar.
+    const fimDoFade = estreito ? w * 0.18 : w * 0.56;
 
     // Paralaxe curta: a cena responde ao ponteiro sem sair do lugar.
     ctx.save();
@@ -184,7 +188,7 @@ export const telemetria: Cena = {
 
     if (s.anom) {
       const yBase = topo + passo * (s.anom.trilha + 0.5);
-      desenharMarcador(ctx, s, yBase, passo * 0.38, t, xNoU, w);
+      desenharMarcador(ctx, s, yBase, passo * 0.38, t, xNoU, w, fimDoFade);
     }
 
     desenharAgora(ctx, s, w, topo, alturaBanda, passo, n, t);
@@ -194,7 +198,7 @@ export const telemetria: Cena = {
     // Isso é feito no canvas, e não só no véu do host, porque o véu escurece
     // por igual e a curva ainda aparecia por baixo do subtítulo. Aqui ela some
     // de vez, e de quebra o dado parece vir do escuro.
-    const fim = w < 700 ? w * 0.18 : w * 0.56;
+    const fim = fimDoFade;
     const apagar = ctx.createLinearGradient(0, 0, fim, 0);
     apagar.addColorStop(0, "rgba(0, 0, 0, 1)");
     apagar.addColorStop(1, "rgba(0, 0, 0, 0)");
@@ -299,12 +303,18 @@ function desenharRotulo(ctx: Ctx, texto: string, w: number, y: number, emDesvio:
  *   2. no gatilho: colchetes vermelhos fecham no trecho e o carimbo acende
  *   3. depois: o carimbo apaga e fica o risco tênue viajando com o trecho
  */
-function desenharMarcador(ctx: Ctx, s: any, yBase: number, amp: number, t: number, xNoU: (u: number) => number, w: number) {
+function desenharMarcador(ctx: Ctx, s: any, yBase: number, amp: number, t: number, xNoU: (u: number) => number, w: number, fimDoFade: number) {
   const uGatilho = s.anom.u0 + SUBIDA * GATILHO;
   const desde = t - uGatilho;
   if (desde < 0) return;
 
   const entrada = Math.min(1, desde / 0.45);
+  // O vermelho e o carimbo saem de cena antes de chegar na coluna do texto. O
+  // fade do canvas ja atenua tudo por ali, mas vermelho saturado sobre o
+  // subtitulo continua puxando o olho mesmo a 30% de opacidade: aqui ele some
+  // de vez. Some pelo GATILHO, que e o ponto mais a esquerda do marcador.
+  const recuo = Math.min(1, Math.max(0, (xNoU(uGatilho) - fimDoFade) / (w * 0.1)));
+  if (recuo <= 0) return;
   const vivo = Math.max(0, 1 - Math.max(0, desde - CARIMBO_VIVO) / 1.6);
   const xEsq = xNoU(s.anom.u0);
   const xDir = xNoU(s.anom.u0 + TOTAL);
@@ -317,7 +327,7 @@ function desenharMarcador(ctx: Ctx, s: any, yBase: number, amp: number, t: numbe
   const limite = yBase - amp * LIMITE;
   ctx.save();
   ctx.setLineDash([3, 5]);
-  ctx.strokeStyle = `rgba(${RED}, ${0.3 * entrada * Math.max(vivo, 0.35)})`;
+  ctx.strokeStyle = `rgba(${RED}, ${0.3 * entrada * recuo * Math.max(vivo, 0.35)})`;
   ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.moveTo(Math.max(0, xEsq), limite);
@@ -327,7 +337,7 @@ function desenharMarcador(ctx: Ctx, s: any, yBase: number, amp: number, t: numbe
 
   // Colchetes: envolvem o trecho sem encaixotá-lo.
   const braco = Math.min(14, Math.max(6, (xDir - xEsq) * 0.14));
-  ctx.strokeStyle = `rgba(${RED}, ${(0.28 + 0.5 * vivo) * entrada})`;
+  ctx.strokeStyle = `rgba(${RED}, ${(0.28 + 0.5 * vivo) * entrada * recuo})`;
   ctx.lineWidth = 1.4;
   ctx.beginPath();
   for (const [x, dir] of [[xEsq, 1], [xDir, -1]] as const) {
@@ -340,7 +350,7 @@ function desenharMarcador(ctx: Ctx, s: any, yBase: number, amp: number, t: numbe
 
   // O instante da marcação: risco vertical no ponto exato em que a plataforma
   // decidiu. Fica depois que o carimbo apaga, mais fraco.
-  ctx.strokeStyle = `rgba(${RED}, ${(0.18 + 0.52 * vivo) * entrada})`;
+  ctx.strokeStyle = `rgba(${RED}, ${(0.18 + 0.52 * vivo) * entrada * recuo})`;
   ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.moveTo(Math.round(xMarca) + 0.5, alto);
@@ -355,7 +365,7 @@ function desenharMarcador(ctx: Ctx, s: any, yBase: number, amp: number, t: numbe
     // Vira para dentro quando o trecho chega perto da borda direita.
     const x = xMarca + larguraTexto + 18 > w ? xMarca - larguraTexto - 10 : xMarca + 10;
     const y = alto - 8;
-    ctx.fillStyle = `rgba(${RED}, ${vivo * entrada})`;
+    ctx.fillStyle = `rgba(${RED}, ${vivo * entrada * recuo})`;
     ctx.fillText(texto, x, y);
     ctx.fillRect(x, y + 4, larguraTexto, 1);
   });
