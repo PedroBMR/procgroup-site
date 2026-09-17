@@ -161,10 +161,6 @@ export const pages = {
       cta: "Enviar currículo por e-mail",
       mailSubject: "Currículo - Trabalhe Conosco",
     },
-    abertura: {
-      saudacao: "Bem-vindo à",
-      pular: "Pular abertura",
-    },
     eventos: {
       metaTitle: "Agenda de Eventos",
       metaDescription: "Acompanhe os eventos, feiras e encontros de tecnologia e segurança com participação da Proc Group.",
@@ -362,10 +358,6 @@ export const pages = {
       cta: "Send résumé by email",
       mailSubject: "Résumé - Careers",
     },
-    abertura: {
-      saudacao: "Welcome to",
-      pular: "Skip intro",
-    },
     eventos: {
       metaTitle: "Events Calendar",
       metaDescription: "Follow the technology and security events, trade shows and meetups Proc Group takes part in.",
@@ -561,10 +553,6 @@ export const pages = {
       lead: "No hay vacantes publicadas en este momento. Una página con posiciones y cultura del equipo está prevista para una próxima fase. Mientras tanto, envía tu currículum y cuéntanos un poco sobre ti.",
       cta: "Enviar currículum por correo",
       mailSubject: "Currículum - Trabaja con Nosotros",
-    },
-    abertura: {
-      saudacao: "Bienvenido a",
-      pular: "Saltar apertura",
     },
     eventos: {
       metaTitle: "Agenda de Eventos",

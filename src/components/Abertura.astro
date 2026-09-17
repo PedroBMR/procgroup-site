@@ -1,0 +1,93 @@
+---
+/**
+ * Abertura da home: um corte de varredura, e acabou.
+ *
+ * Um véu navy cobre o herói e recua para a esquerda em 620ms, com um risco
+ * fino de luz na borda que vai junto. Por onde o risco passa, a home aparece:
+ * a telemetria já rodando, o título e os botões entrando. Total, 700ms.
+ *
+ * O QUE ISSO SUBSTITUI: a nuvem de pontos que montava a marca (IntroBoot,
+ * 369 linhas) e se dissolvia em 3,1s. O Pedro reprovou em 2026-09-17: "cafona
+ * e não tecnológica". Somados os 3,1s dela e a entrada do herói, a home levava
+ * cerca de 4,6s para ficar legível, e a marca aparecia duas vezes seguidas,
+ * na abertura e no cabeçalho logo abaixo.
+ *
+ * SEM MARCA E SEM BOTÃO DE PULAR: nada para ler, nada para clicar, nada para
+ * esperar. Um corte que dura menos que o tempo de uma decisão não precisa de
+ * saída de emergência.
+ *
+ * TUDO EM CSS, NADA DE JS: o véu recua por animação, não por script. Se o JS
+ * falhar, for bloqueado ou demorar, o véu sai do mesmo jeito. O contrário é o
+ * pesadelo clássico da tela de carregamento que nunca some.
+ *
+ * As duas animações compartilham curva e duração de propósito: é isso que
+ * mantém o risco colado na borda do véu. Mexer numa sem mexer na outra faz a
+ * luz descolar do corte.
+ *
+ * Decorativa: aria-hidden, e pointer-events desligado desde o primeiro quadro,
+ * para não engolir um clique de quem chega com pressa.
+ */
+---
+
+<div class="abertura" aria-hidden="true">
+  <span class="veu"></span>
+  <span class="risco"></span>
+</div>
+
+<style>
+  .abertura {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    pointer-events: none;
+    /* Depois do corte o elemento sai do caminho de vez: sem isto ele fica
+       sobre a página, invisível, para sempre. */
+    animation: aberturaFim 0s linear 0.72s forwards;
+  }
+
+  .veu {
+    position: absolute;
+    inset: 0;
+    background: var(--navy-950);
+    /* Encolhe para a esquerda: a borda DIREITA do véu é o corte, e é ela que
+       atravessa a tela. */
+    transform-origin: left center;
+    animation: veuRecua 0.62s cubic-bezier(0.65, 0, 0.35, 1) 0.06s both;
+  }
+
+  .risco {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -1px;
+    width: 2px;
+    background: linear-gradient(180deg, transparent, rgba(190, 214, 246, 0.95) 18%, rgba(190, 214, 246, 0.95) 82%, transparent);
+    box-shadow: 0 0 18px 2px rgba(190, 214, 246, 0.35);
+    animation:
+      riscoVarre 0.62s cubic-bezier(0.65, 0, 0.35, 1) 0.06s both,
+      riscoApaga 0.1s ease-out 0.66s forwards;
+  }
+
+  @keyframes veuRecua {
+    from { transform: scaleX(1); }
+    to { transform: scaleX(0); }
+  }
+
+  @keyframes riscoVarre {
+    from { transform: translateX(100vw); }
+    to { transform: translateX(0); }
+  }
+
+  @keyframes riscoApaga {
+    to { opacity: 0; }
+  }
+
+  @keyframes aberturaFim {
+    to { visibility: hidden; }
+  }
+
+  /* Quem pediu menos movimento não vê corte nenhum: a home já está lá. */
+  @media (prefers-reduced-motion: reduce) {
+    .abertura { display: none; }
+  }
+</style>

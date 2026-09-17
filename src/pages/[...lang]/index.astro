@@ -5,10 +5,10 @@
 // governo sairam para um site proprio (decisao do CEO). Sem dois lados para
 // escolher, nao ha o que selecionar — a home assume a raiz.
 //
-// A abertura da marca veio junto do seletor: era a entrada do site e continua
-// sendo. Toca em toda visita a raiz, com botao de pular, clique ou Esc.
+// A abertura e um corte de varredura de 700ms (Abertura.astro). Substituiu a
+// nuvem de pontos que montava a marca em 3,1s, reprovada em 2026-09-17.
 import Home from "../../components/paginas/Home.astro";
-import IntroBoot from "../../components/IntroBoot.astro";
+import Abertura from "../../components/Abertura.astro";
 import { defaultLocale, type Locale } from "../../i18n/config";
 
 export function getStaticPaths() {
@@ -18,5 +18,5 @@ export function getStaticPaths() {
 const lang = (Astro.params.lang as Locale) || defaultLocale;
 ---
 
-<IntroBoot lang={lang} />
+<Abertura />
 <Home />
