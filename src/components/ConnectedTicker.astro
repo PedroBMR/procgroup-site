@@ -8,11 +8,18 @@ import { getLangFromUrl, useTranslations } from "../i18n/utils";
 const t = useTranslations(getLangFromUrl(Astro.url)).ticker;
 const items = t.items;
 const highlight = t.highlight;
+
+// A trilha anda exatamente UMA cópia por ciclo (-100%/COPIAS) e recomeça; como
+// a cópia seguinte é idêntica, o salto é invisível. Para isso a tela precisa
+// estar sempre coberta: (COPIAS - 1) cópias >= largura da viewport. Uma cópia
+// mede ~1.200px, então com 2 cópias (o que havia antes) monitores de 1920px
+// viam a faixa acabar e voltar do começo. 4 cópias cobrem até ~3.600px.
+const COPIAS = 4;
 ---
 
 <div class="ticker" aria-hidden="true">
-  <div class="ticker-track">
-    {Array.from({ length: 2 }).map(() => (
+  <div class="ticker-track" style={`--copias: ${COPIAS}`}>
+    {Array.from({ length: COPIAS }).map(() => (
       <div class="ticker-group">
         {items.map((item) => (
           <>
@@ -61,7 +68,7 @@ const highlight = t.highlight;
 
   @keyframes ticker-scroll {
     from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
+    to { transform: translateX(calc(-100% / var(--copias))); }
   }
 
   @media (prefers-reduced-motion: reduce) {
