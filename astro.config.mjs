@@ -18,7 +18,7 @@ const EH_PRODUCAO = ['www.procgroup.com.br', 'procgroup.com.br'].includes(new UR
 // Ou seja: /empresas/* virou /*, e /governo/* nao tem equivalente neste site.
 // O que era do lado publico vai para a home; mandar para uma 404 castigaria
 // quem clicou num link que a propria Proc divulgou.
-const CORPORATIVAS = ['', '/empresa', '/contato', '/cases', '/plataforma-proc-ai',
+const CORPORATIVAS = ['', '/empresa', '/contato', '/cases',
   '/solucoes', '/solucoes/ambientes-inteligentes', '/solucoes/ia-industrial',
   '/solucoes/infraestrutura-de-ti'];
 const PUBLICAS = ['', '/empresa', '/contato', '/cases', '/plataforma-proc-ai',
@@ -43,6 +43,11 @@ for (const pref of ['', '/en', '/es']) {
   // mais existem: a raiz e a home, e cidades foi embora com o setor publico.
   REDIRECTS[`${pref}/comecar`] = `${BASE}${raiz}`;
   REDIRECTS[`${pref}/solucoes/cidades-inteligentes`] = `${BASE}${raiz}`;
+  // A pagina da Plataforma Proc AI saiu do site em 2026-09-24. O que ela
+  // apresentava — a base comum das solucoes — vive hoje na visao geral de
+  // solucoes, entao os dois enderecos antigos levam para la.
+  REDIRECTS[`${pref}/plataforma-proc-ai`] = `${BASE}${pref}/solucoes`;
+  REDIRECTS[`${pref}/empresas/plataforma-proc-ai`] = `${BASE}${pref}/solucoes`;
 }
 
 

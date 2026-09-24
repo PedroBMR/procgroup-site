@@ -70,7 +70,7 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
         <span class="so-celular">{t.heroSubtitleCurto}</span>
       </p>
       <div class="hero-actions">
-        <Button href={P(`/plataforma-proc-ai`)} variant="primary" size="md" data-magnetic>{t.heroCtaPrimary}</Button>
+        <Button href={P(`/solucoes`)} variant="primary" size="md" data-magnetic>{t.heroCtaPrimary}</Button>
         <Button href={whatsappDemo(lang)} variant="ghost" size="md" data-magnetic>{t.heroCtaSecondary}</Button>
       </div>
     </div>
@@ -152,9 +152,6 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
         ))}
       </div>
 
-      <div class="platform-cta" data-reveal>
-        <Button href={P(`/plataforma-proc-ai`)} variant="secondary" size="lg">{t.platformCta}</Button>
-      </div>
     </div>
   </section>
 
@@ -326,7 +323,6 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
   .unit-card p { margin-top: var(--space-2); font-size: var(--fs-sm); color: var(--color-text-muted); flex: 1; }
   .unit-link { margin-top: var(--space-4); font-size: var(--fs-xs); font-weight: 700; color: var(--color-text); }
 
-  .platform-cta { margin-top: var(--space-12); text-align: center; }
 
   /* 6 capacidades da plataforma */
   .capabilities { background: var(--color-bg); }

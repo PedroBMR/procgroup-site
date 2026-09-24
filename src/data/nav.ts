@@ -31,7 +31,6 @@ export function getMainNav(lang: Locale): NavItem[] {
   return [
     { id: "home", label: t.home, href: L("/") },
     { id: "empresa", label: t.empresa, href: L("/empresa") },
-    { id: "plataforma", label: t.plataforma, href: L("/plataforma-proc-ai") },
     {
       id: "solucoes",
       label: t.solucoes,

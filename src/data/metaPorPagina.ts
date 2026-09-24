@@ -11,7 +11,7 @@ import type { Locale } from "../i18n/config";
  *
  * O título NÃO leva "Proc Group": o BaseLayout acrescenta.
  */
-export type ChaveMeta = "home" | "empresa" | "contato" | "plataforma" | "cases";
+export type ChaveMeta = "home" | "empresa" | "contato" | "cases";
 
 interface Meta {
   title: string;
@@ -35,11 +35,6 @@ const meta: Record<Locale, Record<ChaveMeta, Meta>> = {
       description:
         "Fale com um especialista da Proc sobre controle de acesso, videomonitoramento com IA, inspeção industrial ou infraestrutura de TI gerenciada.",
     },
-    plataforma: {
-      title: "Proc AI Platform para Operações",
-      description:
-        "A plataforma de IA, visão computacional e analytics que conecta acesso, segurança, qualidade e infraestrutura numa operação só, por APIs abertas.",
-    },
     cases: {
       title: "Aplicações da Plataforma",
       description:
@@ -62,11 +57,6 @@ const meta: Record<Locale, Record<ChaveMeta, Meta>> = {
       description:
         "Talk to a Proc specialist about access control, AI video surveillance, industrial inspection or managed IT infrastructure.",
     },
-    plataforma: {
-      title: "Proc AI Platform for Operations",
-      description:
-        "The AI, computer vision and analytics platform that connects access, security, quality and infrastructure into a single operation, through open APIs.",
-    },
     cases: {
       title: "Platform Applications",
       description:
@@ -88,11 +78,6 @@ const meta: Record<Locale, Record<ChaveMeta, Meta>> = {
       title: "Hablar con Proc: Empresas e Industrias",
       description:
         "Habla con un especialista de Proc sobre control de acceso, videovigilancia con IA, inspección industrial o infraestructura de TI gestionada.",
-    },
-    plataforma: {
-      title: "Proc AI Platform para Operaciones",
-      description:
-        "La plataforma de IA, visión artificial y analytics que conecta acceso, seguridad, calidad e infraestructura en una sola operación, mediante APIs abiertas.",
     },
     cases: {
       title: "Aplicaciones de la Plataforma",

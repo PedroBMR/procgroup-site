@@ -27,7 +27,6 @@ export const translations = {
     nav: {
       home: "Home",
       empresa: "Empresa",
-      plataforma: "Plataforma Proc AI",
       solucoes: "Soluções",
       segmentos: "Segmentos",
       cases: "Cases",
@@ -89,7 +88,7 @@ export const translations = {
           primeira tela. Mesma promessa, sem a enumeracao completa. */
       heroSubtitleCurto:
         "IA, visão computacional, ambientes inteligentes e infraestrutura de TI que transformam os dados da sua operação em decisão.",
-      heroCtaPrimary: "Conheça a Plataforma Proc AI",
+      heroCtaPrimary: "Conheça nossas soluções",
       heroCtaSecondary: "Solicite uma Demonstração",
       statsLabels: ["Clientes atendidos", "Anos de experiência"],
       aboutEyebrow: "O que a Proc faz?",
@@ -103,7 +102,6 @@ export const translations = {
       platformTitle: "Tecnologia própria, com equipe especializada em cada operação",
       platformText:
         "IA, Analytics e Visão Computacional desenvolvidos pela nossa engenharia, aplicados à gestão inteligente da sua operação, com equipe especializada dedicada a ela.",
-      platformCta: "Ver a Plataforma Proc AI",
       // Bloco das 6 capacidades da
       // plataforma (recorte do comercial). Só em PT por enquanto; a home guarda
       // a seção, então EN/ES seguem sem ela até traduzir.
@@ -191,7 +189,6 @@ export const translations = {
       indexLead:
         "Três unidades, cada uma com engenharia e equipe próprias. A escolha começa pelo problema: liberar o acesso com controle, manter a operação de pé, ou enxergar o que a linha de produção não mostra.",
       ctaDemo: "Solicitar Demonstração",
-      ctaPlatform: "Ver a Plataforma Proc AI",
       solutionsEyebrow: "Soluções",
       teamEyebrow: "Time dedicado",
       faqEyebrow: "Perguntas frequentes",
@@ -305,7 +302,6 @@ export const translations = {
     nav: {
       home: "Home",
       empresa: "Company",
-      plataforma: "Proc AI Platform",
       solucoes: "Solutions",
       segmentos: "Industries",
       cases: "Cases",
@@ -365,7 +361,7 @@ export const translations = {
           primeira tela. Mesma promessa, sem a enumeracao completa. */
       heroSubtitleCurto:
         "AI, computer vision, smart environments and IT infrastructure that turn your operation’s data into decisions.",
-      heroCtaPrimary: "Explore the Proc AI Platform",
+      heroCtaPrimary: "Explore our solutions",
       heroCtaSecondary: "Request a Demo",
       statsLabels: ["Clients served", "Years of experience"],
       aboutEyebrow: "What does Proc do?",
@@ -382,7 +378,6 @@ export const translations = {
       // ES ja tinham perdido em 2026-08-26. Alinhado aos outros dois idiomas.
       platformText:
         "AI, Analytics and Computer Vision built by our own engineering, applied to the intelligent management of your operation, with a specialist team dedicated to it.",
-      platformCta: "See the Proc AI Platform",
       capEyebrow: "Proc AI Platform",
       capTitle: "In-house technology. Specialized by operation.",
       capLead:
@@ -462,7 +457,6 @@ export const translations = {
       indexLead:
         "Three units, each with its own engineering and team. Start from the problem: releasing access under control, keeping the operation running, or seeing what the production line does not show.",
       ctaDemo: "Request a Demo",
-      ctaPlatform: "See the Proc AI Platform",
       solutionsEyebrow: "Solutions",
       teamEyebrow: "Dedicated team",
       faqEyebrow: "FAQ",
@@ -572,7 +566,6 @@ export const translations = {
     nav: {
       home: "Inicio",
       empresa: "Empresa",
-      plataforma: "Plataforma Proc AI",
       solucoes: "Soluciones",
       segmentos: "Segmentos",
       cases: "Casos",
@@ -632,7 +625,7 @@ export const translations = {
           primeira tela. Mesma promessa, sem a enumeracao completa. */
       heroSubtitleCurto:
         "IA, visión artificial, ambientes inteligentes e infraestructura de TI que convierten los datos de tu operación en decisiones.",
-      heroCtaPrimary: "Conoce la Plataforma Proc AI",
+      heroCtaPrimary: "Conoce nuestras soluciones",
       heroCtaSecondary: "Solicita una Demostración",
       statsLabels: ["Clientes atendidos", "Años de experiencia"],
       aboutEyebrow: "¿Qué hace Proc?",
@@ -646,7 +639,6 @@ export const translations = {
       platformTitle: "Tecnología propia, con equipo especializado en cada operación",
       platformText:
         "IA, Analytics y Visión Artificial desarrollados por nuestra ingeniería, aplicados a la gestión inteligente de tu operación, con equipo especializado dedicado a ella.",
-      platformCta: "Ver la Plataforma Proc AI",
       capEyebrow: "Plataforma Proc AI",
       capTitle: "Tecnología propia. Especializada por operación.",
       capLead:
@@ -726,7 +718,6 @@ export const translations = {
       indexLead:
         "Tres unidades, cada una con ingeniería y equipo propios. Empieza por el problema: liberar el acceso con control, mantener la operación en pie, o ver lo que la línea de producción no muestra.",
       ctaDemo: "Solicitar Demostración",
-      ctaPlatform: "Ver la Plataforma Proc AI",
       solutionsEyebrow: "Soluciones",
       teamEyebrow: "Equipo dedicado",
       faqEyebrow: "Preguntas frecuentes",
