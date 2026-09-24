@@ -1,5 +1,8 @@
 // Canais de contato da Proc, centralizados.
 
+import type { Locale } from "../i18n/config";
+import { translations } from "../i18n/translations";
+
 /** Comercial / vendas — usado nos CTAs de demonstração e na TopBar. */
 export const WHATSAPP_NUMBER = "5546991411324";
 
@@ -24,7 +27,8 @@ export function whatsappDisplay(numero: string): string {
   return `+55 ${ddd} ${rest.slice(0, -4)}-${rest.slice(-4)}`;
 }
 
-/** CTA padrão "Solicitar Demonstração" — usado nos botões do site. */
-export const WHATSAPP_DEMO = whatsapp(
-  "Olá! Gostaria de solicitar uma demonstração das soluções da Proc."
-);
+/** CTA padrão "Solicitar Demonstração" — usado nos botões do site. A mensagem
+    pré-preenchida segue o idioma da página (antes era fixa em PT). */
+export function whatsappDemo(lang: Locale): string {
+  return whatsapp(translations[lang].topbar.demoMsg);
+}

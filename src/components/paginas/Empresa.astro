@@ -7,7 +7,7 @@ import UnitIcon from "../UnitIcon.astro";
 import { homeStats } from "../../data/stats";
 import { getBusinessUnits } from "../../data/businessUnits";
 import hqPhoto from "../../assets/images/hq-pato-branco-enhanced.webp";
-import { WHATSAPP_DEMO } from "../../data/contact";
+import { whatsappDemo } from "../../data/contact";
 import { getLangFromUrl, useTranslations, localePath, localizePath } from "../../i18n/utils";
 import { metaDaPagina } from "../../data/metaPorPagina";
 import { usePages } from "../../i18n/pages";
@@ -231,7 +231,7 @@ const schema = {
     <div class="container final-cta-inner" data-reveal>
       <h2>{t.finalCtaTitle}</h2>
       <p>{t.finalCtaText}</p>
-      <Button href={WHATSAPP_DEMO} variant="primary" size="lg" data-magnetic>{tr.solutions.ctaDemo}</Button>
+      <Button href={whatsappDemo(lang)} variant="primary" size="lg" data-magnetic>{tr.solutions.ctaDemo}</Button>
     </div>
   </section>
 </BaseLayout>

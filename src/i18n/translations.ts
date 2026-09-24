@@ -54,6 +54,8 @@ export const translations = {
       suporte: "Suporte Técnico",
       /** Mensagem já preenchida ao abrir o WhatsApp do suporte. */
       suporteMsg: "Olá! Preciso de suporte técnico.",
+      /** Mensagem já preenchida nos CTAs "Solicitar demonstração" (WhatsApp comercial). */
+      demoMsg: "Olá! Gostaria de solicitar uma demonstração das soluções da Proc.",
       trabalhe: "Trabalhe conosco",
     },
     ticker: {
@@ -329,6 +331,7 @@ export const translations = {
       whatsapp: "WhatsApp Sales",
       suporte: "Technical Support",
       suporteMsg: "Hi! I need technical support.",
+      demoMsg: "Hi! I'd like to request a demo of Proc's solutions.",
       trabalhe: "Careers",
     },
     ticker: {
@@ -595,6 +598,7 @@ export const translations = {
       whatsapp: "WhatsApp Ventas",
       suporte: "Soporte Técnico",
       suporteMsg: "¡Hola! Necesito soporte técnico.",
+      demoMsg: "¡Hola! Me gustaría solicitar una demostración de las soluciones de Proc.",
       trabalhe: "Trabaja con Nosotros",
     },
     ticker: {

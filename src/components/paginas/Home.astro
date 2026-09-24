@@ -10,7 +10,7 @@ import UnitIcon from "../UnitIcon.astro";
 import { getBusinessUnits } from "../../data/businessUnits";
 import { byNewest } from "../../utils/blog";
 import hqPhoto from "../../assets/images/hq-pato-branco-enhanced.webp";
-import { WHATSAPP_DEMO } from "../../data/contact";
+import { whatsappDemo } from "../../data/contact";
 import { getLangFromUrl, useTranslations, localePath, localizePath } from "../../i18n/utils";
 import { metaDaPagina } from "../../data/metaPorPagina";
 import { defaultLocale, type Locale } from "../../i18n/config";
@@ -71,7 +71,7 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
       </p>
       <div class="hero-actions">
         <Button href={P(`/plataforma-proc-ai`)} variant="primary" size="md" data-magnetic>{t.heroCtaPrimary}</Button>
-        <Button href={WHATSAPP_DEMO} variant="ghost" size="md" data-magnetic>{t.heroCtaSecondary}</Button>
+        <Button href={whatsappDemo(lang)} variant="ghost" size="md" data-magnetic>{t.heroCtaSecondary}</Button>
       </div>
     </div>
 
@@ -223,7 +223,7 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
     <div class="container final-cta-inner" data-reveal>
       <h2>{t.finalCtaTitle}</h2>
       <p>{t.finalCtaText}</p>
-      <Button href={WHATSAPP_DEMO} variant="primary" size="md" data-magnetic>{t.finalCtaButton}</Button>
+      <Button href={whatsappDemo(lang)} variant="primary" size="md" data-magnetic>{t.finalCtaButton}</Button>
     </div>
   </section>
 </BaseLayout>

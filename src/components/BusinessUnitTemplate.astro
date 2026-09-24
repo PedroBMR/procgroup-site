@@ -8,7 +8,7 @@ import UnitIcon from "../components/UnitIcon.astro";
 import { getBusinessUnit, getBusinessUnits } from "../data/businessUnits";
 import { getSolutionRich } from "../data/solutionContent";
 import { solutionMedia } from "../data/mediaBriefs";
-import { WHATSAPP_DEMO } from "../data/contact";
+import { whatsappDemo } from "../data/contact";
 import { getLangFromUrl, useTranslations, localePath, localizePath } from "../i18n/utils";
 
 interface Faq {
@@ -97,7 +97,7 @@ const schema = [
       <h1>{heroTitle ?? unit.name}</h1>
       <p class="lead">{heroLead ?? unit.description}</p>
       <div class="hero-actions">
-        <Button href={WHATSAPP_DEMO} variant="primary" size="lg" data-magnetic>{t.ctaDemo}</Button>
+        <Button href={whatsappDemo(lang)} variant="primary" size="lg" data-magnetic>{t.ctaDemo}</Button>
         <Button href={localePath(`/plataforma-proc-ai`, lang)} variant="secondary" size="lg">{t.ctaPlatform}</Button>
       </div>
     </div>
@@ -380,7 +380,7 @@ const schema = [
     <div class="container final-cta-inner" data-reveal>
       <h2>{finalCtaTitle}</h2>
       <p>{finalCtaText}</p>
-      <Button href={WHATSAPP_DEMO} variant="primary" size="lg" data-magnetic>{t.ctaDemo}</Button>
+      <Button href={whatsappDemo(lang)} variant="primary" size="lg" data-magnetic>{t.ctaDemo}</Button>
     </div>
   </section>
 </BaseLayout>

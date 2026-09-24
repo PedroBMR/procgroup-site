@@ -1,4 +1,4 @@
-import { WHATSAPP_DEMO } from "./contact";
+import { whatsappDemo } from "./contact";
 import { useTranslations, localizePath } from "../i18n/utils";
 import type { Locale } from "../i18n/config";
 
@@ -64,5 +64,5 @@ export function getHomeHref(lang: Locale): string {
 
 /** CTA principal ("Solicitar Demonstração") — link de WhatsApp (externo). */
 export function getCtaNav(lang: Locale) {
-  return { label: useTranslations(lang).nav.cta, href: WHATSAPP_DEMO };
+  return { label: useTranslations(lang).nav.cta, href: whatsappDemo(lang) };
 }
