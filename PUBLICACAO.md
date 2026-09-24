@@ -129,6 +129,12 @@ Ainda não decidido — depende do que a investigação do Git da Hostinger most
 Ativar o SSH (hPanel) é pré-requisito para qualquer uma das duas rotas que envolva transferência
 de arquivo.
 
+⚠️ **Desde 2026-09-24 o repositório mora no GitLab interno** (`gitlab.proc.local`), que só
+responde de dentro da rede da PROC. Isso muda as duas rotas acima: o Git da Hostinger não alcança
+esse endereço, e o GitHub parou em 2026-09-17, então o GitHub Actions não vê mais os commits
+novos. Antes de publicar, decidir entre espelhar o GitLab para um repositório que a Hostinger ou o
+Actions alcancem, ou buildar num runner do GitLab e mandar o `dist/` por SSH.
+
 ### 3.3 Ajustar a variável do WordPress (se ele mudar de endereço)
 
 `src/content.config.ts` já lê a URL do WordPress de uma variável de ambiente:

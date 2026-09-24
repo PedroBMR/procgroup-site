@@ -1,11 +1,45 @@
 # Proc Group — Reformulação do Site — Memória de Progresso
 
 > Arquivo de acompanhamento do projeto. Atualizado pelo Claude a cada marco importante.
-> Local do projeto: `C:\Users\Efapi\Desktop\ProcGroup Novo Site`
-> Repositório GitHub: https://github.com/PedroBMR/procgroup-site (público)
+> Local do projeto: `~/projetos/site-proc/procgroup-site-master`, no WSL (antes: `C:\Users\Efapi\Desktop\ProcGroup Novo Site`)
+> Repositório: GitLab interno, https://gitlab.proc.local/desenvolvimento-interno/site-proc (privado, desde 2026-09-24).
+> O GitHub https://github.com/PedroBMR/procgroup-site (público) parou em 2026-09-17.
 > Stack: Astro 7 (estático), sem framework de UI adicional.
 
-## 🔴 PRÓXIMA SESSÃO — COMECE AQUI
+## 🔴 PRÓXIMA SESSÃO — COMECE AQUI (atualizado em 2026-09-24)
+
+**Onde o projeto mora agora**
+- Pasta de trabalho: `~/projetos/site-proc/procgroup-site-master`, no WSL (Ubuntu). A cópia do
+  lado do Windows veio de um ZIP, não é repositório e **não tem** as mudanças de 2026-09-24 — não
+  trabalhe nela.
+- Repositório: **GitLab interno**, privado —
+  https://gitlab.proc.local/desenvolvimento-interno/site-proc (`origin`). Só responde de dentro da
+  rede da PROC; em 2026-09-24 ficou fora do ar das ~16h30 às 16h54.
+- O GitHub virou o remote `github` e parou em `9a70817` (2026-09-17). O preview em
+  `pedrobmr.github.io/procgroup-site` **não tem** as mudanças de 2026-09-24: o deploy dele é
+  GitHub Actions, e nada foi enviado para lá. Isso afeta o plano de deploy — ver a nota em
+  `PUBLICACAO.md` §3.2.
+- Commits com `dev <dev@procgroup.com.br>`: o GitLab associa esse e-mail à conta `dev-procgroup`.
+
+**O que a sessão de 2026-09-24 fez** (4 commits, `cd73286`..`8f9ccce`)
+- A mensagem pronta do WhatsApp ("Solicitar demonstração") segue o idioma da página.
+- A faixa do ticker não salta mais em telas largas (4 cópias em vez de 2).
+- A página `/plataforma-proc-ai` saiu do site; os endereços antigos redirecionam para `/solucoes`.
+- Auditoria de ponta a ponta em **`AUDITORIA-2026-09-24.md`**: checklist do que falta, por
+  gravidade, separado entre código, conteúdo (equipe/WordPress) e infra.
+
+**Próximo passo recomendado:** corrigir o formulário de contato — o `contact.php` descarta perfil e
+área de interesse (primeiro item "Alta" da auditoria). Aguardando o OK do usuário.
+
+**Dependem da equipe:** a URL certa do LinkedIn (a do rodapé dá 404; `/company/procgroup` é outra
+empresa), a Política de Privacidade no WordPress, e se a marca "Proc AI Platform" continua nos
+textos agora que a página dela saiu.
+
+**Rodar local:** `npx astro dev --background --host --port 4321` →
+http://localhost:4321/procgroup-site/ · parar com `npx astro dev stop`. O WSL tem Node 24 e o
+`npm ci` já foi rodado.
+
+## Próxima sessão de 2026-07-17 — histórico, desatualizado (vale o bloco acima)
 
 **Atualizado em 2026-07-17, fim de uma sessão longa (a mesma sessão que fez o blog headless,
 formulário de contato, etc. — ver seções abaixo, na ordem cronológica em que aconteceram).** Esta

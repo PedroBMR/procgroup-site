@@ -2,7 +2,9 @@
 
 Checagem de ponta a ponta: formulários, idiomas, build e links (crawler + navegador headless em 24 páginas, 1366px e 390px) e coerência de conteúdo. Build passou sem erros; nenhum erro de JS; nenhum overflow horizontal.
 
-## Feito nesta sessão (validado no build)
+## Feito nesta sessão (as mudanças no site foram conferidas no build)
+
+- [x] **Repositório no GitLab interno.** https://gitlab.proc.local/desenvolvimento-interno/site-proc (privado), com o histórico do GitHub mais os commits desta sessão. O GitHub virou o remote `github` e ficou parado em 2026-09-17; ver a nota nova em `PUBLICACAO.md` §3.2.
 
 - [x] **WhatsApp segue o idioma da página.** O "Solicitar demonstração" era fixo em PT. Agora `whatsappDemo(lang)` em `src/data/contact.ts`, texto em `translations.ts` → `topbar.demoMsg`.
 - [x] **Faixa (ticker) sem salto.** Tinha 2 cópias; em telas > ~1.200px o texto acabava e voltava do começo. Agora 4 cópias (`ConnectedTicker.astro`).
@@ -50,6 +52,7 @@ Checagem de ponta a ponta: formulários, idiomas, build e links (crawler + naveg
 
 ## Infra / deploy
 
+- O preview em `pedrobmr.github.io` não recebe mais as mudanças: o GitHub parou em 2026-09-17 e o deploy dele é GitHub Actions.
 - Formulários não funcionam no preview do GitHub Pages (não roda PHP). Esperado até a migração, mas quem testar vai achar que está quebrado.
 - `.htaccess`: `ErrorDocument 404 /404.html` só vale com `base: '/'`.
 - O build depende do WordPress no ar: CI sem cache quebra se procgroup.com.br cair.
