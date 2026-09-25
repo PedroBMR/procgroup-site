@@ -1,6 +1,6 @@
 ---
 import { withBase } from "../utils/url";
-import { whatsapp, whatsappDisplay, WHATSAPP_NUMBER, WHATSAPP_SUPORTE } from "../data/contact";
+import { whatsapp, WHATSAPP_NUMBER, WHATSAPP_SUPORTE } from "../data/contact";
 import { socialProfiles as socialLinks } from "../data/social";
 import { getLangFromUrl, useTranslations, localizePath, localeAlternates } from "../i18n/utils";
 import { localeLabels, localeNames, htmlLangAttr } from "../i18n/config";
@@ -32,15 +32,11 @@ interface UtilityLink {
 }
 
 const utilityLinks: UtilityLink[] = [
-  {
-    label: whatsappDisplay(WHATSAPP_NUMBER),
-    href: `https://wa.me/${WHATSAPP_NUMBER}`,
-    icon: "whatsapp",
-    external: true,
-    ariaLabel: t.topbar.whatsapp,
-  },
+  // O WhatsApp comercial saiu daqui em 2026-09-25: virou ícone à direita,
+  // junto das redes. O suporte continua nesta lista — é outro número, com
+  // rótulo próprio, e não é um canal de rede social.
   // Suporte técnico abre o WhatsApp direto, num número PRÓPRIO — diferente do
-  // comercial acima. Antes levava para a página /suporte.
+  // comercial, que hoje é o ícone à direita. Antes levava para a página /suporte.
   {
     label: t.topbar.suporte,
     href: whatsapp(t.topbar.suporteMsg, WHATSAPP_SUPORTE),
@@ -88,6 +84,19 @@ const utilityLinks: UtilityLink[] = [
       </nav>
 
       <ul class="social-links" aria-label={t.common.social}>
+        {/* WhatsApp comercial. Fica aqui no markup, e NÃO em socialProfiles:
+            aquela lista alimenta o sameAs do JSON-LD, que descreve perfis
+            oficiais da empresa — um link de conversa não é um perfil. */}
+        <li class="whatsapp">
+          <a
+            href={`https://wa.me/${WHATSAPP_NUMBER}`}
+            aria-label={t.topbar.whatsapp}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span class="icon" set:html={icons.whatsapp} />
+          </a>
+        </li>
         {socialLinks.map((item) => (
           <li>
             <a href={item.href} aria-label={item.label} target="_blank" rel="noopener noreferrer">
@@ -219,6 +228,10 @@ const utilityLinks: UtilityLink[] = [
     .utility-links a { padding-inline: 8px; }
   }
   @media (max-width: 520px) {
-    .social-links { display: none; }
+    /* Aqui o bloco inteiro sumia. Como o WhatsApp mudou de lado, sumir junto
+       seria perder no celular um canal que antes estava sempre visível (ele
+       vinha da lista da esquerda, que não é escondida) — e é o contato
+       principal. Então as redes somem e o WhatsApp fica. */
+    .social-links li:not(.whatsapp) { display: none; }
   }
 </style>
