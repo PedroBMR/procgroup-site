@@ -14,7 +14,6 @@ export const translations = {
       navMain: "Navegação principal",
       navFooter: "Navegação do rodapé",
       social: "Redes sociais",
-      breadcrumb: "Trilha de navegação",
     },
     notFound: {
       metaTitle: "Página não encontrada",
@@ -289,7 +288,6 @@ export const translations = {
       navMain: "Main navigation",
       navFooter: "Footer navigation",
       social: "Social media",
-      breadcrumb: "Breadcrumb",
     },
     notFound: {
       metaTitle: "Page not found",
@@ -553,7 +551,6 @@ export const translations = {
       navMain: "Navegación principal",
       navFooter: "Navegación del pie de página",
       social: "Redes sociales",
-      breadcrumb: "Ruta de navegación",
     },
     notFound: {
       metaTitle: "Página no encontrada",

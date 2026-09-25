@@ -1,7 +1,6 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
-import Breadcrumb from "../../../components/Breadcrumb.astro";
 import PostCard from "../../../components/PostCard.astro";
 import BlogCategoryChips from "../../../components/BlogCategoryChips.astro";
 import {
@@ -52,16 +51,6 @@ const schema = {
   description={`Conteúdo da Proc Group sobre ${category.name}.`}
   schema={schema}
 >
-  <div class="container">
-    <Breadcrumb
-      items={[
-        { label: "Home", href: "/" },
-        { label: "Blog", href: "/blog" },
-        { label: category.name, href: `/blog/categoria/${category.slug}` },
-      ]}
-    />
-  </div>
-
   <section class="hero-page">
     <div class="container">
       <p class="eyebrow">Categoria</p>

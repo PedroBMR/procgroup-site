@@ -1,7 +1,6 @@
 ---
 import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Breadcrumb from "../components/Breadcrumb.astro";
 import Button from "../components/Button.astro";
 import MediaPlaceholder from "../components/MediaPlaceholder.astro";
 import UnitIcon from "../components/UnitIcon.astro";
@@ -9,7 +8,7 @@ import { getBusinessUnit, getBusinessUnits } from "../data/businessUnits";
 import { getSolutionRich } from "../data/solutionContent";
 import { solutionMedia } from "../data/mediaBriefs";
 import { whatsappDemo } from "../data/contact";
-import { getLangFromUrl, useTranslations, localePath, localizePath } from "../i18n/utils";
+import { getLangFromUrl, useTranslations, localizePath } from "../i18n/utils";
 
 interface Faq {
   q: string;
@@ -79,18 +78,6 @@ const schema = [
 ---
 
 <BaseLayout title={metaTitle} description={metaDescription} schema={schema}>
-  <div class="container">
-    <Breadcrumb
-      items={[
-        { label: tr.nav.home, href: localePath("/", lang) },
-        // No lado governo nao ha indice de solucoes (uma unidade so) — o
-        // nivel some do breadcrumb em vez de apontar para uma rota inexistente.
-        { label: tr.nav.solucoes, href: localePath("/solucoes", lang) },
-        { label: unit.name, href: localePath(unit.href, lang) },
-      ]}
-    />
-  </div>
-
   <section class="hero-page">
     <div class="container">
       <p class="eyebrow">{unit.shortName}</p>

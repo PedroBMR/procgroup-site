@@ -2,7 +2,6 @@
 import { getCollection, render } from "astro:content";
 import { getImage } from "astro:assets";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import Breadcrumb from "../../components/Breadcrumb.astro";
 import BlogImage from "../../components/BlogImage.astro";
 import {
   byNewest,
@@ -74,16 +73,6 @@ const schema = {
   ogImage={ogImage}
   schema={schema}
 >
-  <div class="container">
-    <Breadcrumb
-      items={[
-        { label: "Home", href: "/" },
-        { label: "Blog", href: "/blog" },
-        { label: data.title, href: `/blog/${data.slug}` },
-      ]}
-    />
-  </div>
-
   <article class="post">
     <header class="post-head container">
       <div class="post-meta">

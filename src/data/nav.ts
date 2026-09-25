@@ -56,7 +56,7 @@ export function getMainNav(lang: Locale): NavItem[] {
   ];
 }
 
-/** Home do site — para onde o logo e o breadcrumb apontam. */
+/** Home do site — para onde o logo aponta. */
 export function getHomeHref(lang: Locale): string {
   return localizePath("/", lang);
 }
