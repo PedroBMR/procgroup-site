@@ -1,14 +1,13 @@
 ---
 import { Image } from "astro:assets";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import Breadcrumb from "../Breadcrumb.astro";
 import Button from "../Button.astro";
 import UnitIcon from "../UnitIcon.astro";
 import { homeStats } from "../../data/stats";
 import { getBusinessUnits } from "../../data/businessUnits";
 import hqPhoto from "../../assets/images/hq-pato-branco-enhanced.webp";
 import { whatsappDemo } from "../../data/contact";
-import { getLangFromUrl, useTranslations, localePath, localizePath } from "../../i18n/utils";
+import { getLangFromUrl, useTranslations, localizePath } from "../../i18n/utils";
 import { metaDaPagina } from "../../data/metaPorPagina";
 import { usePages } from "../../i18n/pages";
 import { defaultLocale, type Locale } from "../../i18n/config";
@@ -41,15 +40,6 @@ const schema = {
 ---
 
 <BaseLayout title={m?.title ?? tr.nav.empresa} description={m?.description ?? t.metaDescription} schema={schema}>
-  <div class="container">
-    <Breadcrumb
-      items={[
-        { label: tr.nav.home, href: localePath("/", lang) },
-        { label: tr.nav.empresa, href: localePath(`/empresa`, lang) },
-      ]}
-    />
-  </div>
-
   <section class="hero-page">
     <div class="container">
       <p class="eyebrow">{t.heroEyebrow}</p>

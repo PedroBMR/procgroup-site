@@ -1,11 +1,10 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import Breadcrumb from "../Breadcrumb.astro";
 import Button from "../Button.astro";
 import CaseIllustration from "../CaseIllustration.astro";
 import { getBusinessUnit } from "../../data/businessUnits";
 import { whatsappDemo } from "../../data/contact";
-import { getLangFromUrl, useTranslations, localePath } from "../../i18n/utils";
+import { getLangFromUrl, useTranslations } from "../../i18n/utils";
 import { metaDaPagina } from "../../data/metaPorPagina";
 import { defaultLocale, type Locale } from "../../i18n/config";
 
@@ -197,15 +196,6 @@ const schema = {
 ---
 
 <BaseLayout title={m?.title ?? tr.nav.cases} description={m?.description ?? t.metaDescription} schema={schema}>
-  <div class="container">
-    <Breadcrumb
-      items={[
-        { label: tr.nav.home, href: localePath("/", lang) },
-        { label: tr.nav.cases, href: localePath(`/cases`, lang) },
-      ]}
-    />
-  </div>
-
   <section class="hero-page">
     <div class="container">
       <p class="eyebrow">{t.heroEyebrow}</p>

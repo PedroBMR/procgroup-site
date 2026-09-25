@@ -1,11 +1,10 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import Breadcrumb from "../../components/Breadcrumb.astro";
 import PostCard from "../../components/PostCard.astro";
 import BlogCategoryChips from "../../components/BlogCategoryChips.astro";
 import { postsInCategory, EVENTS_CATEGORY } from "../../utils/blog";
-import { useTranslations, localePath } from "../../i18n/utils";
+import { useTranslations } from "../../i18n/utils";
 import { usePages } from "../../i18n/pages";
 import { defaultLocale, type Locale } from "../../i18n/config";
 
@@ -27,15 +26,6 @@ const schema = {
 ---
 
 <BaseLayout title={t.metaTitle} description={t.metaDescription} schema={schema}>
-  <div class="container">
-    <Breadcrumb
-      items={[
-        { label: tr.nav.home, href: localePath("/", lang) },
-        { label: t.title, href: localePath("/eventos", lang) },
-      ]}
-    />
-  </div>
-
   <section class="hero-page">
     <div class="container">
       <p class="eyebrow">{t.eyebrow}</p>

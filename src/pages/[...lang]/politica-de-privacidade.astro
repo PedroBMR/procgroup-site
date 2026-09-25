@@ -1,10 +1,8 @@
 ---
 import { getEntry, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import Breadcrumb from "../../components/Breadcrumb.astro";
 import ComingSoon from "../../components/ComingSoon.astro";
 import { formatDate } from "../../utils/blog";
-import { useTranslations, localePath } from "../../i18n/utils";
 import { usePages } from "../../i18n/pages";
 import { defaultLocale, type Locale } from "../../i18n/config";
 
@@ -12,7 +10,6 @@ export function getStaticPaths() {
   return [{ params: { lang: undefined } }, { params: { lang: "en" } }, { params: { lang: "es" } }];
 }
 const lang = (Astro.params.lang as Locale) || defaultLocale;
-const tr = useTranslations(lang);
 const t = usePages(lang).privacy;
 
 const page = await getEntry("pages", "politica-de-privacidade");
@@ -20,15 +17,6 @@ const { Content } = page ? await render(page) : { Content: undefined };
 ---
 
 <BaseLayout title={t.title} description={t.metaDescription}>
-  <div class="container">
-    <Breadcrumb
-      items={[
-        { label: tr.nav.home, href: localePath("/", lang) },
-        { label: t.title, href: localePath("/politica-de-privacidade", lang) },
-      ]}
-    />
-  </div>
-
   {page && Content ? (
     <article class="policy">
       <header class="policy-head container">
