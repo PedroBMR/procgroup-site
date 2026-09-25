@@ -1,8 +1,9 @@
 name: Deploy to GitHub Pages
 
+# Automatico ate 2026-09-25, quando o site ganhou dominio proprio. Desde entao
+# o build aponta para procgroup.com.br, e publicar isso no github.io serviria um
+# site cujo canonical aponta para outro lugar. Ficou so manual.
 on:
-  push:
-    branches: [master]
   workflow_dispatch:
 
 permissions:

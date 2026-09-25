@@ -1,0 +1,73 @@
+# Publica o site na Hostinger a cada push no master.
+#
+# O build roda aqui no runner (a hospedagem compartilhada nao roda Node), e o
+# conteudo de dist/ vai por FTPS para public_html. As credenciais ficam nos
+# secrets do repositorio: quem as cadastra e o Pedro, e elas nunca aparecem no
+# log nem passam por mais ninguem.
+#
+# Secrets necessarios (Settings > Secrets and variables > Actions):
+#   FTP_SERVER     host FTP da Hostinger, algo como ftp.procgroup.com.br
+#   FTP_USERNAME   usuario FTP criado no hPanel
+#   FTP_PASSWORD   senha desse usuario
+#   WP_API_URL     (opcional) de onde o blog e lido. Sem ele, o build usa
+#                  https://procgroup.com.br, que e onde o WordPress esta HOJE.
+#                  No dia em que o WordPress mudar de endereco, este secret e o
+#                  unico lugar a mexer.
+name: Deploy para a Hostinger
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+concurrency:
+  group: hostinger
+  cancel-in-progress: false
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # O build busca o blog no WordPress. Se o WordPress estiver fora do ar, o
+      # loader mantem o cache do build anterior em vez de publicar um site sem
+      # blog (ver src/content.config.ts).
+      - name: Construir o site
+        env:
+          WP_API_URL: ${{ secrets.WP_API_URL }}
+        run: npm run build
+
+      # Rede de seguranca: nao publica um build quebrado. Se a home sair com
+      # noindex ou o sitemap nao existir, alguma coisa deu errado na config e o
+      # deploy para aqui.
+      - name: Conferir o build antes de publicar
+        run: |
+          test -f dist/index.html || { echo "dist/index.html nao existe"; exit 1; }
+          test -f dist/sitemap-index.xml || { echo "sitemap nao foi gerado"; exit 1; }
+          if grep -q "noindex" dist/index.html; then echo "a home saiu com noindex"; exit 1; fi
+          echo "paginas: $(find dist -name '*.html' | wc -l)"
+
+      - name: Enviar para a Hostinger
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          local-dir: ./dist/
+          server-dir: ./public_html/
+          # A action mantem um manifesto no servidor e envia so o que mudou.
+          # Sem dangerous-clean-slate de proposito: ela nunca apaga em massa o
+          # que ja esta la, o que evita derrubar arquivo alheio por engano.
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
