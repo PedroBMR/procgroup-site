@@ -4,6 +4,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import ComingSoon from "../../components/ComingSoon.astro";
 import { formatDate } from "../../utils/blog";
 import { usePages } from "../../i18n/pages";
+import { politicaTraduzida } from "../../data/politicaPrivacidade";
 import { defaultLocale, type Locale } from "../../i18n/config";
 
 export function getStaticPaths() {
@@ -14,6 +15,12 @@ const t = usePages(lang).privacy;
 
 const page = await getEntry("pages", "politica-de-privacidade");
 const { Content } = page ? await render(page) : { Content: undefined };
+
+// PT lê o documento do WordPress, que é a versão canônica. EN e ES leem a
+// tradução local (data/politicaPrivacidade.ts), autorizada em 2026-09-25.
+// A nota no topo diz qual versão prevalece; o canonical continua apontando
+// para a portuguesa.
+const traducao = politicaTraduzida[lang];
 ---
 
 <BaseLayout title={t.title} description={t.metaDescription}>
@@ -29,12 +36,29 @@ const { Content } = page ? await render(page) : { Content: undefined };
       </header>
       <section class="section" data-theme="light">
         <div class="container">
-          {/* O documento existe só em português (entrada única do WordPress).
-              Sem marcar o idioma, o leitor de tela lê português com fonética
-              inglesa nas páginas /en e /es (WCAG 3.1.2). */}
-          <div class="prose" lang={lang === defaultLocale ? undefined : "pt-BR"}>
-            <Content />
-          </div>
+          {/* Em PT sai o HTML do WordPress. Em EN e ES sai a tradução local,
+              montada a partir de blocos — o markup do Elementor não precisa
+              atravessar a tradução, só o conteúdo. Sem a tradução (idioma novo
+              ainda não traduzido) cai no português com lang="pt-BR" marcado,
+              senão o leitor de tela lê português com fonética inglesa
+              (WCAG 3.1.2). */}
+          {traducao ? (
+            <div class="prose">
+              {traducao.map((bloco) =>
+                bloco.tipo === "h4" ? (
+                  <h4><strong>{bloco.texto}</strong></h4>
+                ) : bloco.tipo === "ul" ? (
+                  <ul>{bloco.itens?.map((item) => <li><p>{item}</p></li>)}</ul>
+                ) : (
+                  <p set:html={bloco.texto?.split("\n").join("<br>")} />
+                ),
+              )}
+            </div>
+          ) : (
+            <div class="prose" lang={lang === defaultLocale ? undefined : "pt-BR"}>
+              <Content />
+            </div>
+          )}
         </div>
       </section>
     </article>

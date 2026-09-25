@@ -138,8 +138,7 @@ export const pages = {
       eyebrow: "Legal",
       title: "Política de Privacidade",
       updatedPrefix: "Última atualização:",
-      // O documento vem do WordPress e existe só em português. Vazio em PT,
-      // onde não há nada a avisar.
+      // Aviso de tradução. Vazio em PT: lá o visitante já lê a versão que vale.
       langNote: "",
       comingSoonDesc: "Não foi possível carregar o documento de política de privacidade do WordPress neste build.",
     },
@@ -288,7 +287,7 @@ export const pages = {
       title: "Privacy Policy",
       updatedPrefix: "Last updated:",
       langNote:
-        "This policy is currently available in Portuguese only. It is the document that governs how Proc Group handles personal data under Brazilian law (LGPD).",
+        "This is a translation provided for your convenience. The Portuguese version is the official document and prevails in case of any discrepancy.",
       comingSoonDesc: "The privacy policy document couldn't be loaded from WordPress in this build.",
     },
     contactChannels: {
@@ -436,7 +435,7 @@ export const pages = {
       title: "Política de Privacidad",
       updatedPrefix: "Última actualización:",
       langNote:
-        "Esta política está disponible por ahora solo en portugués. Es el documento que rige cómo Proc Group trata los datos personales conforme a la ley brasileña (LGPD).",
+        "Esta es una traducción facilitada para su comodidad. La versión en portugués es el documento oficial y prevalece en caso de discrepancia.",
       comingSoonDesc: "No se pudo cargar el documento de política de privacidad desde WordPress en este build.",
     },
     contactChannels: {
