@@ -16,18 +16,26 @@ jobs:
   olhar:
     runs-on: ubuntu-latest
     steps:
-      - name: Listar o que a conta FTP enxerga
-        env:
-          SERVIDOR: ${{ secrets.FTP_SERVER }}
-          USUARIO: ${{ secrets.FTP_USERNAME }}
-          SENHA: ${{ secrets.FTP_PASSWORD }}
+      - uses: actions/checkout@v4
+
+      # Um arquivo-sonda: pequeno, inofensivo e facil de procurar depois pela
+      # web. Se ele aparecer em https://procgroup.com.br/_sonda.txt, o caminho
+      # esta certo; se nao aparecer, esta indo para fora do diretorio servido.
+      - name: Preparar a sonda
         run: |
-          set +x
-          echo "== raiz onde a conta cai =="
-          curl -s --ssl-reqd --user "$USUARIO:$SENHA" "ftp://$SERVIDOR/" --list-only || echo "(falhou)"
-          echo
-          echo "== dentro de public_html =="
-          curl -s --ssl-reqd --user "$USUARIO:$SENHA" "ftp://$SERVIDOR/public_html/" --list-only || echo "(nao existe ou sem acesso)"
-          echo
-          echo "== dentro de domains (se houver) =="
-          curl -s --ssl-reqd --user "$USUARIO:$SENHA" "ftp://$SERVIDOR/domains/" --list-only || echo "(nao existe)"
+          mkdir -p sonda
+          echo "sonda de deploy $(date -u +%FT%TZ)" > sonda/_sonda.txt
+
+      # A mesma action do deploy, que ja provou que conecta. O log verbose diz
+      # em que diretorio ela entra e o que encontra la.
+      - name: Enviar a sonda e mostrar o caminho
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          local-dir: ./sonda/
+          server-dir: ./
+          log-level: verbose
+          dry-run: false
