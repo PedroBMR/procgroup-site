@@ -14,7 +14,10 @@ import { sanitizeWpHtml } from "./utils/sanitizeWp";
  * Point at a different WordPress with WP_API_URL (e.g. a staging or future
  * cms.procgroup.com.br) without touching any page code.
  */
-const WP_BASE = (import.meta.env.WP_API_URL ?? "https://procgroup.com.br").replace(/\/+$/, "");
+// `||` e nao `??`: um secret do GitHub Actions que nao existe chega como
+// string VAZIA, e o ?? deixaria passar. Em 2026-09-25 isso derrubou o
+// primeiro deploy, com o loader buscando a API num endereco em branco.
+const WP_BASE = (import.meta.env.WP_API_URL || "https://procgroup.com.br").replace(/\/+$/, "");
 const PER_PAGE = 100;
 
 interface WpRendered {

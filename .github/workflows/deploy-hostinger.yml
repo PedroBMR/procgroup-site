@@ -42,7 +42,8 @@ jobs:
       # blog (ver src/content.config.ts).
       - name: Construir o site
         env:
-          WP_API_URL: ${{ secrets.WP_API_URL }}
+          # O || cobre o secret nao cadastrado, que chega vazio.
+          WP_API_URL: ${{ secrets.WP_API_URL || 'https://procgroup.com.br' }}
         run: npm run build
 
       # Rede de seguranca: nao publica um build quebrado. Se a home sair com
