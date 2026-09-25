@@ -2,7 +2,9 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
-const SITE = 'https://pedrobmr.github.io';
+// Virada de dominio em 2026-09-25. O canonico e SEM www: o proprio servidor
+// responde 301 de www.procgroup.com.br para procgroup.com.br.
+const SITE = 'https://procgroup.com.br';
 
 // Espelha src/utils/deploy.ts — config .mjs nao consegue importar .ts, entao a
 // checagem esta repetida aqui. Se a lista de hosts mudar la, mude aqui tambem.
@@ -29,7 +31,9 @@ const PUBLICAS = ['', '/empresa', '/contato', '/cases', '/plataforma-proc-ai',
 // /cases e cai numa 404 do dominio. (Os enderecos de ORIGEM nao levam base: o
 // Astro ja gera o arquivo dentro do base.) Quando o site for para o dominio da
 // Proc, BASE vira '' e os destinos ficam certos sozinhos.
-const BASE = '/procgroup-site';
+// Vazio no dominio proprio. Nao use '/': os destinos de REDIRECTS sao montados
+// por concatenacao e sairiam com barra dupla.
+const BASE = '';
 const REDIRECTS = {};
 for (const pref of ['', '/en', '/es']) {
   const raiz = pref || '/';
@@ -60,7 +64,7 @@ for (const pref of ['', '/en', '/es']) {
 // https://astro.build/config
 export default defineConfig({
   site: SITE,
-  base: BASE,
+  base: BASE || '/',
   redirects: REDIRECTS,
   integrations: [
     // Sitemap so em producao. Enquanto o site e preview no github.io, todas as

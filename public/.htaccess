@@ -15,6 +15,43 @@
 ErrorDocument 404 /404.html
 
 # ---------------------------------------------------------------------------
+# Enderecos do site antigo (virada de 2026-09-25)
+# ---------------------------------------------------------------------------
+# O WordPress deixou 7 paginas e 19 posts indexados. Sem estes 301 o historico
+# de busca deles morre no dia da troca, e o blog e metade do conteudo indexado
+# da Proc. As regras vem ANTES de qualquer outra reescrita de conteudo.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Posts: /AAAA/MM/DD/slug/ -> /blog/slug. Uma regra cobre os 19 e os que
+  # vierem, porque o padrao de data e do WordPress, nao de cada post.
+  RewriteRule ^([0-9]{4})/([0-9]{2})/([0-9]{2})/([^/]+)/?$ /blog/$4 [R=301,L]
+
+  # Categorias. Novidades tem equivalente; Eventos e Tudo sobre tecnologia nao
+  # geram pagina propria no site novo, entao caem na listagem do blog.
+  RewriteRule ^category/novidades/?$ /blog/categoria/novidades [R=301,L]
+  RewriteRule ^category/[^/]+/?$ /blog [R=301,L]
+
+  # As 59 tags do WordPress nao existem no site novo.
+  RewriteRule ^tag/[^/]+/?$ /blog [R=301,L]
+
+  # Paginas que mudaram de endereco.
+  RewriteRule ^infraestrutura-de-ti/?$ /solucoes/infraestrutura-de-ti [R=301,L]
+  RewriteRule ^sobre-nos/?$ /empresa [R=301,L]
+
+  # /seguranca-publica ficou RESERVADA para o site de cidade e governo, que
+  # ainda nao existe (decisao do Pedro em 2026-09-25). Ate la, home: cidade e
+  # governo sairam deste site em 2026-08-27 e nenhuma pagina daqui responde
+  # pela promessa que essa busca carrega.
+  RewriteRule ^seguranca-publica/?$ / [R=301,L]
+
+  # Restos do WordPress: sem PHP no ar, estes enderecos so gerariam 404.
+  RewriteRule ^(wp-admin|wp-login\.php|xmlrpc\.php|wp-json) / [R=301,L]
+  RewriteRule ^feed/?$ /blog [R=301,L]
+  RewriteRule ^comments/feed/?$ /blog [R=301,L]
+</IfModule>
+
+# ---------------------------------------------------------------------------
 # HTTPS
 # ---------------------------------------------------------------------------
 <IfModule mod_rewrite.c>
@@ -24,10 +61,10 @@ ErrorDocument 404 /404.html
   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 </IfModule>
 
-# Canonicalização apex <-> www: NÃO habilitada de propósito.
-# O hreflang e o canonical do site usam www.procgroup.com.br, mas o painel da
-# Hostinger pode já estar redirecionando por conta própria — duas regras na
-# mesma direção geram loop. Confirme no hPanel antes de descomentar.
+# Canonicalizacao apex <-> www: NAO habilitada de proposito.
+# Verificado em 2026-09-25: o servidor ja responde 301 de www.procgroup.com.br
+# para procgroup.com.br sozinho, e o site inteiro (canonical, og:url, hreflang,
+# sitemap) usa a forma SEM www. Uma regra aqui na mesma direcao geraria loop.
 #
 # <IfModule mod_rewrite.c>
 #   RewriteCond %{HTTP_HOST} ^procgroup\.com\.br$ [NC]

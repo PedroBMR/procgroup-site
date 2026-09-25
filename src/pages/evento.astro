@@ -145,7 +145,7 @@ const pageTitle = d.docTitle;
 // real de deploy — o domínio futuro ainda dá 404 nesses arquivos. Mesma nota em
 // BaseLayout.astro.
 const ogDescription = d.metaDescription;
-const socialOrigin = Astro.site ?? new URL("https://www.procgroup.com.br");
+const socialOrigin = Astro.site ?? new URL("https://procgroup.com.br");
 const ogImageUrl = new URL(withBase("/og-default.png"), socialOrigin).toString();
 const ogUrl = new URL(withBase("/evento/"), socialOrigin).toString();
 
