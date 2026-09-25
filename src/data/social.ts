@@ -14,5 +14,5 @@ export interface SocialProfile {
 export const socialProfiles: SocialProfile[] = [
   { label: "Facebook", href: "https://www.facebook.com/procgroupbrasil/", icon: "facebook" },
   { label: "Instagram", href: "https://www.instagram.com/procgroup/", icon: "instagram" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/company/procgroupti", icon: "linkedin" },
+  { label: "LinkedIn", href: "https://br.linkedin.com/company/proc-solucoes", icon: "linkedin" },
 ];
