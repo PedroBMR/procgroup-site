@@ -38,7 +38,7 @@ const meta: Record<Locale, Record<ChaveMeta, Meta>> = {
     cases: {
       title: "Aplicações da Plataforma",
       description:
-        "O que a Proc AI Platform entrega em ambientes corporativos, indústrias e infraestrutura crítica, do controle de acesso à inspeção visual na linha.",
+        "O que a Proc entrega em ambientes corporativos, indústrias e infraestrutura crítica, do controle de acesso à inspeção visual na linha.",
     },
   },
   en: {
@@ -60,7 +60,7 @@ const meta: Record<Locale, Record<ChaveMeta, Meta>> = {
     cases: {
       title: "Platform Applications",
       description:
-        "What the Proc AI Platform delivers across corporate environments, industry and critical infrastructure, from access control to visual inspection on the line.",
+        "What Proc delivers across corporate environments, industry and critical infrastructure, from access control to visual inspection on the line.",
     },
   },
   es: {
@@ -82,7 +82,7 @@ const meta: Record<Locale, Record<ChaveMeta, Meta>> = {
     cases: {
       title: "Aplicaciones de la Plataforma",
       description:
-        "Lo que la Proc AI Platform entrega en entornos corporativos, industrias e infraestructura crítica, del control de acceso a la inspección visual en la línea.",
+        "Lo que Proc entrega en entornos corporativos, industrias e infraestructura crítica, del control de acceso a la inspección visual en la línea.",
     },
   },
 };

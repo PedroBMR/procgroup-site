@@ -82,7 +82,7 @@ export const translations = {
       metaTitle: "Proc Group, IA, Visão Computacional e Infraestrutura de TI",
       metaDescription:
         "Plataforma própria de IA, Visão Computacional e Infraestrutura de TI que torna empresas e indústrias mais seguras, eficientes e inteligentes.",
-      heroEyebrow: "Plataforma Proc AI",
+      heroEyebrow: "Tecnologia integrada",
       heroTitle: "Tecnologia inteligente para um mundo mais seguro, conectado e eficiente.",
       heroSubtitle:
         "A Proc desenvolve soluções de Inteligência Artificial, Visão Computacional, Ambientes Inteligentes e Infraestrutura de TI que transformam dados em decisões inteligentes, protegendo pessoas e apoiando empresas e indústrias, cada operação com a sua solução.",
@@ -101,14 +101,14 @@ export const translations = {
         "A Proc desenvolve soluções tecnológicas que unem Inteligência Artificial, Visão Computacional, Analytics e Infraestrutura de TI para atender empresas e indústrias, cada uma com a sua solução e a sua equipe. Cada solução integra dados, equipamentos e sistemas da operação que atende, permitindo automatizar processos, fortalecer a segurança, aumentar a produtividade e apoiar decisões estratégicas com informações em tempo real.",
       aboutCta: "Conheça a Proc",
       aboutPhotoAlt: "Sede da Proc Group em Pato Branco",
-      platformEyebrow: "Plataforma Proc AI",
+      platformEyebrow: "A plataforma",
       platformTitle: "Tecnologia própria, com equipe especializada em cada operação",
       platformText:
         "IA, Analytics e Visão Computacional desenvolvidos pela nossa engenharia, aplicados à gestão inteligente da sua operação, com equipe especializada dedicada a ela.",
       // Bloco das 6 capacidades da
       // plataforma (recorte do comercial). Só em PT por enquanto; a home guarda
       // a seção, então EN/ES seguem sem ela até traduzir.
-      capEyebrow: "Plataforma Proc AI",
+      capEyebrow: "O que a plataforma faz",
       capTitle: "Tecnologia própria. Especializada por operação.",
       capLead:
         "Tecnologia desenvolvida para conectar o ecossistema da sua operação. Inteligência Artificial, Visão Computacional, Analytics e Infraestrutura de TI da nossa engenharia, preparada para integrar diferentes tecnologias, automatizar processos e transformar dados em inteligência para apoiar decisões estratégicas.",
@@ -177,10 +177,10 @@ export const translations = {
       casesEyebrow: "Aplicações e projetos",
       casesTitle: "O que a plataforma resolve em operações críticas",
       casesText:
-        "Do controle de acesso que não troca as catracas à inspeção de produto no chão de fábrica, veja o que a Proc AI Platform resolve em empresas e indústrias, incluindo os projetos de visão computacional que já entregamos.",
+        "Do controle de acesso que não troca as catracas à inspeção de produto no chão de fábrica, veja o que a Proc resolve em empresas e indústrias, incluindo os projetos de visão computacional que já entregamos.",
       casesCta: "Ver aplicações e projetos",
       blogEyebrow: "Do nosso blog",
-      blogTitle: "Ideias e bastidores da Proc AI Platform",
+      blogTitle: "Ideias e bastidores da Proc",
       blogCta: "Ver todos os posts",
       finalCtaTitle: "Pronto para transformar sua operação com inteligência artificial?",
       finalCtaText: "Fale com um especialista Proc e descubra a solução ideal para o seu contexto.",
@@ -197,7 +197,7 @@ export const translations = {
       faqEyebrow: "Perguntas frequentes",
       faqTitlePrefix: "Dúvidas sobre",
       otherEyebrow: "Outras unidades de negócio",
-      otherTitle: "Explore outras soluções da Proc AI Platform",
+      otherTitle: "Explore outras soluções da Proc",
       pages: {
         "ia-industrial": {
           metaTitle: "IA Industrial: Visão Computacional",
@@ -249,7 +249,7 @@ export const translations = {
             },
             {
               q: "É possível integrar com câmeras e catracas já instaladas?",
-              a: "Sim, a Proc AI Platform possui APIs abertas para integração com equipamentos de terceiros já instalados, evitando troca completa de infraestrutura.",
+              a: "Sim, a plataforma possui APIs abertas para integração com equipamentos de terceiros já instalados, evitando troca completa de infraestrutura.",
             },
           ],
         },
@@ -355,7 +355,7 @@ export const translations = {
       metaTitle: "Proc Group, AI, Computer Vision and IT Infrastructure",
       metaDescription:
         "Proc's own AI, Computer Vision and IT Infrastructure platform makes companies and industries safer, smarter and more efficient.",
-      heroEyebrow: "Proc AI Platform",
+      heroEyebrow: "Integrated technology",
       heroTitle: "Intelligent technology for a safer, more connected, more efficient world.",
       heroSubtitle:
         "Proc builds Artificial Intelligence, Computer Vision, Smart Environments and IT Infrastructure solutions that turn data into smart decisions, protecting people and supporting companies and industries, each operation with its own solution.",
@@ -374,14 +374,14 @@ export const translations = {
         "Proc develops technology solutions that combine Artificial Intelligence, Computer Vision, Analytics and IT Infrastructure to serve companies and industries, each with its own solution and its own team. Each solution integrates the data, equipment and systems of the operation it serves, automating processes, strengthening security, boosting productivity and supporting strategic decisions with real-time information.",
       aboutCta: "About Proc",
       aboutPhotoAlt: "Proc Group headquarters in Pato Branco, Brazil",
-      platformEyebrow: "Proc AI Platform",
+      platformEyebrow: "The platform",
       platformTitle: "In-house technology, with a specialist team for each operation",
       // Era "A unified, integrated platform ... for ... every operation": a
       // unica sobra, so em EN, da construcao "uma plataforma para tudo" que PT e
       // ES ja tinham perdido em 2026-08-26. Alinhado aos outros dois idiomas.
       platformText:
         "AI, Analytics and Computer Vision built by our own engineering, applied to the intelligent management of your operation, with a specialist team dedicated to it.",
-      capEyebrow: "Proc AI Platform",
+      capEyebrow: "What the platform does",
       capTitle: "In-house technology. Specialized by operation.",
       capLead:
         "Technology built to connect your operation's ecosystem. Artificial Intelligence, Computer Vision, Analytics and IT Infrastructure from our own engineering, ready to integrate different technologies, automate processes and turn data into intelligence to support strategic decisions.",
@@ -445,10 +445,10 @@ export const translations = {
       casesEyebrow: "Applications and projects",
       casesTitle: "What the platform solves in mission-critical operations",
       casesText:
-        "From access control that keeps the turnstiles you already have to product inspection on the factory floor, see what the Proc AI Platform solves for business and industry, including the computer vision projects we have already delivered.",
+        "From access control that keeps the turnstiles you already have to product inspection on the factory floor, see what Proc solves for business and industry, including the computer vision projects we have already delivered.",
       casesCta: "See applications and projects",
       blogEyebrow: "From our blog",
-      blogTitle: "Ideas and behind-the-scenes of the Proc AI Platform",
+      blogTitle: "Ideas and behind-the-scenes at Proc",
       blogCta: "See all posts",
       finalCtaTitle: "Ready to transform your operation with artificial intelligence?",
       finalCtaText: "Talk to a Proc specialist and find the right solution for your context.",
@@ -465,7 +465,7 @@ export const translations = {
       faqEyebrow: "FAQ",
       faqTitlePrefix: "Questions about",
       otherEyebrow: "Other business units",
-      otherTitle: "Explore other Proc AI Platform solutions",
+      otherTitle: "Explore other Proc solutions",
       pages: {
         "ia-industrial": {
           metaTitle: "Industrial AI: Computer Vision",
@@ -513,7 +513,7 @@ export const translations = {
             },
             {
               q: "Can it integrate with cameras and turnstiles already installed?",
-              a: "Yes, the Proc AI Platform has open APIs to integrate with third-party equipment already installed, avoiding a full infrastructure replacement.",
+              a: "Yes, the platform has open APIs to integrate with third-party equipment already installed, avoiding a full infrastructure replacement.",
             },
           ],
         },
@@ -619,7 +619,7 @@ export const translations = {
       metaTitle: "Proc Group, IA, Visión Artificial e Infraestructura de TI",
       metaDescription:
         "Plataforma propia de IA, Visión Artificial e Infraestructura de TI que hace más seguras, eficientes e inteligentes a empresas e industrias.",
-      heroEyebrow: "Plataforma Proc AI",
+      heroEyebrow: "Tecnología integrada",
       heroTitle: "Tecnología inteligente para un mundo más seguro, conectado y eficiente.",
       heroSubtitle:
         "Proc desarrolla soluciones de Inteligencia Artificial, Visión Artificial, Ambientes Inteligentes e Infraestructura de TI que transforman datos en decisiones inteligentes, protegiendo personas y apoyando a empresas e industrias, cada operación con su solución.",
@@ -638,11 +638,11 @@ export const translations = {
         "Proc desarrolla soluciones tecnológicas que unen Inteligencia Artificial, Visión Artificial, Analytics e Infraestructura de TI para atender a empresas e industrias, cada una con su solución y su equipo. Cada solución integra los datos, equipos y sistemas de la operación que atiende, permitiendo automatizar procesos, fortalecer la seguridad, aumentar la productividad y apoyar decisiones estratégicas con información en tiempo real.",
       aboutCta: "Conoce Proc",
       aboutPhotoAlt: "Sede de Proc Group en Pato Branco, Brasil",
-      platformEyebrow: "Plataforma Proc AI",
+      platformEyebrow: "La plataforma",
       platformTitle: "Tecnología propia, con equipo especializado en cada operación",
       platformText:
         "IA, Analytics y Visión Artificial desarrollados por nuestra ingeniería, aplicados a la gestión inteligente de tu operación, con equipo especializado dedicado a ella.",
-      capEyebrow: "Plataforma Proc AI",
+      capEyebrow: "Lo que hace la plataforma",
       capTitle: "Tecnología propia. Especializada por operación.",
       capLead:
         "Tecnología desarrollada para conectar el ecosistema de tu operación. Inteligencia Artificial, Visión Artificial, Analytics e Infraestructura de TI de nuestra ingeniería, preparada para integrar diferentes tecnologías, automatizar procesos y transformar datos en inteligencia para apoyar decisiones estratégicas.",
@@ -706,10 +706,10 @@ export const translations = {
       casesEyebrow: "Aplicaciones y proyectos",
       casesTitle: "Lo que la plataforma resuelve en operaciones críticas",
       casesText:
-        "Del control de acceso que no cambia los torniquetes a la inspección de producto en planta, mira lo que la Proc AI Platform resuelve en empresas e industrias, incluidos los proyectos de visión artificial que ya entregamos.",
+        "Del control de acceso que no cambia los torniquetes a la inspección de producto en planta, mira lo que Proc resuelve en empresas e industrias, incluidos los proyectos de visión artificial que ya entregamos.",
       casesCta: "Ver aplicaciones y proyectos",
       blogEyebrow: "De nuestro blog",
-      blogTitle: "Ideas y detrás de escena de la Proc AI Platform",
+      blogTitle: "Ideas y detrás de escena de Proc",
       blogCta: "Ver todas las publicaciones",
       finalCtaTitle: "¿Listo para transformar tu operación con inteligencia artificial?",
       finalCtaText: "Habla con un especialista Proc y descubre la solución ideal para tu contexto.",
@@ -726,7 +726,7 @@ export const translations = {
       faqEyebrow: "Preguntas frecuentes",
       faqTitlePrefix: "Dudas sobre",
       otherEyebrow: "Otras unidades de negocio",
-      otherTitle: "Explora otras soluciones de la Proc AI Platform",
+      otherTitle: "Explora otras soluciones de Proc",
       pages: {
         "ia-industrial": {
           metaTitle: "IA Industrial: Visión Artificial",
@@ -774,7 +774,7 @@ export const translations = {
             },
             {
               q: "¿Es posible integrar con cámaras y torniquetes ya instalados?",
-              a: "Sí, la Proc AI Platform tiene APIs abiertas para integrar con equipos de terceros ya instalados, evitando el cambio completo de infraestructura.",
+              a: "Sí, la plataforma tiene APIs abiertas para integrar con equipos de terceros ya instalados, evitando el cambio completo de infraestructura.",
             },
           ],
         },

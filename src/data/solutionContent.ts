@@ -87,10 +87,10 @@ const pt: Record<string, SolutionRich> = {
     whyTitle: "Por que investir em IA Industrial?",
     whyIntro: [
       "A transformação digital da indústria vai muito além da automação de máquinas: exige a capacidade de interpretar imagens, identificar padrões e gerar inteligência operacional em tempo real.",
-      "Com a Proc AI Platform, cada câmera deixa de ser apenas um equipamento de captura e passa a atuar como um sensor inteligente, capaz de compreender o ambiente produtivo e fornecer informações estratégicas para a gestão.",
+      "Com a plataforma, cada câmera deixa de ser apenas um equipamento de captura e passa a atuar como um sensor inteligente, capaz de compreender o ambiente produtivo e fornecer informações estratégicas para a gestão.",
     ],
     comparisonLeftHead: "Sem IA Industrial",
-    comparisonRightHead: "Com a Proc AI Platform",
+    comparisonRightHead: "Com a Proc",
     comparison: [
       { without: "Inspeções manuais e por amostragem", with: "Inspeção automatizada em 100% da produção" },
       { without: "Erros de contagem", with: "Contagem automática com alta precisão" },
@@ -102,7 +102,7 @@ const pt: Record<string, SolutionRich> = {
     resolveTitle: "Como a Proc resolve esse desafio",
     resolveIntro: [
       "Nossa solução combina câmeras industriais, Inteligência Artificial, Visão Computacional e Analytics para monitorar continuamente cada etapa da produção.",
-      "As imagens são analisadas por algoritmos especializados que identificam padrões, reconhecem objetos, detectam anomalias e geram informações para apoiar decisões operacionais, tudo integrado à Proc AI Platform, com indicadores em tempo real.",
+      "As imagens são analisadas por algoritmos especializados que identificam padrões, reconhecem objetos, detectam anomalias e geram informações para apoiar decisões operacionais, tudo integrado à plataforma, com indicadores em tempo real.",
     ],
     flow: [
       "Linha de Produção",
@@ -123,7 +123,7 @@ const pt: Record<string, SolutionRich> = {
       { title: "Dashboards Gerenciais", desc: "As informações são consolidadas em painéis intuitivos, com indicadores, tendências e desempenho da operação." },
     ],
     applicationsTitle: "Principais aplicações",
-    applicationsIntro: "Nossa plataforma pode ser adaptada para diferentes processos industriais.",
+    applicationsIntro: "A solução se adapta a diferentes processos industriais.",
     applications: [
       { name: "Controle de Qualidade", desc: "Identificação automática de defeitos superficiais, deformações, falhas de pintura, ausência de componentes e não conformidades." },
       { name: "Inspeção Visual Automatizada", desc: "Substituição de inspeções manuais por análises contínuas e padronizadas." },
@@ -149,7 +149,7 @@ const pt: Record<string, SolutionRich> = {
       "Integração com sistemas existentes e pronta para expansão.",
     ],
     kpisTitle: "Indicadores gerenciais",
-    kpisIntro: "A Proc AI Platform transforma imagens em indicadores estratégicos para a gestão industrial.",
+    kpisIntro: "A Proc transforma imagens em indicadores estratégicos para a gestão industrial.",
     kpis: [
       "Produção por período",
       "Peças aprovadas e reprovadas",
@@ -176,7 +176,7 @@ const pt: Record<string, SolutionRich> = {
     whyProcTitle: "Por que escolher a Proc?",
     whyProc: [
       "A Proc vai além da implementação de algoritmos de visão computacional: atuamos como parceiros tecnológicos para compreender os desafios específicos de cada operação industrial e desenvolver soluções aderentes ao negócio.",
-      "Nossa plataforma tem arquitetura modular, escalável e preparada para evoluir, permitindo incorporar novas aplicações de IA conforme as necessidades da indústria.",
+      "A plataforma tem arquitetura modular, escalável e preparada para evoluir, permitindo incorporar novas aplicações de IA conforme as necessidades da indústria.",
       "Contamos com equipes especializadas em Visão Computacional, Inteligência Artificial, Automação Industrial e Infraestrutura de TI, garantindo implantação segura, integração com o ambiente existente e suporte contínuo.",
     ],
   },
@@ -185,7 +185,7 @@ const pt: Record<string, SolutionRich> = {
     challengesTitle: "Os desafios de proteger um ambiente corporativo hoje",
     challengesIntro: [
       "A proteção de pessoas e patrimônios vai muito além da instalação de câmeras. Empresas modernas precisam identificar riscos antes que incidentes aconteçam, controlar acessos de forma inteligente e transformar milhares de imagens em informações capazes de apoiar decisões rápidas.",
-      "Nossa plataforma foi desenvolvida para substituir o monitoramento reativo por uma operação preventiva, automatizada e orientada por Inteligência Artificial.",
+      "A solução substitui o monitoramento reativo por uma operação preventiva, automatizada e orientada por Inteligência Artificial.",
     ],
     challengesListTitle: "Principais desafios que ajudamos a resolver",
     challenges: [
@@ -215,7 +215,7 @@ const pt: Record<string, SolutionRich> = {
     ],
     resolveTitle: "Como a Proc resolve esse desafio",
     resolveIntro: [
-      "A Proc AI Platform conecta videomonitoramento inteligente, controle de acesso, leitura de placas, monitoramento perimetral, gestão de visitantes e analytics em uma única plataforma.",
+      "A plataforma conecta videomonitoramento inteligente, controle de acesso, leitura de placas, monitoramento perimetral, gestão de visitantes e analytics em uma única plataforma.",
       "Todos os eventos são processados por algoritmos de IA que analisam continuamente imagens, acessos e movimentações para identificar situações relevantes, gerar alertas e apoiar a decisão.",
     ],
     flow: [
@@ -340,7 +340,7 @@ const pt: Record<string, SolutionRich> = {
       "Dashboards gerenciais em tempo real.",
     ],
     kpisTitle: "Indicadores gerenciais",
-    kpisIntro: "A Proc AI Platform transforma eventos de segurança em informações estratégicas.",
+    kpisIntro: "A Proc transforma eventos de segurança em informações estratégicas.",
     kpis: [
       "Total de acessos e visitantes por período",
       "Tempo médio de permanência",
@@ -405,7 +405,7 @@ const pt: Record<string, SolutionRich> = {
     resolveTitle: "Como a Proc resolve esse desafio",
     resolveIntro: [
       "Nossa equipe gerencia toda a infraestrutura tecnológica da empresa, do ambiente local à nuvem, monitorando continuamente servidores, redes, aplicações e serviços críticos.",
-      "Usamos ferramentas de monitoramento, automação e analytics para identificar anomalias, prevenir indisponibilidades e garantir segurança e desempenho, tudo integrado à Proc AI Platform, com uma visão unificada da saúde da infraestrutura.",
+      "Usamos ferramentas de monitoramento, automação e analytics para identificar anomalias, prevenir indisponibilidades e garantir segurança e desempenho, tudo integrado à plataforma, com uma visão unificada da saúde da infraestrutura.",
     ],
     flow: [
       "Servidores • Redes • Firewalls • Cloud • Aplicações",
@@ -573,10 +573,10 @@ const en: Record<string, SolutionRich> = {
     whyTitle: "Why invest in Industrial AI?",
     whyIntro: [
       "The industry's digital transformation goes far beyond machine automation: it requires the ability to interpret images, identify patterns and generate operational intelligence in real time.",
-      "With the Proc AI Platform, each camera stops being just a capture device and becomes an intelligent sensor, able to understand the production environment and provide strategic information for management.",
+      "With the platform, each camera stops being just a capture device and becomes an intelligent sensor, able to understand the production environment and provide strategic information for management.",
     ],
     comparisonLeftHead: "Without Industrial AI",
-    comparisonRightHead: "With the Proc AI Platform",
+    comparisonRightHead: "With Proc",
     comparison: [
       { without: "Manual, sample-based inspection", with: "Automated inspection across 100% of production" },
       { without: "Counting errors", with: "Automatic counting with high precision" },
@@ -588,7 +588,7 @@ const en: Record<string, SolutionRich> = {
     resolveTitle: "How Proc solves this challenge",
     resolveIntro: [
       "Our solution combines industrial cameras, Artificial Intelligence, Computer Vision and Analytics to continuously monitor every stage of production.",
-      "Images are analyzed by specialized algorithms that identify patterns, recognize objects, detect anomalies and generate information to support operational decisions, all integrated into the Proc AI Platform, with real-time indicators.",
+      "Images are analyzed by specialized algorithms that identify patterns, recognize objects, detect anomalies and generate information to support operational decisions, all integrated into the platform, with real-time indicators.",
     ],
     flow: ["Production Line", "Image Capture", "Computer Vision", "Artificial Intelligence", "Analysis and Classification", "Automatic Alerts", "Dashboards and Indicators", "Decision-Making"],
     howTitle: "How it works",
@@ -600,7 +600,7 @@ const en: Record<string, SolutionRich> = {
       { title: "Management Dashboards", desc: "Information is consolidated into intuitive panels, with indicators, trends and operation performance." },
     ],
     applicationsTitle: "Main applications",
-    applicationsIntro: "Our platform can be adapted to different industrial processes.",
+    applicationsIntro: "The solution adapts to different industrial processes.",
     applications: [
       { name: "Quality Control", desc: "Automatic identification of surface defects, deformations, paint flaws, missing components and non-conformities." },
       { name: "Automated Visual Inspection", desc: "Replacing manual inspections with continuous, standardized analysis." },
@@ -624,7 +624,7 @@ const en: Record<string, SolutionRich> = {
       "Integration with existing systems and ready to scale.",
     ],
     kpisTitle: "Management indicators",
-    kpisIntro: "The Proc AI Platform turns images into strategic indicators for industrial management.",
+    kpisIntro: "Proc turns images into strategic indicators for industrial management.",
     kpis: [
       "Production by period",
       "Approved and rejected parts",
@@ -641,7 +641,7 @@ const en: Record<string, SolutionRich> = {
     whyProcTitle: "Why choose Proc?",
     whyProc: [
       "Proc goes beyond deploying computer-vision algorithms: we act as technology partners to understand the specific challenges of each industrial operation and build solutions aligned with the business.",
-      "Our platform has a modular, scalable architecture ready to evolve, allowing new AI applications to be added as the industry's needs change.",
+      "The platform has a modular, scalable architecture ready to evolve, allowing new AI applications to be added as the industry's needs change.",
       "We have teams specialized in Computer Vision, Artificial Intelligence, Industrial Automation and IT Infrastructure, ensuring safe deployment, integration with the existing environment and ongoing support.",
     ],
   },
@@ -650,7 +650,7 @@ const en: Record<string, SolutionRich> = {
     challengesTitle: "The challenges of protecting a corporate environment today",
     challengesIntro: [
       "Protecting people and assets goes far beyond installing cameras. Modern companies need to identify risks before incidents happen, control access intelligently and turn thousands of images into information that supports fast decisions.",
-      "Our platform was built to replace reactive monitoring with a preventive, automated operation driven by Artificial Intelligence.",
+      "The solution replaces reactive monitoring with a preventive, automated operation driven by Artificial Intelligence.",
     ],
     challengesListTitle: "Key challenges we help solve",
     challenges: [
@@ -680,7 +680,7 @@ const en: Record<string, SolutionRich> = {
     ],
     resolveTitle: "How Proc solves this challenge",
     resolveIntro: [
-      "The Proc AI Platform connects intelligent video surveillance, access control, license-plate reading, perimeter monitoring, visitor management and analytics on a single platform.",
+      "The platform connects intelligent video surveillance, access control, license-plate reading, perimeter monitoring, visitor management and analytics on a single platform.",
       "Every event is processed by AI algorithms that continuously analyze images, access and movement to identify relevant situations, generate alerts and support decisions.",
     ],
     flow: ["Cameras • Controllers • Sensors • Barriers", "Computer Vision", "Artificial Intelligence", "People and Vehicle Recognition", "Event Analysis", "Intelligent Alerts", "Management Dashboards", "Decision-Making"],
@@ -717,7 +717,7 @@ const en: Record<string, SolutionRich> = {
       "Real-time management dashboards.",
     ],
     kpisTitle: "Management indicators",
-    kpisIntro: "The Proc AI Platform turns security events into strategic information.",
+    kpisIntro: "Proc turns security events into strategic information.",
     kpis: [
       "Total accesses and visitors by period",
       "Average dwell time",
@@ -773,7 +773,7 @@ const en: Record<string, SolutionRich> = {
     resolveTitle: "How Proc solves this challenge",
     resolveIntro: [
       "Our team manages the company's entire technology infrastructure, from on-premises to the cloud, continuously monitoring servers, networks, applications and critical services.",
-      "We use monitoring, automation and analytics tools to identify anomalies, prevent downtime and ensure security and performance, all integrated into the Proc AI Platform, with a unified view of infrastructure health.",
+      "We use monitoring, automation and analytics tools to identify anomalies, prevent downtime and ensure security and performance, all integrated into the platform, with a unified view of infrastructure health.",
     ],
     flow: ["Servers • Networks • Firewalls • Cloud • Applications", "Continuous Monitoring", "Intelligent Analysis", "Preventive Detection", "Automatic Alerts", "Specialist Team", "Correction and Optimization", "Operation Availability"],
     featuresTitle: "Our solutions",
@@ -851,10 +851,10 @@ const es: Record<string, SolutionRich> = {
     whyTitle: "¿Por qué invertir en IA Industrial?",
     whyIntro: [
       "La transformación digital de la industria va mucho más allá de la automatización de máquinas: exige la capacidad de interpretar imágenes, identificar patrones y generar inteligencia operativa en tiempo real.",
-      "Con la Proc AI Platform, cada cámara deja de ser solo un equipo de captura y pasa a actuar como un sensor inteligente, capaz de comprender el entorno productivo y aportar información estratégica para la gestión.",
+      "Con la plataforma, cada cámara deja de ser solo un equipo de captura y pasa a actuar como un sensor inteligente, capaz de comprender el entorno productivo y aportar información estratégica para la gestión.",
     ],
     comparisonLeftHead: "Sin IA Industrial",
-    comparisonRightHead: "Con la Proc AI Platform",
+    comparisonRightHead: "Con Proc",
     comparison: [
       { without: "Inspecciones manuales y por muestreo", with: "Inspección automatizada en el 100% de la producción" },
       { without: "Errores de conteo", with: "Conteo automático con alta precisión" },
@@ -866,7 +866,7 @@ const es: Record<string, SolutionRich> = {
     resolveTitle: "Cómo Proc resuelve este desafío",
     resolveIntro: [
       "Nuestra solución combina cámaras industriales, Inteligencia Artificial, Visión Artificial y Analytics para monitorear continuamente cada etapa de la producción.",
-      "Las imágenes son analizadas por algoritmos especializados que identifican patrones, reconocen objetos, detectan anomalías y generan información para apoyar decisiones operativas, todo integrado a la Proc AI Platform, con indicadores en tiempo real.",
+      "Las imágenes son analizadas por algoritmos especializados que identifican patrones, reconocen objetos, detectan anomalías y generan información para apoyar decisiones operativas, todo integrado a la plataforma, con indicadores en tiempo real.",
     ],
     flow: ["Línea de Producción", "Captura de Imágenes", "Visión Artificial", "Inteligencia Artificial", "Análisis y Clasificación", "Alertas Automáticas", "Dashboards e Indicadores", "Toma de Decisión"],
     howTitle: "Cómo funciona",
@@ -878,7 +878,7 @@ const es: Record<string, SolutionRich> = {
       { title: "Dashboards Gerenciales", desc: "La información se consolida en paneles intuitivos, con indicadores, tendencias y desempeño de la operación." },
     ],
     applicationsTitle: "Principales aplicaciones",
-    applicationsIntro: "Nuestra plataforma puede adaptarse a diferentes procesos industriales.",
+    applicationsIntro: "La solución se adapta a diferentes procesos industriales.",
     applications: [
       { name: "Control de Calidad", desc: "Identificación automática de defectos superficiales, deformaciones, fallas de pintura, ausencia de componentes y no conformidades." },
       { name: "Inspección Visual Automatizada", desc: "Sustitución de inspecciones manuales por análisis continuos y estandarizados." },
@@ -902,7 +902,7 @@ const es: Record<string, SolutionRich> = {
       "Integración con sistemas existentes y lista para escalar.",
     ],
     kpisTitle: "Indicadores gerenciales",
-    kpisIntro: "La Proc AI Platform transforma imágenes en indicadores estratégicos para la gestión industrial.",
+    kpisIntro: "Proc transforma imágenes en indicadores estratégicos para la gestión industrial.",
     kpis: [
       "Producción por período",
       "Piezas aprobadas y rechazadas",
@@ -919,7 +919,7 @@ const es: Record<string, SolutionRich> = {
     whyProcTitle: "¿Por qué elegir Proc?",
     whyProc: [
       "Proc va más allá de la implementación de algoritmos de visión artificial: actuamos como socios tecnológicos para comprender los desafíos específicos de cada operación industrial y desarrollar soluciones alineadas con el negocio.",
-      "Nuestra plataforma tiene arquitectura modular, escalable y preparada para evolucionar, permitiendo incorporar nuevas aplicaciones de IA según las necesidades de la industria.",
+      "La plataforma tiene arquitectura modular, escalable y preparada para evolucionar, permitiendo incorporar nuevas aplicaciones de IA según las necesidades de la industria.",
       "Contamos con equipos especializados en Visión Artificial, Inteligencia Artificial, Automatización Industrial e Infraestructura de TI, garantizando una implementación segura, integración con el entorno existente y soporte continuo.",
     ],
   },
@@ -928,7 +928,7 @@ const es: Record<string, SolutionRich> = {
     challengesTitle: "Los desafíos de proteger un entorno corporativo hoy",
     challengesIntro: [
       "La protección de personas y patrimonios va mucho más allá de la instalación de cámaras. Las empresas modernas necesitan identificar riesgos antes de que ocurran los incidentes, controlar accesos de forma inteligente y transformar miles de imágenes en información capaz de apoyar decisiones rápidas.",
-      "Nuestra plataforma fue desarrollada para sustituir el monitoreo reactivo por una operación preventiva, automatizada y orientada por Inteligencia Artificial.",
+      "La solución sustituye el monitoreo reactivo por una operación preventiva, automatizada y orientada por Inteligencia Artificial.",
     ],
     challengesListTitle: "Principales desafíos que ayudamos a resolver",
     challenges: [
@@ -958,7 +958,7 @@ const es: Record<string, SolutionRich> = {
     ],
     resolveTitle: "Cómo Proc resuelve este desafío",
     resolveIntro: [
-      "La Proc AI Platform conecta videovigilancia inteligente, control de acceso, lectura de placas, monitoreo perimetral, gestión de visitantes y analytics en una única plataforma.",
+      "La plataforma conecta videovigilancia inteligente, control de acceso, lectura de placas, monitoreo perimetral, gestión de visitantes y analytics en una única plataforma.",
       "Todos los eventos son procesados por algoritmos de IA que analizan continuamente imágenes, accesos y movimientos para identificar situaciones relevantes, generar alertas y apoyar la decisión.",
     ],
     flow: ["Cámaras • Controladores • Sensores • Barreras", "Visión Artificial", "Inteligencia Artificial", "Reconocimiento de Personas y Vehículos", "Análisis de Eventos", "Alertas Inteligentes", "Dashboards Gerenciales", "Toma de Decisión"],
@@ -995,7 +995,7 @@ const es: Record<string, SolutionRich> = {
       "Dashboards gerenciales en tiempo real.",
     ],
     kpisTitle: "Indicadores gerenciales",
-    kpisIntro: "La Proc AI Platform transforma eventos de seguridad en información estratégica.",
+    kpisIntro: "Proc transforma eventos de seguridad en información estratégica.",
     kpis: [
       "Total de accesos y visitantes por período",
       "Tiempo medio de permanencia",
@@ -1051,7 +1051,7 @@ const es: Record<string, SolutionRich> = {
     resolveTitle: "Cómo Proc resuelve este desafío",
     resolveIntro: [
       "Nuestro equipo gestiona toda la infraestructura tecnológica de la empresa, del entorno local a la nube, monitoreando continuamente servidores, redes, aplicaciones y servicios críticos.",
-      "Usamos herramientas de monitoreo, automatización y analytics para identificar anomalías, prevenir indisponibilidades y garantizar seguridad y desempeño, todo integrado a la Proc AI Platform, con una visión unificada de la salud de la infraestructura.",
+      "Usamos herramientas de monitoreo, automatización y analytics para identificar anomalías, prevenir indisponibilidades y garantizar seguridad y desempeño, todo integrado a la plataforma, con una visión unificada de la salud de la infraestructura.",
     ],
     flow: ["Servidores • Redes • Firewalls • Cloud • Aplicaciones", "Monitoreo Continuo", "Análisis Inteligente", "Detección Preventiva", "Alertas Automáticas", "Equipo Especializado", "Corrección y Optimización", "Disponibilidad de la Operación"],
     featuresTitle: "Nuestras Soluciones",
