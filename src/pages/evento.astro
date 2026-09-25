@@ -159,6 +159,10 @@ const WA_ICON =
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex,nofollow" />
+    {/* Mesma ordem do BaseLayout: ico primeiro, que e o que todo navegador
+        aceita. Esta pagina tem head proprio e por isso repete a declaracao. */}
+    <link rel="icon" href={withBase("/favicon.ico")} sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href={withBase("/favicon-32.png")} />
     <link rel="icon" type="image/webp" href={withBase("/brand/mark-red.webp")} />
     <title>{pageTitle}</title>
     <meta name="description" content={ogDescription} />

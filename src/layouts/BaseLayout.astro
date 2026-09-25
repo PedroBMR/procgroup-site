@@ -158,8 +158,17 @@ const schemaList = Array.isArray(schema) ? schema : schema ? [schema] : [];
         below to show them. If JS never runs, force everything visible so the
         page is never left blank. */}
     <noscript><style>[data-reveal]{opacity:1 !important;transform:none !important;}</style></noscript>
+    {/* Tres formatos de proposito. O .ico e o unico que todo navegador aceita,
+        e e o que o navegador busca sozinho em /favicon.ico quando nao entende o
+        resto. O PNG cobre aba e atalho. O WebP fica por ultimo: e o mais leve,
+        mas o Safari nao o aceita como icone, e ate 2026-09-25 era o unico
+        declarado, o que deixava a Proc sem icone em parte dos navegadores. O
+        apple-touch-icon vai sobre o navy porque o iOS pinta transparencia de
+        preto. */}
+    <link rel="icon" href={withBase("/favicon.ico")} sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href={withBase("/favicon-32.png")} />
     <link rel="icon" type="image/webp" href={withBase("/brand/mark-red.webp")} />
-    <link rel="apple-touch-icon" href={withBase("/brand/mark-red.webp")} />
+    <link rel="apple-touch-icon" sizes="180x180" href={withBase("/apple-touch-icon.png")} />
     <link rel="canonical" href={canonical} />
     {alternates.map((a) => <link rel="alternate" hreflang={a.hrefLang} href={a.href} />)}
     {xDefault && <link rel="alternate" hreflang="x-default" href={xDefault} />}
