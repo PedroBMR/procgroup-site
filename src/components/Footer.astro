@@ -7,6 +7,10 @@ import { getLangFromUrl, useTranslations, localizePath } from "../i18n/utils";
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang).footer;
 const common = useTranslations(lang).common;
+// O rótulo vive em topbar.trabalhe porque no desktop quem mostra esse link é
+// a barra do topo. Reusar em vez de duplicar mantém uma tradução só: mexeu
+// lá, os dois lugares seguem.
+const trabalheLabel = useTranslations(lang).topbar.trabalhe;
 const mainNav = getMainNav(lang);
 const solucoesItem = mainNav.find((i) => i.id === "solucoes");
 const solucoes = solucoesItem?.children ?? (solucoesItem ? [{ label: solucoesItem.label, href: solucoesItem.href }] : []);
@@ -53,6 +57,11 @@ const year = new Date().getFullYear();
           <li>{t.address} · <a href={MAPS_URL} target="_blank" rel="noopener noreferrer">{t.mapLink}</a></li>
           <li><a href={localizePath("/contato", lang)}>{t.demoLink}</a></li>
           <li><a href={localizePath("/suporte", lang)}>{t.suporteLink}</a></li>
+          {/* Só no celular. Lá a TopBar esconde os links de utilidade, e este
+              é o ÚNICO caminho do site para /trabalhe-conosco — sem ele a
+              página fica inalcançável. No desktop o link segue na barra do
+              topo, então repetir aqui seria redundante. */}
+          <li class="so-celular"><a href={localizePath("/trabalhe-conosco", lang)}>{trabalheLabel}</a></li>
         </ul>
       </div>
     </nav>
@@ -114,7 +123,11 @@ const year = new Date().getFullYear();
   .footer-legal a { display: inline-block; padding-block: var(--space-1); }
   .legal-note { color: rgba(255,255,255,0.5); }
 
+  /* Aparece apenas abaixo de 780px — ver o comentário no markup. */
+  .so-celular { display: none; }
+
   @media (max-width: 780px) {
+    .so-celular { display: list-item; }
     .footer-top { grid-template-columns: 1fr; gap: var(--space-12); }
     .footer-nav { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
     .footer-bottom { flex-direction: column; gap: var(--space-2); text-align: center; }

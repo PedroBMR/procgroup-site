@@ -208,12 +208,19 @@ const utilityLinks: UtilityLink[] = [
   .social-links .icon { width: 14px; height: 14px; color: var(--white); }
 
   @media (max-width: 780px) {
-    /* Antes era display:none. O rótulo é o ÚNICO texto destes links — os SVGs
-       não têm nome acessível —, então escondê-los assim deixava "Suporte
-       Técnico", "Trabalhe Conosco" e o seletor de idioma como links sem nome
-       nenhum no celular (WCAG 2.4.4 / 4.1.2). Recortar em vez de remover tira
-       da tela mas mantém na árvore de acessibilidade. */
-    .utility-label,
+    /* Suporte Técnico e Trabalhe Conosco saem da barra no celular. Abaixo
+       deste ponto eles já vinham sem rótulo — dois ícones vermelhos sem nome
+       ao lado do logo, que não se explicavam a ninguém. O suporte continua
+       alcançável pelo rodapé (/suporte, coluna de contato) e o Trabalhe
+       Conosco passa a aparecer lá também: era o único caminho do site para
+       aquela página, e sumir com ele a deixaria órfã. */
+    .utility-links { display: none; }
+    /* Sem a lista da esquerda, o space-between jogaria o bloco da direita
+       (idiomas + WhatsApp) para o canto esquerdo. */
+    .topbar-inner { justify-content: flex-end; }
+    /* Recortar em vez de remover: o rótulo é o ÚNICO texto do seletor de
+       idioma — a bandeira é um SVG sem nome acessível —, então display:none
+       o deixaria como link sem nome nenhum (WCAG 2.4.4 / 4.1.2). */
     .lang-switch .lang-code {
       position: absolute;
       width: 1px; height: 1px;
@@ -221,11 +228,6 @@ const utilityLinks: UtilityLink[] = [
       clip: rect(0 0 0 0);
       white-space: nowrap;
     }
-    .utility-links { gap: var(--space-4); }
-    /* Só o ícone de 14px aparece aqui, e o alvo ficava com 22px de largura —
-       2px abaixo do mínimo de 24x24 da WCAG 2.5.8. Com 8px de cada lado vai a
-       30px, e os 16px de vão continuam separando um do outro. */
-    .utility-links a { padding-inline: 8px; }
   }
   @media (max-width: 520px) {
     /* Aqui o bloco inteiro sumia. Como o WhatsApp mudou de lado, sumir junto
