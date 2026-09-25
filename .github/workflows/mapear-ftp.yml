@@ -1,0 +1,108 @@
+# Descobre em que diretorio a conta FTP cai e, principalmente, qual diretorio o
+# dominio realmente serve.
+#
+# Criado em 2026-09-25 depois de tres deploys que terminaram em "sucesso" sem
+# mudar o site: os arquivos foram para uma pasta que o dominio nao serve. Em vez
+# de chutar caminho, este workflow escreve um arquivo-sonda com nome unico em
+# cada candidato e pergunta ao proprio dominio, por HTTP, qual deles aparece.
+# Quem responder 200 e o diretorio certo.
+#
+# Roda so a mao (Actions > Mapear o FTP > Run workflow). Nao envia o site, nao
+# apaga nada que ja estava la, e remove as proprias sondas no fim.
+name: Mapear o FTP
+
+on:
+  workflow_dispatch:
+
+jobs:
+  mapear:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Instalar o lftp
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp
+
+      - name: Olhar o FTP e perguntar ao dominio
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          # --env-password le a senha daqui, sem que ela apareca na linha de
+          # comando do processo. O GitHub tambem mascara secret no log.
+          LFTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          DOMINIO: https://procgroup.com.br
+        run: |
+          set -uo pipefail
+
+          # Uma conexao por chamada: mais lento, mas cada erro fica isolado.
+          ftp() {
+            lftp --env-password -u "$FTP_USERNAME" "ftp://$FTP_SERVER" \
+              -e "set ssl:verify-certificate no; set ftp:ssl-force true; set ftp:ssl-protect-data true; set net:max-retries 2; set net:timeout 25; $1; bye" 2>&1
+          }
+
+          # Os lugares onde hospedagem compartilhada costuma servir o site. Nao
+          # incluo find recursivo: numa arvore WordPress isso leva minutos.
+          CANDIDATOS=". ./public_html ./files ./files/public_html ./htdocs ./www ./public ./domains/procgroup.com.br/public_html"
+
+          echo "===== 1. onde a conta cai ====="
+          ftp "pwd"
+
+          echo
+          echo "===== 2. o que tem nesse diretorio ====="
+          ftp "ls -la"
+
+          echo
+          echo "===== 3. dois niveis abaixo ====="
+          ftp "find -d 2" | head -200
+
+          echo
+          echo "===== 4. quais candidatos existem ====="
+          for d in $CANDIDATOS; do
+            echo "--- $d"
+            ftp "cls -1 $d" | head -20
+          done
+
+          echo
+          echo "===== 5. sondas ====="
+          # Nome diferente por candidato: e o nome que aparecer no dominio que
+          # identifica de qual diretorio ele veio.
+          ENVIADAS=""
+          for d in $CANDIDATOS; do
+            s=$(echo "$d" | sed 's#[./]#_#g; s#^_*##; s#_*$##')
+            [ -z "$s" ] && s="raiz"
+            f="_sonda-$s.txt"
+            echo "$d" > "$f"
+            if ftp "put -O \"$d\" $f" >/dev/null 2>&1; then
+              echo "escreveu em $d"
+              ENVIADAS="$ENVIADAS $d|$f"
+            else
+              echo "nao escreveu em $d"
+            fi
+          done
+
+          echo
+          echo "===== 6. o que o dominio serve ====="
+          sleep 3
+          SERVIDO=""
+          for par in $ENVIADAS; do
+            d="${par%%|*}"; f="${par##*|}"
+            code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 20 \
+              -H "Cache-Control: no-cache" "$DOMINIO/$f?v=$GITHUB_RUN_ID")
+            echo "$DOMINIO/$f -> $code   (veio de $d)"
+            [ "$code" = "200" ] && SERVIDO="$d"
+          done
+
+          echo
+          if [ -n "$SERVIDO" ]; then
+            echo ">>> O dominio serve: $SERVIDO"
+            echo "### O dominio serve \`$SERVIDO\`" >> "$GITHUB_STEP_SUMMARY"
+            echo "Use isso como \`server-dir\` no deploy." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo ">>> Nenhum candidato apareceu no dominio. Olhar a arvore do passo 3."
+            echo "### Nenhum candidato apareceu no dominio" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+          echo
+          echo "===== 7. limpando as sondas ====="
+          for par in $ENVIADAS; do
+            d="${par%%|*}"; f="${par##*|}"
+            ftp "rm -f \"$d/$f\"" >/dev/null 2>&1 && echo "removida de $d" || echo "sobrou em $d"
+          done
