@@ -1,16 +1,30 @@
 ---
 import { getCollection } from "astro:content";
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import BlogImage from "../../components/BlogImage.astro";
-import BlogCategoryChips from "../../components/BlogCategoryChips.astro";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import BlogImage from "../../../components/BlogImage.astro";
+import BlogCategoryChips from "../../../components/BlogCategoryChips.astro";
 import {
   byNewest,
   categoryColor,
   formatDate,
   isoDate,
   CATCH_ALL_CATEGORY,
-} from "../../utils/blog";
-import { withBase } from "../../utils/url";
+} from "../../../utils/blog";
+import { localizePath, useTranslations } from "../../../i18n/utils";
+import { defaultLocale, type Locale } from "../../../i18n/config";
+
+// O blog existe nos tres idiomas de casca. O texto dos posts segue em
+// portugues (vem do WordPress, que e PT-only), mas menu, rodape e os links
+// daqui para fora ficam no idioma da URL -- antes /blog jogava todo mundo de
+// volta para o portugues e nao havia como voltar.
+export function getStaticPaths() {
+  return [{ params: { lang: undefined } }, { params: { lang: "en" } }, { params: { lang: "es" } }];
+}
+const lang = (Astro.params.lang as Locale) || defaultLocale;
+const tr = useTranslations(lang);
+// Marca de conteúdo em português dentro de uma página /en ou /es. Vazia em
+// PT, onde a página e os posts já falam o mesmo idioma.
+const textoEmPortugues = lang === defaultLocale ? undefined : "pt-BR";
 
 const posts = (await getCollection("blog")).sort(byNewest);
 const [featured, ...rest] = posts;
@@ -44,15 +58,19 @@ const schema = {
       <p class="eyebrow">Blog</p>
       <h1>Novidades, eventos e tecnologia</h1>
       <p class="lead">Conteúdo direto dos especialistas da Proc Group.</p>
+      {tr.common.blogLangNote && <p class="lang-note">{tr.common.blogLangNote}</p>}
       <BlogCategoryChips />
     </div>
   </section>
 
   <section class="section posts-section" data-theme="light">
-    <div class="container">
+    {/* Os posts vêm do WordPress e só existem em português: marcar o idioma
+        do bloco em /en e /es é o mesmo tratamento que /eventos já dá (WCAG
+        3.1.2). Sem isso o leitor de tela lê português com voz inglesa. */}
+    <div class="container" lang={textoEmPortugues}>
       {featured && (
         <a
-          href={withBase(`/blog/${featured.data.slug}`)}
+          href={localizePath(`/blog/${featured.data.slug}`, lang)}
           class="feature-card"
           data-reveal
           style={`--unit-color: ${categoryColor(primaryCategory(featured.data.categories)?.slug)}`}
@@ -82,7 +100,7 @@ const schema = {
             const cat = primaryCategory(post.data.categories);
             return (
               <a
-                href={withBase(`/blog/${post.data.slug}`)}
+                href={localizePath(`/blog/${post.data.slug}`, lang)}
                 class="post-card"
                 data-reveal
                 style={`--unit-color: ${categoryColor(cat?.slug)}`}
@@ -117,6 +135,7 @@ const schema = {
   .hero-page { padding-block: var(--space-16) var(--space-8); }
   .hero-page h1 { font-size: var(--fs-4xl); margin-top: var(--space-4); max-width: 780px; }
   .lead { margin-top: var(--space-6); font-size: var(--fs-lg); color: var(--color-text-muted); max-width: 640px; }
+  .lang-note { margin-top: var(--space-3); font-size: var(--fs-sm); color: var(--color-text-faint); }
 
 
   .section { padding-block: var(--space-16) var(--space-24); }

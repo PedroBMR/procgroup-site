@@ -1,8 +1,8 @@
 ---
 import { getCollection } from "astro:content";
-import BaseLayout from "../../../layouts/BaseLayout.astro";
-import PostCard from "../../../components/PostCard.astro";
-import BlogCategoryChips from "../../../components/BlogCategoryChips.astro";
+import BaseLayout from "../../../../layouts/BaseLayout.astro";
+import PostCard from "../../../../components/PostCard.astro";
+import BlogCategoryChips from "../../../../components/BlogCategoryChips.astro";
 import {
   collectCategories,
   postsInCategory,
@@ -11,8 +11,8 @@ import {
   EVENTS_CATEGORY,
   type BlogPost,
   type BlogCategory,
-} from "../../../utils/blog";
-import { withBase } from "../../../utils/url";
+} from "../../../../utils/blog";
+import { locales, defaultLocale, type Locale } from "../../../../i18n/config";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
@@ -20,10 +20,16 @@ export async function getStaticPaths() {
   const categories = collectCategories(posts).filter(
     (c) => c.slug !== CATCH_ALL_CATEGORY && c.slug !== EVENTS_CATEGORY,
   );
-  return categories.map((category) => ({
-    params: { slug: category.slug },
-    props: { category, posts: postsInCategory(posts, category.slug) },
-  }));
+  // Uma cópia por idioma de casca, como o resto do blog.
+  return locales.flatMap((lang) =>
+    categories.map((category) => ({
+      params: {
+        lang: lang === defaultLocale ? undefined : lang,
+        slug: category.slug,
+      },
+      props: { category, posts: postsInCategory(posts, category.slug) },
+    })),
+  );
 }
 
 interface Props {
@@ -32,6 +38,7 @@ interface Props {
 }
 
 const { category, posts } = Astro.props;
+const lang = (Astro.params.lang as Locale) || defaultLocale;
 
 const schema = {
   "@context": "https://schema.org",
@@ -62,7 +69,8 @@ const schema = {
 
   <section class="section posts-section" data-theme="light">
     <div class="container">
-      <div class="posts-grid">
+      {/* Títulos e resumos são portugueses; em /en e /es o bloco diz isso. */}
+      <div class="posts-grid" lang={lang === defaultLocale ? undefined : "pt-BR"}>
         {posts.map((post) => <PostCard post={post} />)}
       </div>
     </div>

@@ -5,7 +5,7 @@ import Footer from "../components/Footer.astro";
 import { withBase } from "../utils/url";
 import { ehProducao } from "../utils/deploy";
 import { socialProfiles } from "../data/social";
-import { getLangFromUrl, useTranslations, logicalPath, localePath, isSingleVersionPath } from "../i18n/utils";
+import { getLangFromUrl, useTranslations, logicalPath, localePath, isSingleVersionPath, isPtOnlyContentPath } from "../i18n/utils";
 import { locales, defaultLocale, htmlLangAttr, ogLocaleAttr } from "../i18n/config";
 import "../styles/tokens.css";
 import "../styles/base.css";
@@ -78,7 +78,14 @@ const fullTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
 // building canonical/og URLs.
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 const canonicalPath = base && path.startsWith(base) ? path.slice(base.length) || "/" : path;
-const canonical = new URL(canonicalPath, siteUrl).toString();
+// Caminho lógico (sem base, sem prefixo de idioma). Serve ao canonical do blog
+// logo abaixo e ao hreflang mais adiante.
+const logical = logicalPath(Astro.url);
+// O blog tem casca nos três idiomas e o MESMO texto português nos três. As
+// versões /en e /es apontam canonical para a portuguesa: sem isso as três
+// competiriam entre si como conteúdo duplicado e o buscador escolheria uma na
+// sorte. O visitante não perde nada — continua navegando no idioma que pediu.
+const canonical = new URL(isPtOnlyContentPath(logical) ? logical : canonicalPath, siteUrl).toString();
 
 // A imagem social é o único caso que NÃO pode usar siteUrl: o canonical aponta
 // para o domínio futuro (www.procgroup.com.br), que ainda não serve os arquivos
@@ -97,20 +104,22 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const htmlLang = htmlLangAttr[lang];
 const ogLocale = ogLocaleAttr[lang];
-const logical = logicalPath(Astro.url);
-// Páginas de versão única (blog, 404) não têm equivalente em outro idioma.
-// Emitir hreflang apontando para /en/... e /es/... gerava alternativas que dão
-// 404 — e o Google descarta o cluster inteiro quando isso acontece. Com uma
-// única versão, o correto é não declarar hreflang nenhum.
-const singleVersion = isSingleVersionPath(logical);
-const alternates = singleVersion
+// Duas situações em que não existe alternativa de idioma para declarar:
+//  - /404 existe numa versão só. Apontar hreflang para /es/404 gerava uma
+//    alternativa que dá 404, e o Google descarta o cluster inteiro quando isso
+//    acontece.
+//  - o blog tem três URLs, mas com o mesmo texto português nas três. São a
+//    mesma página com o menu traduzido, não traduções uma da outra; quem manda
+//    nelas é o canonical acima.
+const semAlternativaDeIdioma = isSingleVersionPath(logical) || isPtOnlyContentPath(logical);
+const alternates = semAlternativaDeIdioma
   ? []
   : locales.map((l) => ({
       lang: l,
       hrefLang: htmlLangAttr[l],
       href: new URL(localePath(logical, l), siteUrl).toString(),
     }));
-const xDefault = singleVersion ? null : new URL(localePath(logical, defaultLocale), siteUrl).toString();
+const xDefault = semAlternativaDeIdioma ? null : new URL(localePath(logical, defaultLocale), siteUrl).toString();
 
 const organizationSchema = {
   "@context": "https://schema.org",

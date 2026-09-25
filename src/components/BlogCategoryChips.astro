@@ -13,8 +13,7 @@ import {
   categoryHref,
   CATCH_ALL_CATEGORY,
 } from "../utils/blog";
-import { withBase } from "../utils/url";
-import { getLangFromUrl } from "../i18n/utils";
+import { getLangFromUrl, localizePath } from "../i18n/utils";
 import { defaultLocale } from "../i18n/config";
 
 interface Props {
@@ -41,13 +40,13 @@ const blocoEmPortugues = lang === defaultLocale ? undefined : "pt-BR";
     {/* Link, não span: os irmãos são links e este tem a mesma aparência.
         Como span, não era focável nem anunciado como o filtro atual. */}
     <a
-      href={withBase("/blog")}
+      href={localizePath("/blog", lang)}
       class:list={["chip", { "is-active": active === "todos" }]}
       aria-current={active === "todos" ? "page" : undefined}
     >Todos</a>
     {categories.map((cat) => (
       <a
-        href={withBase(categoryHref(cat.slug))}
+        href={localizePath(categoryHref(cat.slug), lang)}
         class:list={["chip", { "is-active": active === cat.slug }]}
         aria-current={active === cat.slug ? "page" : undefined}
         style={`--unit-color: ${categoryColor(cat.slug)}`}

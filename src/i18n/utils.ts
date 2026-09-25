@@ -21,17 +21,40 @@ export function useTranslations(lang: Locale) {
 
 /**
  * Caminhos que existem numa única versão, sem variante por idioma:
- *  - `/blog` — alimentado pelo WordPress, que é PT-only por decisão de projeto.
- *  - `/404`  — página de erro única, servida pelo host para qualquer URL inexistente.
+ *  - `/404` — página de erro única, servida pelo host para qualquer URL inexistente.
  *
  * Prefixá-los com o idioma gerava 404 em massa (menu, rodapé, hreflang e seletor
- * de idioma apontavam para /en/blog, /es/404 etc., que nunca são gerados), então
- * eles nunca recebem prefixo.
+ * de idioma apontavam para /es/404 etc., que nunca são gerados), então eles nunca
+ * recebem prefixo.
+ *
+ * `/blog` esteve aqui até 2026-09-25, pelo mesmo motivo: as rotas traduzidas não
+ * existiam. O preço era alto e invisível — entrar no blog vindo de /en derrubava
+ * o idioma (o site descobre o idioma lendo a URL, e ali não havia nenhum), e o
+ * visitante não tinha como voltar: o menu inteiro já apontava para o português.
+ * Hoje /en/blog e /es/blog são gerados, em pages/[...lang]/blog/, e o caminho
+ * recebe prefixo como qualquer outro.
  */
-const SINGLE_VERSION_PREFIXES = ["/blog", "/404"];
+const SINGLE_VERSION_PREFIXES = ["/404"];
 
 export function isSingleVersionPath(path: string): boolean {
   return SINGLE_VERSION_PREFIXES.some((p) => path === p || path.startsWith(`${p}/`));
+}
+
+/**
+ * Caminhos cujo CONTEÚDO só existe em português, embora a casca — menu, rodapé,
+ * links, seletor de idioma — seja traduzida. O blog vem do WordPress, que é
+ * PT-only por decisão de projeto.
+ *
+ * As três URLs servem o mesmo texto português. Não são versões de idioma uma da
+ * outra: são a mesma página com o menu traduzido. Declarar hreflang seria mentir
+ * para o buscador, então as traduzidas não emitem nenhum e apontam canonical
+ * para a versão PT — o Google indexa um post só, e o visitante segue navegando
+ * no idioma que escolheu. Ver BaseLayout.
+ */
+const PT_ONLY_CONTENT_PREFIXES = ["/blog"];
+
+export function isPtOnlyContentPath(path: string): boolean {
+  return PT_ONLY_CONTENT_PREFIXES.some((p) => path === p || path.startsWith(`${p}/`));
 }
 
 /**

@@ -1,8 +1,8 @@
 ---
 import { getCollection, render } from "astro:content";
 import { getImage } from "astro:assets";
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import BlogImage from "../../components/BlogImage.astro";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import BlogImage from "../../../components/BlogImage.astro";
 import {
   byNewest,
   categoryColor,
@@ -10,20 +10,27 @@ import {
   formatDate,
   isoDate,
   type BlogPost,
-} from "../../utils/blog";
-import { withBase } from "../../utils/url";
-import { clampDescription } from "../../utils/seo";
+} from "../../../utils/blog";
+import { clampDescription } from "../../../utils/seo";
+import { localizePath } from "../../../i18n/utils";
+import { locales, defaultLocale, type Locale } from "../../../i18n/config";
 
+// Uma cópia do post por idioma de casca. O texto é o mesmo português nas três
+// — quem escolhe a URL é o menu, que carrega o idioma junto. O canonical das
+// traduzidas aponta para a versão PT (ver BaseLayout), então o buscador
+// continua vendo um post só.
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
   const sorted = [...posts].sort(byNewest);
-  return sorted.map((post) => {
-    const related = sorted.filter((p) => p.id !== post.id).slice(0, 3);
-    return {
-      params: { slug: post.data.slug },
-      props: { post, related },
-    };
-  });
+  return locales.flatMap((lang) =>
+    sorted.map((post) => ({
+      params: {
+        lang: lang === defaultLocale ? undefined : lang,
+        slug: post.data.slug,
+      },
+      props: { post, related: sorted.filter((p) => p.id !== post.id).slice(0, 3) },
+    })),
+  );
 }
 
 interface Props {
@@ -32,6 +39,7 @@ interface Props {
 }
 
 const { post, related } = Astro.props;
+const lang = (Astro.params.lang as Locale) || defaultLocale;
 const { data } = post;
 const { Content } = await render(post);
 // O excerpt segue íntegro no lead da página e nos cards; só a meta encolhe.
@@ -73,13 +81,16 @@ const schema = {
   ogImage={ogImage}
   schema={schema}
 >
-  <article class="post">
+  {/* O post vem do WordPress e só existe em português: em /en e /es o artigo
+      declara o próprio idioma (WCAG 3.1.2), senão o leitor de tela lê
+      português com voz inglesa. Mesmo tratamento de /eventos. */}
+  <article class="post" lang={lang === defaultLocale ? undefined : "pt-BR"}>
     <header class="post-head container">
       <div class="post-meta">
         {data.categories
           .filter((c) => c.slug !== "tudo-sobre-tecnologia")
           .map((c) => (
-            <a href={withBase(categoryHref(c.slug))} class="cat-pill" style={`--unit-color: ${categoryColor(c.slug)}`}>
+            <a href={localizePath(categoryHref(c.slug), lang)} class="cat-pill" style={`--unit-color: ${categoryColor(c.slug)}`}>
               {c.name}
             </a>
           ))}
@@ -113,7 +124,7 @@ const schema = {
           {related.map((r) => {
             const cat = r.data.categories.find((c) => c.slug !== "tudo-sobre-tecnologia") ?? r.data.categories[0];
             return (
-              <a href={withBase(`/blog/${r.data.slug}`)} class="related-card" data-reveal style={`--unit-color: ${categoryColor(cat?.slug)}`}>
+              <a href={localizePath(`/blog/${r.data.slug}`, lang)} class="related-card" data-reveal style={`--unit-color: ${categoryColor(cat?.slug)}`}>
                 {r.data.image && (
                   <div class="related-image">
                     <BlogImage image={r.data.image} width={480} decorative />

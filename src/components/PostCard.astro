@@ -6,7 +6,7 @@ import {
   CATCH_ALL_CATEGORY,
   type BlogPost,
 } from "../utils/blog";
-import { withBase } from "../utils/url";
+import { getLangFromUrl, localizePath } from "../i18n/utils";
 import BlogImage from "./BlogImage.astro";
 
 interface Props {
@@ -14,13 +14,16 @@ interface Props {
   loading?: "eager" | "lazy";
 }
 
+// O idioma vem da URL da pagina que renderiza o card: assim o link do post
+// mantem quem clicou no idioma em que estava navegando.
+const lang = getLangFromUrl(Astro.url);
 const { post, loading = "lazy" } = Astro.props;
 const { data } = post;
 const category = data.categories.find((c) => c.slug !== CATCH_ALL_CATEGORY) ?? data.categories[0];
 ---
 
 <a
-  href={withBase(`/blog/${data.slug}`)}
+  href={localizePath(`/blog/${data.slug}`, lang)}
   class="post-card"
   data-reveal
   style={`--unit-color: ${categoryColor(category?.slug)}`}
