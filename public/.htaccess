@@ -15,6 +15,15 @@
 ErrorDocument 404 /404.html
 
 # ---------------------------------------------------------------------------
+# Quem responde pela raiz
+# ---------------------------------------------------------------------------
+# No primeiro deploy o site novo chega em public_html com o WordPress ainda la
+# dentro. O Apache, por padrao, prefere index.php: sem esta linha o visitante
+# continuaria vendo o site antigo mesmo com o novo publicado. Aqui o index.html
+# vem primeiro, e o WordPress segue de pe para servir a API do blog.
+DirectoryIndex index.html index.php
+
+# ---------------------------------------------------------------------------
 # Enderecos do site antigo (virada de 2026-09-25)
 # ---------------------------------------------------------------------------
 # O WordPress deixou 7 paginas e 19 posts indexados. Sem estes 301 o historico
@@ -46,7 +55,9 @@ ErrorDocument 404 /404.html
   RewriteRule ^seguranca-publica/?$ / [R=301,L]
 
   # Restos do WordPress: sem PHP no ar, estes enderecos so gerariam 404.
-  RewriteRule ^(wp-admin|wp-login\.php|xmlrpc\.php|wp-json) / [R=301,L]
+  # ⚠️ wp-json fica de FORA desta regra de proposito: e a API que alimenta o
+  # blog a cada build. Redirecionar isso quebraria o blog em silencio.
+  RewriteRule ^(wp-admin|wp-login\.php|xmlrpc\.php) / [R=301,L]
   RewriteRule ^feed/?$ /blog [R=301,L]
   RewriteRule ^comments/feed/?$ /blog [R=301,L]
 </IfModule>
