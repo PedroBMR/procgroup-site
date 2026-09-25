@@ -2,10 +2,10 @@
 # dominio realmente serve.
 #
 # Criado em 2026-09-25 depois de tres deploys que terminaram em "sucesso" sem
-# mudar o site: os arquivos foram para uma pasta que o dominio nao serve. Em vez
-# de chutar caminho, este workflow escreve um arquivo-sonda com nome unico em
-# cada candidato e pergunta ao proprio dominio, por HTTP, qual deles aparece.
-# Quem responder 200 e o diretorio certo.
+# mudar o site: os arquivos foram para uma pasta que o servidor web nao serve.
+# Em vez de chutar caminho, este workflow escreve um arquivo-sonda com nome
+# unico em cada candidato e pergunta ao proprio dominio, por HTTP, qual deles
+# aparece. Quem responder 200 e o diretorio certo.
 #
 # Roda so a mao (Actions > Mapear o FTP > Run workflow). Nao envia o site, nao
 # apaga nada que ja estava la, e remove as proprias sondas no fim.
@@ -30,7 +30,12 @@ jobs:
           LFTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
           DOMINIO: https://procgroup.com.br
         run: |
-          set -uo pipefail
+          # O GitHub roda o run com bash -e: sem isto, o primeiro diretorio
+          # inexistente derruba o passo inteiro, que foi o que aconteceu na
+          # primeira rodada.
+          set -u
+          set +e
+          set +o pipefail
 
           # Uma conexao por chamada: mais lento, mas cada erro fica isolado.
           ftp() {
@@ -38,26 +43,29 @@ jobs:
               -e "set ssl:verify-certificate no; set ftp:ssl-force true; set ftp:ssl-protect-data true; set net:max-retries 2; set net:timeout 25; $1; bye" 2>&1
           }
 
-          # Os lugares onde hospedagem compartilhada costuma servir o site. Nao
-          # incluo find recursivo: numa arvore WordPress isso leva minutos.
-          CANDIDATOS=". ./public_html ./files ./files/public_html ./htdocs ./www ./public ./domains/procgroup.com.br/public_html"
+          # Relativos ao diretorio de login, que a rodada anterior mostrou ser
+          # /public_html. O WordPress nao esta nele, entao o que o dominio serve
+          # deve estar em algum vizinho: por isso os ../ .
+          CANDIDATOS=". ./public_html .. ../public_html ../htdocs ../www ../public ../domains/procgroup.com.br/public_html ../domains/procgroup.com.br/public_html/.."
 
           echo "===== 1. onde a conta cai ====="
           ftp "pwd"
 
           echo
-          echo "===== 2. o que tem nesse diretorio ====="
-          ftp "ls -la"
+          echo "===== 2. um nivel acima, a casa da conta ====="
+          ftp "ls -la .."
 
           echo
-          echo "===== 3. dois niveis abaixo ====="
-          ftp "find -d 2" | head -200
+          echo "===== 3. dois niveis a partir da casa ====="
+          ftp "find -d 2 .." | head -250
 
           echo
-          echo "===== 4. quais candidatos existem ====="
+          echo "===== 4. onde esta o WordPress ====="
+          # Procura marcador do WordPress sem nunca ler o wp-config.php, que tem
+          # a senha do banco. Listar o nome do arquivo basta.
           for d in $CANDIDATOS; do
-            echo "--- $d"
-            ftp "cls -1 $d" | head -20
+            achou=$(ftp "cls -1 \"$d/wp-login.php\" \"$d/wp-content\" \"$d/index.php\"" | grep -v "^$" | head -5)
+            [ -n "$achou" ] && echo "--- $d" && echo "$achou"
           done
 
           echo
@@ -106,3 +114,7 @@ jobs:
             d="${par%%|*}"; f="${par##*|}"
             ftp "rm -f \"$d/$f\"" >/dev/null 2>&1 && echo "removida de $d" || echo "sobrou em $d"
           done
+
+          # Sonda solta de uma tentativa anterior, de 19:30 de hoje.
+          ftp "rm -f ./_sonda.txt" >/dev/null 2>&1 && echo "removida a sonda antiga do login" || true
+          exit 0
