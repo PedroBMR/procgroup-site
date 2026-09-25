@@ -2,8 +2,12 @@
 // O corpo da pagina vive em components/paginas/: o wrapper so declara a rota e
 // os idiomas. Vinha da divisao em dois publicos, que acabou em 2026-08-27.
 import Cases from "../../components/paginas/Cases.astro";
+import { secoes } from "../../data/secoes";
 
+// Secao desligada nao gera caminho nenhum, e a pagina some do build sem que o
+// arquivo saia do projeto. O interruptor esta em src/data/secoes.ts.
 export function getStaticPaths() {
+  if (!secoes.cases) return [];
   return [{ params: { lang: undefined } }, { params: { lang: "en" } }, { params: { lang: "es" } }];
 }
 ---

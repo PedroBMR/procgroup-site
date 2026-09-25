@@ -1,6 +1,7 @@
 import { whatsappDemo } from "./contact";
 import { useTranslations, localizePath } from "../i18n/utils";
 import type { Locale } from "../i18n/config";
+import { secoes } from "./secoes";
 
 export interface NavChild {
   label: string;
@@ -41,7 +42,7 @@ export function getMainNav(lang: Locale): NavItem[] {
         { label: t.sol.ti.label, href: L("/solucoes/infraestrutura-de-ti"), description: t.sol.ti.desc },
       ],
     },
-    { id: "cases", label: t.cases, href: L("/cases") },
+    ...(secoes.cases ? [{ id: "cases", label: t.cases, href: L("/cases") }] : []),
     {
       id: "blog",
       label: t.blog,

@@ -57,3 +57,11 @@ export const solutionMedia: Record<string, MediaBrief> = {
     asset: heroInfraestruturaDeTi,
   },
 };
+
+/**
+ * Arte institucional que substituiu a foto da fachada na home e na pagina
+ * Empresa, em 2026-09-25. O Pedro vai gerar por IA; ate la as duas paginas
+ * mostram o placeholder da marca.
+ */
+export const BRIEFING_FACHADA =
+  "Imagem institucional da PROC GROUP, a ser gerada por IA e ainda nao produzida. Direcao: ambiente corporativo de tecnologia, luz fria, paleta navy da marca (#060A14 a #1C2D52) com o vermelho #E2081D pontual. Nada de banco de imagem generico, nada de rosto identificavel, nada de tela que sugira identificacao biometrica de pessoas. Proporcao 4:3 na home e 20:9 na pagina Empresa.";

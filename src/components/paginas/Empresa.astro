@@ -5,12 +5,13 @@ import Button from "../Button.astro";
 import UnitIcon from "../UnitIcon.astro";
 import { homeStats } from "../../data/stats";
 import { getBusinessUnits } from "../../data/businessUnits";
-import hqPhoto from "../../assets/images/hq-pato-branco-enhanced.webp";
 import { whatsappDemo } from "../../data/contact";
 import { getLangFromUrl, useTranslations, localizePath } from "../../i18n/utils";
 import { metaDaPagina } from "../../data/metaPorPagina";
 import { usePages } from "../../i18n/pages";
 import { defaultLocale, type Locale } from "../../i18n/config";
+import MediaPlaceholder from "../MediaPlaceholder.astro";
+import { BRIEFING_FACHADA } from "../../data/mediaBriefs";
 
 const lang = getLangFromUrl(Astro.url);
 // De que lado do site esta instancia esta montada — sai da URL, como no
@@ -49,7 +50,9 @@ const schema = {
   </section>
 
   <section class="photo-section">
-    <Image src={hqPhoto} alt={t.photoAlt} width={1600} height={720} quality={70} class="hq-photo" />
+    {/* Mesma troca da home, em 2026-09-25: arte de IA a produzir no lugar da
+         foto da fachada. Ver src/data/mediaBriefs.ts. */}
+    <MediaPlaceholder kind="image" caption={t.photoAlt} prompt={BRIEFING_FACHADA} lang={lang} />
   </section>
 
   {e.purposeParas && (

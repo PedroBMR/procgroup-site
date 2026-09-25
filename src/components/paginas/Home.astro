@@ -9,11 +9,13 @@ import ConnectedTicker from "../ConnectedTicker.astro";
 import UnitIcon from "../UnitIcon.astro";
 import { getBusinessUnits } from "../../data/businessUnits";
 import { byNewest } from "../../utils/blog";
-import hqPhoto from "../../assets/images/hq-pato-branco-enhanced.webp";
 import { whatsappDemo } from "../../data/contact";
 import { getLangFromUrl, useTranslations, localePath, localizePath } from "../../i18n/utils";
 import { metaDaPagina } from "../../data/metaPorPagina";
 import { defaultLocale, type Locale } from "../../i18n/config";
+import { secoes } from "../../data/secoes";
+import MediaPlaceholder from "../MediaPlaceholder.astro";
+import { BRIEFING_FACHADA } from "../../data/mediaBriefs";
 
 // Uma rota, três idiomas: PT na raiz (/), EN em /en, ES em /es.
 
@@ -61,10 +63,10 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
     <div class="container hero-inner" data-hero-intro>
       <p class="eyebrow">{t.heroEyebrow}</p>
       <h1>{t.heroTitle}</h1>
-      <!-- Duas versoes do mesmo subtitulo, uma so aparece por vez. Ficam
+      {/* Duas versoes do mesmo subtitulo, uma so aparece por vez. Ficam
            dentro do MESMO <p> de proposito: o data-hero-intro anima os filhos
            diretos em sequencia, e um paragrafo a mais abriria um buraco no
-           stagger para animar algo invisivel. -->
+           stagger para animar algo invisivel. */}
       <p class="hero-subtitle">
         <span class="so-tela-larga">{t.heroSubtitle}</span>
         <span class="so-celular">{t.heroSubtitleCurto}</span>
@@ -75,10 +77,10 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
       </div>
     </div>
 
-    <!-- O ticker fecha o heroi. Ficava depois dele, fora da primeira tela, e
+    {/* O ticker fecha o heroi. Ficava depois dele, fora da primeira tela, e
          so aparecia para quem rolava: dentro do heroi ele e visto por quem
          chega e ainda faz de rodape da cena. No lugar dele havia o bloco de
-         estatisticas (200+ clientes, 10+ anos), retirado em 2026-09-17. -->
+         estatisticas (200+ clientes, 10+ anos), retirado em 2026-09-17. */}
     <div class="hero-ticker">
       <ConnectedTicker />
     </div>
@@ -93,15 +95,11 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
         <Button href={P(`/empresa`)} variant="secondary">{t.aboutCta}</Button>
       </div>
       <div class="about-visual" data-reveal>
-        <Image
-          class="about-photo"
-          src={hqPhoto}
-          alt={t.aboutPhotoAlt}
-          loading="lazy"
-          width={800}
-          height={600}
-          quality={70}
-        />
+        {/* A foto da fachada saiu em 2026-09-25: entra arte gerada por IA, que o
+             Pedro ainda vai produzir. Ate la, o placeholder da marca. Ele tem dois
+             estados: no `astro dev` mostra o briefing para a equipe, no build sai so
+             o grafico. O arquivo hq-pato-branco-enhanced.webp continua no projeto. */}
+        <MediaPlaceholder kind="image" caption={t.aboutPhotoAlt} prompt={BRIEFING_FACHADA} lang={lang} />
       </div>
     </div>
   </section>
@@ -172,7 +170,7 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
     </div>
   </section>
 
-  {x.casesTitle && (
+  {secoes.cases && x.casesTitle && (
     <section class="section cases-teaser">
       <div class="container cases-teaser-inner" data-reveal>
         <div class="cases-teaser-copy">

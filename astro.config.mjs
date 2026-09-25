@@ -48,6 +48,12 @@ for (const pref of ['', '/en', '/es']) {
   // solucoes, entao os dois enderecos antigos levam para la.
   REDIRECTS[`${pref}/plataforma-proc-ai`] = `${BASE}${pref}/solucoes`;
   REDIRECTS[`${pref}/empresas/plataforma-proc-ai`] = `${BASE}${pref}/solucoes`;
+  // Cases esta DESLIGADA (src/data/secoes.ts, 2026-09-25), nao apagada. Enquanto
+  // estiver assim, quem chega pelo endereco antigo vai para solucoes em vez de
+  // bater numa 404. ⚠️ Estas duas linhas saem no dia em que a secao voltar: com
+  // a pagina existindo de novo, o redirect passa a atropelar a propria pagina.
+  REDIRECTS[`${pref}/cases`] = `${BASE}${pref}/solucoes`;
+  REDIRECTS[`${pref}/empresas/cases`] = `${BASE}${pref}/solucoes`;
 }
 
 
