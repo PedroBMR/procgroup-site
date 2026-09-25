@@ -1,12 +1,12 @@
 # Publica o site na Hostinger a cada push no master.
 #
-# O build roda aqui no runner (a hospedagem compartilhada nao roda Node), e o
-# conteudo de dist/ vai por FTPS para public_html. As credenciais ficam nos
-# secrets do repositorio: quem as cadastra e o Pedro, e elas nunca aparecem no
-# log nem passam por mais ninguem.
+# O build roda aqui no runner (a hospedagem compartilhada nao roda Node) e o
+# conteudo de dist/ vai por FTPS para o diretorio que o dominio serve. As
+# credenciais ficam nos secrets do repositorio: quem as cadastra e o Pedro, e
+# elas nunca aparecem no log nem passam por mais ninguem.
 #
 # Secrets necessarios (Settings > Secrets and variables > Actions):
-#   FTP_SERVER     host FTP da Hostinger, algo como ftp.procgroup.com.br
+#   FTP_SERVER     host FTP da Hostinger
 #   FTP_USERNAME   usuario FTP criado no hPanel
 #   FTP_PASSWORD   senha desse usuario
 #   WP_API_URL     (opcional) de onde o blog e lido. Sem ele, o build usa
@@ -24,9 +24,18 @@ concurrency:
   group: hostinger
   cancel-in-progress: false
 
+env:
+  # Caminho absoluto DENTRO da sessao FTP. Medido em 2026-09-25 pelo workflow
+  # "Mapear o FTP": a conta cai em /public_html, que nao e servido por ninguem,
+  # e o dominio serve /domains/procgroup.com.br/public_html. Foi por isso que
+  # tres deploys terminaram em sucesso sem mudar o site.
+  DOCROOT: /domains/procgroup.com.br/public_html
+  DOMINIO: https://procgroup.com.br
+
 jobs:
   publicar:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
@@ -47,31 +56,116 @@ jobs:
         run: npm run build
 
       # Rede de seguranca: nao publica um build quebrado. Se a home sair com
-      # noindex ou o sitemap nao existir, alguma coisa deu errado na config e o
-      # deploy para aqui.
+      # noindex, o sitemap nao existir ou o .htaccess nao tiver sido copiado
+      # para dist/, alguma coisa deu errado e o deploy para aqui.
       - name: Conferir o build antes de publicar
         run: |
           test -f dist/index.html || { echo "dist/index.html nao existe"; exit 1; }
           test -f dist/sitemap-index.xml || { echo "sitemap nao foi gerado"; exit 1; }
-          if grep -q "noindex" dist/index.html; then echo "a home saiu com noindex"; exit 1; fi
-          echo "paginas: $(find dist -name '*.html' | wc -l)"
+          test -f dist/.htaccess || { echo "o .htaccess nao foi copiado para dist"; exit 1; }
+          if grep -q noindex dist/index.html; then echo "a home saiu com noindex"; exit 1; fi
+          echo "paginas: $(find dist -name *.html | wc -l)"
+
+      - name: Instalar o lftp
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp
+
+      # O .htaccess que esta no ar hoje e o do WordPress, e o deploy vai passar
+      # por cima dele. Guardar uma copia e o que torna a volta atras barata:
+      # uma no servidor, ao lado do original, e uma como artefato da run.
+      - name: Guardar o .htaccess que esta no ar
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          LFTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          set -u; set +e
+          ftp() {
+            lftp --env-password -u "$FTP_USERNAME" "ftp://$FTP_SERVER" \
+              -e "set ssl:verify-certificate no; set ftp:ssl-force true; set ftp:ssl-protect-data true; set net:timeout 30; $1; bye" 2>&1
+          }
+          mkdir -p guardado
+          ftp "cd $DOCROOT; get .htaccess -o guardado/htaccess-no-ar"
+          if [ -s guardado/htaccess-no-ar ]; then
+            echo "copiei o .htaccess do ar"
+            # Nao sobrescreve um backup que ja exista: numa segunda rodada o que
+            # esta no ar ja seria o nosso, e o backup bom seria perdido.
+            if ftp "cd $DOCROOT; cls -1 .htaccess-antes-do-site-novo" | grep -q htaccess; then
+              echo "backup no servidor ja existe, mantido"
+            else
+              ftp "cd $DOCROOT; put guardado/htaccess-no-ar -o .htaccess-antes-do-site-novo" >/dev/null
+              echo "backup gravado no servidor como .htaccess-antes-do-site-novo"
+            fi
+          else
+            echo "nao havia .htaccess no ar, ou nao deu para baixar"
+          fi
+          exit 0
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: htaccess-antes-do-deploy
+          path: guardado/
+          if-no-files-found: warn
 
       - name: Enviar para a Hostinger
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftps
+          port: 21
+          timeout: 120000
           local-dir: ./dist/
-          # A conta FTP ja cai DENTRO de public_html: com ./public_html/ os
-          # arquivos iam para um nivel abaixo do que o dominio serve, e o site
-          # nunca mudava, mesmo com o deploy terminando em sucesso (2026-09-25).
-          server-dir: ./
-          # A action mantem um manifesto no servidor e envia so o que mudou.
-          # Sem dangerous-clean-slate de proposito: ela nunca apaga em massa o
-          # que ja esta la, o que evita derrubar arquivo alheio por engano.
+          # Com barra no inicio a action entra na raiz da sessao FTP antes de
+          # descer, entao este caminho nao depende de onde a conta cai.
+          server-dir: /domains/procgroup.com.br/public_html/
+          # A action mantem um manifesto no servidor e so apaga o que esta nesse
+          # manifesto. Nada do WordPress entra nele, entao nada do WordPress e
+          # apagado. Sem dangerous-clean-slate de proposito.
           exclude: |
             **/.git*
             **/.git*/**
             **/node_modules/**
+
+      # A prova de que o deploy funcionou nao e o log da action, e o dominio
+      # respondendo. Foi exatamente isto que faltou nas tres tentativas
+      # anteriores, que terminaram verdes com o site intacto.
+      - name: Conferir no dominio
+        id: conferir
+        run: |
+          set -u; set +e
+          FALHOU=0
+          for p in / /solucoes/ /contato/ /blog/ /politica-de-privacidade/ /en/ /es/ /sitemap-index.xml /robots.txt; do
+            code=$(curl -s -o corpo -w "%{http_code}" --max-time 25 -H "Cache-Control: no-cache" "$DOMINIO$p")
+            printf "%-28s %s\n" "$p" "$code"
+            [ "$code" = "200" ] || FALHOU=1
+          done
+          echo "--- titulo da home ---"
+          curl -s --max-time 25 "$DOMINIO/" | grep -o "<title>[^<]*</title>" | head -1
+          echo "--- a API do WordPress continua de pe, o build do blog depende dela ---"
+          curl -s -o /dev/null -w "wp-json: %{http_code}\n" --max-time 25 \
+            "$DOMINIO/wp-json/wp/v2/posts?per_page=1"
+          exit $FALHOU
+
+      # Se alguma pagina nao respondeu 200, devolve a home para o WordPress em
+      # vez de deixar o site pela metade, que foi o estado ruim de 2026-09-25.
+      - name: Voltar atras se a conferencia falhou
+        if: failure() && steps.conferir.outcome == 'failure'
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          LFTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          set -u; set +e
+          ftp() {
+            lftp --env-password -u "$FTP_USERNAME" "ftp://$FTP_SERVER" \
+              -e "set ssl:verify-certificate no; set ftp:ssl-force true; set ftp:ssl-protect-data true; set net:timeout 30; $1; bye" 2>&1
+          }
+          echo "devolvendo a home para o WordPress"
+          ftp "cd $DOCROOT; mv index.html index.html-do-site-novo"
+          ftp "cd $DOCROOT; mv .htaccess .htaccess-do-site-novo"
+          ftp "cd $DOCROOT; mv .htaccess-antes-do-site-novo .htaccess"
+          sleep 3
+          curl -s --max-time 25 "$DOMINIO/" | grep -o "<title>[^<]*</title>" | head -1
+          echo "o site novo continua no servidor, so a home e o .htaccess voltaram"
+          exit 1
