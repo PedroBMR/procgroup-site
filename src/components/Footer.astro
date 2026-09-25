@@ -27,7 +27,13 @@ const year = new Date().getFullYear();
       <div>
         <h2>{t.navHeading}</h2>
         <ul>
-          {mainNav.filter((i) => i.id !== "home").map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+          {/* O contato leva rótulo próprio nesta coluna: no celular as colunas
+              empilham e ele caía colado no <h2> "Contato" da coluna seguinte,
+              dois iguais em sequência. No menu do topo segue "Contato" — lá
+              não há com o que colidir. */}
+          {mainNav.filter((i) => i.id !== "home").map((item) => (
+            <li><a href={item.href}>{item.id === "contato" ? t.contatoLink : item.label}</a></li>
+          ))}
         </ul>
       </div>
       )}

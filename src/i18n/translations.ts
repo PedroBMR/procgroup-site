@@ -65,6 +65,10 @@ export const translations = {
       navHeading: "Navegação",
       solucoesHeading: "Soluções",
       contatoHeading: "Contato",
+      /** Rótulo do item de contato NA COLUNA DE NAVEGAÇÃO. Diferente de
+          contatoHeading de propósito: no celular as colunas empilham e os
+          dois ficavam colados, iguais. No menu do topo segue "Contato". */
+      contatoLink: "Fale conosco",
       demoLink: "Solicitar demonstração",
       suporteLink: "Suporte técnico",
       rights: "Todos os direitos reservados.",
@@ -337,6 +341,7 @@ export const translations = {
       navHeading: "Navigation",
       solucoesHeading: "Solutions",
       contatoHeading: "Contact",
+      contatoLink: "Get in touch",
       demoLink: "Request a demo",
       suporteLink: "Technical support",
       rights: "All rights reserved.",
@@ -600,6 +605,7 @@ export const translations = {
       navHeading: "Navegación",
       solucoesHeading: "Soluciones",
       contatoHeading: "Contacto",
+      contatoLink: "Contáctanos",
       demoLink: "Solicitar demostración",
       suporteLink: "Soporte técnico",
       rights: "Todos los derechos reservados.",
