@@ -314,7 +314,11 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
     display: flex; align-items: center; justify-content: center;
     width: 44px; height: 44px; margin-bottom: var(--space-4);
     border-radius: var(--radius-sm);
-    background: color-mix(in srgb, var(--unit-color), transparent 82%);
+    /* Mesmo remedio da barrinha acima. O --unit-color do Ambientes e o
+       navy-900, que e praticamente a superficie do card: 18% dele sobre ela
+       nao pintava nada e o quadrado sumia, enquanto o da Industria (navy-700)
+       aparecia. Clarear antes de diluir da peso visual igual as tres. */
+    background: color-mix(in srgb, color-mix(in srgb, var(--unit-color), white 24%), transparent 82%);
     color: color-mix(in srgb, var(--unit-color), white 40%);
   }
   .unit-icon-wrap :global(.unit-icon) { width: 24px; height: 24px; }

@@ -286,6 +286,10 @@ const schema = {
     display: flex; align-items: center; justify-content: center;
     width: 44px; height: 44px; margin-bottom: var(--space-4);
     border-radius: var(--radius-sm);
+    /* Variante de tema claro (a secao e data-theme="light"): aqui a
+       superficie e branca e o navy escuro ja aparece sozinho. Nao receber o
+       clareamento que Home e BusinessUnitTemplate aplicam e proposital --
+       clarear sobre branco apagaria o quadrado. */
     background: color-mix(in srgb, var(--unit-color), transparent 85%);
     color: color-mix(in srgb, var(--unit-color), black 8%);
   }
