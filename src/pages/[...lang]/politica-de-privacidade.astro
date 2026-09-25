@@ -1,5 +1,4 @@
 ---
-import { getEntry, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ComingSoon from "../../components/ComingSoon.astro";
 import { formatDate } from "../../utils/blog";
@@ -13,25 +12,25 @@ export function getStaticPaths() {
 const lang = (Astro.params.lang as Locale) || defaultLocale;
 const t = usePages(lang).privacy;
 
-const page = await getEntry("pages", "politica-de-privacidade");
-const { Content } = page ? await render(page) : { Content: undefined };
+// As tres versoes sao locais desde 2026-09-25, quando o portugues saiu do
+// WordPress (decisao do Pedro: nada no site depende dele). A portuguesa e a
+// canonica; o canonical das outras aponta para ela.
+const traducao = politicaTraduzida[lang] ?? politicaTraduzida.pt;
 
-// PT lê o documento do WordPress, que é a versão canônica. EN e ES leem a
-// tradução local (data/politicaPrivacidade.ts), autorizada em 2026-09-25.
-// A nota no topo diz qual versão prevalece; o canonical continua apontando
-// para a portuguesa.
-const traducao = politicaTraduzida[lang];
+// Data da ultima revisao do documento. Era a data de modificacao no WordPress;
+// agora e explicita, porque quem altera o texto altera este arquivo.
+const REVISADA_EM = new Date("2026-09-25T12:00:00-03:00");
 ---
 
 <BaseLayout title={t.title} description={t.metaDescription}>
-  {page && Content ? (
+  {traducao ? (
     <article class="policy">
       <header class="policy-head container">
         <p class="eyebrow">{t.eyebrow}</p>
         {/* t.title, não page.data.title: o título do WordPress vem sempre em
             português, então o h1 contradizia o <title> e o lang da página. */}
         <h1>{t.title}</h1>
-        <p class="updated">{t.updatedPrefix} {formatDate(page.data.modified, lang)}</p>
+        <p class="updated">{t.updatedPrefix} {formatDate(REVISADA_EM, lang)}</p>
         {t.langNote && <p class="lang-note">{t.langNote}</p>}
       </header>
       <section class="section" data-theme="light">
@@ -42,8 +41,7 @@ const traducao = politicaTraduzida[lang];
               ainda não traduzido) cai no português com lang="pt-BR" marcado,
               senão o leitor de tela lê português com fonética inglesa
               (WCAG 3.1.2). */}
-          {traducao ? (
-            <div class="prose">
+          <div class="prose">
               {traducao.map((bloco) =>
                 bloco.tipo === "h4" ? (
                   <h4><strong>{bloco.texto}</strong></h4>
@@ -53,12 +51,7 @@ const traducao = politicaTraduzida[lang];
                   <p set:html={bloco.texto?.split("\n").join("<br>")} />
                 ),
               )}
-            </div>
-          ) : (
-            <div class="prose" lang={lang === defaultLocale ? undefined : "pt-BR"}>
-              <Content />
-            </div>
-          )}
+          </div>
         </div>
       </section>
     </article>

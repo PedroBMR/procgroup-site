@@ -5,13 +5,13 @@
  * para a gestão das redes da Proc. Ela pediu a tag em 2026-09-17 para ver o
  * tráfego do site no mesmo painel das redes.
  *
- * ⛔ ESTÁ DESLIGADO DE PROPÓSITO, e o interruptor é o `ativo` abaixo.
+ * ✅ LIGADO em 2026-09-25, depois que a condição foi cumprida.
  *
- * O QUE PRECISA ACONTECER PARA LIGAR: a Política de Privacidade precisa citar
- * a medição de audiência pela Metricool. O pixel envia o IP do visitante para
- * um terceiro, o que é tratamento de dado pessoal, e a Proc não pode fazer
- * isso sem dizer. O texto da política vive no WordPress, não neste
- * repositório: se corrige lá, e só então este `ativo` vira true.
+ * A condição era a Política de Privacidade citar esta medição, porque o pixel
+ * envia o IP do visitante para um terceiro e isso é tratamento de dado pessoal.
+ * O texto entrou na seção "Medição de audiência", nos três idiomas, em
+ * src/data/politicaPrivacidade.ts (que no mesmo dia deixou de depender do
+ * WordPress). Desligar é trocar o `ativo` abaixo para false.
  *
  * COMO O PIXEL FUNCIONA: `c3po.jpg` é uma imagem de 1x1. O navegador do
  * visitante a pede ao servidor da Metricool, e é esse pedido que conta a
@@ -23,7 +23,7 @@
  * para o body sozinho. O resultado é o mesmo, o HTML é que fica válido.
  */
 export const metricool = {
-  ativo: false,
+  ativo: true,
   hash: "f849040cf3447e6aecba5176dffcb533",
 } as const;
 

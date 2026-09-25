@@ -1,24 +1,23 @@
 import type { Locale } from "../i18n/config";
 
 /**
- * Política de Privacidade traduzida.
+ * Politica de Privacidade: as tres versoes, todas locais.
  *
- * O português é a VERSÃO CANÔNICA: vem do WordPress (coleção `pages`), é o que
- * a Proc publica e é o que vale juridicamente. O que está aqui são traduções
- * de leitura, autorizadas em 2026-09-25, para que quem navega em /en e /es
- * entenda o documento sem precisar do português.
+ * Ate 2026-09-25 o portugues era buscado no WordPress a cada build. O Pedro
+ * decidiu no mesmo dia que **nada no site pode depender do WordPress**, entao o
+ * texto foi trazido para ca, exatamente como estava publicado, e a colecao
+ * `pages` do WordPress deixou de ser usada por esta pagina.
  *
- * Duas consequências práticas:
+ * O portugues continua sendo a VERSAO CANONICA: e o que a Proc publica e o que
+ * vale juridicamente. EN e ES sao traducoes de leitura, e o canonical das duas
+ * aponta para a portuguesa (ver BaseLayout).
  *
- *  1. O canonical das páginas traduzidas continua apontando para a versão PT
- *     (ver BaseLayout) — uma política, três leituras.
- *  2. Se o texto mudar no WordPress, ESTAS TRADUÇÕES FICAM DESATUALIZADAS e
- *     ninguém percebe sozinho. Por isso existe scripts/checa-politica.mjs, que
- *     compara a estrutura das três versões e acusa divergência. Rode-o depois
- *     de qualquer alteração na política.
+ * ⚠️ Alterar a politica agora e alterar ESTE arquivo, nos tres idiomas. Depois
+ * de mexer, rode `npm run checa-politica`, que compara a estrutura das versoes
+ * e acusa divergencia.
  *
- * Nomes próprios, CNPJ, razão social, telefone, e-mail e a citação da lei
- * ficam como no original: são identificadores, não texto a traduzir.
+ * Nomes proprios, CNPJ, razao social, telefone, e-mail e a citacao da lei ficam
+ * como no original: sao identificadores, nao texto a traduzir.
  */
 export interface BlocoPolitica {
   tipo: "h4" | "p" | "ul";
@@ -27,6 +26,39 @@ export interface BlocoPolitica {
   /** ul. */
   itens?: string[];
 }
+
+const PT: BlocoPolitica[] = [
+  { tipo: "h4", texto: "Quem Somos" },
+  { tipo: "p", texto: "Nosso website: procgroup.com.brCNPJ: 10.381.377/0001-91Razão Social: Proc Solucoes em Informatica Proc Especialistas em Infraestrutura de Ti LTDA" },
+  { tipo: "h4", texto: "Nossas Políticas" },
+  { tipo: "p", texto: "Todas as informações pessoais recolhidas serão utilizadas para tornar sua visita em nosso site agradável e segura. A PROC GROUP garante a confidencialidade dos dados pessoais coletados, na forma da Lei Geral de Proteção de Dados (Lei 13.709/2018 – “LGPD”), observando:" },
+  { tipo: "ul", itens: ["Confirmação que realizamos o tratamento dos seus dados pessoais;", "Acesso ao conteúdo de seus dados pessoais;", "Solicitação de correção de dados pessoais desatualizados ou incompletos;", "Solicitação de eliminação, bloqueio ou modo anônimo dos dados pessoais considerados desnecessários ou em desconformidade com a LGPD;", "Solicitação de eliminação dos dados pessoais tratados com base no seu consentimento, exceto nas hipóteses de conservação de dados pessoais previstas na LGPD;", "Solicitação de informações a respeito de com quem seus dados pessoais são compartilhados;", "Solicitação de informações sobre a alternativa de seu não consentimento e as consequências, prejuízos e limitações de acesso;", "Cancelamento de sua autorização para o tratamento dos seus dados pessoais, quando houverem tratamentos realizados com base no seu consentimento;", "Manifestação de oposição a tratamento de informações que viole a LGPD;"] },
+  { tipo: "p", texto: "Não compartilhamos suas informações, histórico de navegação e preferências com terceiros." },
+  { tipo: "p", texto: "Ao acessar o site da PROC GROUP e suas páginas, fica acordado sua aceitação sobre a presente política de privacidade em todos seus termos. Recomendamos que consulte esta página com regularidade para estar sempre atualizado sobre os últimos ajustes." },
+  { tipo: "h4", texto: "Informações Coletadas" },
+  { tipo: "p", texto: "Informações que poderão ser coletadas, armazenadas e utilizadas para que possamos lhe oferecer os melhores conteúdos, ofertas e comunicações:" },
+  { tipo: "ul", itens: ["Informações sobre o seu computador, endereço IP, localização geográfica, tipo e versão do navegador e sistema operacional;", "Informações sobre uso do site e visitas, referência ou origem, tempo de duração da visita, páginas visualizadas e fluxo/etapas de navegação;", "Seu endereço de e-mail, utilizado durante o login de sua conta, cadastro, envio de mensagens via formulários ou acesso aos conteúdos especiais;", "Informações de cadastro de perfil em nosso site – por exemplo, nome, foto, endereço, sexo, data de nascimento, profissão, interesses e outras relacionadas às páginas temáticas;", "Qualquer outra informação pessoal que você nos enviar;", "Informações gerais que você digita ou busca durante a navegação do site;", "Informações automáticas captadas durante o uso de nosso site, incluindo data, horário e frequência de uso;", "Informações relacionadas às compras, serviços que usa ou transações realizadas através do nosso site, incluindo nome, endereço, número de telefone, endereço de e-mail e dados do cartão de crédito para aprovação das compras;"] },
+  { tipo: "p", texto: "O conteúdo de suas publicações em nosso site, tais como depoimentos e comentários sobre produtos, incluindo seu nome de usuário e fotos de perfil, se disponível;" },
+  { tipo: "p", texto: "Informações inclusas nas comunicações que você nos envia por e-mail, WhatsApp, chat, direct (redes sociais) ou através de nosso site, incluindo conteúdos e metadados;" },
+  { tipo: "p", texto: "Seu nome e endereço de e-mail para recebimento de nossas newsletters." },
+  { tipo: "h4", texto: "Finalidade do Uso dos Dados" },
+  { tipo: "p", texto: "As informações pessoais poderão ser utilizadas para:" },
+  { tipo: "ul", itens: ["Permitir a gestão do site e o ambiente de negócios;", "Personalização do site de acordo com as preferências de uso identificadas;", "Disponibilizar os recursos para uso do site;", "Gestão de envio de conteúdo, links, lembretes de pagamento ou carrinhos abandonados;", "Facilitar os serviços de atendimento via site;", "Operacionalização dos envios dos produtos ou serviços contratados;", "Envio de comunicações promocionais e informativas (com opção de cancelamento a qualquer momento);", "Envio de conteúdos e notificações solicitadas pelo usuário;", "Fornecer bases estatísticas sobre o perfil dos usuários (sem identificação individual);", "Manter o site seguro e evitar fraudes;", "Verificar a conformidade com os termos e condições de uso."] },
+  { tipo: "h4", texto: "Divulgação de Informações" },
+  { tipo: "p", texto: "A divulgação de informações pessoais ocorrerá para o fiel cumprimento da finalidade de nossa empresa, obedecendo aos fins estabelecidos nesta política por nossos funcionários, gestores, autoridades e parceiros:" },
+  { tipo: "ul", itens: ["De acordo com o previsto ou solicitado por lei;", "Para suporte legal a processos judiciais em andamento ou potenciais;", "Para exercer a defesa de nossos direitos legais;", "Para autoridades fiscais (emissão de notas fiscais);", "Para transportadores e entregadores para envio de mercadorias."] },
+  { tipo: "h4", texto: "Nossos Anúncios e Campanhas" },
+  { tipo: "p", texto: "Utilizamos informações contidas nos anúncios (como IP, ISP e navegador) para análise de tráfego. Você pode desligar os cookies nas opções do seu navegador ou em ferramentas de antivírus, ciente de que isso pode afetar a interação com nosso site e o acesso a áreas restritas." },
+  { tipo: "h4", texto: "Cookies" },
+  { tipo: "p", texto: "Comentários: Ao deixar um comentário, você pode optar por salvar seu nome e e-mail em cookies para sua comodidade. Estes duram um ano." },
+  { tipo: "p", texto: "Login: Se você visitar nossa página de login, um cookie temporário será criado para testar a compatibilidade do navegador (sem dados pessoais). Ao logar, cookies de acesso são criados e duram de dois dias a duas semanas (se selecionado “Lembrar-me”)." },
+  { tipo: "p", texto: "Edição: Se editar ou publicar um conteúdo, um cookie adicional (apenas ID do post) será salvo por 24 horas." },
+  { tipo: "h4", texto: "Dúvidas Gerais" },
+  { tipo: "p", texto: "Em caso de dúvidas após a leitura desta Política, por gentileza entre em contato com nossa equipe através do telefone (46) 3224-3532 ou envie um e-mail para comercial@procgroup.com.br." },
+  { tipo: "p", texto: "Consideramos que ao navegar no site da PROC GROUP você estará de acordo com os termos apresentados." },
+  { tipo: "h4", texto: "Medição de audiência" },
+  { tipo: "p", texto: "Utilizamos a ferramenta Metricool para medir a audiência deste site. Quando você acessa uma página, seu navegador solicita uma imagem hospedada nos servidores da Metricool, e esse pedido registra a visita. Nesse processo são tratados o endereço IP, o tipo de navegador e a página de origem, com a finalidade de entender o volume e a origem do tráfego do site. Não são utilizados cookies e você não é identificado individualmente. A Metricool atua como operadora dos dados e os trata conforme a política de privacidade dela. Para exercer seus direitos como titular, utilize os canais de contato informados nesta política." },
+];
 
 const EN: BlocoPolitica[] = [
   { tipo: "h4", texto: "Who We Are" },
@@ -164,6 +196,8 @@ const EN: BlocoPolitica[] = [
     tipo: "p",
     texto: "We consider that by browsing the PROC GROUP site you agree to the terms presented.",
   },
+  { tipo: "h4", texto: "Audience measurement" },
+  { tipo: "p", texto: "We use Metricool to measure this website’s audience. When you open a page, your browser requests an image hosted on Metricool servers, and that request records the visit. The IP address, browser type and referring page are processed, in order to understand the volume and origin of the site traffic. No cookies are used and you are not identified individually. Metricool acts as a data processor and handles the data under its own privacy policy. To exercise your rights as a data subject, use the contact channels listed in this policy." },
 ];
 
 const ES: BlocoPolitica[] = [
@@ -302,7 +336,9 @@ const ES: BlocoPolitica[] = [
     tipo: "p",
     texto: "Consideramos que al navegar por el sitio de PROC GROUP usted acepta los términos presentados.",
   },
+  { tipo: "h4", texto: "Medición de audiencia" },
+  { tipo: "p", texto: "Utilizamos la herramienta Metricool para medir la audiencia de este sitio. Cuando accedes a una página, tu navegador solicita una imagen alojada en los servidores de Metricool, y esa solicitud registra la visita. En ese proceso se tratan la dirección IP, el tipo de navegador y la página de origen, con la finalidad de entender el volumen y el origen del tráfico del sitio. No se utilizan cookies y no se te identifica individualmente. Metricool actúa como operadora de los datos y los trata conforme a su propia política de privacidad. Para ejercer tus derechos como titular, utiliza los canales de contacto indicados en esta política." },
 ];
 
 /** Sem entrada para `pt`: lá o texto vem do WordPress, que é a fonte canônica. */
-export const politicaTraduzida: Partial<Record<Locale, BlocoPolitica[]>> = { en: EN, es: ES };
+export const politicaTraduzida: Record<Locale, BlocoPolitica[]> = { pt: PT, en: EN, es: ES };
