@@ -1,0 +1,33 @@
+# Diagnostico do FTP: mostra ONDE a conta cai ao conectar e o que existe la.
+#
+# Criado em 2026-09-25 porque o primeiro deploy para a Hostinger terminou com
+# sucesso, enviou as 98 paginas, e o site continuou servindo o WordPress: os
+# arquivos nao apareceram nem em public_html nem num public_html duplicado.
+# Chutar caminho custa 7 minutos por tentativa; isto responde em um.
+#
+# Roda so a mao (Actions > Diagnostico FTP > Run workflow). As credenciais vem
+# dos mesmos secrets do deploy, e o GitHub mascara secret no log.
+name: Diagnostico FTP
+
+on:
+  workflow_dispatch:
+
+jobs:
+  olhar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Listar o que a conta FTP enxerga
+        env:
+          SERVIDOR: ${{ secrets.FTP_SERVER }}
+          USUARIO: ${{ secrets.FTP_USERNAME }}
+          SENHA: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          set +x
+          echo "== raiz onde a conta cai =="
+          curl -s --ssl-reqd --user "$USUARIO:$SENHA" "ftp://$SERVIDOR/" --list-only || echo "(falhou)"
+          echo
+          echo "== dentro de public_html =="
+          curl -s --ssl-reqd --user "$USUARIO:$SENHA" "ftp://$SERVIDOR/public_html/" --list-only || echo "(nao existe ou sem acesso)"
+          echo
+          echo "== dentro de domains (se houver) =="
+          curl -s --ssl-reqd --user "$USUARIO:$SENHA" "ftp://$SERVIDOR/domains/" --list-only || echo "(nao existe)"
