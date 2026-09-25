@@ -16,8 +16,13 @@
 name: Deploy para a Hostinger
 
 on:
-  push:
-    branches: [master]
+  # So a mao, de proposito, ate a primeira virada dar certo. Enquanto o gatilho
+  # de push existia, qualquer commit no master trocava o site que esta no ar, e
+  # no dia 2026-09-25 isso deixou o site pela metade. Depois da primeira
+  # publicacao conferida, basta descomentar as duas linhas abaixo para voltar ao
+  # publica-a-cada-push.
+  # push:
+  #   branches: [master]
   workflow_dispatch:
 
 concurrency:
