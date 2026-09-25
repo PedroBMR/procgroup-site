@@ -13,7 +13,7 @@ export const pages = {
       heroTitle: "Uma empresa de tecnologia. Não uma integradora.",
       heroLead:
         "Fundada em 2014 em Pato Branco (PR), a Proc nasceu para atender as necessidades específicas do varejo alimentar em infraestrutura de TI. Hoje desenvolvemos nossa própria plataforma de Inteligência Artificial, Visão Computacional e Infraestrutura de TI, mantendo equipes altamente especializadas em cada segmento de atuação.",
-      photoAlt: "Sede da Proc Group em Pato Branco",
+      photoAlt: "Ilustração: corredor de data center com racks iluminados e um alerta vermelho ao fundo",
       storyEyebrow: "Nossa história",
       storyTitle: "Engenharia própria, especializada em cada operação.",
       storyText:
@@ -163,7 +163,7 @@ export const pages = {
       heroTitle: "A technology company. Not a systems integrator.",
       heroLead:
         "Founded in 2014 in Pato Branco, Brazil, Proc began by serving the specific IT-infrastructure needs of food retail. Today we build our own Artificial Intelligence, Computer Vision and IT Infrastructure platform, keeping highly specialized teams for each business segment.",
-      photoAlt: "Proc Group headquarters in Pato Branco, Brazil",
+      photoAlt: "Illustration: a data center corridor with lit racks and a single red alert in the distance",
       storyEyebrow: "Our story",
       storyTitle: "In-house engineering, specialized for each operation.",
       storyText:
@@ -311,7 +311,7 @@ export const pages = {
       heroTitle: "Una empresa de tecnología. No una integradora.",
       heroLead:
         "Fundada en 2014 en Pato Branco (PR, Brasil), Proc nació para atender las necesidades específicas del comercio minorista de alimentos en infraestructura de TI. Hoy desarrollamos nuestra propia plataforma de Inteligencia Artificial, Visión Artificial e Infraestructura de TI, manteniendo equipos altamente especializados en cada segmento.",
-      photoAlt: "Sede de Proc Group en Pato Branco, Brasil",
+      photoAlt: "Ilustración: pasillo de data center con racks iluminados y una alerta roja al fondo",
       storyEyebrow: "Nuestra historia",
       storyTitle: "Ingeniería propia, especializada en cada operación.",
       storyText:

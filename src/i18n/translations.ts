@@ -100,7 +100,7 @@ export const translations = {
       aboutText:
         "A Proc desenvolve soluções tecnológicas que unem Inteligência Artificial, Visão Computacional, Analytics e Infraestrutura de TI para atender empresas e indústrias, cada uma com a sua solução e a sua equipe. Cada solução integra dados, equipamentos e sistemas da operação que atende, permitindo automatizar processos, fortalecer a segurança, aumentar a produtividade e apoiar decisões estratégicas com informações em tempo real.",
       aboutCta: "Conheça a Proc",
-      aboutPhotoAlt: "Sede da Proc Group em Pato Branco",
+      aboutPhotoAlt: "Ilustração: corredor de data center com racks iluminados e um alerta vermelho ao fundo",
       platformEyebrow: "A plataforma",
       platformTitle: "Tecnologia própria, com equipe especializada em cada operação",
       platformText:
@@ -373,7 +373,7 @@ export const translations = {
       aboutText:
         "Proc develops technology solutions that combine Artificial Intelligence, Computer Vision, Analytics and IT Infrastructure to serve companies and industries, each with its own solution and its own team. Each solution integrates the data, equipment and systems of the operation it serves, automating processes, strengthening security, boosting productivity and supporting strategic decisions with real-time information.",
       aboutCta: "About Proc",
-      aboutPhotoAlt: "Proc Group headquarters in Pato Branco, Brazil",
+      aboutPhotoAlt: "Illustration: a data center corridor with lit racks and a single red alert in the distance",
       platformEyebrow: "The platform",
       platformTitle: "In-house technology, with a specialist team for each operation",
       // Era "A unified, integrated platform ... for ... every operation": a
@@ -637,7 +637,7 @@ export const translations = {
       aboutText:
         "Proc desarrolla soluciones tecnológicas que unen Inteligencia Artificial, Visión Artificial, Analytics e Infraestructura de TI para atender a empresas e industrias, cada una con su solución y su equipo. Cada solución integra los datos, equipos y sistemas de la operación que atiende, permitiendo automatizar procesos, fortalecer la seguridad, aumentar la productividad y apoyar decisiones estratégicas con información en tiempo real.",
       aboutCta: "Conoce Proc",
-      aboutPhotoAlt: "Sede de Proc Group en Pato Branco, Brasil",
+      aboutPhotoAlt: "Ilustración: pasillo de data center con racks iluminados y una alerta roja al fondo",
       platformEyebrow: "La plataforma",
       platformTitle: "Tecnología propia, con equipo especializado en cada operación",
       platformText:

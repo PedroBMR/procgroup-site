@@ -14,8 +14,7 @@ import { getLangFromUrl, useTranslations, localePath, localizePath } from "../..
 import { metaDaPagina } from "../../data/metaPorPagina";
 import { defaultLocale, type Locale } from "../../i18n/config";
 import { secoes } from "../../data/secoes";
-import MediaPlaceholder from "../MediaPlaceholder.astro";
-import { BRIEFING_FACHADA } from "../../data/mediaBriefs";
+import arte from "../../assets/images/corredor-datacenter-ilustracao.png";
 
 // Uma rota, três idiomas: PT na raiz (/), EN em /en, ES em /es.
 
@@ -95,11 +94,18 @@ const latestPosts = (await getCollection("blog")).sort(byNewest).slice(0, 3);
         <Button href={P(`/empresa`)} variant="secondary">{t.aboutCta}</Button>
       </div>
       <div class="about-visual" data-reveal>
-        {/* A foto da fachada saiu em 2026-09-25: entra arte gerada por IA, que o
-             Pedro ainda vai produzir. Ate la, o placeholder da marca. Ele tem dois
-             estados: no `astro dev` mostra o briefing para a equipe, no build sai so
-             o grafico. O arquivo hq-pato-branco-enhanced.webp continua no projeto. */}
-        <MediaPlaceholder kind="image" caption={t.aboutPhotoAlt} prompt={BRIEFING_FACHADA} lang={lang} />
+        {/* No lugar da foto da fachada, arte gerada por IA (2026-09-25). O
+             recorte 4:3 come as laterais e sobra o miolo do corredor, que e onde
+             a imagem tem forca. O .webp da fachada continua no projeto. */}
+        <Image
+          class="about-photo"
+          src={arte}
+          alt={t.aboutPhotoAlt}
+          loading="lazy"
+          width={800}
+          height={600}
+          quality={72}
+        />
       </div>
     </div>
   </section>

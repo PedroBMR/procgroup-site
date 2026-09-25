@@ -10,8 +10,7 @@ import { getLangFromUrl, useTranslations, localizePath } from "../../i18n/utils"
 import { metaDaPagina } from "../../data/metaPorPagina";
 import { usePages } from "../../i18n/pages";
 import { defaultLocale, type Locale } from "../../i18n/config";
-import MediaPlaceholder from "../MediaPlaceholder.astro";
-import { BRIEFING_FACHADA } from "../../data/mediaBriefs";
+import arte from "../../assets/images/corredor-datacenter-ilustracao.png";
 
 const lang = getLangFromUrl(Astro.url);
 // De que lado do site esta instancia esta montada — sai da URL, como no
@@ -50,9 +49,10 @@ const schema = {
   </section>
 
   <section class="photo-section">
-    {/* Mesma troca da home, em 2026-09-25: arte de IA a produzir no lugar da
-         foto da fachada. Ver src/data/mediaBriefs.ts. */}
-    <MediaPlaceholder kind="image" caption={t.photoAlt} prompt={BRIEFING_FACHADA} lang={lang} />
+    {/* A arte nasceu em 1672x941 (16:9). Aqui ela e servida larga e cortada
+         pelo CSS (.hq-photo), que limita a altura: o corredor mantem a fuga no
+         centro, entao o corte tira ceu e piso, nao a cena. */}
+    <Image src={arte} alt={t.photoAlt} width={1600} height={900} quality={72} class="hq-photo" />
   </section>
 
   {e.purposeParas && (
