@@ -94,7 +94,7 @@ const schema = {
               {c.name}
             </a>
           ))}
-        <time datetime={isoDate(data.date)}>{formatDate(data.date)}</time>
+        <time datetime={isoDate(data.date)}>{formatDate(data.date, lang)}</time>
       </div>
       <h1>{data.title}</h1>
       {data.excerpt && <p class="lead">{data.excerpt}</p>}
@@ -133,7 +133,7 @@ const schema = {
                 <div class="related-body">
                   {cat && <span class="related-cat">{cat.name}</span>}
                   <h3>{r.data.title}</h3>
-                  <time datetime={isoDate(r.data.date)}>{formatDate(r.data.date)}</time>
+                  <time datetime={isoDate(r.data.date)}>{formatDate(r.data.date, lang)}</time>
                 </div>
               </a>
             );

@@ -85,7 +85,7 @@ const schema = {
               {primaryCategory(featured.data.categories) && (
                 <span class="post-category">{primaryCategory(featured.data.categories).name}</span>
               )}
-              <time datetime={isoDate(featured.data.date)}>{formatDate(featured.data.date)}</time>
+              <time datetime={isoDate(featured.data.date)}>{formatDate(featured.data.date, lang)}</time>
             </div>
             <h2>{featured.data.title}</h2>
             <p>{featured.data.excerpt}</p>
@@ -113,7 +113,7 @@ const schema = {
                 <div class="post-body">
                   <div class="post-meta">
                     {cat && <span class="post-category">{cat.name}</span>}
-                    <time datetime={isoDate(post.data.date)}>{formatDate(post.data.date)}</time>
+                    <time datetime={isoDate(post.data.date)}>{formatDate(post.data.date, lang)}</time>
                   </div>
                   <h2>{post.data.title}</h2>
                   <p>{post.data.excerpt}</p>

@@ -24,7 +24,7 @@ const { Content } = page ? await render(page) : { Content: undefined };
         {/* t.title, não page.data.title: o título do WordPress vem sempre em
             português, então o h1 contradizia o <title> e o lang da página. */}
         <h1>{t.title}</h1>
-        <p class="updated">{t.updatedPrefix} {formatDate(page.data.modified)}</p>
+        <p class="updated">{t.updatedPrefix} {formatDate(page.data.modified, lang)}</p>
         {t.langNote && <p class="lang-note">{t.langNote}</p>}
       </header>
       <section class="section" data-theme="light">

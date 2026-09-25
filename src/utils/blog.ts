@@ -1,4 +1,5 @@
 import type { CollectionEntry } from "astro:content";
+import { htmlLangAttr, defaultLocale, type Locale } from "../i18n/config";
 
 export type BlogPost = CollectionEntry<"blog">;
 export type BlogCategory = BlogPost["data"]["categories"][number];
@@ -34,8 +35,15 @@ export function byNewest(a: BlogPost, b: BlogPost): number {
   return b.data.date.valueOf() - a.data.date.valueOf();
 }
 
-export function formatDate(date: Date): string {
-  return date.toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" });
+/**
+ * Data por extenso no idioma da página. Era fixa em pt-BR, e como a casca do
+ * site é traduzida isso vazava: /en/politica-de-privacidade dizia "Last
+ * updated: 19 de janeiro de 2026", e as datas dos posts em /en e /es também
+ * saíam em português. O texto do post continua português (vem do WordPress),
+ * mas a data quem monta é o site, então ela acompanha a página.
+ */
+export function formatDate(date: Date, lang: Locale = defaultLocale): string {
+  return date.toLocaleDateString(htmlLangAttr[lang], { day: "2-digit", month: "long", year: "numeric" });
 }
 
 /** Machine-readable date for <time datetime> and schema.org. */

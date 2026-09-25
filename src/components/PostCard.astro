@@ -36,7 +36,7 @@ const category = data.categories.find((c) => c.slug !== CATCH_ALL_CATEGORY) ?? d
   <div class="post-body">
     <div class="post-meta">
       {category && <span class="post-category">{category.name}</span>}
-      <time datetime={isoDate(data.date)}>{formatDate(data.date)}</time>
+      <time datetime={isoDate(data.date)}>{formatDate(data.date, lang)}</time>
     </div>
     <h2>{data.title}</h2>
     <p>{data.excerpt}</p>
