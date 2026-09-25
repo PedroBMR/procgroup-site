@@ -3,11 +3,10 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Breadcrumb from "../../components/Breadcrumb.astro";
 import BlogImage from "../../components/BlogImage.astro";
+import BlogCategoryChips from "../../components/BlogCategoryChips.astro";
 import {
   byNewest,
   categoryColor,
-  categoryHref,
-  collectCategories,
   formatDate,
   isoDate,
   CATCH_ALL_CATEGORY,
@@ -17,10 +16,6 @@ import { withBase } from "../../utils/url";
 const posts = (await getCollection("blog")).sort(byNewest);
 const [featured, ...rest] = posts;
 
-// Chips: real WP categories (minus the catch-all that sits on every post).
-const categories = collectCategories(posts)
-  .filter((c) => c.slug !== CATCH_ALL_CATEGORY)
-  .sort((a, b) => a.name.localeCompare(b.name, "pt-BR"));
 
 function primaryCategory(cats: { slug: string; name: string }[]) {
   return cats.find((c) => c.slug !== CATCH_ALL_CATEGORY) ?? cats[0];
@@ -54,18 +49,7 @@ const schema = {
       <p class="eyebrow">Blog</p>
       <h1>Novidades, eventos e tecnologia</h1>
       <p class="lead">Conteúdo direto dos especialistas da Proc Group.</p>
-      {categories.length > 0 && (
-        <div class="category-chips">
-          {/* Link, não span: os irmãos são links e este tem a mesma aparência.
-              Como span, não era focável nem anunciado como o filtro atual. */}
-          <a href={withBase("/blog")} class="chip is-active" aria-current="page">Todos</a>
-          {categories.map((cat) => (
-            <a href={withBase(categoryHref(cat.slug))} class="chip" style={`--unit-color: ${categoryColor(cat.slug)}`}>
-              {cat.name}
-            </a>
-          ))}
-        </div>
-      )}
+      <BlogCategoryChips />
     </div>
   </section>
 
@@ -139,15 +123,6 @@ const schema = {
   .hero-page h1 { font-size: var(--fs-4xl); margin-top: var(--space-4); max-width: 780px; }
   .lead { margin-top: var(--space-6); font-size: var(--fs-lg); color: var(--color-text-muted); max-width: 640px; }
 
-  .category-chips { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-8); }
-  .chip {
-    font-size: var(--fs-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
-    padding: var(--space-2) var(--space-4); border-radius: var(--radius-pill);
-    border: 1px solid var(--unit-color, var(--color-border-strong)); color: var(--white);
-    transition: background var(--dur-fast) ease, color var(--dur-fast) ease;
-  }
-  .chip.is-active { background: var(--white); color: var(--navy-900); border-color: var(--white); }
-  .chip:not(.is-active):hover { background: var(--unit-color); color: var(--white); }
 
   .section { padding-block: var(--space-16) var(--space-24); }
   .posts-section { background: var(--color-bg); }

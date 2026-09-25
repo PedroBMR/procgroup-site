@@ -1,0 +1,71 @@
+---
+// Filtro do blog: "Todos" mais uma pilula por categoria real do WordPress.
+//
+// Vivia dentro de blog/index.astro, entao so aparecia em /blog: quem clicava
+// numa categoria caia numa pagina sem filtro nenhum e perdia o caminho de
+// volta. Virou componente para as tres paginas do conjunto mostrarem a mesma
+// barra -- /blog, /blog/categoria/<slug> e /eventos, que e uma categoria com
+// pagina propria (ver categoryHref).
+import { getCollection } from "astro:content";
+import {
+  collectCategories,
+  categoryColor,
+  categoryHref,
+  CATCH_ALL_CATEGORY,
+} from "../utils/blog";
+import { withBase } from "../utils/url";
+import { getLangFromUrl } from "../i18n/utils";
+import { defaultLocale } from "../i18n/config";
+
+interface Props {
+  /** Slug da categoria aberta; "todos" em /blog. Marca a pilula atual. */
+  active?: string;
+}
+const { active = "todos" } = Astro.props;
+
+// A catch-all do WordPress ("tudo sobre tecnologia") esta em todo post, entao
+// nao filtra nada e o arquivo dela seria /blog de novo.
+const categories = collectCategories(await getCollection("blog"))
+  .filter((c) => c.slug !== CATCH_ALL_CATEGORY)
+  .sort((a, b) => a.name.localeCompare(b.name, "pt-BR"));
+
+// Os nomes vem do WordPress, que e so portugues. Em /en/eventos e /es/eventos
+// a barra continua em PT, entao marca o idioma do bloco (WCAG 3.1.2) -- mesmo
+// tratamento que a grade de posts ja recebe nessas paginas.
+const lang = getLangFromUrl(Astro.url);
+const blocoEmPortugues = lang === defaultLocale ? undefined : "pt-BR";
+---
+
+{categories.length > 0 && (
+  <div class="category-chips" lang={blocoEmPortugues}>
+    {/* Link, não span: os irmãos são links e este tem a mesma aparência.
+        Como span, não era focável nem anunciado como o filtro atual. */}
+    <a
+      href={withBase("/blog")}
+      class:list={["chip", { "is-active": active === "todos" }]}
+      aria-current={active === "todos" ? "page" : undefined}
+    >Todos</a>
+    {categories.map((cat) => (
+      <a
+        href={withBase(categoryHref(cat.slug))}
+        class:list={["chip", { "is-active": active === cat.slug }]}
+        aria-current={active === cat.slug ? "page" : undefined}
+        style={`--unit-color: ${categoryColor(cat.slug)}`}
+      >
+        {cat.name}
+      </a>
+    ))}
+  </div>
+)}
+
+<style>
+  .category-chips { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-8); }
+  .chip {
+    font-size: var(--fs-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+    padding: var(--space-2) var(--space-4); border-radius: var(--radius-pill);
+    border: 1px solid var(--unit-color, var(--color-border-strong)); color: var(--white);
+    transition: background var(--dur-fast) ease, color var(--dur-fast) ease;
+  }
+  .chip.is-active { background: var(--white); color: var(--navy-900); border-color: var(--white); }
+  .chip:not(.is-active):hover { background: var(--unit-color); color: var(--white); }
+</style>
