@@ -64,7 +64,10 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftps
           local-dir: ./dist/
-          server-dir: ./public_html/
+          # A conta FTP ja cai DENTRO de public_html: com ./public_html/ os
+          # arquivos iam para um nivel abaixo do que o dominio serve, e o site
+          # nunca mudava, mesmo com o deploy terminando em sucesso (2026-09-25).
+          server-dir: ./
           # A action mantem um manifesto no servidor e envia so o que mudou.
           # Sem dangerous-clean-slate de proposito: ela nunca apaga em massa o
           # que ja esta la, o que evita derrubar arquivo alheio por engano.

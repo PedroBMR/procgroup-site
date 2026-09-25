@@ -55,6 +55,13 @@ DirectoryIndex index.html index.php
   RewriteRule ^seguranca-publica/?$ / [R=301,L]
 
   # Restos do WordPress: sem PHP no ar, estes enderecos so gerariam 404.
+  # A API do WordPress precisa das regras DELE para responder, e este arquivo
+  # substitui o .htaccess que estava la. Sem esta linha, /wp-json cai em 404 e
+  # o proximo build do site fica sem blog. Entao: tudo que comeca com wp-json
+  # volta a ser entregue ao index.php do WordPress, e para por ai.
+  RewriteCond %{REQUEST_URI} ^/wp-json
+  RewriteRule ^ /index.php [L]
+
   # ⚠️ wp-json fica de FORA desta regra de proposito: e a API que alimenta o
   # blog a cada build. Redirecionar isso quebraria o blog em silencio.
   RewriteRule ^(wp-admin|wp-login\.php|xmlrpc\.php) / [R=301,L]
