@@ -59,7 +59,7 @@ export const translations = {
     },
     ticker: {
       items: ["Câmeras", "Sensores", "Centros de Operação", "Empresas", "Indústrias"],
-      highlight: "Engenharia própria. Tudo conectado.",
+      highlight: ["Engenharia própria", "Tudo conectado"],
     },
     footer: {
       tagline: "Engenharia própria em IA e Visão Computacional. Inteligência para um mundo mais seguro, conectado e eficiente.",
@@ -332,7 +332,7 @@ export const translations = {
     },
     ticker: {
       items: ["Cameras", "Sensors", "Operations Centers", "Businesses", "Industries"],
-      highlight: "In-house engineering. Everything connected.",
+      highlight: ["In-house engineering", "Everything connected"],
     },
     footer: {
       tagline: "In-house AI and Computer Vision engineering. Intelligence for a safer, more connected, more efficient world.",
@@ -596,7 +596,7 @@ export const translations = {
     },
     ticker: {
       items: ["Cámaras", "Sensores", "Centros de Operación", "Empresas", "Industrias"],
-      highlight: "Ingeniería propia. Todo conectado.",
+      highlight: ["Ingeniería propia", "Todo conectado"],
     },
     footer: {
       tagline: "Ingeniería propia en IA y Visión Artificial. Inteligencia para un mundo más seguro, conectado y eficiente.",

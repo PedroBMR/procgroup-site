@@ -7,6 +7,10 @@
 import { getLangFromUrl, useTranslations } from "../i18n/utils";
 const t = useTranslations(getLangFromUrl(Astro.url)).ticker;
 const items = t.items;
+// O fecho são duas frases, não uma só: antes vinham grudadas numa string
+// ("Engenharia própria. Tudo conectado.") e o ponto final fazia o papel de
+// separador — o único ponto da faixa inteira. Como array, cada frase é um item
+// como os outros, e quem separa é o losango vermelho.
 const highlight = t.highlight;
 
 // A trilha anda exatamente UMA cópia por ciclo (-100%/COPIAS) e recomeça; como
@@ -27,8 +31,12 @@ const COPIAS = 4;
             <span class="sep">◆</span>
           </>
         ))}
-        <span class="item highlight">{highlight}</span>
-        <span class="sep">◆</span>
+        {highlight.map((frase) => (
+          <>
+            <span class="item highlight">{frase}</span>
+            <span class="sep">◆</span>
+          </>
+        ))}
       </div>
     ))}
   </div>
