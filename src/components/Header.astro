@@ -11,6 +11,50 @@ const ctaNav = getCtaNav(lang);
 const currentPath = Astro.url.pathname;
 // A raiz voltou a ser a home do site quando o lado publico saiu (2026-08-27).
 const homeHref = getHomeHref(lang);
+
+/**
+ * Destaque de "voce esta aqui" no menu.
+ *
+ * A comparacao era `currentPath === item.href` e so funcionava na home, por
+ * um detalhe de barra: o Astro serve /procgroup-site/empresa/ (com barra
+ * final) e o href do menu e /procgroup-site/empresa (sem). Nunca batiam. A
+ * home escapava porque withBase("/") devolve a barra, entao ali os dois lados
+ * eram iguais por acaso.
+ *
+ * Alem de normalizar a barra, o item pai acende nas paginas abaixo dele:
+ * /solucoes/ia-industrial acende "Solucoes", /blog/<post> acende "Blog". A
+ * home e a excecao obvia — todo caminho comeca com "/", entao ela so acende
+ * nela mesma, senao ficaria acesa o site inteiro.
+ */
+const semBarra = (p: string) => (p.length > 1 ? p.replace(/\/+$/, "") : p);
+const raiz = semBarra(homeHref);
+
+/** Este link aponta para a pagina aberta AGORA. So isto merece aria-current. */
+function ehEstaPagina(href: string): boolean {
+  return semBarra(currentPath) === semBarra(href);
+}
+
+/**
+ * Este link aponta para a pagina aberta ou para uma secao que a contem. Serve
+ * ao destaque VISUAL, que indica onde voce esta no site, nao qual link e a
+ * pagina. A home e excecao: todo caminho comeca com "/", entao ela so acende
+ * nela mesma.
+ */
+function cobreAPagina(href: string): boolean {
+  const alvo = semBarra(href);
+  if (alvo === raiz) return ehEstaPagina(href);
+  return ehEstaPagina(href) || semBarra(currentPath).startsWith(alvo + "/");
+}
+
+/**
+ * Um item de topo tambem acende quando quem esta aberto e um filho dele. Isso
+ * importa porque nem todo filho mora sob o pai: "Agenda de Eventos" vive no
+ * menu Blog mas o endereco e /eventos, entao a checagem por prefixo nao
+ * alcanca — em /eventos o menu ficava inteiro apagado.
+ */
+function itemAtivo(item: { href: string; children?: { href: string }[] }): boolean {
+  return cobreAPagina(item.href) || (item.children?.some((c) => cobreAPagina(c.href)) ?? false);
+}
 const menuLabel = { pt: "Abrir menu", en: "Open menu", es: "Abrir menú" }[lang];
 const homeAria = { pt: "Proc Group, página inicial", en: "Proc Group, home", es: "Proc Group, inicio" }[lang];
 ---
@@ -26,14 +70,14 @@ const homeAria = { pt: "Proc Group, página inicial", en: "Proc Group, home", es
       <ul>
         {mainNav.map((item) => (
           <li class:list={["nav-item", { "has-children": item.children }]}>
-            <a href={item.href} aria-current={currentPath === item.href ? "page" : undefined}>
+            <a href={item.href} class:list={{ atual: itemAtivo(item) }} aria-current={ehEstaPagina(item.href) ? "page" : undefined}>
               {item.label}
               {item.children && <svg aria-hidden="true" focusable="false" class="chev" width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>}
             </a>
             {item.children && (
               <div class="dropdown">
                 {item.children.map((child) => (
-                  <a href={child.href} class="dropdown-item">
+                  <a href={child.href} class="dropdown-item" aria-current={ehEstaPagina(child.href) ? "page" : undefined}>
                     <span class="dropdown-title">{child.label}</span>
                     <span class="dropdown-desc">{child.description}</span>
                   </a>
@@ -68,10 +112,12 @@ const homeAria = { pt: "Proc Group, página inicial", en: "Proc Group, home", es
     <ul>
       {mainNav.map((item) => (
         <li>
-          <a href={item.href}>{item.label}</a>
+          <a href={item.href} class:list={{ atual: itemAtivo(item) }} aria-current={ehEstaPagina(item.href) ? "page" : undefined}>{item.label}</a>
           {item.children && (
             <ul class="mobile-sub">
-              {item.children.map((child) => <li><a href={child.href}>{child.label}</a></li>)}
+              {item.children.map((child) => (
+                <li><a href={child.href} aria-current={ehEstaPagina(child.href) ? "page" : undefined}>{child.label}</a></li>
+              ))}
             </ul>
           )}
         </li>
@@ -120,7 +166,10 @@ const homeAria = { pt: "Proc Group, página inicial", en: "Proc Group, home", es
     white-space: nowrap;
     transition: color var(--dur-fast) ease;
   }
-  .nav-item > a:hover, .nav-item > a[aria-current="page"] { color: var(--white); }
+  /* .atual, e nao so [aria-current]: o aria-current marca a pagina EXATA, e
+     seria mentira poe-lo no "Blog" quando quem esta aberta e a agenda de
+     eventos. O destaque visual, esse sim, tem de acender no pai. */
+  .nav-item > a:hover, .nav-item > a.atual { color: var(--white); }
   .chev { transition: transform var(--dur-fast) ease; }
   .nav-item:hover .chev { transform: rotate(180deg); }
 
@@ -147,6 +196,10 @@ const homeAria = { pt: "Proc Group, página inicial", en: "Proc Group, home", es
   }
   .dropdown-item { display: flex; flex-direction: column; gap: 2px; padding: var(--space-3); border-radius: var(--radius-sm); }
   .dropdown-item:hover { background: var(--surface-3); }
+  /* A pagina aberta dentro do submenu ganha o mesmo fundo do hover, mais uma
+     barra vermelha: o titulo ja e branco aqui, entao cor sozinha nao
+     distinguiria nada. */
+  .dropdown-item[aria-current="page"] { background: var(--surface-3); box-shadow: inset 2px 0 0 var(--red-500); }
   .dropdown-title { font-weight: 700; font-size: var(--fs-sm); color: var(--white); }
   .dropdown-desc { font-size: var(--fs-xs); color: var(--ink-500); }
 
