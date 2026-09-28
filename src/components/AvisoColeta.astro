@@ -1,0 +1,318 @@
+---
+/**
+ * Aviso de coleta: pede o aceite para o Google Analytics.
+ *
+ * O GA só é carregado DEPOIS do "Aceitar". Antes disso nenhum script do Google
+ * entra na página e nenhum cookie é gravado. A base legal é o consentimento
+ * (ver o comentário longo em src/data/medicao.ts).
+ *
+ * O que segue o Guia de Cookies da ANPD (out/2022):
+ *   - "Recusar" e "Aceitar" com o mesmo peso visual (p. 30 e 33)
+ *   - segundo nível com as categorias, no <details> (p. 31)
+ *   - estatística desligada por padrão (p. 31)
+ *   - mudar de ideia a qualquer momento, pelo link do rodapé (p. 31 e 33)
+ *
+ * A escolha fica no localStorage, e não em cookie: é o registro necessário para
+ * o aviso não reaparecer a cada página, e não sai do aparelho. Sem JavaScript o
+ * aviso nunca aparece e o GA nunca carrega, que é o comportamento certo.
+ *
+ * O aviso só existe se googleAnalytics.ativo for true: sem GA, não há o que pedir.
+ */
+import { getLangFromUrl, useTranslations, localizePath } from "../i18n/utils";
+import { googleAnalytics } from "../data/medicao";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang).aviso;
+const politica = localizePath("/politica-de-privacidade", lang);
+// O segundo cookie do GA leva o ID da propriedade sem o "G-".
+const cookieDaPropriedade = `_ga_${googleAnalytics.id.replace(/^G-/, "")}`;
+---
+
+{googleAnalytics.ativo && (
+  <section
+    id="aviso-coleta"
+    class="aviso-coleta"
+    aria-labelledby="aviso-coleta-titulo"
+    data-ga-id={googleAnalytics.id}
+    data-nosnippet
+    hidden
+  >
+    <h2 id="aviso-coleta-titulo" class="aviso-titulo" tabindex="-1">{t.titulo}</h2>
+    <p class="aviso-texto">
+      {t.texto} <a href={politica}>{t.linkPolitica}</a>
+    </p>
+
+    <details class="aviso-detalhes">
+      <summary>{t.detalhesTitulo}</summary>
+      <dl>
+        <dt>{t.necessarioTitulo}</dt>
+        <dd>{t.necessarioTexto}</dd>
+        <dt>{t.estatisticaTitulo}</dt>
+        <dd>{t.estatisticaTexto.replace("{cookie}", cookieDaPropriedade)}</dd>
+      </dl>
+    </details>
+
+    {/* Mesmo estilo nos dois de proposito: dar destaque so ao aceite e pratica
+        que a ANPD manda evitar. Recusar vem primeiro pelo mesmo motivo. */}
+    <div class="aviso-acoes">
+      <button type="button" class="aviso-botao" data-escolha="recusado">{t.recusar}</button>
+      <button type="button" class="aviso-botao" data-escolha="aceito">{t.aceitar}</button>
+    </div>
+  </section>
+)}
+
+<script>
+  import { HOSTS_DE_PRODUCAO } from "../utils/deploy";
+
+  type Escolha = "aceito" | "recusado";
+
+  type JanelaComGA = Window & {
+    dataLayer?: unknown[];
+    gtag?: (...args: unknown[]) => void;
+    [desligar: `ga-disable-${string}`]: boolean | undefined;
+  };
+
+  const CHAVE = "proc-coleta";
+  // Subir a versao faz o aviso reaparecer para todo mundo. Serve para quando a
+  // coleta mudar de natureza, por exemplo uma ferramenta nova.
+  const VERSAO = 1;
+
+  const w = window as JanelaComGA;
+  let gaCarregado = false;
+  let quemAbriu: HTMLElement | null = null;
+
+  function lerEscolha(): Escolha | null {
+    try {
+      const bruto = localStorage.getItem(CHAVE);
+      if (!bruto) return null;
+      const dado = JSON.parse(bruto) as { escolha?: unknown; versao?: unknown };
+      if (dado.versao !== VERSAO) return null;
+      return dado.escolha === "aceito" || dado.escolha === "recusado" ? dado.escolha : null;
+    } catch {
+      // Navegacao privada ou armazenamento bloqueado: sem registro, o aviso
+      // volta a cada pagina e o GA nao carrega sem um aceite novo.
+      return null;
+    }
+  }
+
+  function gravarEscolha(escolha: Escolha): void {
+    try {
+      localStorage.setItem(CHAVE, JSON.stringify({ escolha, versao: VERSAO, em: new Date().toISOString() }));
+    } catch {
+      // Sem armazenamento a escolha vale so para esta pagina. Nao ha o que fazer.
+    }
+  }
+
+  // Trava de ambiente: o GA so mede no dominio real. Aberto em localhost ou num
+  // preview, o aceite funciona na tela mas nada vai para o Google, para teste
+  // nao virar visita no relatorio da Proc.
+  function medirAqui(): boolean {
+    return HOSTS_DE_PRODUCAO.includes(location.hostname);
+  }
+
+  function ligarGA(id: string): void {
+    if (!medirAqui()) return;
+    w[`ga-disable-${id}`] = false;
+
+    if (gaCarregado) {
+      // Aceite de novo na mesma pagina, depois de uma recusa.
+      w.gtag?.("consent", "update", { analytics_storage: "granted" });
+      return;
+    }
+    gaCarregado = true;
+
+    w.dataLayer = w.dataLayer ?? [];
+    // Tem que empurrar o objeto `arguments`, nao um array: o gtag.js so
+    // reconhece comando nesse formato. E o mesmo trecho do snippet oficial.
+    w.gtag = function () {
+      // eslint-disable-next-line prefer-rest-params
+      w.dataLayer!.push(arguments);
+    };
+    w.gtag("consent", "default", {
+      analytics_storage: "granted",
+      ad_storage: "denied",
+      ad_user_data: "denied",
+      ad_personalization: "denied",
+    });
+    w.gtag("js", new Date());
+    // Sem sinais do Google (cruzamento entre dispositivos) e sem personalizacao
+    // de anuncio: a politica de privacidade afirma as duas coisas.
+    w.gtag("config", id, { allow_google_signals: false, allow_ad_personalization_signals: false });
+
+    const s = document.createElement("script");
+    s.async = true;
+    s.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(id)}`;
+    document.head.appendChild(s);
+  }
+
+  function desligarGA(id: string): void {
+    w[`ga-disable-${id}`] = true;
+    w.gtag?.("consent", "update", { analytics_storage: "denied" });
+    apagarCookiesGA();
+  }
+
+  // Ao retirar o aceite, os cookies saem deste navegador, como a politica promete.
+  // O GA grava no dominio principal (.procgroup.com.br), entao tenta todas as
+  // variacoes do endereco atual; as que nao casam o navegador ignora.
+  function apagarCookiesGA(): void {
+    const nomes = document.cookie
+      .split(";")
+      .map((c) => c.split("=")[0].trim())
+      .filter((n) => n === "_ga" || n.startsWith("_ga_"));
+    const partes = location.hostname.split(".");
+    const dominios = [""];
+    for (let i = 0; i < partes.length - 1; i++) dominios.push(`; domain=.${partes.slice(i).join(".")}`);
+    for (const nome of nomes) {
+      for (const dominio of dominios) document.cookie = `${nome}=; Max-Age=0; path=/${dominio}`;
+    }
+  }
+
+  function mostrar(aviso: HTMLElement, pedidoPeloVisitante: boolean): void {
+    // Na primeira visita o aviso entra com atraso, depois da abertura da home e
+    // sem roubar o foco. Reaberto pelo rodape, entra na hora e recebe o foco.
+    aviso.classList.toggle("aviso-coleta--agora", pedidoPeloVisitante);
+    aviso.hidden = false;
+    if (pedidoPeloVisitante) aviso.querySelector<HTMLElement>(".aviso-titulo")?.focus();
+  }
+
+  function esconder(aviso: HTMLElement): void {
+    aviso.hidden = true;
+    quemAbriu?.focus();
+    quemAbriu = null;
+  }
+
+  function iniciar(aviso: HTMLElement): void {
+    const id = aviso.dataset.gaId ?? "";
+    const escolha = lerEscolha();
+
+    if (escolha === "aceito") ligarGA(id);
+    else if (escolha === "recusado") w[`ga-disable-${id}`] = true;
+    else mostrar(aviso, false);
+
+    aviso.addEventListener("click", (evento) => {
+      const botao = (evento.target as HTMLElement).closest<HTMLButtonElement>("[data-escolha]");
+      if (!botao) return;
+      const nova = botao.dataset.escolha as Escolha;
+      gravarEscolha(nova);
+      if (nova === "aceito") ligarGA(id);
+      else desligarGA(id);
+      esconder(aviso);
+    });
+
+    document.addEventListener("click", (evento) => {
+      const gatilho = (evento.target as HTMLElement).closest<HTMLElement>("[data-abrir-aviso-coleta]");
+      if (!gatilho) return;
+      evento.preventDefault();
+      quemAbriu = gatilho;
+      mostrar(aviso, true);
+    });
+  }
+
+  const aviso = document.getElementById("aviso-coleta");
+  if (aviso) iniciar(aviso);
+</script>
+
+<style>
+  .aviso-coleta {
+    position: fixed;
+    /* Acima do cabecalho fixo, abaixo de qualquer sobreposicao de tela cheia. */
+    z-index: calc(var(--z-overlay) - 1);
+    left: var(--space-4);
+    bottom: var(--space-4);
+    width: min(26rem, calc(100vw - 2 * var(--space-4)));
+    max-height: calc(100dvh - 2 * var(--space-4));
+    overflow-y: auto;
+    padding: var(--space-5);
+    background: var(--surface-2);
+    color: var(--white);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    font-size: var(--fs-sm);
+    line-height: 1.5;
+    animation: aviso-entra var(--dur-med) var(--ease-out) 0.8s both;
+  }
+  .aviso-coleta[hidden] { display: none; }
+
+  /* A visibilidade entra na animacao da primeira visita para o aviso nao ficar
+     clicavel e invisivel durante o atraso inicial. */
+  @keyframes aviso-entra {
+    from { opacity: 0; transform: translateY(12px); visibility: hidden; }
+    to { opacity: 1; transform: none; visibility: visible; }
+  }
+
+  /* Reaberto pelo rodape: sem atraso e SEM mexer na visibilidade. O titulo
+     recebe o foco no mesmo instante, e o navegador ignora foco em elemento com
+     visibility: hidden, que e como a animacao acima comeca. */
+  .aviso-coleta--agora { animation: aviso-entra-agora var(--dur-fast) var(--ease-out) both; }
+  @keyframes aviso-entra-agora {
+    from { opacity: 0; transform: translateY(8px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .aviso-coleta,
+    .aviso-coleta--agora { animation: none; }
+  }
+
+  /* Os titulos do site sao Barlow em caixa alta. Aqui e um aviso, nao uma
+     secao: vai na fonte do texto e em caixa normal, para ler como mensagem. */
+  .aviso-titulo {
+    font-family: var(--font-sans);
+    font-size: var(--fs-base);
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+    margin-bottom: var(--space-2);
+  }
+  .aviso-titulo:focus { outline: none; }
+  .aviso-titulo:focus-visible { outline: 2px solid var(--red-400); outline-offset: 4px; }
+
+  .aviso-texto { margin: 0; color: rgba(255, 255, 255, 0.8); }
+  .aviso-texto a { color: var(--white); text-decoration: underline; text-underline-offset: 2px; }
+
+  .aviso-detalhes { margin-top: var(--space-3); }
+  .aviso-detalhes summary {
+    cursor: pointer;
+    padding-block: var(--space-1);
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+  }
+  .aviso-detalhes summary:hover { color: var(--white); }
+  .aviso-detalhes dl { margin: var(--space-2) 0 0; }
+  .aviso-detalhes dt { margin-top: var(--space-2); font-weight: 600; }
+  .aviso-detalhes dd { margin: 0; color: rgba(255, 255, 255, 0.72); }
+
+  .aviso-acoes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3);
+    margin-top: var(--space-4);
+  }
+  .aviso-botao {
+    min-height: 44px;
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: var(--white);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background var(--dur-fast), border-color var(--dur-fast);
+  }
+  .aviso-botao:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--white); }
+  .aviso-botao:focus-visible { outline: 2px solid var(--red-400); outline-offset: 2px; }
+
+  /* No celular vira uma faixa no pe da tela, respeitando a barra do sistema. */
+  @media (max-width: 480px) {
+    .aviso-coleta {
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: auto;
+      max-height: 85dvh;
+      border-radius: var(--radius-md) var(--radius-md) 0 0;
+      padding-bottom: calc(var(--space-5) + env(safe-area-inset-bottom));
+    }
+  }
+</style>

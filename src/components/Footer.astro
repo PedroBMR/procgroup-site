@@ -3,6 +3,7 @@ import { getMainNav } from "../data/nav";
 import { MAPS_URL } from "../data/contact";
 import Logo from "./Logo.astro";
 import { getLangFromUrl, useTranslations, localizePath } from "../i18n/utils";
+import { googleAnalytics } from "../data/medicao";
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang).footer;
@@ -71,6 +72,12 @@ const year = new Date().getFullYear();
     <p>&copy; {year} Proc Group. {t.rights}</p>
     <div class="footer-legal">
       <a href={localizePath("/politica-de-privacidade", lang)}>{t.privacy}</a>
+      {/* Reabre o aviso de coleta. E botao e nao link porque faz uma acao na
+          pagina em vez de navegar. E o caminho para retirar o aceite que a
+          politica promete, e a ANPD pede que ele seja direto e facil. */}
+      {googleAnalytics.ativo && (
+        <button type="button" class="footer-preferencias" data-abrir-aviso-coleta>{t.preferencias}</button>
+      )}
       <span class="legal-note">{t.lgpdNote}</span>
       <span class="legal-note">{t.staticNote}</span>
     </div>
@@ -121,6 +128,17 @@ const year = new Date().getFullYear();
   /* 21px de alto reprovava o mínimo de 24x24; o padding sobe para 29 sem
      mexer na linha, que já tem folga no rodapé. */
   .footer-legal a { display: inline-block; padding-block: var(--space-1); }
+  /* Veste o botao de link, igual ao da politica ao lado. */
+  .footer-preferencias {
+    display: inline-block;
+    padding: var(--space-1) 0;
+    background: none;
+    border: 0;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+  }
+  .footer-preferencias:hover { color: var(--white); }
   .legal-note { color: rgba(255,255,255,0.5); }
 
   /* Aparece apenas abaixo de 780px — ver o comentário no markup. */

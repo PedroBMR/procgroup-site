@@ -33,7 +33,7 @@ const PT: BlocoPolitica[] = [
   { tipo: "h4", texto: "Nossas Políticas" },
   { tipo: "p", texto: "Todas as informações pessoais recolhidas serão utilizadas para tornar sua visita em nosso site agradável e segura. A PROC GROUP garante a confidencialidade dos dados pessoais coletados, na forma da Lei Geral de Proteção de Dados (Lei 13.709/2018 – “LGPD”), observando:" },
   { tipo: "ul", itens: ["Confirmação que realizamos o tratamento dos seus dados pessoais;", "Acesso ao conteúdo de seus dados pessoais;", "Solicitação de correção de dados pessoais desatualizados ou incompletos;", "Solicitação de eliminação, bloqueio ou modo anônimo dos dados pessoais considerados desnecessários ou em desconformidade com a LGPD;", "Solicitação de eliminação dos dados pessoais tratados com base no seu consentimento, exceto nas hipóteses de conservação de dados pessoais previstas na LGPD;", "Solicitação de informações a respeito de com quem seus dados pessoais são compartilhados;", "Solicitação de informações sobre a alternativa de seu não consentimento e as consequências, prejuízos e limitações de acesso;", "Cancelamento de sua autorização para o tratamento dos seus dados pessoais, quando houverem tratamentos realizados com base no seu consentimento;", "Manifestação de oposição a tratamento de informações que viole a LGPD;"] },
-  { tipo: "p", texto: "Não compartilhamos suas informações, histórico de navegação e preferências com terceiros." },
+  { tipo: "p", texto: "Não vendemos suas informações pessoais. Dados de navegação são compartilhados somente com as ferramentas de medição descritas na seção “Medição de audiência”, e apenas nos termos descritos nela." },
   { tipo: "p", texto: "Ao acessar o site da PROC GROUP e suas páginas, fica acordado sua aceitação sobre a presente política de privacidade em todos seus termos. Recomendamos que consulte esta página com regularidade para estar sempre atualizado sobre os últimos ajustes." },
   { tipo: "h4", texto: "Informações Coletadas" },
   { tipo: "p", texto: "Informações que poderão ser coletadas, armazenadas e utilizadas para que possamos lhe oferecer os melhores conteúdos, ofertas e comunicações:" },
@@ -50,14 +50,16 @@ const PT: BlocoPolitica[] = [
   { tipo: "h4", texto: "Nossos Anúncios e Campanhas" },
   { tipo: "p", texto: "Utilizamos informações contidas nos anúncios (como IP, ISP e navegador) para análise de tráfego. Você pode desligar os cookies nas opções do seu navegador ou em ferramentas de antivírus, ciente de que isso pode afetar a interação com nosso site e o acesso a áreas restritas." },
   { tipo: "h4", texto: "Cookies" },
-  { tipo: "p", texto: "Comentários: Ao deixar um comentário, você pode optar por salvar seu nome e e-mail em cookies para sua comodidade. Estes duram um ano." },
-  { tipo: "p", texto: "Login: Se você visitar nossa página de login, um cookie temporário será criado para testar a compatibilidade do navegador (sem dados pessoais). Ao logar, cookies de acesso são criados e duram de dois dias a duas semanas (se selecionado “Lembrar-me”)." },
-  { tipo: "p", texto: "Edição: Se editar ou publicar um conteúdo, um cookie adicional (apenas ID do post) será salvo por 24 horas." },
+  { tipo: "p", texto: "Sem o seu aceite, este site não grava cookies. Ele guarda no seu navegador somente preferências de funcionamento, como a sua escolha sobre o aviso de coleta, para não perguntar de novo a cada página. Esses registros não são cookies, não saem do seu aparelho e servem apenas para o site funcionar como você escolheu." },
+  { tipo: "p", texto: "Se você aceitar o aviso de coleta, o Google Analytics grava os cookies _ga e _ga_8G2YCBFVJ3, válidos por até 2 anos, para distinguir visitantes e medir o uso do site. Se você recusar, nenhum cookie é gravado." },
+  { tipo: "p", texto: "Você pode mudar a sua escolha a qualquer momento pelo link “Preferências de coleta”, no rodapé de todas as páginas. Ao retirar o aceite, os cookies do Google Analytics são apagados deste navegador. Também é possível bloquear ou apagar cookies nas configurações do seu navegador." },
   { tipo: "h4", texto: "Dúvidas Gerais" },
   { tipo: "p", texto: "Em caso de dúvidas após a leitura desta Política, por gentileza entre em contato com nossa equipe através do telefone (46) 3224-3532 ou envie um e-mail para comercial@procgroup.com.br." },
   { tipo: "p", texto: "Consideramos que ao navegar no site da PROC GROUP você estará de acordo com os termos apresentados." },
   { tipo: "h4", texto: "Medição de audiência" },
   { tipo: "p", texto: "Utilizamos a ferramenta Metricool para medir a audiência deste site. Quando você acessa uma página, seu navegador solicita uma imagem hospedada nos servidores da Metricool, e esse pedido registra a visita. Nesse processo são tratados o endereço IP, o tipo de navegador e a página de origem, com a finalidade de entender o volume e a origem do tráfego do site. Não são utilizados cookies e você não é identificado individualmente. A Metricool atua como operadora dos dados e os trata conforme a política de privacidade dela. Para exercer seus direitos como titular, utilize os canais de contato informados nesta política." },
+  { tipo: "p", texto: "Com o seu aceite, usamos também o Google Analytics, serviço do Google, para entender como o site é usado: páginas vistas, tempo de visita, origem do acesso e retorno de visitantes. A base legal é o seu consentimento (art. 7º, I, da LGPD). Sem ele, o Google Analytics não é carregado, e você pode retirá-lo a qualquer momento pelo link “Preferências de coleta”, no rodapé." },
+  { tipo: "p", texto: "Os dados do Google Analytics são tratados pelo Google conforme a política de privacidade dele, inclusive em servidores fora do Brasil. A coleta é configurada sem recursos de publicidade e sem os sinais do Google, que cruzam dados entre dispositivos. Os dados em nível de visita ficam retidos pelo prazo configurado na ferramenta, de no máximo 14 meses; depois disso, restam apenas relatórios agregados." },
 ];
 
 const EN: BlocoPolitica[] = [
@@ -88,7 +90,7 @@ const EN: BlocoPolitica[] = [
       "Object to any processing of information that breaches the LGPD;",
     ],
   },
-  { tipo: "p", texto: "We do not share your information, browsing history or preferences with third parties." },
+  { tipo: "p", texto: "We do not sell your personal information. Browsing data is shared only with the measurement tools described in the “Audience measurement” section, and only on the terms described there." },
   {
     tipo: "p",
     texto:
@@ -173,17 +175,17 @@ const EN: BlocoPolitica[] = [
   {
     tipo: "p",
     texto:
-      "Comments: when leaving a comment, you may choose to save your name and e-mail in cookies for your convenience. These last one year.",
+      "Without your consent, this site does not set cookies. It stores in your browser only functional preferences, such as your choice on the data collection notice, so it does not ask again on every page. These records are not cookies, do not leave your device and serve only to make the site work as you chose.",
   },
   {
     tipo: "p",
     texto:
-      "Login: if you visit our login page, a temporary cookie is created to test browser compatibility (with no personal data). When you log in, access cookies are created and last from two days to two weeks (if “Remember me” is selected).",
+      "If you accept the data collection notice, Google Analytics sets the cookies _ga and _ga_8G2YCBFVJ3, valid for up to 2 years, to distinguish visitors and measure how the site is used. If you decline, no cookie is set.",
   },
   {
     tipo: "p",
     texto:
-      "Editing: if you edit or publish content, an additional cookie (the post ID only) is stored for 24 hours.",
+      "You can change your choice at any time through the “Data collection preferences” link in the footer of every page. When you withdraw consent, the Google Analytics cookies are deleted from this browser. You can also block or delete cookies in your browser settings.",
   },
 
   { tipo: "h4", texto: "General Questions" },
@@ -198,6 +200,8 @@ const EN: BlocoPolitica[] = [
   },
   { tipo: "h4", texto: "Audience measurement" },
   { tipo: "p", texto: "We use Metricool to measure this website’s audience. When you open a page, your browser requests an image hosted on Metricool servers, and that request records the visit. The IP address, browser type and referring page are processed, in order to understand the volume and origin of the site traffic. No cookies are used and you are not identified individually. Metricool acts as a data processor and handles the data under its own privacy policy. To exercise your rights as a data subject, use the contact channels listed in this policy." },
+  { tipo: "p", texto: "With your consent, we also use Google Analytics, a Google service, to understand how the site is used: pages viewed, visit duration, traffic source and returning visitors. The legal basis is your consent (art. 7, I, of the LGPD). Without it, Google Analytics is not loaded, and you can withdraw it at any time through the “Data collection preferences” link in the footer." },
+  { tipo: "p", texto: "Google Analytics data is processed by Google under its own privacy policy, including on servers outside Brazil. Collection is configured without advertising features and without Google signals, which combine data across devices. Visit-level data is kept for the period set in the tool, at most 14 months; after that, only aggregated reports remain." },
 ];
 
 const ES: BlocoPolitica[] = [
@@ -228,7 +232,7 @@ const ES: BlocoPolitica[] = [
       "Manifestación de oposición a cualquier tratamiento de información que vulnere la LGPD;",
     ],
   },
-  { tipo: "p", texto: "No compartimos su información, historial de navegación ni preferencias con terceros." },
+  { tipo: "p", texto: "No vendemos su información personal. Los datos de navegación se comparten únicamente con las herramientas de medición descritas en la sección “Medición de audiencia”, y solo en los términos descritos en ella." },
   {
     tipo: "p",
     texto:
@@ -313,17 +317,17 @@ const ES: BlocoPolitica[] = [
   {
     tipo: "p",
     texto:
-      "Comentarios: al dejar un comentario, puede optar por guardar su nombre y correo electrónico en cookies para su comodidad. Estas duran un año.",
+      "Sin su consentimiento, este sitio no guarda cookies. Solo guarda en su navegador preferencias de funcionamiento, como su elección sobre el aviso de recogida de datos, para no volver a preguntar en cada página. Estos registros no son cookies, no salen de su dispositivo y sirven únicamente para que el sitio funcione como usted eligió.",
   },
   {
     tipo: "p",
     texto:
-      "Inicio de sesión: si visita nuestra página de inicio de sesión, se creará una cookie temporal para comprobar la compatibilidad del navegador (sin datos personales). Al iniciar sesión, se crean cookies de acceso que duran de dos días a dos semanas (si se selecciona “Recordarme”).",
+      "Si acepta el aviso de recogida de datos, Google Analytics guarda las cookies _ga y _ga_8G2YCBFVJ3, válidas hasta 2 años, para distinguir visitantes y medir el uso del sitio. Si lo rechaza, no se guarda ninguna cookie.",
   },
   {
     tipo: "p",
     texto:
-      "Edición: si edita o publica un contenido, se guardará una cookie adicional (solo el ID de la publicación) durante 24 horas.",
+      "Puede cambiar su elección en cualquier momento mediante el enlace “Preferencias de recogida de datos”, en el pie de todas las páginas. Al retirar el consentimiento, las cookies de Google Analytics se borran de este navegador. También puede bloquear o borrar cookies en la configuración de su navegador.",
   },
 
   { tipo: "h4", texto: "Dudas Generales" },
@@ -337,8 +341,10 @@ const ES: BlocoPolitica[] = [
     texto: "Consideramos que al navegar por el sitio de PROC GROUP usted acepta los términos presentados.",
   },
   { tipo: "h4", texto: "Medición de audiencia" },
-  { tipo: "p", texto: "Utilizamos la herramienta Metricool para medir la audiencia de este sitio. Cuando accedes a una página, tu navegador solicita una imagen alojada en los servidores de Metricool, y esa solicitud registra la visita. En ese proceso se tratan la dirección IP, el tipo de navegador y la página de origen, con la finalidad de entender el volumen y el origen del tráfico del sitio. No se utilizan cookies y no se te identifica individualmente. Metricool actúa como operadora de los datos y los trata conforme a su propia política de privacidad. Para ejercer tus derechos como titular, utiliza los canales de contacto indicados en esta política." },
+  { tipo: "p", texto: "Utilizamos la herramienta Metricool para medir la audiencia de este sitio. Cuando usted accede a una página, su navegador solicita una imagen alojada en los servidores de Metricool, y esa solicitud registra la visita. En ese proceso se tratan la dirección IP, el tipo de navegador y la página de origen, con la finalidad de entender el volumen y el origen del tráfico del sitio. No se utilizan cookies y no se le identifica individualmente. Metricool actúa como operadora de los datos y los trata conforme a su propia política de privacidad. Para ejercer sus derechos como titular, utilice los canales de contacto indicados en esta política." },
+  { tipo: "p", texto: "Con su consentimiento, también usamos Google Analytics, un servicio de Google, para entender cómo se usa el sitio: páginas vistas, duración de la visita, origen del acceso y visitantes que regresan. La base legal es su consentimiento (art. 7, I, de la LGPD). Sin él, Google Analytics no se carga, y usted puede retirarlo en cualquier momento mediante el enlace “Preferencias de recogida de datos”, en el pie de página." },
+  { tipo: "p", texto: "Los datos de Google Analytics los trata Google conforme a su propia política de privacidad, incluso en servidores fuera de Brasil. La recogida está configurada sin funciones de publicidad y sin las señales de Google, que cruzan datos entre dispositivos. Los datos a nivel de visita se conservan durante el plazo configurado en la herramienta, de como máximo 14 meses; después, solo quedan informes agregados." },
 ];
 
-/** Sem entrada para `pt`: lá o texto vem do WordPress, que é a fonte canônica. */
+/** As três versões moram aqui desde 2026-09-25; a portuguesa é a canônica (ver o topo). */
 export const politicaTraduzida: Record<Locale, BlocoPolitica[]> = { pt: PT, en: EN, es: ES };
