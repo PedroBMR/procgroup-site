@@ -3,12 +3,14 @@
 //
 // Foi o seletor de publico entre 2026-08-26 e 2026-08-27, quando cidade e
 // governo sairam para um site proprio (decisao do CEO). Sem dois lados para
-// escolher, nao ha o que selecionar — a home assume a raiz.
+// escolher, nao ha o que selecionar: a home assume a raiz.
 //
-// A abertura e um corte de varredura de 700ms (Abertura.astro). Substituiu a
-// nuvem de pontos que montava a marca em 3,1s, reprovada em 2026-09-17.
+// A abertura (Abertura.astro), o corte de varredura de 700ms que substituiu a
+// nuvem de pontos reprovada em 2026-09-17, mora dentro do Home.astro desde
+// 2026-09-28. Antes ela era chamada aqui, ao lado do <Home />, e por isso saia
+// antes do <html>, o que esvaziava o <head> das tres homes. Nada de markup
+// solto aqui: tudo o que a pagina desenha tem que passar pelo BaseLayout.
 import Home from "../../components/paginas/Home.astro";
-import Abertura from "../../components/Abertura.astro";
 import { defaultLocale, type Locale } from "../../i18n/config";
 
 export function getStaticPaths() {
@@ -18,5 +20,4 @@ export function getStaticPaths() {
 const lang = (Astro.params.lang as Locale) || defaultLocale;
 ---
 
-<Abertura />
 <Home />

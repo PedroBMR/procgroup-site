@@ -69,6 +69,15 @@ jobs:
           test -f dist/sitemap-index.xml || { echo "sitemap nao foi gerado"; exit 1; }
           test -f dist/.htaccess || { echo "o .htaccess nao foi copiado para dist"; exit 1; }
           if grep -q noindex dist/index.html; then echo "a home saiu com noindex"; exit 1; fi
+          # Nada pode vir antes do <html>. Em 2026-09-28 a abertura da home saia
+          # antes dele, e o leitor de HTML fechava o <head> vazio: title,
+          # canonical, hreflang e a verificacao do Google iam parar no body, e o
+          # Search Console recusou a verificacao. As paginas de redirecionamento
+          # do Astro nao tem <html> por natureza e ficam de fora.
+          for f in $(find dist -name '*.html'); do
+            grep -q 'http-equiv="refresh"' "$f" && continue
+            head -c 40 "$f" | grep -qi '^<!doctype html><html' || { echo "$f: markup antes do <html>"; exit 1; }
+          done
           echo "paginas: $(find dist -name *.html | wc -l)"
 
       - name: Instalar o lftp

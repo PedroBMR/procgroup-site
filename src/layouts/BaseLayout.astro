@@ -209,6 +209,13 @@ const schemaList = Array.isArray(schema) ? schema : schema ? [schema] : [];
     {schemaList.map((s) => <script type="application/ld+json" set:html={ldjson(s)} />)}
   </head>
   <body>
+    {/* Sobreposicao de tela cheia que a pagina queira mostrar antes de tudo, como
+        a abertura da home. Tem que entrar AQUI, dentro do body. Ate 2026-09-28 a
+        abertura era escrita fora do layout, antes do <html>: o leitor de HTML via
+        um <div> antes do <head>, fechava o <head> vazio e jogava title,
+        canonical, hreflang e a verificacao do Google para dentro do body. Foi
+        isso que fez o Search Console recusar a verificacao. */}
+    <slot name="abertura" />
     {/* Pixel de medicao de audiencia. Desligado ate a Politica de Privacidade
         citar a ferramenta: ver src/data/medicao.ts, que explica o porque e e o
         unico lugar onde se liga. */}
