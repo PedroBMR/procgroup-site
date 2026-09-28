@@ -16,6 +16,7 @@ import "../styles/fonts.css";
 import barlow800Url from "../assets/fonts/barlow-condensed-800.woff2?url";
 import spaceGroteskUrl from "../assets/fonts/space-grotesk-var.woff2?url";
 import { metricool, pixelMetricool } from "../data/medicao";
+import { verificacaoGoogle } from "../data/buscadores";
 
 interface Props {
   title: string;
@@ -178,6 +179,9 @@ const schemaList = Array.isArray(schema) ? schema : schema ? [schema] : [];
 
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
+    {/* Prova ao Google Search Console de que o site é da Proc. Não remover:
+        ver src/data/buscadores.ts. */}
+    <meta name="google-site-verification" content={verificacaoGoogle} />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={siteName} />
