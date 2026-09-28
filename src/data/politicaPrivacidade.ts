@@ -1,4 +1,10 @@
 import type { Locale } from "../i18n/config";
+import { googleAnalytics } from "./medicao";
+
+// O segundo cookie do GA leva o ID da propriedade. Calculado, e nao escrito a
+// mao, para a politica nao afirmar um nome de cookie errado se o ID mudar: o
+// aviso de coleta faz a mesma conta (AvisoColeta.astro).
+const COOKIE_GA = `_ga_${googleAnalytics.id.replace(/^G-/, "")}`;
 
 /**
  * Politica de Privacidade: as tres versoes, todas locais.
@@ -51,7 +57,7 @@ const PT: BlocoPolitica[] = [
   { tipo: "p", texto: "Utilizamos informações contidas nos anúncios (como IP, ISP e navegador) para análise de tráfego. Você pode desligar os cookies nas opções do seu navegador ou em ferramentas de antivírus, ciente de que isso pode afetar a interação com nosso site e o acesso a áreas restritas." },
   { tipo: "h4", texto: "Cookies" },
   { tipo: "p", texto: "Sem o seu aceite, este site não grava cookies. Ele guarda no seu navegador somente preferências de funcionamento, como a sua escolha sobre o aviso de coleta, para não perguntar de novo a cada página. Esses registros não são cookies, não saem do seu aparelho e servem apenas para o site funcionar como você escolheu." },
-  { tipo: "p", texto: "Se você aceitar o aviso de coleta, o Google Analytics grava os cookies _ga e _ga_8G2YCBFVJ3, válidos por até 2 anos, para distinguir visitantes e medir o uso do site. Se você recusar, nenhum cookie é gravado." },
+  { tipo: "p", texto: `Se você aceitar o aviso de coleta, o Google Analytics grava os cookies _ga e ${COOKIE_GA}, válidos por até 2 anos, para distinguir visitantes e medir o uso do site. Se você recusar, nenhum cookie é gravado.` },
   { tipo: "p", texto: "Você pode mudar a sua escolha a qualquer momento pelo link “Preferências de coleta”, no rodapé de todas as páginas. Ao retirar o aceite, os cookies do Google Analytics são apagados deste navegador. Também é possível bloquear ou apagar cookies nas configurações do seu navegador." },
   { tipo: "h4", texto: "Dúvidas Gerais" },
   { tipo: "p", texto: "Em caso de dúvidas após a leitura desta Política, por gentileza entre em contato com nossa equipe através do telefone (46) 3224-3532 ou envie um e-mail para comercial@procgroup.com.br." },
@@ -180,7 +186,7 @@ const EN: BlocoPolitica[] = [
   {
     tipo: "p",
     texto:
-      "If you accept the data collection notice, Google Analytics sets the cookies _ga and _ga_8G2YCBFVJ3, valid for up to 2 years, to distinguish visitors and measure how the site is used. If you decline, no cookie is set.",
+      `If you accept the data collection notice, Google Analytics sets the cookies _ga and ${COOKIE_GA}, valid for up to 2 years, to distinguish visitors and measure how the site is used. If you decline, no cookie is set.`,
   },
   {
     tipo: "p",
@@ -322,7 +328,7 @@ const ES: BlocoPolitica[] = [
   {
     tipo: "p",
     texto:
-      "Si acepta el aviso de recogida de datos, Google Analytics guarda las cookies _ga y _ga_8G2YCBFVJ3, válidas hasta 2 años, para distinguir visitantes y medir el uso del sitio. Si lo rechaza, no se guarda ninguna cookie.",
+      `Si acepta el aviso de recogida de datos, Google Analytics guarda las cookies _ga y ${COOKIE_GA}, válidas hasta 2 años, para distinguir visitantes y medir el uso del sitio. Si lo rechaza, no se guarda ninguna cookie.`,
   },
   {
     tipo: "p",

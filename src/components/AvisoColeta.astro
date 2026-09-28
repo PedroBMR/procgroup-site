@@ -185,9 +185,17 @@ const cookieDaPropriedade = `_ga_${googleAnalytics.id.replace(/^G-/, "")}`;
     const id = aviso.dataset.gaId ?? "";
     const escolha = lerEscolha();
 
-    if (escolha === "aceito") ligarGA(id);
-    else if (escolha === "recusado") w[`ga-disable-${id}`] = true;
-    else mostrar(aviso, false);
+    if (escolha === "aceito") {
+      ligarGA(id);
+    } else {
+      // Sem aceite valido nao pode haver cookie do GA, e ele pode ter sobrado:
+      // a tag antiga do WordPress usava esta mesma propriedade, sem pedir
+      // nada, e o _ga vale 2 anos. Sai antes de qualquer escolha. Achado na
+      // revisao de 2026-09-28.
+      apagarCookiesGA();
+      if (escolha === "recusado") w[`ga-disable-${id}`] = true;
+      else mostrar(aviso, false);
+    }
 
     aviso.addEventListener("click", (evento) => {
       const botao = (evento.target as HTMLElement).closest<HTMLButtonElement>("[data-escolha]");
