@@ -158,16 +158,18 @@ const schemaList = Array.isArray(schema) ? schema : schema ? [schema] : [];
         below to show them. If JS never runs, force everything visible so the
         page is never left blank. */}
     <noscript><style>[data-reveal]{opacity:1 !important;transform:none !important;}</style></noscript>
-    {/* Tres formatos de proposito. O .ico e o unico que todo navegador aceita,
-        e e o que o navegador busca sozinho em /favicon.ico quando nao entende o
-        resto. O PNG cobre aba e atalho. O WebP fica por ultimo: e o mais leve,
-        mas o Safari nao o aceita como icone, e ate 2026-09-25 era o unico
-        declarado, o que deixava a Proc sem icone em parte dos navegadores. O
-        apple-touch-icon vai sobre o navy porque o iOS pinta transparencia de
-        preto. */}
+    {/* Todos os icones vao com o navy de fundo, nao com transparencia. O mark
+        da Proc e BRANCO com um detalhe vermelho: sobre fundo claro ele some, e
+        foi o que aconteceu no resultado do Google em 2026-09-28, que desenha o
+        favicon dentro de um circulo branco. O mesmo valia para a aba em tema
+        claro e para o iOS, que pinta transparencia de preto.
+
+        O .ico e o unico que todo navegador aceita, e e o que o buscador e o
+        navegador pedem sozinhos em /favicon.ico. O WebP transparente foi
+        retirado daqui de proposito: ele continua sendo a marca do site, no
+        cabecalho, onde o fundo e escuro. */}
     <link rel="icon" href={withBase("/favicon.ico")} sizes="any" />
     <link rel="icon" type="image/png" sizes="32x32" href={withBase("/favicon-32.png")} />
-    <link rel="icon" type="image/webp" href={withBase("/brand/mark-red.webp")} />
     <link rel="apple-touch-icon" sizes="180x180" href={withBase("/apple-touch-icon.png")} />
     <link rel="canonical" href={canonical} />
     {alternates.map((a) => <link rel="alternate" hreflang={a.hrefLang} href={a.href} />)}
