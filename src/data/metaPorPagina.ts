@@ -23,7 +23,7 @@ const meta: Record<Locale, Record<ChaveMeta, Meta>> = {
     home: {
       title: "Tecnologia para Empresas e Indústrias",
       description:
-        "Controle de acesso sem contato, videomonitoramento com IA, inspeção visual e infraestrutura de TI gerenciada, integrados aos sistemas que sua empresa já usa.",
+        "Controle de acesso sem contato, câmeras com IA, visão computacional na indústria e TI gerenciada, integrados aos sistemas que sua empresa já usa.",
     },
     empresa: {
       title: "A Proc para Empresas e Indústrias",
@@ -45,7 +45,7 @@ const meta: Record<Locale, Record<ChaveMeta, Meta>> = {
     home: {
       title: "Technology for Business and Industry",
       description:
-        "Contactless access control, AI video surveillance, visual inspection and managed IT infrastructure, integrated with the systems your company already uses.",
+        "Contactless access control, AI cameras, computer vision for industry and managed IT, integrated with the systems your company already uses.",
     },
     empresa: {
       title: "Proc for Business and Industry",
@@ -67,7 +67,7 @@ const meta: Record<Locale, Record<ChaveMeta, Meta>> = {
     home: {
       title: "Tecnología para Empresas e Industrias",
       description:
-        "Control de acceso sin contacto, videovigilancia con IA, inspección visual e infraestructura de TI gestionada, integrados a los sistemas que tu empresa ya usa.",
+        "Control de acceso sin contacto, cámaras con IA, visión artificial para la industria y TI gestionada, integrados a los sistemas que tu empresa ya usa.",
     },
     empresa: {
       title: "Proc para Empresas e Industrias",

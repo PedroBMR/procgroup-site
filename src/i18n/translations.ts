@@ -217,9 +217,13 @@ export const translations = {
       otherTitle: "Explore outras soluções da Proc",
       pages: {
         "ia-industrial": {
-          metaTitle: "IA Industrial: Visão Computacional",
+          // Titulo e descricao com os termos que as pessoas buscam (levantamento
+          // de 2026-09-28). "Visao computacional" abre o titulo a pedido do
+          // comercial; "IA na industria" tem muito mais procura que "IA
+          // Industrial", que e o nome da unidade e quase ninguem digita.
+          metaTitle: "Visão Computacional e IA na Indústria",
           metaDescription:
-            "Inspeção visual automatizada, controle de qualidade, contagem e rastreabilidade com Edge AI para reduzir perdas e aumentar a eficiência de linhas de produção.",
+            "Visão computacional na linha de produção: inspeção de qualidade, contagem de peças e rastreabilidade com IA embarcada (Edge AI), para reduzir perdas.",
           heroTitle: "IA Industrial para aumentar a produtividade, a inspeção de qualidade e reduzir perdas na produção.",
           heroLead:
             "Automatize inspeções, controle de qualidade, contagem de peças e rastreabilidade com soluções de Visão Computacional com IA, que identificam falhas em tempo real e tornam sua produção mais eficiente.",
@@ -246,9 +250,14 @@ export const translations = {
         "ambientes-inteligentes": {
           // "Seguranca Corporativa" era o nome antigo da unidade, aposentado em
           // 2026-08-20. Nome morto nao volta nem como palavra de titulo.
-          metaTitle: "Ambientes Inteligentes: Acesso e Segurança",
+          // "Ambientes Inteligentes" ninguem busca; "controle de acesso para
+          // empresas" e "camera com inteligencia artificial" sim (levantamento
+          // de 2026-09-28). A tecnica biometrica nao e nomeada, pela redacao
+          // branda de 2026-09-17, mesmo sendo o termo com mais procura. As
+          // cameras alertam a equipe do cliente: fornece != opera.
+          metaTitle: "Controle de Acesso e Câmeras com IA",
           metaDescription:
-            "Videomonitoramento com IA, controle e liberação de acesso e gestão de alarmes para proteger patrimônio, pessoas e operações.",
+            "Controle de acesso sem contato para empresas e condomínios, e câmeras com IA e visão computacional que alertam sua equipe no primeiro sinal de risco.",
           // Era "Protegemos pessoas, patrimonios e operacoes". A Proc fornece a
           // tecnologia; quem protege e quem vigia e o cliente (fornece != opera).
           heroTitle: "Tecnologia para proteger pessoas, patrimônio e operações com Inteligência Artificial.",
@@ -271,9 +280,13 @@ export const translations = {
           ],
         },
         "infraestrutura-de-ti": {
-          metaTitle: "Infraestrutura de TI: Alta Disponibilidade",
+          // "Infraestrutura de TI para empresas", "backup em nuvem para
+          // empresas" e "suporte de TI para empresas" tem procura (levantamento
+          // de 2026-09-28). Na TI gerenciada a equipe da Proc acompanha o
+          // ambiente de verdade: e a excecao legitima a fornece != opera.
+          metaTitle: "Infraestrutura de TI para Empresas",
           metaDescription:
-            "Cloud, backup, NOC, firewall, service desk e governança de infraestrutura para empresas que precisam de continuidade operacional e performance em escala.",
+            "Cloud em data center próprio e Oracle Cloud, backup em nuvem, firewall, NOC e suporte de TI 24x7 para empresas que não podem parar.",
           heroTitle: "Infraestrutura preparada para operações críticas que não podem parar.",
           heroLead:
             "Garantimos disponibilidade, segurança e alta performance da sua infraestrutura de TI com monitoramento e suporte técnico 24×7, serviços especializados de cloud, backup, firewall e antivírus corporativos, segurança da informação e serviços gerenciados.",
@@ -498,9 +511,9 @@ export const translations = {
       otherTitle: "Explore other Proc solutions",
       pages: {
         "ia-industrial": {
-          metaTitle: "Industrial AI: Computer Vision",
+          metaTitle: "Computer Vision and AI for Industry",
           metaDescription:
-            "Automated visual inspection, quality control, counting and traceability with Edge AI to reduce losses and boost production-line efficiency.",
+            "Computer vision on the production line: quality inspection, part counting and traceability with embedded AI (Edge AI), to reduce losses.",
           heroTitle: "Industrial AI to boost productivity, quality inspection and cut production losses.",
           heroLead:
             "Automate inspections, quality control, part counting and traceability with AI computer-vision solutions that spot defects in real time and make your production more efficient.",
@@ -525,9 +538,9 @@ export const translations = {
           ],
         },
         "ambientes-inteligentes": {
-          metaTitle: "Smart Environments: Access and Security",
+          metaTitle: "Access Control and AI Cameras",
           metaDescription:
-            "AI video surveillance, access control and release and alarm management to protect assets, people and operations.",
+            "Contactless access control for companies and condominiums, and AI cameras with computer vision that alert your team at the first sign of risk.",
           heroTitle: "Technology to protect people, assets and operations with Artificial Intelligence.",
           heroLead:
             "Bring intelligent AI video surveillance, access control and release, alerted perimeter monitoring and analytics together on a single platform to raise the bar for your company's access control, security and efficiency.",
@@ -548,9 +561,9 @@ export const translations = {
           ],
         },
         "infraestrutura-de-ti": {
-          metaTitle: "IT Infrastructure: High Availability",
+          metaTitle: "IT Infrastructure for Business",
           metaDescription:
-            "Cloud, backup, NOC, firewall, service desk and infrastructure governance for companies that need operational continuity and performance at scale.",
+            "Cloud in our own data center and Oracle Cloud, cloud backup, firewall, NOC and 24x7 IT support for companies that cannot stop.",
           heroTitle: "Infrastructure built for mission-critical operations that can't stop.",
           heroLead:
             "We ensure the availability, security and high performance of your IT infrastructure with 24×7 monitoring and technical support, specialized cloud, backup, firewall and corporate antivirus services, information security and managed services.",
@@ -772,9 +785,9 @@ export const translations = {
       otherTitle: "Explora otras soluciones de Proc",
       pages: {
         "ia-industrial": {
-          metaTitle: "IA Industrial: Visión Artificial",
+          metaTitle: "Visión Artificial e IA para la Industria",
           metaDescription:
-            "Inspección visual, control de calidad, conteo y trazabilidad con Edge AI para reducir pérdidas y aumentar la eficiencia de las líneas de producción.",
+            "Visión artificial en la línea de producción: inspección de calidad, conteo de piezas y trazabilidad con IA embarcada (Edge AI), para reducir pérdidas.",
           heroTitle: "IA Industrial para aumentar la productividad, la inspección de calidad y reducir pérdidas en la producción.",
           heroLead:
             "Automatiza inspecciones, control de calidad, conteo de piezas y trazabilidad con soluciones de visión artificial con IA que identifican fallas en tiempo real y hacen tu producción más eficiente.",
@@ -799,9 +812,9 @@ export const translations = {
           ],
         },
         "ambientes-inteligentes": {
-          metaTitle: "Ambientes Inteligentes: Acceso y Seguridad",
+          metaTitle: "Control de Acceso y Cámaras con IA",
           metaDescription:
-            "Videovigilancia con IA, control y liberación de acceso y gestión de alarmas para proteger patrimonio, personas y operaciones.",
+            "Control de acceso sin contacto para empresas y condominios, y cámaras con IA y visión artificial que alertan a su equipo ante la primera señal de riesgo.",
           heroTitle: "Tecnología para proteger personas, patrimonio y operaciones con Inteligencia Artificial.",
           heroLead:
             "Integra videovigilancia inteligente con IA, control y liberación de acceso, monitoreo perimetral con alertas y analytics en una única plataforma, para elevar el nivel del control de acceso, la seguridad y la eficiencia de tu empresa.",
@@ -822,9 +835,9 @@ export const translations = {
           ],
         },
         "infraestrutura-de-ti": {
-          metaTitle: "Infraestructura de TI: Alta Disponibilidad",
+          metaTitle: "Infraestructura de TI para Empresas",
           metaDescription:
-            "Cloud, backup, NOC, firewall, service desk y gobernanza de infraestructura para empresas que necesitan continuidad operativa y rendimiento a escala.",
+            "Cloud en data center propio y Oracle Cloud, backup en la nube, firewall, NOC y soporte de TI 24x7 para empresas que no pueden detenerse.",
           heroTitle: "Infraestructura preparada para operaciones críticas que no pueden parar.",
           heroLead:
             "Garantizamos la disponibilidad, seguridad y alto rendimiento de tu infraestructura de TI con monitoreo y soporte técnico 24×7, servicios especializados de cloud, backup, firewall y antivirus corporativos, seguridad de la información y servicios gestionados.",

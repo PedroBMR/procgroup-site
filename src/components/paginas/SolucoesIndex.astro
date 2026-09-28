@@ -8,13 +8,20 @@ const lang = getLangFromUrl(Astro.url);
 const tr = useTranslations(lang);
 const t = tr.solutions;
 const units = getBusinessUnits(lang);
+// Título e descrição com os termos que as pessoas buscam, e não com o nome das
+// unidades, que ninguém digita. Levantamento de procura de 2026-09-28 pelo
+// autocompletar do Google; "visão computacional" entrou a pedido do comercial.
+const title = {
+  pt: "Soluções em IA, Visão Computacional e TI",
+  en: "AI, Computer Vision and IT Solutions",
+  es: "Soluciones de IA, Visión Artificial y TI" }[lang];
 const description = {
-  pt: "Conheça as unidades de negócio da Proc: Ambientes Inteligentes, Infraestrutura de TI e IA Industrial.",
-  en: "Explore Proc's business units: Smart Environments, IT Infrastructure and Industrial AI.",
-  es: "Conoce las unidades de negocio de Proc: Ambientes Inteligentes, Infraestructura de TI e IA Industrial." }[lang];
+  pt: "Controle de acesso sem contato, câmeras com IA, visão computacional na indústria e infraestrutura de TI para empresas: as três unidades de negócio da Proc.",
+  en: "Contactless access control, AI cameras, computer vision for industry and IT infrastructure for business: Proc's three business units.",
+  es: "Control de acceso sin contacto, cámaras con IA, visión artificial para la industria e infraestructura de TI para empresas: las tres unidades de negocio de Proc." }[lang];
 ---
 
-<BaseLayout title={tr.nav.solucoes} description={description}>
+<BaseLayout title={title} description={description}>
   <section class="hero-page">
     <div class="container">
       <p class="eyebrow">{t.indexEyebrow}</p>
