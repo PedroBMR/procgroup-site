@@ -24,4 +24,17 @@ export const secoes = {
    * para `/solucoes`, que é a página que responde à mesma pergunta.
    */
   cases: false,
+
+  /**
+   * Visão computacional, subpágina de Ambientes Inteligentes em
+   * /solucoes/ambientes-inteligentes/visao-computacional.
+   *
+   * Criada em 2026-09-28 a pedido do comercial, que quer a Proc encontrada por
+   * "visão computacional". Nasce DESLIGADA: é rascunho até o comercial aprovar
+   * o texto, que mora inteiro em src/data/visaoComputacional.ts.
+   *
+   * Ligar gera a página nas três URLs (conteúdo só em português, como o blog),
+   * entra no sitemap e ganha o link no topo da página de Ambientes Inteligentes.
+   */
+  visaoComputacional: false,
 } as const;

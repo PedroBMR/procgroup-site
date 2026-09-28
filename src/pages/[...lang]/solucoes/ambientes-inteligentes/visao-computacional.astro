@@ -1,0 +1,13 @@
+---
+// Rota da página de visão computacional, dentro de Ambientes Inteligentes.
+// Só gera caminho com a chave ligada em src/data/secoes.ts: enquanto o texto é
+// rascunho, a URL simplesmente não existe e nada entra no sitemap.
+import SolucaoVisaoComputacional from "../../../../components/paginas/SolucaoVisaoComputacional.astro";
+import { secoes } from "../../../../data/secoes";
+
+export function getStaticPaths() {
+  if (!secoes.visaoComputacional) return [];
+  return [{ params: { lang: undefined } }, { params: { lang: "en" } }, { params: { lang: "es" } }];
+}
+---
+<SolucaoVisaoComputacional />

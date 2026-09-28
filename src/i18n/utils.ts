@@ -50,8 +50,12 @@ export function isSingleVersionPath(path: string): boolean {
  * para o buscador, então as traduzidas não emitem nenhum e apontam canonical
  * para a versão PT — o Google indexa um post só, e o visitante segue navegando
  * no idioma que escolheu. Ver BaseLayout.
+ *
+ * A página de visão computacional entrou aqui em 2026-09-28 pelo mesmo motivo:
+ * o texto nasceu em português, para o comercial revisar, e só depois de
+ * aprovado ganha tradução. Quando ganhar, sai desta lista.
  */
-const PT_ONLY_CONTENT_PREFIXES = ["/blog"];
+const PT_ONLY_CONTENT_PREFIXES = ["/blog", "/solucoes/ambientes-inteligentes/visao-computacional"];
 
 export function isPtOnlyContentPath(path: string): boolean {
   return PT_ONLY_CONTENT_PREFIXES.some((p) => path === p || path.startsWith(`${p}/`));

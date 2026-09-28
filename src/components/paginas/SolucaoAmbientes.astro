@@ -1,10 +1,19 @@
 ---
 import BusinessUnitTemplate from "../BusinessUnitTemplate.astro";
-import { getLangFromUrl, useTranslations } from "../../i18n/utils";
+import { getLangFromUrl, useTranslations, localePath } from "../../i18n/utils";
 import { defaultLocale, type Locale } from "../../i18n/config";
+import { secoes } from "../../data/secoes";
 
 const lang = getLangFromUrl(Astro.url);
 const p = useTranslations(lang).solutions.pages["ambientes-inteligentes"];
+
+// A subpágina de visão computacional mora dentro desta unidade. Com ela ligada
+// em src/data/secoes.ts, o topo daqui ganha o segundo botão, que é também o
+// link interno de que ela precisa para o Google a encontrar.
+const rotuloVisao = { pt: "Visão computacional", en: "Computer vision", es: "Visión artificial" }[lang];
+const linkVisao = secoes.visaoComputacional
+  ? { href: localePath("/solucoes/ambientes-inteligentes/visao-computacional", lang), label: rotuloVisao }
+  : undefined;
 ---
 
 <BusinessUnitTemplate
@@ -18,4 +27,5 @@ const p = useTranslations(lang).solutions.pages["ambientes-inteligentes"];
   faqs={p.faqs}
   finalCtaTitle={p.finalCtaTitle}
   finalCtaText={p.finalCtaText}
+  linkExtra={linkVisao}
 />

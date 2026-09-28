@@ -5,7 +5,7 @@ import Button from "../components/Button.astro";
 import MediaPlaceholder from "../components/MediaPlaceholder.astro";
 import UnitIcon from "../components/UnitIcon.astro";
 import { getBusinessUnit, getBusinessUnits } from "../data/businessUnits";
-import { getSolutionRich } from "../data/solutionContent";
+import { getSolutionRich, type SolutionRich } from "../data/solutionContent";
 import { solutionMedia } from "../data/mediaBriefs";
 import { whatsappDemo } from "../data/contact";
 import { getLangFromUrl, useTranslations, localizePath } from "../i18n/utils";
@@ -28,6 +28,18 @@ interface Props {
   faqs: Faq[];
   finalCtaTitle: string;
   finalCtaText: string;
+  // Os quatro abaixo existem para páginas que moram DENTRO de uma unidade sem
+  // ser a unidade, como a de visão computacional em Ambientes Inteligentes
+  // (2026-09-28). Elas herdam cor, rótulo e "outras unidades" pelo `slug`, e
+  // trazem o próprio conteúdo. Omitidos, a página da unidade fica como era.
+  /** Conteúdo longo próprio. Omitido, vem de solutionContent pelo `slug`. */
+  rich?: SolutionRich;
+  /** Serviço declarado no schema.org. Omitido, é o nome da unidade. */
+  serviceType?: string;
+  /** Complemento do título da FAQ ("Dúvidas sobre ..."). Omitido, o nome da unidade. */
+  faqAssunto?: string;
+  /** Segundo botão no topo, para uma subpágina da unidade. */
+  linkExtra?: { href: string; label: string };
 }
 
 const {
@@ -40,7 +52,11 @@ const {
   teamDescription,
   faqs,
   finalCtaTitle,
-  finalCtaText } = Astro.props;
+  finalCtaText,
+  rich: richProprio,
+  serviceType,
+  faqAssunto,
+  linkExtra } = Astro.props;
 
 const lang = getLangFromUrl(Astro.url);
 // De que lado do site esta instancia esta montada — sai da URL, como no
@@ -53,7 +69,7 @@ const otherUnits = getBusinessUnits(lang).filter(
 
 // Conteúdo longo (recorte do comercial). Existe só em PT por enquanto; quando
 // undefined (EN/ES), a página cai no template enxuto — chips + time.
-const rich = getSolutionRich(slug, lang);
+const rich = richProprio ?? getSolutionRich(slug, lang);
 
 // Mídia do hero: imagem real quando `asset` existe, senão o placeholder com o
 // briefing. A caption vira o alt — ela já descreve a cena em cada idioma.
@@ -63,9 +79,9 @@ const schema = [
   {
     "@context": "https://schema.org",
     "@type": "Service",
-    serviceType: unit.name,
+    serviceType: serviceType ?? unit.name,
     provider: { "@type": "Organization", name: "Proc Group" },
-    description: unit.description,
+    description: serviceType ? metaDescription : unit.description,
     areaServed: "BR" },
   {
     "@context": "https://schema.org",
@@ -85,6 +101,7 @@ const schema = [
       <p class="lead">{heroLead ?? unit.description}</p>
       <div class="hero-actions">
         <Button href={whatsappDemo(lang)} variant="primary" size="lg" data-magnetic>{t.ctaDemo}</Button>
+        {linkExtra && <Button href={linkExtra.href} variant="secondary" size="lg">{linkExtra.label}</Button>}
       </div>
     </div>
   </section>
@@ -328,7 +345,7 @@ const schema = [
     <div class="container">
       <div class="section-header" data-reveal>
         <p class="eyebrow">{t.faqEyebrow}</p>
-        <h2>{t.faqTitlePrefix} {unit.name}</h2>
+        <h2>{t.faqTitlePrefix} {faqAssunto ?? unit.name}</h2>
       </div>
       <div class="faq-list">
         {faqs.map((f) => (

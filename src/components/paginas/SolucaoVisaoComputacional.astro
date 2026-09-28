@@ -1,0 +1,26 @@
+---
+// Visão computacional, dentro de Ambientes Inteligentes (2026-09-28).
+//
+// Usa o template da unidade com slug "ambientes-inteligentes": herda a cor, o
+// rótulo do topo e a vitrine das outras unidades, e traz o próprio conteúdo. O
+// texto inteiro está em src/data/visaoComputacional.ts, e só existe em
+// português; as URLs em EN e ES mostram o mesmo texto, como o blog.
+import BusinessUnitTemplate from "../BusinessUnitTemplate.astro";
+import { visaoComputacional as p } from "../../data/visaoComputacional";
+---
+
+<BusinessUnitTemplate
+  slug="ambientes-inteligentes"
+  metaTitle={p.metaTitle}
+  metaDescription={p.metaDescription}
+  heroTitle={p.heroTitle}
+  heroLead={p.heroLead}
+  solutionsHeading={p.solutionsHeading}
+  teamDescription={p.teamDescription}
+  faqs={p.faqs}
+  finalCtaTitle={p.finalCtaTitle}
+  finalCtaText={p.finalCtaText}
+  rich={p.rich}
+  serviceType={p.serviceType}
+  faqAssunto={p.faqAssunto}
+/>
