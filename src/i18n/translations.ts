@@ -17,8 +17,8 @@ export const translations = {
     },
     // Aviso de coleta (AvisoColeta.astro). O texto segue o Guia de Cookies da
     // ANPD: diz o que é coletado, por quem, que os dados saem do Brasil (art. 33
-    // da LGPD) e oferece aceitar e recusar com o mesmo peso. {cookie} vira o
-    // nome real do segundo cookie do GA, que depende do ID da propriedade.
+    // da LGPD) e oferece aceitar e recusar com o mesmo peso. O nome dos cookies
+    // fica só na política de privacidade, não no aviso.
     aviso: {
       titulo: "Coleta de dados neste site",
       texto: "Contamos as visitas sem cookies e sem identificar você. Se você aceitar, usamos também o Google Analytics, que grava cookies para entender como o site é usado. Esses dados são tratados pelo Google, inclusive em servidores fora do Brasil.",
@@ -27,7 +27,7 @@ export const translations = {
       necessarioTitulo: "Necessário, sempre ativo",
       necessarioTexto: "Guardar neste navegador a sua escolha sobre este aviso. Não é cookie e não sai do seu aparelho.",
       estatisticaTitulo: "Estatísticas, só com o seu aceite",
-      estatisticaTexto: "Google Analytics. Cookies _ga e {cookie}, válidos por até 2 anos. Mostram páginas vistas, tempo de visita e se você já esteve aqui antes.",
+      estatisticaTexto: "Google Analytics, com cookies válidos por até 2 anos. Mostram páginas vistas, tempo de visita e se você já esteve aqui antes.",
       recusar: "Recusar",
       aceitar: "Aceitar",
     },
@@ -331,7 +331,7 @@ export const translations = {
       necessarioTitulo: "Necessary, always on",
       necessarioTexto: "Storing your choice about this notice in this browser. It is not a cookie and it does not leave your device.",
       estatisticaTitulo: "Statistics, only with your consent",
-      estatisticaTexto: "Google Analytics. Cookies _ga and {cookie}, valid for up to 2 years. They show pages viewed, visit duration and whether you have been here before.",
+      estatisticaTexto: "Google Analytics, with cookies valid for up to 2 years. They show pages viewed, visit duration and whether you have been here before.",
       recusar: "Decline",
       aceitar: "Accept",
     },
@@ -608,7 +608,7 @@ export const translations = {
       necessarioTitulo: "Necesario, siempre activo",
       necessarioTexto: "Guardar en este navegador tu elección sobre este aviso. No es una cookie y no sale de tu dispositivo.",
       estatisticaTitulo: "Estadísticas, solo con tu consentimiento",
-      estatisticaTexto: "Google Analytics. Cookies _ga y {cookie}, válidas hasta 2 años. Muestran las páginas vistas, la duración de la visita y si ya estuviste aquí antes.",
+      estatisticaTexto: "Google Analytics, con cookies válidas hasta 2 años. Muestran las páginas vistas, la duración de la visita y si ya estuviste aquí antes.",
       recusar: "Rechazar",
       aceitar: "Aceptar",
     },

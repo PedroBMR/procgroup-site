@@ -25,7 +25,6 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang).aviso;
 const politica = localizePath("/politica-de-privacidade", lang);
 // O segundo cookie do GA leva o ID da propriedade sem o "G-".
-const cookieDaPropriedade = `_ga_${googleAnalytics.id.replace(/^G-/, "")}`;
 ---
 
 {googleAnalytics.ativo && (
@@ -48,7 +47,7 @@ const cookieDaPropriedade = `_ga_${googleAnalytics.id.replace(/^G-/, "")}`;
         <dt>{t.necessarioTitulo}</dt>
         <dd>{t.necessarioTexto}</dd>
         <dt>{t.estatisticaTitulo}</dt>
-        <dd>{t.estatisticaTexto.replace("{cookie}", cookieDaPropriedade)}</dd>
+        <dd>{t.estatisticaTexto}</dd>
       </dl>
     </details>
 
