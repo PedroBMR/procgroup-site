@@ -1,12 +1,21 @@
 ---
-import { getMainNav, getCtaNav, getHomeHref } from "../data/nav";
+import { getMainNav, getCtaNav, getHomeHref, type NavItem } from "../data/nav";
 import Button from "./Button.astro";
 import Logo from "./Logo.astro";
 import { getLangFromUrl, useTranslations } from "../i18n/utils";
 
+interface Props {
+  /**
+   * Menu alternativo. Omitido, vem de `getMainNav` como sempre, então o site
+   * em produção não muda. Serve ao preview da reestruturação, que precisa
+   * mostrar o menu do documento sem tocar no menu que está no ar.
+   */
+  nav?: NavItem[];
+}
+
 const lang = getLangFromUrl(Astro.url);
 const common = useTranslations(lang).common;
-const mainNav = getMainNav(lang);
+const mainNav = Astro.props.nav ?? getMainNav(lang);
 const ctaNav = getCtaNav(lang);
 const currentPath = Astro.url.pathname;
 // A raiz voltou a ser a home do site quando o lado publico saiu (2026-08-27).
@@ -69,12 +78,25 @@ const homeAria = { pt: "Proc Group, página inicial", en: "Proc Group, home", es
     <nav class="main-nav" aria-label={common.navMain}>
       <ul>
         {mainNav.map((item) => (
-          <li class:list={["nav-item", { "has-children": item.children }]}>
+          <li class:list={["nav-item", { "has-children": item.children || item.colunas, "tem-mega": item.colunas }]}>
             <a href={item.href} class:list={{ atual: itemAtivo(item) }} aria-current={ehEstaPagina(item.href) ? "page" : undefined}>
               {item.label}
-              {item.children && <svg aria-hidden="true" focusable="false" class="chev" width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>}
+              {(item.children || item.colunas) && <svg aria-hidden="true" focusable="false" class="chev" width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>}
             </a>
-            {item.children && (
+            {item.colunas ? (
+              <div class="dropdown mega">
+                {item.colunas.map((col) => (
+                  <div class="mega-col">
+                    <a href={col.href} class="mega-col-titulo" aria-current={ehEstaPagina(col.href) ? "page" : undefined}>{col.titulo}</a>
+                    <ul>
+                      {col.itens.map((sub) => (
+                        <li><a href={sub.href} class="mega-item">{sub.label}</a></li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            ) : item.children && (
               <div class="dropdown">
                 {item.children.map((child) => (
                   <a href={child.href} class="dropdown-item" aria-current={ehEstaPagina(child.href) ? "page" : undefined}>
@@ -113,7 +135,16 @@ const homeAria = { pt: "Proc Group, página inicial", en: "Proc Group, home", es
       {mainNav.map((item) => (
         <li>
           <a href={item.href} class:list={{ atual: itemAtivo(item) }} aria-current={ehEstaPagina(item.href) ? "page" : undefined}>{item.label}</a>
-          {item.children && (
+          {item.colunas ? (
+            <ul class="mobile-sub">
+              {item.colunas.map((col) => (
+                <Fragment>
+                  <li><a href={col.href} class="mobile-sub-titulo" aria-current={ehEstaPagina(col.href) ? "page" : undefined}>{col.titulo}</a></li>
+                  {col.itens.map((sub) => <li class="mobile-sub-item"><a href={sub.href}>{sub.label}</a></li>)}
+                </Fragment>
+              ))}
+            </ul>
+          ) : item.children && (
             <ul class="mobile-sub">
               {item.children.map((child) => (
                 <li><a href={child.href} aria-current={ehEstaPagina(child.href) ? "page" : undefined}>{child.label}</a></li>
@@ -203,6 +234,50 @@ const homeAria = { pt: "Proc Group, página inicial", en: "Proc Group, home", es
   .dropdown-title { font-weight: 700; font-size: var(--fs-sm); color: var(--white); }
   .dropdown-desc { font-size: var(--fs-xs); color: var(--ink-500); }
 
+  /* Mega-menu em colunas.
+     O item vira `position: static` para o painel ancorar no cabeçalho, e não
+     no item: um painel de três colunas preso a "Soluções", que fica no meio da
+     barra, saía pela esquerda da tela. Centrado no cabeçalho, cabe sempre. */
+  .nav-item.tem-mega { position: static; }
+  .dropdown.mega {
+    left: 50%;
+    right: auto;
+    width: min(960px, calc(100vw - 2 * var(--space-6)));
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-6);
+    padding: var(--space-6);
+    min-width: 0;
+    transform: translate(-50%, 8px);
+  }
+  .nav-item.has-children:hover .dropdown.mega,
+  .nav-item.has-children:focus-within .dropdown.mega {
+    transform: translate(-50%, 0);
+  }
+  .mega-col-titulo {
+    display: block;
+    padding-bottom: var(--space-3);
+    margin-bottom: var(--space-3);
+    border-bottom: 1px solid var(--color-border);
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--fs-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--white);
+  }
+  .mega-col-titulo:hover { color: var(--red-400); }
+  .mega-col ul { display: grid; gap: 2px; }
+  .mega-item {
+    display: block;
+    padding: var(--space-2) var(--space-2);
+    border-radius: var(--radius-sm);
+    font-size: var(--fs-xs);
+    line-height: 1.35;
+    color: var(--ink-300);
+  }
+  .mega-item:hover { background: var(--surface-3); color: var(--white); }
+
   .header-cta { flex-shrink: 0; }
   .menu-toggle { display: none; }
 
@@ -245,6 +320,8 @@ const homeAria = { pt: "Proc Group, página inicial", en: "Proc Group, home", es
   .mobile-nav > ul > li > a:not(.mobile-cta) { display: block; padding: var(--space-3) 0; font-weight: 700; font-size: var(--fs-lg); text-transform: uppercase; letter-spacing: 0.02em; color: var(--white); }
   .mobile-sub { padding-left: var(--space-4); }
   .mobile-sub a { display: block; padding: var(--space-2) 0; color: var(--ink-300); font-size: var(--fs-sm); }
+  .mobile-sub-titulo { color: var(--white) !important; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; font-size: var(--fs-xs) !important; }
+  .mobile-sub-item { padding-left: var(--space-3); }
   .mobile-cta { margin-top: var(--space-4); display: inline-block; background: var(--color-primary); color: var(--white) !important; padding: 0.8rem 1.6rem; border-radius: var(--radius-pill); font-weight: 700; }
 
   @media (max-width: 1200px) {

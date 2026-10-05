@@ -1,0 +1,39 @@
+---
+/**
+ * Faixa que avisa que a página é preview, não o site no ar.
+ *
+ * TEMPORÁRIO. Era um cabeçalho inteiro (CabecalhoAjustes), com logo, menu e
+ * CSS próprios, e foi isso que deixou o preview com cara de outro site. Agora
+ * o cabeçalho e o rodapé vêm do BaseLayout, iguais aos de produção, e aqui
+ * sobra só o aviso.
+ */
+import { withBase } from "../../utils/url";
+---
+
+<div class="aviso-preview">
+  <div class="container aviso-inner">
+    <strong>Preview da reestruturação</strong>
+    <span>Isto não é o site no ar. É o documento "Ajustes no site" montado para você ver.</span>
+    <a href={withBase("/preview")}>Início do preview</a>
+  </div>
+</div>
+
+<style>
+  .aviso-preview { background: var(--red-700, #b8081a); color: var(--white); }
+  .aviso-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-4);
+    padding-block: var(--space-3);
+    font-size: var(--fs-xs);
+  }
+  .aviso-inner strong { font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+  .aviso-inner span { opacity: 0.85; }
+  .aviso-inner a {
+    margin-left: auto;
+    display: inline-flex; align-items: center; min-height: 32px;
+    padding-inline: var(--space-2);
+    color: var(--white); text-decoration: underline; text-underline-offset: 3px;
+  }
+</style>

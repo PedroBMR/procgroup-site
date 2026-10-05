@@ -17,6 +17,11 @@
  *    silenciosa.
  */
 
+import { withBase } from "../../utils/url";
+import type { NavItem } from "../nav";
+import type { BusinessUnit } from "../businessUnits";
+import type { SolutionRich } from "../solutionContent";
+
 export interface Solucao {
   n: string;
   titulo: string;
@@ -657,3 +662,74 @@ export const parcerias = {
     },
   ],
 };
+
+/* ══════════════════ PONTES PARA OS COMPONENTES DO SITE ══════════════════ */
+
+/*
+ * As três funções abaixo existem para o preview usar os MESMOS componentes do
+ * site (Header, BusinessUnitTemplate) em vez de uma página paralela com CSS
+ * próprio. Foi o que deixou o preview anterior com cara de outro site.
+ */
+
+/** O menu do documento no formato que o Header de produção entende. */
+export function navPreview(): NavItem[] {
+  const L = (href: string) => (href.startsWith("#") ? href : withBase(href));
+
+  return menu.map((item) => ({
+    id: item.href.replace(/[^a-z]/g, "") || "item",
+    label: item.label,
+    href: L(item.href),
+    ...("blocos" in item && item.blocos
+      ? {
+          colunas: item.blocos.map((bloco) => ({
+            titulo: bloco.area,
+            href: L(bloco.href),
+            itens: bloco.itens.map((rotulo) => ({ label: rotulo, href: L(bloco.href) })),
+          })),
+        }
+      : {}),
+    ...(item.externo ? { externo: true } : {}),
+  }));
+}
+
+/** Cor de cada área, no mesmo papel que a cor das unidades de hoje. */
+const corDaArea: Record<string, string> = {
+  "infraestrutura-de-ti": "var(--red-600)",
+  "hospedagem-em-nuvem": "var(--navy-700)",
+  "visao-computacional": "var(--navy-900)",
+};
+
+/** Uma área do documento vestida de unidade de negócio. */
+export function unidadeDaArea(area: Area): BusinessUnit {
+  return {
+    slug: area.slug,
+    name: area.nome,
+    shortName: area.menuNome,
+    tagline: area.subchamada,
+    description: area.intro[0],
+    href: `/preview/${area.slug}`,
+    color: corDaArea[area.slug] ?? "var(--navy-700)",
+    team: area.fecho.titulo,
+    solutions: area.solucoes.map((s) => s.titulo),
+  };
+}
+
+export const unidades: BusinessUnit[] = areas.map(unidadeDaArea);
+
+/** As soluções da área no formato de conteúdo longo das páginas de solução. */
+export function richDaArea(area: Area): SolutionRich {
+  return {
+    challengesTitle: `O que a Proc faz em ${area.nome}`,
+    challengesIntro: area.intro,
+    featuresTitle: `Nossas soluções em ${area.nome}`,
+    featuresIntro: `${area.solucoes.length} soluções, na ordem em que o documento apresenta.`,
+    featureGroups: area.solucoes.map((s) => ({
+      title: `${s.n}. ${s.titulo}`,
+      intro: [s.resumo, s.intro].filter(Boolean).join(" "),
+      items: s.itens ?? [],
+      aviso: s.revisado
+        ? `Reescrito em relação ao documento. Saiu: ${s.revisado.saiu}. Por quê: ${s.revisado.porque}`
+        : undefined,
+    })),
+  };
+}

@@ -2,161 +2,44 @@
 /**
  * Preview das três páginas de área de negócio.
  *
- * TEMPORÁRIO, fora do site no ar. Uma rota só para as três, porque a estrutura
- * que o documento pede é idêntica nas três: chamada, introdução, lista
- * numerada de soluções e fecho.
+ * TEMPORÁRIO, fora do site no ar. Usa o BusinessUnitTemplate de produção, o
+ * mesmo das páginas de solução que estão publicadas: a área vai como unidade
+ * pronta (`unit`) e as soluções do documento vão como conteúdo longo
+ * (`richDaArea`). Antes esta página tinha CSS próprio e por isso parecia de
+ * outro site.
  *
- * Onde eu reescrevi um bloco por causa de regra de LGPD, a página mostra o
- * aviso na tela com o que saiu e por quê. A decisão precisa ser visível, não
- * silenciosa.
+ * Os blocos que eu reescrevi por causa de regra de LGPD aparecem com o aviso
+ * dentro do próprio bloco, dizendo o que saiu e por quê.
  */
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import CabecalhoAjustes from "../../components/preview/CabecalhoAjustes.astro";
-import { withBase } from "../../utils/url";
-import { areas } from "../../data/preview/ajustes";
+import BusinessUnitTemplate from "../../components/BusinessUnitTemplate.astro";
+import AvisoPreview from "../../components/preview/AvisoPreview.astro";
+import { areas, unidades, unidadeDaArea, richDaArea, navPreview } from "../../data/preview/ajustes";
 
 export function getStaticPaths() {
   return areas.map((a) => ({ params: { area: a.slug }, props: { area: a } }));
 }
 
 const { area } = Astro.props;
-const revisados = area.solucoes.filter((s) => s.revisado).length;
+const unit = unidadeDaArea(area);
+const outras = unidades.filter((u) => u.slug !== area.slug);
 ---
 
-<BaseLayout
-  title={`Preview: ${area.nome}`}
-  description="Preview interno da reestruturação do site."
-  bare
+<BusinessUnitTemplate
+  slug={area.slug}
+  unit={unit}
+  outras={outras}
+  rich={richDaArea(area)}
+  nav={navPreview()}
+  metaTitle={`Preview: ${area.nome}`}
+  metaDescription="Preview interno da reestruturação do site."
+  heroTitle={area.chamada}
+  heroLead={area.subchamada}
+  solutionsHeading={`Nossas soluções em ${area.nome}`}
+  teamDescription={area.fecho.texto}
+  faqs={[]}
+  finalCtaTitle={area.fecho.titulo}
+  finalCtaText={area.fecho.texto}
   noIndex
 >
-  <CabecalhoAjustes atual={`/preview/${area.slug}`} />
-
-  <main>
-    <section class="topo-pagina">
-      <div class="caixa">
-        <p class="eyebrow">{area.tituloPagina}</p>
-        <h1>{area.chamada}</h1>
-        <p class="sub">{area.subchamada}</p>
-      </div>
-    </section>
-
-    <section class="intro">
-      <div class="caixa">
-        {area.intro.map((p) => <p>{p}</p>)}
-      </div>
-    </section>
-
-    {revisados > 0 && (
-      <div class="caixa">
-        <p class="aviso-topo">
-          <strong>{revisados} bloco{revisados > 1 ? "s" : ""} desta página {revisados > 1 ? "foram" : "foi"} reescrito{revisados > 1 ? "s" : ""}</strong>
-          por causa das regras de LGPD já registradas. O que saiu está marcado ao lado de cada um.
-        </p>
-      </div>
-    )}
-
-    <section class="solucoes">
-      <div class="caixa">
-        <h2>Nossas soluções em {area.nome}</h2>
-        <div class="lista">
-          {area.solucoes.map((s) => (
-            <article class="solucao">
-              <header>
-                <span class="n">{s.n}</span>
-                <div>
-                  <h3>{s.titulo}</h3>
-                  <p class="resumo">{s.resumo}</p>
-                </div>
-              </header>
-
-              {s.intro && <p class="intro-sol">{s.intro}</p>}
-
-              {s.itens && (
-                <ul class="itens">
-                  {s.itens.map((i) => <li>{i}</li>)}
-                </ul>
-              )}
-
-              {s.revisado && (
-                <aside class="revisado">
-                  <p class="revisado-titulo">Reescrito em relação ao documento</p>
-                  <p><strong>Saiu:</strong> {s.revisado.saiu}</p>
-                  <p><strong>Por quê:</strong> {s.revisado.porque}</p>
-                </aside>
-              )}
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <section class="fecho">
-      <div class="caixa">
-        <h2>{area.fecho.titulo}</h2>
-        <p>{area.fecho.texto}</p>
-        <a class="btn" href={withBase("/contato")}>Fale com um especialista</a>
-      </div>
-    </section>
-  </main>
-</BaseLayout>
-
-<style>
-  main { background: var(--navy-950); color: var(--white); }
-  .caixa { max-width: var(--container-max); margin-inline: auto; padding-inline: var(--space-6); }
-  .eyebrow { font-size: var(--fs-xs); font-weight: 600; text-transform: uppercase; letter-spacing: 0.22em; color: var(--red-400); }
-
-  .topo-pagina { padding-block: var(--space-24) var(--space-8); }
-  .topo-pagina h1 { margin-top: var(--space-4); font-size: clamp(1.9rem, min(3.6vw, 5.4vh), 3.2rem); line-height: 1.08; max-width: 24ch; color: var(--white); }
-  .sub { margin-top: var(--space-5); font-size: var(--fs-lg); color: rgba(255,255,255,0.75); max-width: 60ch; }
-
-  .intro { padding-bottom: var(--space-12); }
-  .intro p { margin-top: var(--space-5); max-width: 72ch; color: rgba(255,255,255,0.66); line-height: var(--lh-normal); }
-
-  .aviso-topo {
-    padding: var(--space-5);
-    border-left: 3px solid var(--red-400);
-    border-radius: var(--radius-sm);
-    background: rgba(226, 8, 29, 0.09);
-    font-size: var(--fs-sm);
-    color: rgba(255,255,255,0.8);
-  }
-  .aviso-topo strong { color: var(--white); }
-
-  .solucoes { padding-block: var(--space-16); background: var(--navy-900); margin-top: var(--space-12); }
-  .solucoes h2 { font-size: var(--fs-2xl); color: var(--white); }
-  .lista { display: grid; gap: var(--space-6); margin-top: var(--space-10); }
-
-  .solucao { padding: var(--space-8); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: rgba(255,255,255,0.03); }
-  .solucao header { display: flex; gap: var(--space-5); align-items: flex-start; }
-  .n { font-family: ui-monospace, Consolas, monospace; font-size: var(--fs-lg); font-weight: 700; color: var(--red-400); line-height: 1.2; }
-  .solucao h3 { font-size: var(--fs-xl); color: var(--white); }
-  .resumo { margin-top: var(--space-2); font-weight: 600; color: rgba(255,255,255,0.8); }
-  .intro-sol { margin-top: var(--space-5); color: rgba(255,255,255,0.62); line-height: var(--lh-normal); max-width: 76ch; }
-
-  .itens { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2) var(--space-6); margin-top: var(--space-5); padding: 0; list-style: none; }
-  .itens li { position: relative; padding-left: var(--space-5); font-size: var(--fs-sm); color: rgba(255,255,255,0.6); }
-  .itens li::before { content: ""; position: absolute; left: 0; top: 0.6em; width: 6px; height: 1px; background: var(--red-400); }
-
-  .revisado {
-    margin-top: var(--space-6);
-    padding: var(--space-5);
-    border: 1px dashed rgba(255, 74, 84, 0.5);
-    border-radius: var(--radius-sm);
-    background: rgba(226, 8, 29, 0.07);
-    font-size: var(--fs-xs);
-    color: rgba(255,255,255,0.7);
-  }
-  .revisado p + p { margin-top: var(--space-2); }
-  .revisado-titulo { font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--red-400); }
-  .revisado strong { color: var(--white); }
-
-  .fecho { padding-block: var(--space-24); text-align: center; }
-  .fecho h2 { font-size: var(--fs-2xl); color: var(--white); }
-  .fecho p { margin: var(--space-5) auto 0; max-width: 70ch; color: rgba(255,255,255,0.68); line-height: var(--lh-normal); }
-  .btn { display: inline-flex; align-items: center; min-height: 48px; margin-top: var(--space-8); padding-inline: var(--space-6); border-radius: var(--radius-pill); background: var(--color-primary); color: var(--white); font-weight: 700; font-size: var(--fs-sm); text-decoration: none; }
-  .btn:hover { background: var(--color-primary-dark); }
-
-  @media (max-width: 760px) {
-    .itens { grid-template-columns: 1fr; }
-  }
-</style>
+  <AvisoPreview slot="aviso" />
+</BusinessUnitTemplate>

@@ -1,105 +1,107 @@
 ---
 /**
  * Preview da página Seja um Parceiro da Proc.
- * TEMPORÁRIO, fora do site no ar.
  *
- * O modelo de Indicação de Oportunidades aparece BLOQUEADO na tela, com o
- * motivo. São dois travamentos, os dois na auditoria: o formulário coleta dado
- * pessoal de terceiro sem base legal declarada (R2), e as 12 regras citam um
- * regulamento completo que ainda não existe (R4).
+ * TEMPORÁRIO, fora do site no ar. Mesmas seções do site: hero, faixas
+ * alternando claro e escuro, cards com borda. Antes tinha fundo próprio.
+ *
+ * O modelo de Indicação de Oportunidades aparece bloqueado, com o motivo na
+ * tela: são dois travamentos da auditoria, o formulário que coleta dado
+ * pessoal de terceiro sem base legal declarada (R2) e as 12 regras que citam
+ * um regulamento que ainda não existe (R4).
  */
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import CabecalhoAjustes from "../../components/preview/CabecalhoAjustes.astro";
+import AvisoPreview from "../../components/preview/AvisoPreview.astro";
+import Button from "../../components/Button.astro";
 import { withBase } from "../../utils/url";
-import { parcerias } from "../../data/preview/ajustes";
+import { parcerias, navPreview } from "../../data/preview/ajustes";
 ---
 
-<BaseLayout title="Preview: Parcerias" description="Preview interno da reestruturação do site." bare noIndex>
-  <CabecalhoAjustes atual="/preview/parcerias" />
+<BaseLayout
+  title="Preview: Parcerias"
+  description="Preview interno da reestruturação do site."
+  nav={navPreview()}
+  noIndex
+>
+  <AvisoPreview slot="aviso" />
 
-  <main>
-    <section class="topo-pagina">
-      <div class="caixa">
-        <p class="eyebrow">{parcerias.titulo}</p>
-        <h1>{parcerias.chamada}</h1>
-        <p class="intro">{parcerias.intro}</p>
+  <section class="hero-page">
+    <div class="container">
+      <p class="eyebrow">{parcerias.titulo}</p>
+      <h1>{parcerias.chamada}</h1>
+      <p class="lead">{parcerias.intro}</p>
+    </div>
+  </section>
+
+  {parcerias.modelos.map((m, i) => (
+    <section class="section banda" data-theme={i % 2 === 0 ? "light" : undefined}>
+      <div class="container">
+        <div class="section-header" data-reveal>
+          <p class="eyebrow">Modelo {String(i + 1).padStart(2, "0")}</p>
+          <h2>{m.titulo}</h2>
+          <p class="chamada">{m.chamada}</p>
+        </div>
+        <div class="corpo">
+          <p class="texto" data-reveal>{m.texto}</p>
+          <ol class="passos" data-reveal>
+            {m.passos.map((p, n) => (
+              <li><span class="n">{String(n + 1).padStart(2, "0")}</span>{p}</li>
+            ))}
+          </ol>
+        </div>
+        {m.bloqueio && (
+          <p class="alerta" data-reveal>
+            <strong>Não entra no ar ainda.</strong> {m.bloqueio}
+          </p>
+        )}
       </div>
     </section>
+  ))}
 
-    <section class="modelos">
-      <div class="caixa">
-        {parcerias.modelos.map((m, i) => (
-          <article class:list={["modelo", { travado: !!m.bloqueio }]}>
-            <header>
-              <span class="n">{String(i + 1).padStart(2, "0")}</span>
-              <div>
-                <h2>{m.titulo}</h2>
-                <p class="chamada">{m.chamada}</p>
-              </div>
-            </header>
-
-            <p class="texto">{m.texto}</p>
-
-            <ol class="passos">
-              {m.passos.map((p) => <li>{p}</li>)}
-            </ol>
-
-            {m.bloqueio && (
-              <aside class="bloqueio">
-                <p class="bloqueio-titulo">Não entra no ar ainda</p>
-                <p>{m.bloqueio}</p>
-              </aside>
-            )}
-          </article>
-        ))}
-      </div>
-    </section>
-
-    <section class="fecho">
-      <div class="caixa">
-        <h2>A tecnologia funciona melhor quando pessoas e empresas trabalham juntas.</h2>
-        <p>Vamos crescer juntos. Fale com nossa equipe sobre a parceria ideal para seu negócio.</p>
-        <a class="btn" href={withBase("/contato")}>Fale com nossa equipe</a>
-      </div>
-    </section>
-  </main>
+  <section class="section fecho">
+    <div class="container fecho-inner" data-reveal>
+      <h2>A tecnologia funciona melhor quando pessoas e empresas trabalham juntas.</h2>
+      <p>Vamos crescer juntos. Fale com nossa equipe sobre a parceria ideal para seu negócio.</p>
+      <Button href={withBase("/contato")} variant="primary" size="lg" data-magnetic>
+        Fale com nossa equipe
+      </Button>
+    </div>
+  </section>
 </BaseLayout>
 
 <style>
-  main { background: var(--navy-950); color: var(--white); }
-  .caixa { max-width: var(--container-max); margin-inline: auto; padding-inline: var(--space-6); }
-  .eyebrow { font-size: var(--fs-xs); font-weight: 600; text-transform: uppercase; letter-spacing: 0.22em; color: var(--red-400); }
+  .hero-page { padding-block: var(--space-16) var(--space-8); }
+  .hero-page h1 { font-size: var(--fs-4xl); margin-top: var(--space-4); }
+  .lead { margin-top: var(--space-5); max-width: 70ch; font-size: var(--fs-lg); color: var(--color-text-muted); line-height: 1.5; }
 
-  .topo-pagina { padding-block: var(--space-24) var(--space-10); }
-  .topo-pagina h1 { margin-top: var(--space-4); font-size: clamp(2rem, 3.6vw, 3.2rem); color: var(--white); }
-  .intro { margin-top: var(--space-5); max-width: 72ch; color: rgba(255,255,255,0.68); line-height: var(--lh-normal); }
+  .section { padding-block: var(--space-16); }
+  .banda { background: var(--color-bg); }
+  .section-header { max-width: 760px; margin-bottom: var(--space-8); }
+  .section-header h2 { margin-top: var(--space-4); font-size: var(--fs-3xl); }
+  .chamada { margin-top: var(--space-4); font-size: var(--fs-lg); font-weight: 600; color: var(--color-text); max-width: 60ch; }
 
-  .modelos { padding-bottom: var(--space-16); }
-  .modelos .caixa { display: grid; gap: var(--space-6); }
-  .modelo { padding: var(--space-8); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: rgba(255,255,255,0.03); }
-  .modelo.travado { border-style: dashed; border-color: rgba(255,74,84,0.45); }
-  .modelo header { display: flex; gap: var(--space-5); align-items: flex-start; }
-  .n { font-family: ui-monospace, Consolas, monospace; font-size: var(--fs-lg); font-weight: 700; color: var(--red-400); }
-  .modelo h2 { font-size: var(--fs-xl); color: var(--white); }
-  .chamada { margin-top: var(--space-2); font-weight: 600; color: rgba(255,255,255,0.8); }
-  .texto { margin-top: var(--space-5); max-width: 76ch; color: rgba(255,255,255,0.62); line-height: var(--lh-normal); }
+  .corpo { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-8); align-items: start; }
+  .texto { font-size: var(--fs-sm); color: var(--color-text-muted); line-height: 1.6; max-width: 56ch; }
+  .passos { display: grid; gap: var(--space-3); }
+  .passos li { display: flex; gap: var(--space-3); font-size: var(--fs-sm); color: var(--color-text-muted); }
+  .n { font-family: var(--font-display); font-weight: 800; color: var(--color-eyebrow); }
 
-  .passos { margin-top: var(--space-6); padding-left: var(--space-6); display: grid; gap: var(--space-2); }
-  .passos li { font-size: var(--fs-sm); color: rgba(255,255,255,0.6); }
-
-  .bloqueio {
-    margin-top: var(--space-6);
+  .alerta {
+    margin-top: var(--space-8);
+    max-width: 76ch;
     padding: var(--space-5);
-    border-left: 3px solid var(--red-400);
+    border-left: 3px solid var(--color-primary);
     border-radius: var(--radius-sm);
-    background: rgba(226, 8, 29, 0.1);
+    background: rgba(226, 8, 29, 0.07);
     font-size: var(--fs-xs);
-    color: rgba(255,255,255,0.78);
+    color: var(--color-text-muted);
+    line-height: 1.55;
   }
-  .bloqueio-titulo { font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--red-400); margin-bottom: var(--space-2); }
+  .alerta strong { color: var(--color-text); }
 
-  .fecho { padding-block: var(--space-16) var(--space-24); text-align: center; }
-  .fecho h2 { font-size: var(--fs-2xl); color: var(--white); max-width: 26ch; margin-inline: auto; }
-  .fecho p { margin: var(--space-5) auto 0; max-width: 60ch; color: rgba(255,255,255,0.68); }
-  .btn { display: inline-flex; align-items: center; min-height: 48px; margin-top: var(--space-8); padding-inline: var(--space-6); border-radius: var(--radius-pill); background: var(--color-primary); color: var(--white); font-weight: 700; font-size: var(--fs-sm); text-decoration: none; }
+  .fecho { text-align: center; padding-block: var(--space-16) var(--space-24); }
+  .fecho-inner h2 { font-size: var(--fs-3xl); max-width: 26ch; margin-inline: auto; }
+  .fecho-inner p { margin: var(--space-5) auto var(--space-8); max-width: 60ch; color: var(--color-text-muted); }
+
+  @media (max-width: 860px) { .corpo { grid-template-columns: 1fr; } }
 </style>

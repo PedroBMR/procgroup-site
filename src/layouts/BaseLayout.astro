@@ -18,6 +18,7 @@ import spaceGroteskUrl from "../assets/fonts/space-grotesk-var.woff2?url";
 import { metricool, pixelMetricool } from "../data/medicao";
 import { verificacaoGoogle } from "../data/buscadores";
 import AvisoColeta from "../components/AvisoColeta.astro";
+import type { NavItem } from "../data/nav";
 
 interface Props {
   title: string;
@@ -39,6 +40,12 @@ interface Props {
    * padrão já é `true` — ver o cálculo de `bloquearIndexacao` abaixo.
    */
   noIndex?: boolean;
+  /**
+   * Menu alternativo, repassado ao Header. Omitido, o Header monta o menu de
+   * sempre. Serve ao preview da reestruturação, que mostra outro menu sem
+   * tocar no que está no ar.
+   */
+  nav?: NavItem[];
 }
 
 const {
@@ -52,6 +59,7 @@ const {
   schema,
   noIndex,
   bare = false,
+  nav,
 } = Astro.props;
 
 // Enquanto o site é preview no github.io, TODA página sai com noindex.
@@ -236,7 +244,10 @@ const schemaList = Array.isArray(schema) ? schema : schema ? [schema] : [];
         no aviso na segunda tecla Tab, e nao depois da pagina inteira. */}
     <AvisoColeta />
     {!bare && <TopBar />}
-    {!bare && <Header />}
+    {!bare && <Header nav={nav} />}
+    {/* Faixa colada abaixo do cabeçalho, fora do <main>. Hoje só o preview da
+        reestruturação usa, para avisar que a página não é o site no ar. */}
+    <slot name="aviso" />
     <main id="main" tabindex="-1">
       <slot />
     </main>

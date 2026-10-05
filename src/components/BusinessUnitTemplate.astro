@@ -4,7 +4,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Button from "../components/Button.astro";
 import MediaPlaceholder from "../components/MediaPlaceholder.astro";
 import UnitIcon from "../components/UnitIcon.astro";
-import { getBusinessUnit, getBusinessUnits } from "../data/businessUnits";
+import { getBusinessUnit, getBusinessUnits, type BusinessUnit } from "../data/businessUnits";
+import type { NavItem } from "../data/nav";
 import { getSolutionRich, type SolutionRich } from "../data/solutionContent";
 import { solutionMedia } from "../data/mediaBriefs";
 import { whatsappDemo } from "../data/contact";
@@ -40,6 +41,17 @@ interface Props {
   faqAssunto?: string;
   /** Segundo botão no topo, para uma subpágina da unidade. */
   linkExtra?: { href: string; label: string };
+  // Os dois abaixo existem para o preview da reestruturação (2026-10-05), que
+  // monta áreas de negócio que ainda não estão em businessUnits.ts. Omitidos,
+  // a unidade e as "outras unidades" saem de businessUnits como sempre.
+  /** Unidade pronta, no lugar da busca por `slug`. */
+  unit?: BusinessUnit;
+  /** Lista de "outras unidades", no lugar das demais de businessUnits. */
+  outras?: BusinessUnit[];
+  /** Menu alternativo, repassado ao BaseLayout. */
+  nav?: NavItem[];
+  /** Força noindex, repassado ao BaseLayout. */
+  noIndex?: boolean;
 }
 
 const {
@@ -56,14 +68,18 @@ const {
   rich: richProprio,
   serviceType,
   faqAssunto,
-  linkExtra } = Astro.props;
+  linkExtra,
+  unit: unitProprio,
+  outras,
+  nav,
+  noIndex } = Astro.props;
 
 const lang = getLangFromUrl(Astro.url);
 // De que lado do site esta instancia esta montada — sai da URL, como no
 const tr = useTranslations(lang);
 const t = tr.solutions;
-const unit = getBusinessUnit(slug, lang)!;
-const otherUnits = getBusinessUnits(lang).filter(
+const unit = unitProprio ?? getBusinessUnit(slug, lang)!;
+const otherUnits = outras ?? getBusinessUnits(lang).filter(
   (u) => u.slug !== unit.slug
 );
 
@@ -83,17 +99,20 @@ const schema = [
     provider: { "@type": "Organization", name: "Proc Group" },
     description: serviceType ? metaDescription : unit.description,
     areaServed: "BR" },
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqs.map((f) => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a } })) },
+  ...(faqs.length > 0
+    ? [{
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: faqs.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a } })) }]
+    : []),
 ];
 ---
 
-<BaseLayout title={metaTitle} description={metaDescription} schema={schema}>
+<BaseLayout title={metaTitle} description={metaDescription} schema={schema} nav={nav} noIndex={noIndex}>
+  <Fragment slot="aviso"><slot name="aviso" /></Fragment>
   <section class="hero-page">
     <div class="container">
       <p class="eyebrow">{unit.shortName}</p>
@@ -226,6 +245,7 @@ const schema = [
                   <ul class="chip-list">
                     {g.items.map((it) => <li>{it}</li>)}
                   </ul>
+                  {g.aviso && <p class="feature-group-aviso">{g.aviso}</p>}
                 </div>
               ))}
             </div>
@@ -341,6 +361,7 @@ const schema = [
 
   <slot name="case-study" />
 
+  {faqs.length > 0 && (
   <section class="section faq-section" data-theme="light">
     <div class="container">
       <div class="section-header" data-reveal>
@@ -357,6 +378,7 @@ const schema = [
       </div>
     </div>
   </section>
+  )}
 
   {otherUnits.length > 0 && (
   <section class="section other-units">
@@ -473,6 +495,16 @@ const schema = [
   }
   .feature-group h3 { font-size: var(--fs-lg); }
   .feature-group-intro { margin-top: var(--space-3); font-size: var(--fs-sm); color: var(--color-text-muted); line-height: 1.5; }
+  .feature-group-aviso {
+    margin-top: var(--space-5);
+    padding: var(--space-4);
+    border-left: 3px solid var(--color-primary);
+    border-radius: var(--radius-sm);
+    background: rgba(226, 8, 29, 0.07);
+    font-size: var(--fs-xs);
+    color: var(--color-text-muted);
+    line-height: 1.5;
+  }
   .chip-list { list-style: none; padding: 0; margin: var(--space-5) 0 0; display: flex; flex-wrap: wrap; gap: var(--space-2); }
   .chip-list li {
     font-size: var(--fs-xs); font-weight: 600; padding: 6px 12px;

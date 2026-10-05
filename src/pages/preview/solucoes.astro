@@ -1,76 +1,90 @@
 ---
 /**
- * Preview do índice de Soluções: as três áreas e o que cada uma reúne.
- * TEMPORÁRIO, fora do site no ar.
+ * Preview do índice de Soluções: as três áreas do documento.
+ *
+ * TEMPORÁRIO, fora do site no ar. Mesmos cards e mesmos estilos do índice de
+ * soluções publicado, só com as três áreas novas no lugar das unidades de
+ * hoje.
  */
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import CabecalhoAjustes from "../../components/preview/CabecalhoAjustes.astro";
+import AvisoPreview from "../../components/preview/AvisoPreview.astro";
+import UnitIcon from "../../components/UnitIcon.astro";
 import { withBase } from "../../utils/url";
-import { areas } from "../../data/preview/ajustes";
+import { unidades, areas, navPreview } from "../../data/preview/ajustes";
 ---
 
-<BaseLayout title="Preview: Soluções" description="Preview interno da reestruturação do site." bare noIndex>
-  <CabecalhoAjustes atual="/preview/solucoes" />
+<BaseLayout
+  title="Preview: Soluções"
+  description="Preview interno da reestruturação do site."
+  nav={navPreview()}
+  noIndex
+>
+  <AvisoPreview slot="aviso" />
 
-  <main>
-    <section class="topo-pagina">
-      <div class="caixa">
-        <p class="eyebrow">Soluções</p>
-        <h1>Três áreas de negócio. Uma equipe especializada em cada uma.</h1>
-        <p class="sub">
-          A apresentação segue a ordem definida no documento: Infraestrutura de TI, Hospedagem em
-          nuvem, Visão Computacional e Vídeo Analytics.
-        </p>
-      </div>
-    </section>
+  <section class="hero-page">
+    <div class="container">
+      <p class="eyebrow">Soluções</p>
+      <h1>Três áreas de negócio. Uma equipe especializada em cada uma.</h1>
+      <p class="lead">
+        A ordem é a do documento: Infraestrutura de TI, Hospedagem em nuvem, e Visão
+        Computacional e Vídeo Analytics.
+      </p>
+    </div>
+  </section>
 
-    <section class="grade">
-      <div class="caixa cards">
-        {areas.map((a, i) => (
-          <a class="card" href={withBase(`/preview/${a.slug}`)}>
-            <span class="n">{String(i + 1).padStart(2, "0")}</span>
-            <h2>{a.nome}</h2>
-            <p class="chamada">{a.chamada}</p>
-            <ul>
-              {a.solucoes.slice(0, 6).map((s) => <li>{s.titulo}</li>)}
-              {a.solucoes.length > 6 && <li class="mais">e mais {a.solucoes.length - 6}</li>}
-            </ul>
-            <span class="ir">Conheça a área</span>
-          </a>
-        ))}
-      </div>
-    </section>
-  </main>
+  <section class="section">
+    <div class="container units-grid">
+      {unidades.map((unit, i) => (
+        <a href={withBase(unit.href)} class="unit-card" data-reveal style={`--unit-color: ${unit.color}`}>
+          <span class="unit-icon-wrap"><UnitIcon slug={unit.slug} /></span>
+          <span class="unit-badge">{unit.shortName}</span>
+          <h2>{unit.name}</h2>
+          <p>{unit.tagline}</p>
+          <ul class="sol-lista">
+            {areas[i].solucoes.slice(0, 6).map((s) => <li>{s.titulo}</li>)}
+            {areas[i].solucoes.length > 6 && (
+              <li class="mais">e mais {areas[i].solucoes.length - 6}</li>
+            )}
+          </ul>
+        </a>
+      ))}
+    </div>
+  </section>
 </BaseLayout>
 
 <style>
-  main { background: var(--navy-950); color: var(--white); min-height: 70vh; }
-  .caixa { max-width: var(--container-max); margin-inline: auto; padding-inline: var(--space-6); }
-  .eyebrow { font-size: var(--fs-xs); font-weight: 600; text-transform: uppercase; letter-spacing: 0.22em; color: var(--red-400); }
-
-  .topo-pagina { padding-block: var(--space-24) var(--space-8); }
-  .topo-pagina h1 { margin-top: var(--space-4); font-size: clamp(1.9rem, 3.4vw, 3rem); max-width: 22ch; color: var(--white); }
-  .sub { margin-top: var(--space-5); color: rgba(255,255,255,0.68); max-width: 64ch; }
-
-  .grade { padding-block: var(--space-12) var(--space-24); }
-  .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); }
-  .card {
-    display: flex; flex-direction: column;
+  /* Mesmos valores do índice de soluções publicado, para o preview não ter
+     tipografia nem respiro diferentes do site. */
+  .hero-page { padding-block: var(--space-16) var(--space-8); }
+  .hero-page h1 { font-size: var(--fs-4xl); margin-top: var(--space-4); }
+  .hero-page .lead { margin-top: var(--space-5); max-width: 62ch; font-size: var(--fs-lg); color: var(--color-text-muted); text-wrap: pretty; }
+  .section { padding-block: var(--space-16) var(--space-24); }
+  .units-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); }
+  .unit-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
     padding: var(--space-8);
-    border: 1px solid var(--color-border); border-radius: var(--radius-md);
-    background: rgba(255,255,255,0.03);
-    text-decoration: none; color: inherit;
-    transition: border-color var(--dur-fast) ease, transform var(--dur-fast) ease;
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out), border-color var(--dur-fast) ease;
+    overflow: hidden;
   }
-  .card:hover { border-color: rgba(255,74,84,0.5); transform: translateY(-3px); }
-  .n { font-family: ui-monospace, Consolas, monospace; font-size: var(--fs-xs); color: var(--red-400); letter-spacing: 0.12em; }
-  .card h2 { margin-top: var(--space-3); font-size: var(--fs-xl); color: var(--white); }
-  .chamada { margin-top: var(--space-3); font-size: var(--fs-sm); color: rgba(255,255,255,0.7); line-height: var(--lh-normal); }
-  .card ul { margin-top: var(--space-5); padding: 0; list-style: none; display: grid; gap: var(--space-1); flex: 1; }
-  .card li { font-size: var(--fs-xs); color: rgba(255,255,255,0.55); }
-  .card li::before { content: "› "; color: var(--red-400); }
+  .unit-card::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: color-mix(in srgb, var(--unit-color), white 24%);
+  }
+  .unit-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); border-color: color-mix(in srgb, var(--unit-color), white 36%); }
+  .unit-icon-wrap { color: color-mix(in srgb, var(--unit-color), white 40%); }
+  .unit-icon-wrap :global(.unit-icon) { width: 28px; height: 28px; }
+  .unit-badge { margin-top: var(--space-4); font-size: var(--fs-xs); font-weight: 700; color: var(--color-text-faint); text-transform: uppercase; letter-spacing: 0.08em; }
+  .unit-card h2 { margin-top: var(--space-2); font-size: var(--fs-xl); }
+  .unit-card > p { margin-top: var(--space-2); color: var(--color-text-muted); }
+  .sol-lista { margin-top: var(--space-5); display: grid; gap: var(--space-1); }
+  .sol-lista li { font-size: var(--fs-xs); color: var(--color-text-faint); }
+  .sol-lista li::before { content: "› "; color: var(--color-eyebrow); }
   .mais { font-style: italic; }
-  .ir { margin-top: var(--space-6); font-size: var(--fs-sm); font-weight: 700; color: var(--red-400); }
-
-  @media (max-width: 900px) { .cards { grid-template-columns: 1fr; } }
+  @media (max-width: 900px) { .units-grid { grid-template-columns: 1fr; } }
 </style>

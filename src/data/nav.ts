@@ -9,12 +9,30 @@ export interface NavChild {
   description?: string;
 }
 
+/**
+ * Coluna de um mega-menu: uma área de negócio e os itens dela.
+ *
+ * Existe porque o documento "Ajustes no site" (2026-10-05) pede o submenu de
+ * Soluções em três colunas, uma por área, com todos os subitens visíveis. O
+ * dropdown de coluna única continua sendo o padrão: nada no menu de produção
+ * declara `colunas` hoje.
+ */
+export interface NavColuna {
+  titulo: string;
+  href: string;
+  itens: NavChild[];
+}
+
 export interface NavItem {
   /** Chave estável (independe do idioma) para filtros no Header/Footer. */
   id: string;
   label: string;
   href: string;
   children?: NavChild[];
+  /** Submenu em colunas. Quando presente, vence `children` no Header. */
+  colunas?: NavColuna[];
+  /** Link para fora do site (não recebe base path nem destaque de página). */
+  externo?: boolean;
 }
 
 /**
