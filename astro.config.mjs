@@ -75,7 +75,14 @@ export default defineConfig({
       // Páginas noindex ficam fora do sitemap (sinal contraditório): a 404 e
       // a landing /evento (chaveiro NFC, acesso direto). O endsWith preserva
       // /eventos/, que é a agenda pública e deve continuar no sitemap.
-      filter: (page) => !page.includes('/404') && !page.endsWith('/evento/'),
+      //
+      // /preview/ é a reestruturação do documento de 2026-10-05 montada para
+      // aprovação. Sai do sitemap por dois motivos: já nasce noindex, e um
+      // sitemap não divulga endereço interno que ainda não foi aprovado.
+      filter: (page) =>
+        !page.includes('/404') &&
+        !page.endsWith('/evento/') &&
+        !page.includes('/preview/'),
     })] : []),
   ],
   image: {

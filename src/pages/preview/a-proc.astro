@@ -1,0 +1,159 @@
+---
+/**
+ * Preview da página A Proc, reescrita conforme o documento de 2026-10-05.
+ * TEMPORÁRIO, fora do site no ar.
+ *
+ * O bloco de atuação internacional traz um alerta na tela: Paraguai, Argentina
+ * e Bolívia não constam no cofre nem na skill contexto-proc (R3 da auditoria).
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import CabecalhoAjustes from "../../components/preview/CabecalhoAjustes.astro";
+import { withBase } from "../../utils/url";
+import { aProc } from "../../data/preview/ajustes";
+---
+
+<BaseLayout title="Preview: A Proc" description="Preview interno da reestruturação do site." bare noIndex>
+  <CabecalhoAjustes atual="/preview/a-proc" />
+
+  <main>
+    <section class="topo-pagina">
+      <div class="caixa">
+        <p class="eyebrow">{aProc.titulo}</p>
+        <h1>{aProc.chamada}</h1>
+        {aProc.intro.map((p) => <p class="intro">{p}</p>)}
+      </div>
+    </section>
+
+    <section class="bloco">
+      <div class="caixa">
+        <h2>Nossa história</h2>
+        <div class="tempo">
+          {aProc.linhaDoTempo.map((m) => (
+            <article class="marco">
+              <span class="ano">{m.ano}</span>
+              <h3>{m.titulo}</h3>
+              <p>{m.texto}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="bloco escuro">
+      <div class="caixa">
+        <h2>Nosso diferencial</h2>
+        <p class="lead">Tecnologia pode ser adquirida. Experiência precisa ser construída.</p>
+        <div class="grade-4">
+          {aProc.diferenciais.map((d) => (
+            <article class="item">
+              <h3>{d.titulo}</h3>
+              <p>{d.texto}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="bloco">
+      <div class="caixa">
+        <h2>{aProc.alcance.titulo}</h2>
+        <p class="lead">{aProc.alcance.texto}</p>
+        <aside class="alerta">
+          <p class="alerta-titulo">Precisa de confirmação antes de publicar</p>
+          <p>{aProc.alcance.alerta}</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="bloco escuro">
+      <div class="caixa">
+        <div class="grade-3">
+          <article class="item">
+            <h3>Nossa Missão</h3>
+            <p>{aProc.missao}</p>
+          </article>
+          <article class="item">
+            <h3>Nossa Visão</h3>
+            <p>{aProc.visao}</p>
+            <aside class="alerta pequeno">
+              <p>
+                A skill contexto-proc proíbe construções de superioridade, e cita "referência
+                nacional" entre elas. Isto já está no site hoje, dentro da declaração de Visão.
+                Decisão sua: mantém como aspiração declarada ou sai.
+              </p>
+            </aside>
+          </article>
+          <article class="item">
+            <h3>Nosso Propósito</h3>
+            <p>{aProc.proposito}</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="bloco">
+      <div class="caixa">
+        <h2>Três pilares</h2>
+        <div class="grade-3">
+          {aProc.pilares.map((p) => (
+            <article class="item">
+              <h3>{p.titulo}</h3>
+              <p>{p.texto}</p>
+            </article>
+          ))}
+        </div>
+        <div class="fim">
+          <p class="assinatura">Proc Group. Tecnologia especializada para empresas que não podem parar.</p>
+          <a class="btn" href={withBase("/preview/solucoes")}>Conheça nossas soluções</a>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  main { background: var(--navy-950); color: var(--white); }
+  .caixa { max-width: var(--container-max); margin-inline: auto; padding-inline: var(--space-6); }
+  .eyebrow { font-size: var(--fs-xs); font-weight: 600; text-transform: uppercase; letter-spacing: 0.22em; color: var(--red-400); }
+
+  .topo-pagina { padding-block: var(--space-24) var(--space-12); }
+  .topo-pagina h1 { margin-top: var(--space-4); font-size: clamp(1.9rem, min(3.4vw, 5vh), 3rem); max-width: 26ch; color: var(--white); }
+  .intro { margin-top: var(--space-5); max-width: 72ch; color: rgba(255,255,255,0.68); line-height: var(--lh-normal); }
+
+  .bloco { padding-block: var(--space-16); }
+  .bloco.escuro { background: var(--navy-900); }
+  .bloco h2 { font-size: var(--fs-2xl); color: var(--white); }
+  .lead { margin-top: var(--space-4); max-width: 70ch; color: rgba(255,255,255,0.72); line-height: var(--lh-normal); }
+
+  .tempo { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); margin-top: var(--space-10); }
+  .marco { padding-top: var(--space-5); border-top: 2px solid var(--red-400); }
+  .ano { font-family: ui-monospace, Consolas, monospace; font-size: var(--fs-sm); color: var(--red-400); letter-spacing: 0.1em; }
+  .marco h3 { margin-top: var(--space-2); font-size: var(--fs-lg); color: var(--white); }
+  .marco p { margin-top: var(--space-3); font-size: var(--fs-sm); color: rgba(255,255,255,0.6); line-height: var(--lh-normal); }
+
+  .grade-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-6); margin-top: var(--space-10); }
+  .grade-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); margin-top: var(--space-8); }
+  .item { padding: var(--space-6); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: rgba(255,255,255,0.03); }
+  .item h3 { font-size: var(--fs-base); color: var(--white); }
+  .item p { margin-top: var(--space-3); font-size: var(--fs-sm); color: rgba(255,255,255,0.62); line-height: var(--lh-normal); }
+
+  .alerta {
+    margin-top: var(--space-6);
+    padding: var(--space-5);
+    border: 1px dashed rgba(255, 74, 84, 0.5);
+    border-radius: var(--radius-sm);
+    background: rgba(226, 8, 29, 0.07);
+    font-size: var(--fs-xs);
+    color: rgba(255,255,255,0.72);
+    max-width: 70ch;
+  }
+  .alerta.pequeno { margin-top: var(--space-4); padding: var(--space-4); }
+  .alerta-titulo { font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--red-400); margin-bottom: var(--space-2); }
+
+  .fim { margin-top: var(--space-12); text-align: center; }
+  .assinatura { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-xl); color: var(--white); text-transform: uppercase; letter-spacing: 0.02em; }
+  .btn { display: inline-flex; align-items: center; min-height: 48px; margin-top: var(--space-6); padding-inline: var(--space-6); border-radius: var(--radius-pill); background: var(--color-primary); color: var(--white); font-weight: 700; font-size: var(--fs-sm); text-decoration: none; }
+
+  @media (max-width: 1000px) { .grade-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 760px) { .tempo, .grade-3, .grade-4 { grid-template-columns: 1fr; } }
+</style>
