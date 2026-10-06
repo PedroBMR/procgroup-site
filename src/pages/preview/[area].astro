@@ -1,42 +1,32 @@
 ---
 /**
- * As três páginas de área de negócio, como ficariam no ar.
+ * As três páginas de área de negócio, com o conteúdo INTEGRAL do documento
+ * "Ajustes no site". Fora do site publicado, sem nada de preview na tela.
  *
- * Fora do site publicado, mas sem nada de preview na tela: usa o
- * BusinessUnitTemplate de produção, o mesmo das páginas de solução que já
- * estão no ar. A área vai como unidade pronta (`unit`) e as soluções do
- * documento vão como conteúdo longo (`richDaArea`).
- *
- * Três blocos de Visão Computacional estão com o texto REESCRITO por causa das
- * regras de LGPD. O que saiu e por quê está em AUDITORIA-AJUSTES-SITE.md, não
- * mais na tela: aqui fica só o texto que eu publicaria.
+ * Até 2026-10-06 esta página encaixava o documento no BusinessUnitTemplate,
+ * e o que não cabia no molde ficou de fora. O comercial apontou que faltava
+ * muita coisa, e faltava: medido, só 27% das palavras do PDF estavam na tela.
+ * Agora cada página é transcrita bloco a bloco em src/data/preview/paginas/.
  */
-import BusinessUnitTemplate from "../../components/BusinessUnitTemplate.astro";
-import { areas, unidades, unidadeDaArea, richDaArea, navPreview } from "../../data/preview/ajustes";
+import PaginaPreview from "../../components/preview/PaginaPreview.astro";
+import { infra } from "../../data/preview/paginas/infra";
+import { nuvem } from "../../data/preview/paginas/nuvem";
+import { visao } from "../../data/preview/paginas/visao";
+import type { Pagina } from "../../data/preview/blocos";
+
+const PAGINAS: Record<string, { pagina: Pagina; title: string }> = {
+  "infraestrutura-de-ti": { pagina: infra, title: "Infraestrutura de TI" },
+  "hospedagem-em-nuvem": { pagina: nuvem, title: "Hospedagem em Nuvem" },
+  "visao-computacional": { pagina: visao, title: "Visão Computacional e Vídeo Analytics" },
+};
 
 export function getStaticPaths() {
-  return areas.map((a) => ({ params: { area: a.slug }, props: { area: a } }));
+  return ["infraestrutura-de-ti", "hospedagem-em-nuvem", "visao-computacional"].map((area) => ({
+    params: { area },
+  }));
 }
 
-const { area } = Astro.props;
-const unit = unidadeDaArea(area);
-const outras = unidades.filter((u) => u.slug !== area.slug);
+const { pagina, title } = PAGINAS[Astro.params.area as string];
 ---
 
-<BusinessUnitTemplate
-  slug={area.slug}
-  unit={unit}
-  outras={outras}
-  rich={richDaArea(area)}
-  nav={navPreview()}
-  metaTitle={area.nome}
-  metaDescription={area.subchamada}
-  heroTitle={area.chamada}
-  heroLead={area.subchamada}
-  solutionsHeading={`Nossas soluções em ${area.nome}`}
-  teamDescription={area.fecho.texto}
-  faqs={[]}
-  finalCtaTitle={area.fecho.titulo}
-  finalCtaText={area.fecho.texto}
-  noIndex
-/>
+<PaginaPreview pagina={pagina} title={title} description={pagina.hero.lead ?? pagina.hero.titulo} />

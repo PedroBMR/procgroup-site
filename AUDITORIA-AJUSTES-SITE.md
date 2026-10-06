@@ -197,3 +197,79 @@ A ordem importa, porque a arquitetura de dados do site é a base de tudo o que v
 ---
 
 *Auditoria gerada em 2026-10-05. O PDF original está em `C:\Users\Pedro_ProcGroup\Downloads\Ajustes no site.pdf`.*
+
+---
+
+## 6. 2026-10-06: auditoria de conteúdo do preview
+
+O comercial disse que o preview não usava o documento inteiro. **Estava certo.** A primeira
+versão resumiu o PDF para caber nos moldes que o site já tinha, e seções inteiras ficaram de
+fora: os dois blocos de "equipe de TI", o suporte 24/7, "outros serviços", quase toda a
+página de Hospedagem, a pesquisa de veículos, os alertas, as 12 regras da indicação, os 3
+formulários, a história completa, "Proc Group hoje", o manifesto do propósito.
+
+### Como foi medido
+
+Cada frase do PDF (com 3 palavras ou mais) foi procurada no texto visível das páginas do
+preview, ignorando pontuação. Conta palavra, não frase, para trecho longo pesar mais.
+
+| | Palavras do PDF na tela |
+|---|---|
+| Versão de 2026-10-05 | **27%** |
+| Versão de 2026-10-06, transcrição integral | **89%** |
+
+Os 11% que não batem são, todos, uma destas quatro coisas:
+
+1. **Instrução para quem monta o site**, não texto de página: "redirecionar para a página de
+   contatos", "Encerramos a página...", "TÍTULO DA PÁGINA", a especificação do menu.
+2. **Os oito itens que saíram por LGPD**, listados abaixo.
+3. **"relacionados à veículos"**, que virou "relacionados a veículos" (crase).
+4. **Duas tarefas que não são texto**: as imagens dos heróis e o rodapé (abaixo).
+
+### O que saiu por LGPD, item por item
+
+Ampliação do R1. A primeira versão cortava parte disso **sem registrar**; agora está tudo aqui
+e no comentário de `src/data/preview/paginas/visao.ts`.
+
+| Página do PDF | Bloco | Item que saiu |
+|---|---|---|
+| 24 | Analytics do fluxo de pessoas | Taxa de frequência |
+| 24 | Analytics do fluxo de pessoas | Taxa de retorno |
+| 24 | Analytics do fluxo de pessoas | Análise de perfil |
+| 24 | Analytics do fluxo de pessoas | Dados demográficos, quando tecnicamente aplicáveis |
+| 25 | Analytics do fluxo de veículos | Frequência e retorno |
+| 26 | Segurança operacional | Permanência em postos de trabalho |
+| 26 | Segurança operacional | Permanência em áreas comuns |
+| 30 | Pesquisa inteligente de pessoas | Reconhecimento facial (como critério de busca) |
+
+**Frequência e retorno de veículos é item novo nesta lista.** Pelo mesmo raciocínio do fluxo de
+pessoas: contar retorno pela placa identifica o mesmo cliente em visitas diferentes.
+
+**Ficaram, de propósito:** "Reconhecimento facial" na lista geral do que a plataforma faz (é
+vocabulário público da Proc), "Tempo de permanência" e "Análise de comportamento" no fluxo de
+pessoas (a skill libera permanência agregada), e todas as características objetivas de cena.
+
+### Dois pontos novos para decidir
+
+| | Trecho | Por quê |
+|---|---|---|
+| 🟡 R11 | "Venda de computadores, servidores e equipamentos" (Infraestrutura, outros serviços) | A skill diz que hardware é **locado, não vendido**. A regra foi escrita para câmeras de município, então pode não valer aqui. Confirmar se a Proc vende equipamento de TI |
+| 🟡 R12 | "estrutura de investimento mais competitiva em comparação com plataformas globais" (A Proc e Visão Computacional) | Comparação com concorrente, mesmo sem nome. Fica perto do "diferente de outros" que a skill proíbe |
+
+Os dois estão publicados no preview como o documento escreveu.
+
+### O que o documento pede e ainda não foi feito
+
+| Pedido | Página do PDF | Por que não |
+|---|---|---|
+| Uma imagem para cada herói, "bem visual e atrativo" | 2 | É trabalho de direção de arte. Os quatro heróis usam a mesma cena de fundo |
+| Atualizar o rodapé "conforme ajustes sugeridos" | 5 | O documento não diz o que muda, e o e-mail do rodapé depende do R5. Na cópia do Cloudflare os links do rodapé já redirecionam para as páginas novas |
+| Menu de soluções no estilo de viasoft.com.br | 2 | Não conferi a referência |
+| Link da Proc City | 2 | O endereço não está no documento (R9) |
+
+### Mudanças de estrutura que vieram junto
+
+- Cada um dos 25 subitens do menu leva direto ao bloco da solução, não ao topo da página.
+- Parcerias ganhou submenu com os três modelos, como o documento pede.
+- Página de Contato com vendas@, WhatsApp e o formulário "Fale com vendas" de quatro campos.
+- Os formulários do preview não enviam nada e avisam isso a quem clica.

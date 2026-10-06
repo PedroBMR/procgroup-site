@@ -1,0 +1,37 @@
+---
+/**
+ * Casca das páginas internas do preview: cabeçalho e rodapé do site (via
+ * BaseLayout), o hero no mesmo desenho das páginas de solução, e os blocos do
+ * documento em sequência.
+ */
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Secoes from "./Secoes.astro";
+import { navPreview } from "../../data/preview/ajustes";
+import type { Pagina } from "../../data/preview/blocos";
+
+interface Props {
+  pagina: Pagina;
+  title: string;
+  description: string;
+}
+const { pagina, title, description } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} nav={navPreview()} noIndex>
+  <section class="hero-page">
+    <div class="container">
+      <p class="eyebrow">{pagina.hero.eyebrow}</p>
+      <h1>{pagina.hero.titulo}</h1>
+      {pagina.hero.lead && <p class="lead">{pagina.hero.lead}</p>}
+    </div>
+  </section>
+
+  <Secoes blocos={pagina.blocos} />
+</BaseLayout>
+
+<style>
+  /* Mesmos valores do hero do BusinessUnitTemplate. */
+  .hero-page { padding-block: var(--space-16) var(--space-12); }
+  .hero-page h1 { font-size: var(--fs-4xl); margin-top: var(--space-4); max-width: 780px; }
+  .lead { margin-top: var(--space-6); font-size: var(--fs-lg); color: var(--color-text-muted); max-width: 640px; }
+</style>

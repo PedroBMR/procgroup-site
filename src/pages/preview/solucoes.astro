@@ -38,7 +38,7 @@ import { unidades, areas, navPreview } from "../../data/preview/ajustes";
           <h2>{unit.name}</h2>
           <p>{unit.tagline}</p>
           <ul class="sol-lista">
-            {areas[i].solucoes.slice(0, 6).map((s) => <li>{s.titulo}</li>)}
+            {areas[i].solucoes.slice(0, 6).map((s) => <li>{s}</li>)}
             {areas[i].solucoes.length > 6 && (
               <li class="mais">e mais {areas[i].solucoes.length - 6}</li>
             )}

@@ -1,86 +1,12 @@
 ---
 /**
- * A página Seja um Parceiro da Proc, como ficaria no ar.
- *
- * Fora do site publicado, mas sem nada de preview na tela. Mesmas seções do
- * site: hero, faixas alternando claro e escuro, cards com borda.
- *
- * O primeiro modelo, Indicação de Oportunidades, está desenhado aqui mas NÃO
- * pode ir ao ar como está: o formulário coleta dado pessoal de terceiro sem
- * base legal declarada (R2) e as 12 regras citam um regulamento que ainda não
- * existe (R4). Os dois estão em AUDITORIA-AJUSTES-SITE.md.
+ * A página Seja um Parceiro da Proc, com o conteúdo INTEGRAL do documento
+ * "Ajustes no site" (páginas 32 a 40). Fora do site publicado, sem nada de
+ * preview na tela. Conteúdo em src/data/preview/paginas/parcerias.ts, onde
+ * estão também os dois travamentos do programa de indicação (R2 e R4).
  */
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import Button from "../../components/Button.astro";
-import { withBase } from "../../utils/url";
-import { parcerias, navPreview } from "../../data/preview/ajustes";
+import PaginaPreview from "../../components/preview/PaginaPreview.astro";
+import { parcerias } from "../../data/preview/paginas/parcerias";
 ---
 
-<BaseLayout
-  title="Seja um Parceiro da Proc"
-  description="Indicação de oportunidades, parceria com desenvolvedores de software e parceria com profissionais técnicos. Três formas de crescer junto com a Proc."
-  nav={navPreview()}
-  noIndex
->
-  <section class="hero-page">
-    <div class="container">
-      <p class="eyebrow">{parcerias.titulo}</p>
-      <h1>{parcerias.chamada}</h1>
-      <p class="lead">{parcerias.intro}</p>
-    </div>
-  </section>
-
-  {parcerias.modelos.map((m, i) => (
-    <section class="section banda" data-theme={i % 2 === 0 ? "light" : undefined}>
-      <div class="container">
-        <div class="section-header" data-reveal>
-          <p class="eyebrow">Modelo {String(i + 1).padStart(2, "0")}</p>
-          <h2>{m.titulo}</h2>
-          <p class="chamada">{m.chamada}</p>
-        </div>
-        <div class="corpo">
-          <p class="texto" data-reveal>{m.texto}</p>
-          <ol class="passos" data-reveal>
-            {m.passos.map((p, n) => (
-              <li><span class="n">{String(n + 1).padStart(2, "0")}</span>{p}</li>
-            ))}
-          </ol>
-        </div>
-      </div>
-    </section>
-  ))}
-
-  <section class="section fecho">
-    <div class="container fecho-inner" data-reveal>
-      <h2>A tecnologia funciona melhor quando pessoas e empresas trabalham juntas.</h2>
-      <p>Vamos crescer juntos. Fale com nossa equipe sobre a parceria ideal para seu negócio.</p>
-      <Button href={withBase("/preview/contato")} variant="primary" size="lg" data-magnetic>
-        Fale com nossa equipe
-      </Button>
-    </div>
-  </section>
-</BaseLayout>
-
-<style>
-  .hero-page { padding-block: var(--space-16) var(--space-8); }
-  .hero-page h1 { font-size: var(--fs-4xl); margin-top: var(--space-4); }
-  .lead { margin-top: var(--space-5); max-width: 70ch; font-size: var(--fs-lg); color: var(--color-text-muted); line-height: 1.5; }
-
-  .section { padding-block: var(--space-16); }
-  .banda { background: var(--color-bg); }
-  .section-header { max-width: 760px; margin-bottom: var(--space-8); }
-  .section-header h2 { margin-top: var(--space-4); font-size: var(--fs-3xl); }
-  .chamada { margin-top: var(--space-4); font-size: var(--fs-lg); font-weight: 600; color: var(--color-text); max-width: 60ch; }
-
-  .corpo { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-8); align-items: start; }
-  .texto { font-size: var(--fs-sm); color: var(--color-text-muted); line-height: 1.6; max-width: 56ch; }
-  .passos { display: grid; gap: var(--space-3); }
-  .passos li { display: flex; gap: var(--space-3); font-size: var(--fs-sm); color: var(--color-text-muted); }
-  .n { font-family: var(--font-display); font-weight: 800; color: var(--color-eyebrow); }
-
-  .fecho { text-align: center; padding-block: var(--space-16) var(--space-24); }
-  .fecho-inner h2 { font-size: var(--fs-3xl); max-width: 26ch; margin-inline: auto; }
-  .fecho-inner p { margin: var(--space-5) auto var(--space-8); max-width: 60ch; color: var(--color-text-muted); }
-
-  @media (max-width: 860px) { .corpo { grid-template-columns: 1fr; } }
-</style>
+<PaginaPreview pagina={parcerias} title="Seja um Parceiro da Proc" description="Indicação de oportunidades, parceria com desenvolvedores de software e parceria com profissionais técnicos." />

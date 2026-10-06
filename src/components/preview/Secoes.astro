@@ -1,0 +1,251 @@
+---
+/**
+ * Desenha os blocos de conteúdo de uma página do preview, na ordem em que
+ * aparecem no documento "Ajustes no site".
+ *
+ * As faixas alternam clara e escura como nas páginas de solução do site, e os
+ * estilos repetem os do BusinessUnitTemplate (cabeçalho de seção, chips, lista
+ * com marcador, cards, fluxo). O molde segue o documento: nada é cortado para
+ * caber. Ver src/data/preview/blocos.ts.
+ */
+import Button from "../Button.astro";
+import { withBase } from "../../utils/url";
+import type { Bloco } from "../../data/preview/blocos";
+
+interface Props {
+  blocos: Bloco[];
+}
+const { blocos } = Astro.props;
+
+// Links internos recebem o base path; âncoras e externos ficam como estão.
+const L = (href: string) => (href.startsWith("#") || href.startsWith("http") ? href : withBase(href));
+---
+
+{blocos.map((b, i) => {
+  const manifesto = b.estilo === "manifesto";
+  const clara = !manifesto && i % 2 === 0;
+  return (
+    <section
+      id={b.id}
+      class:list={["secao", { manifesto }]}
+      data-theme={clara ? "light" : undefined}
+    >
+      <div class="container">
+        {(b.eyebrow || b.titulo || b.subtitulo || b.paragrafos) && (
+          <div class="cabeca" data-reveal>
+            {b.eyebrow && <p class="eyebrow">{b.eyebrow}</p>}
+            {b.titulo && <h2>{b.titulo}</h2>}
+            {b.subtitulo && <p class="subtitulo">{b.subtitulo}</p>}
+            {b.paragrafos?.map((p) => <p class="paragrafo">{p}</p>)}
+          </div>
+        )}
+
+        {b.itens && (
+          <div class="lista" data-reveal>
+            {b.itensTitulo && <p class="lista-titulo">{b.itensTitulo}</p>}
+            {b.itensEstilo === "chips" ? (
+              <ul class="chips">{b.itens.map((it) => <li>{it}</li>)}</ul>
+            ) : b.itensEstilo === "numerada" ? (
+              <ol class="numerada">
+                {b.itens.map((it, n) => (
+                  <li><span class="num">{String(n + 1).padStart(2, "0")}</span>{it}</li>
+                ))}
+              </ol>
+            ) : (
+              <ul class="check">{b.itens.map((it) => <li>{it}</li>)}</ul>
+            )}
+          </div>
+        )}
+
+        {b.fluxo && (
+          <div class="fluxo-bloco" data-reveal>
+            {b.fluxoTitulo && <p class="lista-titulo">{b.fluxoTitulo}</p>}
+            <ol class="fluxo">
+              {b.fluxo.map((passo) => <li>{passo}</li>)}
+            </ol>
+          </div>
+        )}
+
+        {b.cards && (
+          <div class:list={["cards", `col-${b.colunas ?? 3}`]}>
+            {b.cards.map((c) => {
+              const Tag = c.href ? "a" : "div";
+              return (
+                <Tag id={c.id} href={c.href ? L(c.href) : undefined} class:list={["card", { link: !!c.href }]} data-reveal>
+                  {c.n && <span class="card-n">{c.n}</span>}
+                  <h3>{c.titulo}</h3>
+                  {c.subtitulo && <p class="card-sub">{c.subtitulo}</p>}
+                  {c.paragrafos?.map((p) => <p class="card-p">{p}</p>)}
+                  {c.itens && (
+                    <>
+                      {c.itensTitulo && <p class="card-lista-titulo">{c.itensTitulo}</p>}
+                      <ul class="chips pequeno">{c.itens.map((it) => <li>{it}</li>)}</ul>
+                    </>
+                  )}
+                  {c.depois?.map((p) => <p class="card-p">{p}</p>)}
+                  {c.fecho?.map((p) => <p class="card-fecho">{p}</p>)}
+                </Tag>
+              );
+            })}
+          </div>
+        )}
+
+        {b.formularios && (
+          <div class:list={["cards", `col-${Math.min(b.formularios.length, 3)}`]}>
+            {b.formularios.map((f) => (
+              <form class="card form" data-form-demo novalidate data-reveal>
+                <h3>{f.titulo}</h3>
+                {f.campos.map((campo) => (
+                  <label>
+                    <span>{campo}</span>
+                    {f.longos?.includes(campo) ? <textarea name={campo} rows="3" /> : <input type="text" name={campo} />}
+                  </label>
+                ))}
+                {f.opcoes && (
+                  <fieldset>
+                    {f.opcoes.map((op, n) => (
+                      <label class="opcao">
+                        <input type="radio" name={`${f.titulo}-opcao`} value={op} checked={n === 0} />
+                        <span>{op}</span>
+                      </label>
+                    ))}
+                  </fieldset>
+                )}
+                <button type="submit" class="enviar">Enviar</button>
+                <p class="status" data-form-status role="status" aria-live="polite" hidden></p>
+              </form>
+            ))}
+          </div>
+        )}
+
+        {(b.depois || b.fecho || b.ctas) && (
+          <div class="pe" data-reveal>
+            {b.depois?.map((p) => <p class="paragrafo">{p}</p>)}
+            {b.fecho?.map((p) => <p class="fecho">{p}</p>)}
+            {b.ctas && (
+              <div class="ctas">
+                {b.ctas.map((c, n) => (
+                  <Button href={L(c.href)} variant={n === 0 ? "primary" : manifesto || !clara ? "ghost" : "secondary"} size="lg">{c.label}</Button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+})}
+
+<style>
+  /* Mesmos valores das seções ricas do BusinessUnitTemplate. */
+  .secao { padding-block: var(--space-16); background: var(--color-bg); scroll-margin-top: var(--space-4); }
+  .cabeca { max-width: 760px; }
+  .cabeca h2 { font-size: var(--fs-3xl); }
+  .cabeca .eyebrow + h2 { margin-top: var(--space-4); }
+  .subtitulo { margin-top: var(--space-4); font-size: var(--fs-lg); font-weight: 600; color: var(--color-text); line-height: 1.45; }
+  .paragrafo { margin-top: var(--space-4); font-size: var(--fs-base); color: var(--color-text-muted); max-width: 70ch; line-height: 1.6; }
+  .cabeca > .paragrafo:first-child { margin-top: 0; font-size: var(--fs-lg); }
+
+  .lista, .fluxo-bloco, .cards, .pe { margin-top: var(--space-12); }
+  .lista-titulo { font-weight: 700; color: var(--color-text); margin-bottom: var(--space-4); }
+
+  .check { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-3) var(--space-8); max-width: 920px; }
+  .check li { position: relative; padding-left: 28px; font-size: var(--fs-sm); color: var(--color-text-muted); line-height: 1.5; }
+  .check li::before { content: "✓"; position: absolute; left: 0; top: -1px; color: var(--color-success); font-weight: 800; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .chips li {
+    font-size: var(--fs-sm); font-weight: 600; padding: 8px 14px;
+    border-radius: var(--radius-pill); background: var(--color-surface);
+    border: 1px solid var(--color-border); color: var(--color-text);
+  }
+  .chips.pequeno li { font-size: var(--fs-xs); padding: 6px 12px; background: var(--color-bg-alt); }
+
+  .numerada { display: grid; gap: var(--space-3); max-width: 760px; }
+  .numerada li { display: flex; gap: var(--space-4); align-items: baseline; font-size: var(--fs-base); color: var(--color-text); }
+  .num { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-lg); color: var(--color-eyebrow); min-width: 2ch; }
+
+  .fluxo { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+  .fluxo li {
+    display: inline-flex; align-items: center; gap: var(--space-2);
+    font-size: var(--fs-sm); font-weight: 700; color: var(--color-text);
+  }
+  .fluxo li:not(:last-child)::after { content: "→"; color: var(--color-eyebrow); font-weight: 800; margin-left: var(--space-2); }
+  .fluxo li { padding: 10px 16px; border-radius: var(--radius-pill); background: var(--color-surface); border: 1px solid var(--color-border); }
+  .fluxo li:not(:last-child) { padding-right: var(--space-3); }
+
+  .cards { display: grid; gap: var(--space-6); }
+  .cards.col-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cards.col-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .cards.col-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .card {
+    display: flex; flex-direction: column;
+    padding: var(--space-8); border-radius: var(--radius-md);
+    background: var(--color-surface); border: 1px solid var(--color-border);
+    scroll-margin-top: var(--space-4);
+  }
+  .card.link { transition: transform var(--dur-fast) var(--ease-out), border-color var(--dur-fast) ease; }
+  .card.link:hover { transform: translateY(-4px); border-color: var(--color-border-strong); }
+  .card-n { font-family: var(--font-display); font-size: var(--fs-xl); font-weight: 800; color: var(--color-eyebrow); }
+  .card h3 { font-size: var(--fs-lg); }
+  .card-n + h3 { margin-top: var(--space-2); }
+  .card-sub { margin-top: var(--space-3); font-size: var(--fs-sm); font-weight: 600; color: var(--color-text); line-height: 1.45; }
+  .card-p { margin-top: var(--space-3); font-size: var(--fs-sm); color: var(--color-text-muted); line-height: 1.55; }
+  .card-lista-titulo { margin-top: var(--space-4); font-size: var(--fs-sm); font-weight: 700; color: var(--color-text); }
+  .card .chips { margin-top: var(--space-3); }
+  .card-fecho { margin-top: var(--space-4); font-size: var(--fs-sm); font-weight: 700; color: var(--color-text); }
+
+  .pe { max-width: 760px; }
+  .pe > .paragrafo:first-child { margin-top: 0; }
+  .fecho { margin-top: var(--space-4); font-family: var(--font-display); font-weight: 800; font-size: var(--fs-xl); text-transform: uppercase; letter-spacing: 0.01em; color: var(--color-text); line-height: var(--lh-tight); }
+  .ctas { display: flex; flex-wrap: wrap; gap: var(--space-4); margin-top: var(--space-8); }
+
+  /* Faixa escura centrada, para declarações e fechos de página. */
+  .manifesto { background: linear-gradient(135deg, var(--navy-900), var(--navy-800)); text-align: center; padding-block: var(--space-24); }
+  .manifesto .cabeca, .manifesto .pe { margin-inline: auto; }
+  .manifesto .paragrafo { margin-inline: auto; }
+  .manifesto .ctas { justify-content: center; }
+  .manifesto .check { margin-inline: auto; }
+
+  /* Formulários: desenho do que o documento pede, sem envio nesta cópia. */
+  .form { gap: var(--space-4); }
+  .form label { display: grid; gap: var(--space-2); }
+  .form label span { font-size: var(--fs-sm); font-weight: 600; color: var(--color-text); }
+  .form input[type="text"], .form textarea {
+    min-height: 44px; padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--color-border-ui); border-radius: var(--radius-sm);
+    background: var(--color-bg); color: var(--color-text); font: inherit;
+  }
+  .form fieldset { border: 0; margin: 0; padding: 0; display: grid; gap: var(--space-2); }
+  .form .opcao { display: flex; align-items: center; gap: var(--space-3); min-height: 32px; }
+  .form .opcao span { font-weight: 500; }
+  .enviar {
+    justify-self: start; align-self: flex-start; min-height: 48px; padding-inline: var(--space-8);
+    border: none; border-radius: var(--radius-pill);
+    background: var(--color-primary); color: var(--white); font-weight: 700;
+  }
+  .enviar:hover { background: var(--color-primary-dark); }
+  .status { padding: var(--space-4); border-radius: var(--radius-sm); background: var(--color-bg-alt); border: 1px solid var(--color-border); font-size: var(--fs-sm); color: var(--color-text); }
+
+  @media (max-width: 1000px) {
+    .cards.col-3, .cards.col-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 720px) {
+    .cards.col-2, .cards.col-3, .cards.col-4, .check { grid-template-columns: 1fr; }
+    .card { padding: var(--space-6); }
+  }
+</style>
+
+<script>
+  // Cópia de avaliação: os formulários não têm para onde enviar. Avisa quem
+  // clicar, em vez de fingir que a mensagem foi.
+  document.querySelectorAll<HTMLFormElement>("[data-form-demo]").forEach((form) => {
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const status = form.querySelector<HTMLElement>("[data-form-status]");
+      if (!status) return;
+      status.hidden = false;
+      status.textContent = "Este formulário é de demonstração e ainda não envia dados.";
+    });
+  });
+</script>
