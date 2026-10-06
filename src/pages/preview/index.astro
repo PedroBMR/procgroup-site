@@ -149,7 +149,9 @@ import { herois, oQueFazemos, unidades, navPreview } from "../../data/preview/aj
     background: color-mix(in srgb, var(--unit-color), white 24%);
   }
   .card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); border-color: color-mix(in srgb, var(--unit-color), white 36%); }
-  .card-icone { color: color-mix(in srgb, var(--unit-color), white 40%); }
+  /* Cor cheia da unidade: esta faixa é clara, e o tom clareado com branco que
+     os cards escuros usam some sobre o branco. */
+  .card-icone { color: var(--unit-color); }
   .card-icone :global(.unit-icon) { width: 28px; height: 28px; }
   .card h3 { margin-top: var(--space-4); font-size: var(--fs-lg); }
   .card-chamada { margin-top: var(--space-3); font-size: var(--fs-sm); font-weight: 600; color: var(--color-text); }
