@@ -98,7 +98,7 @@ export const menu = [
   { label: "Parcerias", href: "/preview/parcerias" },
   { label: "Proc City", href: "#proc-city", externo: true },
   { label: "Blog", href: "/blog" },
-  { label: "Contato", href: "/contato" },
+  { label: "Contato", href: "/preview/contato" },
 ];
 
 /* ══════════════════ HOME: OS QUATRO HERÓIS ══════════════════ */
@@ -112,7 +112,7 @@ export const herois = [
     texto:
       "Infraestrutura de TI, hospedagem em nuvem e inteligência aplicada às operações através de visão computacional e IA. A Proc Group combina tecnologia, experiência e suporte especializado para proteger dados, sustentar ambientes críticos e transformar informações em inteligência para a gestão.",
     cta: { label: "Conheça nossas soluções", href: "/preview/solucoes" },
-    cta2: { label: "Fale com um especialista", href: "/contato" },
+    cta2: { label: "Fale com um especialista", href: "/preview/contato" },
   },
   {
     id: "infra",
@@ -122,7 +122,7 @@ export const herois = [
     texto:
       "Cuidamos e protegemos a infraestrutura que sustenta o seu negócio, de ambientes locais e em nuvem a redes, servidores, bancos de dados, segurança, backup e suporte especializado.",
     cta: { label: "Conheça Infraestrutura de TI", href: "/preview/infraestrutura-de-ti" },
-    cta2: { label: "Fale com um especialista", href: "/contato" },
+    cta2: { label: "Fale com um especialista", href: "/preview/contato" },
   },
   {
     id: "nuvem",
@@ -131,7 +131,7 @@ export const herois = [
     sub: "Hospedagem de aplicações, arquivos e bancos de dados em ambientes preparados para garantir segurança, estabilidade e performance.",
     texto: "Conte com uma infraestrutura robusta e segura, gerenciamento especializado e suporte 24/7.",
     cta: { label: "Conheça a Hospedagem em Nuvem", href: "/preview/hospedagem-em-nuvem" },
-    cta2: { label: "Fale com um especialista", href: "/contato" },
+    cta2: { label: "Fale com um especialista", href: "/preview/contato" },
   },
   {
     id: "visao",
@@ -141,7 +141,7 @@ export const herois = [
     texto:
       "A Plataforma Proc transforma imagens capturadas pelas câmeras em dados analíticos que apoiam segurança, gestão, produtividade e tomada de decisão.",
     cta: { label: "Conheça a Plataforma Proc", href: "/preview/visao-computacional" },
-    cta2: { label: "Fale com um especialista", href: "/contato" },
+    cta2: { label: "Fale com um especialista", href: "/preview/contato" },
   },
 ];
 
