@@ -112,7 +112,6 @@ const schema = [
 ---
 
 <BaseLayout title={metaTitle} description={metaDescription} schema={schema} nav={nav} noIndex={noIndex}>
-  <Fragment slot="aviso"><slot name="aviso" /></Fragment>
   <section class="hero-page">
     <div class="container">
       <p class="eyebrow">{unit.shortName}</p>
@@ -245,7 +244,6 @@ const schema = [
                   <ul class="chip-list">
                     {g.items.map((it) => <li>{it}</li>)}
                   </ul>
-                  {g.aviso && <p class="feature-group-aviso">{g.aviso}</p>}
                 </div>
               ))}
             </div>
@@ -495,16 +493,6 @@ const schema = [
   }
   .feature-group h3 { font-size: var(--fs-lg); }
   .feature-group-intro { margin-top: var(--space-3); font-size: var(--fs-sm); color: var(--color-text-muted); line-height: 1.5; }
-  .feature-group-aviso {
-    margin-top: var(--space-5);
-    padding: var(--space-4);
-    border-left: 3px solid var(--color-primary);
-    border-radius: var(--radius-sm);
-    background: rgba(226, 8, 29, 0.07);
-    font-size: var(--fs-xs);
-    color: var(--color-text-muted);
-    line-height: 1.5;
-  }
   .chip-list { list-style: none; padding: 0; margin: var(--space-5) 0 0; display: flex; flex-wrap: wrap; gap: var(--space-2); }
   .chip-list li {
     font-size: var(--fs-xs); font-weight: 600; padding: 6px 12px;

@@ -245,9 +245,6 @@ const schemaList = Array.isArray(schema) ? schema : schema ? [schema] : [];
     <AvisoColeta />
     {!bare && <TopBar />}
     {!bare && <Header nav={nav} />}
-    {/* Faixa colada abaixo do cabeçalho, fora do <main>. Hoje só o preview da
-        reestruturação usa, para avisar que a página não é o site no ar. */}
-    <slot name="aviso" />
     <main id="main" tabindex="-1">
       <slot />
     </main>

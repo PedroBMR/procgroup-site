@@ -17,12 +17,6 @@ export interface FeatureGroup {
   title: string;
   intro?: string;
   items: string[];
-  /**
-   * Nota curta exibida dentro do grupo, destacada. Hoje só o preview da
-   * reestruturação usa, para mostrar na tela qual bloco foi reescrito por
-   * causa de regra de LGPD e o que saiu.
-   */
-  aviso?: string;
 }
 export interface NamedItem {
   name: string;

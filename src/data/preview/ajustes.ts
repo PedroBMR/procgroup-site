@@ -13,8 +13,9 @@
  *
  * 2. Os três blocos de risco de LGPD (R1 da auditoria). Estão marcados com
  *    `revisado`, trazem o texto que eu escreveria no lugar e dizem o que saiu.
- *    O preview mostra o aviso na tela, para a decisão ser visível e não
- *    silenciosa.
+ *    O campo continua aqui, mas NÃO aparece mais na tela: as páginas mostram só
+ *    o texto reescrito, como ficariam no ar. A lista do que mudou e por quê
+ *    está em AUDITORIA-AJUSTES-SITE.md, que é onde a decisão se resolve.
  */
 
 import { withBase } from "../../utils/url";
@@ -722,14 +723,10 @@ export function richDaArea(area: Area): SolutionRich {
     challengesTitle: `O que a Proc faz em ${area.nome}`,
     challengesIntro: area.intro,
     featuresTitle: `Nossas soluções em ${area.nome}`,
-    featuresIntro: `${area.solucoes.length} soluções, na ordem em que o documento apresenta.`,
     featureGroups: area.solucoes.map((s) => ({
       title: `${s.n}. ${s.titulo}`,
       intro: [s.resumo, s.intro].filter(Boolean).join(" "),
       items: s.itens ?? [],
-      aviso: s.revisado
-        ? `Reescrito em relação ao documento. Saiu: ${s.revisado.saiu}. Por quê: ${s.revisado.porque}`
-        : undefined,
     })),
   };
 }

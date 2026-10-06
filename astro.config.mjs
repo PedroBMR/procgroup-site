@@ -4,7 +4,11 @@ import sitemap from '@astrojs/sitemap';
 
 // Virada de dominio em 2026-09-25. O canonico e SEM www: o proprio servidor
 // responde 301 de www.procgroup.com.br para procgroup.com.br.
-const SITE = 'https://procgroup.com.br';
+// SITE_URL existe para subir uma COPIA de avaliacao em outro endereco (uma
+// pages.dev, por exemplo) sem mexer no arquivo: como o host deixa de ser o da
+// Proc, EH_PRODUCAO fica false e toda pagina sai com noindex, que e o que se
+// quer numa copia. Sem a variavel, nada muda.
+const SITE = process.env.SITE_URL ?? 'https://procgroup.com.br';
 
 // Espelha src/utils/deploy.ts — config .mjs nao consegue importar .ts, entao a
 // checagem esta repetida aqui. Se a lista de hosts mudar la, mude aqui tambem.

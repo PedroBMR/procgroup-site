@@ -1,33 +1,30 @@
 ---
 /**
- * Preview do índice de Soluções: as três áreas do documento.
+ * O índice de Soluções com as três áreas do documento, como ficaria no ar.
  *
- * TEMPORÁRIO, fora do site no ar. Mesmos cards e mesmos estilos do índice de
- * soluções publicado, só com as três áreas novas no lugar das unidades de
- * hoje.
+ * Fora do site publicado, mas sem nada de preview na tela. Mesmos cards e
+ * mesmos estilos do índice de soluções de hoje, só com as três áreas novas no
+ * lugar das unidades atuais.
  */
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import AvisoPreview from "../../components/preview/AvisoPreview.astro";
 import UnitIcon from "../../components/UnitIcon.astro";
 import { withBase } from "../../utils/url";
 import { unidades, areas, navPreview } from "../../data/preview/ajustes";
 ---
 
 <BaseLayout
-  title="Preview: Soluções"
-  description="Preview interno da reestruturação do site."
+  title="Soluções"
+  description="Infraestrutura de TI, hospedagem em nuvem e visão computacional com IA. Três áreas de negócio, uma equipe especializada em cada uma."
   nav={navPreview()}
   noIndex
 >
-  <AvisoPreview slot="aviso" />
-
   <section class="hero-page">
     <div class="container">
       <p class="eyebrow">Soluções</p>
       <h1>Três áreas de negócio. Uma equipe especializada em cada uma.</h1>
       <p class="lead">
-        A ordem é a do documento: Infraestrutura de TI, Hospedagem em nuvem, e Visão
-        Computacional e Vídeo Analytics.
+        Da infraestrutura que mantém a operação funcionando à inteligência artificial que
+        transforma imagens em informação. Escolha por onde começar.
       </p>
     </div>
   </section>

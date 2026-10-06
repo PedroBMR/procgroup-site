@@ -1,30 +1,27 @@
 ---
 /**
- * Preview da página Seja um Parceiro da Proc.
+ * A página Seja um Parceiro da Proc, como ficaria no ar.
  *
- * TEMPORÁRIO, fora do site no ar. Mesmas seções do site: hero, faixas
- * alternando claro e escuro, cards com borda. Antes tinha fundo próprio.
+ * Fora do site publicado, mas sem nada de preview na tela. Mesmas seções do
+ * site: hero, faixas alternando claro e escuro, cards com borda.
  *
- * O modelo de Indicação de Oportunidades aparece bloqueado, com o motivo na
- * tela: são dois travamentos da auditoria, o formulário que coleta dado
- * pessoal de terceiro sem base legal declarada (R2) e as 12 regras que citam
- * um regulamento que ainda não existe (R4).
+ * O primeiro modelo, Indicação de Oportunidades, está desenhado aqui mas NÃO
+ * pode ir ao ar como está: o formulário coleta dado pessoal de terceiro sem
+ * base legal declarada (R2) e as 12 regras citam um regulamento que ainda não
+ * existe (R4). Os dois estão em AUDITORIA-AJUSTES-SITE.md.
  */
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import AvisoPreview from "../../components/preview/AvisoPreview.astro";
 import Button from "../../components/Button.astro";
 import { withBase } from "../../utils/url";
 import { parcerias, navPreview } from "../../data/preview/ajustes";
 ---
 
 <BaseLayout
-  title="Preview: Parcerias"
-  description="Preview interno da reestruturação do site."
+  title="Seja um Parceiro da Proc"
+  description="Indicação de oportunidades, parceria com desenvolvedores de software e parceria com profissionais técnicos. Três formas de crescer junto com a Proc."
   nav={navPreview()}
   noIndex
 >
-  <AvisoPreview slot="aviso" />
-
   <section class="hero-page">
     <div class="container">
       <p class="eyebrow">{parcerias.titulo}</p>
@@ -49,11 +46,6 @@ import { parcerias, navPreview } from "../../data/preview/ajustes";
             ))}
           </ol>
         </div>
-        {m.bloqueio && (
-          <p class="alerta" data-reveal>
-            <strong>Não entra no ar ainda.</strong> {m.bloqueio}
-          </p>
-        )}
       </div>
     </section>
   ))}
@@ -85,19 +77,6 @@ import { parcerias, navPreview } from "../../data/preview/ajustes";
   .passos { display: grid; gap: var(--space-3); }
   .passos li { display: flex; gap: var(--space-3); font-size: var(--fs-sm); color: var(--color-text-muted); }
   .n { font-family: var(--font-display); font-weight: 800; color: var(--color-eyebrow); }
-
-  .alerta {
-    margin-top: var(--space-8);
-    max-width: 76ch;
-    padding: var(--space-5);
-    border-left: 3px solid var(--color-primary);
-    border-radius: var(--radius-sm);
-    background: rgba(226, 8, 29, 0.07);
-    font-size: var(--fs-xs);
-    color: var(--color-text-muted);
-    line-height: 1.55;
-  }
-  .alerta strong { color: var(--color-text); }
 
   .fecho { text-align: center; padding-block: var(--space-16) var(--space-24); }
   .fecho-inner h2 { font-size: var(--fs-3xl); max-width: 26ch; margin-inline: auto; }

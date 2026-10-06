@@ -1,30 +1,29 @@
 ---
 /**
- * Preview da página A Proc, reescrita conforme o documento de 2026-10-05.
+ * A página A Proc reescrita conforme o documento de 2026-10-05, como ficaria no
+ * ar.
  *
- * TEMPORÁRIO, fora do site no ar. Usa as mesmas seções da página Empresa
- * publicada: hero, faixa clara com a linha do tempo, cards de diferencial,
- * missão e visão. Antes esta página tinha fundo e tipografia próprios.
+ * Fora do site publicado, mas sem nada de preview na tela. Mesmas seções da
+ * página Empresa de hoje: hero, faixa clara com a linha do tempo, cards de
+ * diferencial, missão e visão.
  *
- * Dois avisos aparecem na tela, os dois na auditoria: a atuação em Paraguai,
- * Argentina e Bolívia (R3) e a construção "referência nacional" dentro da
- * Visão, que a skill contexto-proc proíbe.
+ * Dois trechos desta página dependem de decisão e estão em
+ * AUDITORIA-AJUSTES-SITE.md, não mais na tela: a atuação em Paraguai,
+ * Argentina e Bolívia (R3), que não consta no cofre, e "referência nacional"
+ * dentro da Visão, construção que a skill contexto-proc proíbe.
  */
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import AvisoPreview from "../../components/preview/AvisoPreview.astro";
 import Button from "../../components/Button.astro";
 import { withBase } from "../../utils/url";
 import { aProc, navPreview } from "../../data/preview/ajustes";
 ---
 
 <BaseLayout
-  title="Preview: A Proc"
-  description="Preview interno da reestruturação do site."
+  title="A Proc"
+  description="Desde 2014 a Proc desenvolve e sustenta tecnologia para empresas que dependem dos seus ambientes para operar, crescer e evoluir."
   nav={navPreview()}
   noIndex
 >
-  <AvisoPreview slot="aviso" />
-
   <section class="hero-page">
     <div class="container">
       <p class="eyebrow">{aProc.titulo}</p>
@@ -75,9 +74,6 @@ import { aProc, navPreview } from "../../data/preview/ajustes";
         <h2>{aProc.alcance.titulo}</h2>
         <p class="lead">{aProc.alcance.texto}</p>
       </div>
-      <p class="alerta" data-reveal>
-        <strong>Precisa de confirmação antes de publicar.</strong> {aProc.alcance.alerta}
-      </p>
     </div>
   </section>
 
@@ -91,11 +87,6 @@ import { aProc, navPreview } from "../../data/preview/ajustes";
         <div class="cartao" data-reveal>
           <p class="eyebrow">Nossa Visão</p>
           <p class="mv">{aProc.visao}</p>
-          <p class="alerta pequeno">
-            <strong>Atenção.</strong> A skill contexto-proc proíbe construções de superioridade e
-            cita "referência nacional" entre elas. Isto já está no site hoje, dentro da Visão.
-            Decisão sua: mantém como aspiração declarada ou sai.
-          </p>
         </div>
         <div class="cartao" data-reveal>
           <p class="eyebrow">Nosso Propósito</p>
@@ -161,19 +152,6 @@ import { aProc, navPreview } from "../../data/preview/ajustes";
   .cartao h3 { font-size: var(--fs-base); }
   .cartao p { margin-top: var(--space-3); font-size: var(--fs-sm); color: var(--color-text-muted); line-height: 1.55; }
   .mv { margin-top: var(--space-4) !important; }
-
-  .alerta {
-    max-width: 76ch;
-    padding: var(--space-5);
-    border-left: 3px solid var(--color-primary);
-    border-radius: var(--radius-sm);
-    background: rgba(226, 8, 29, 0.07);
-    font-size: var(--fs-xs);
-    color: var(--color-text-muted);
-    line-height: 1.55;
-  }
-  .alerta strong { color: var(--color-text); }
-  .alerta.pequeno { margin-top: var(--space-4); padding: var(--space-4); }
 
   .fecho { text-align: center; padding-block: var(--space-16) var(--space-24); }
   .fecho-inner h2 { font-size: var(--fs-3xl); max-width: 26ch; margin-inline: auto; margin-bottom: var(--space-8); }

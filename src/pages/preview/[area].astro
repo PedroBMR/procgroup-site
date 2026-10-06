@@ -1,18 +1,17 @@
 ---
 /**
- * Preview das três páginas de área de negócio.
+ * As três páginas de área de negócio, como ficariam no ar.
  *
- * TEMPORÁRIO, fora do site no ar. Usa o BusinessUnitTemplate de produção, o
- * mesmo das páginas de solução que estão publicadas: a área vai como unidade
- * pronta (`unit`) e as soluções do documento vão como conteúdo longo
- * (`richDaArea`). Antes esta página tinha CSS próprio e por isso parecia de
- * outro site.
+ * Fora do site publicado, mas sem nada de preview na tela: usa o
+ * BusinessUnitTemplate de produção, o mesmo das páginas de solução que já
+ * estão no ar. A área vai como unidade pronta (`unit`) e as soluções do
+ * documento vão como conteúdo longo (`richDaArea`).
  *
- * Os blocos que eu reescrevi por causa de regra de LGPD aparecem com o aviso
- * dentro do próprio bloco, dizendo o que saiu e por quê.
+ * Três blocos de Visão Computacional estão com o texto REESCRITO por causa das
+ * regras de LGPD. O que saiu e por quê está em AUDITORIA-AJUSTES-SITE.md, não
+ * mais na tela: aqui fica só o texto que eu publicaria.
  */
 import BusinessUnitTemplate from "../../components/BusinessUnitTemplate.astro";
-import AvisoPreview from "../../components/preview/AvisoPreview.astro";
 import { areas, unidades, unidadeDaArea, richDaArea, navPreview } from "../../data/preview/ajustes";
 
 export function getStaticPaths() {
@@ -30,8 +29,8 @@ const outras = unidades.filter((u) => u.slug !== area.slug);
   outras={outras}
   rich={richDaArea(area)}
   nav={navPreview()}
-  metaTitle={`Preview: ${area.nome}`}
-  metaDescription="Preview interno da reestruturação do site."
+  metaTitle={area.nome}
+  metaDescription={area.subchamada}
   heroTitle={area.chamada}
   heroLead={area.subchamada}
   solutionsHeading={`Nossas soluções em ${area.nome}`}
@@ -40,6 +39,4 @@ const outras = unidades.filter((u) => u.slug !== area.slug);
   finalCtaTitle={area.fecho.titulo}
   finalCtaText={area.fecho.texto}
   noIndex
->
-  <AvisoPreview slot="aviso" />
-</BusinessUnitTemplate>
+/>
