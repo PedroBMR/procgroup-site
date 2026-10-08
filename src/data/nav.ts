@@ -2,25 +2,12 @@ import { whatsappDemo } from "./contact";
 import { useTranslations, localizePath } from "../i18n/utils";
 import type { Locale } from "../i18n/config";
 import { secoes } from "./secoes";
+import type { SolutionsMenu } from "./megaMenu";
 
 export interface NavChild {
   label: string;
   href: string;
   description?: string;
-}
-
-/**
- * Coluna de um mega-menu: uma área de negócio e os itens dela.
- *
- * Existe porque o documento "Ajustes no site" (2026-10-05) pede o submenu de
- * Soluções em três colunas, uma por área, com todos os subitens visíveis. O
- * dropdown de coluna única continua sendo o padrão: nada no menu de produção
- * declara `colunas` hoje.
- */
-export interface NavColuna {
-  titulo: string;
-  href: string;
-  itens: NavChild[];
 }
 
 export interface NavItem {
@@ -29,8 +16,12 @@ export interface NavItem {
   label: string;
   href: string;
   children?: NavChild[];
-  /** Submenu em colunas. Quando presente, vence `children` no Header. */
-  colunas?: NavColuna[];
+  /**
+   * Mega-menu de Soluções (SolutionsMegaMenu). Quando presente, vence
+   * `children` no Header. Nada no menu de produção declara isto hoje: só o
+   * preview da reestruturação.
+   */
+  mega?: SolutionsMenu;
   /** Link para fora do site (não recebe base path nem destaque de página). */
   externo?: boolean;
 }

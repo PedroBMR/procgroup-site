@@ -1,0 +1,11 @@
+---
+// Ícone de linha do mega-menu. Os desenhos ficam em src/data/iconesMenu.ts.
+import { ICONES_MENU, type NomeIconeMenu } from "../data/iconesMenu";
+
+interface Props {
+  nome: NomeIconeMenu;
+  class?: string;
+}
+const { nome, class: className = "" } = Astro.props;
+---
+<svg class={`menu-icon ${className}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false" set:html={ICONES_MENU[nome]} />

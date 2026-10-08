@@ -19,6 +19,7 @@ import type { BusinessUnit } from "../businessUnits";
 import { infra } from "./paginas/infra";
 import { nuvem } from "./paginas/nuvem";
 import { visao } from "./paginas/visao";
+import { montarMenuSolucoes } from "./menuSolucoes";
 
 /* ══════════════════ MENU ══════════════════ */
 
@@ -237,15 +238,7 @@ export function navPreview(): NavItem[] {
     id: item.href.replace(/[^a-z]/g, "") || "item",
     label: item.label,
     href: L(item.href),
-    ...(item.blocos
-      ? {
-          colunas: item.blocos.map((bloco) => ({
-            titulo: bloco.area,
-            href: L(bloco.href),
-            itens: bloco.itens.map((i) => ({ label: i.label, href: `${L(bloco.href)}#${i.ancora}` })),
-          })),
-        }
-      : {}),
+    ...(item.blocos ? { mega: montarMenuSolucoes(item.blocos, L) } : {}),
     ...(item.filhos
       ? { children: item.filhos.map((f) => ({ label: f.label, href: `${L(item.href)}#${f.ancora}` })) }
       : {}),

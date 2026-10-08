@@ -1,0 +1,194 @@
+---
+/**
+ * Mega-menu de Soluções, versão celular (até 1200px).
+ *
+ * Navegação em camadas dentro do menu do celular, com "Voltar" em cada nível:
+ *
+ *   Soluções   Áreas de negócio (3), Proc City, e o grupo Acessos à parte
+ *   Área       as soluções daquela área e o link para a página dela
+ *
+ * A mesma separação do desktop: Acessos nunca se mistura com as áreas.
+ *
+ * O link "Soluções" da lista principal mora no Header e aponta para esta
+ * camada pelo atributo data-m-abrir. Sem JS ele continua levando à página de
+ * soluções. As camadas ficam fora da <ul> principal, que some enquanto uma
+ * camada está aberta.
+ */
+import UnitIcon from "./UnitIcon.astro";
+import MenuIcon from "./MenuIcon.astro";
+import type { SolutionsMenu } from "../data/megaMenu";
+
+interface Props {
+  dados: SolutionsMenu;
+  id: string;
+}
+const { dados, id } = Astro.props;
+const { businessAreas, external, ctas } = dados;
+const raiz = `${id}-m`;
+---
+
+<div class="m-camadas" data-m-camadas>
+  <section class="m-view" id={raiz} data-m-view aria-label="Soluções" hidden>
+    <button type="button" class="m-voltar" data-m-voltar>
+      <MenuIcon nome="seta" class="m-voltar-seta" /> Menu
+    </button>
+    <p class="m-titulo">Soluções</p>
+
+    <p class="m-grupo">Áreas de negócio</p>
+    <ul class="m-lista">
+      {businessAreas.map((a) => (
+        <li>
+          <button type="button" class="m-item" data-m-ir={`${raiz}-${a.id}`}>
+            <span class="m-icone"><UnitIcon slug={a.icone} /></span>
+            <span class="m-item-titulo">{a.titulo}</span>
+            <MenuIcon nome="seta" class="m-seta" />
+          </button>
+        </li>
+      ))}
+      {external && (
+        <li class="m-externo-li">
+          <a
+            href={external.url ?? undefined}
+            target={external.url ? "_blank" : undefined}
+            rel={external.url ? "noopener noreferrer" : undefined}
+            class="m-item m-externo"
+          >
+            <span class="m-icone"><UnitIcon slug={external.icone} /></span>
+            <span class="m-item-titulo">
+              {external.titulo}
+              <span class="m-nota">Site da {external.titulo}</span>
+            </span>
+            <MenuIcon nome="externo" class="m-seta" />
+          </a>
+        </li>
+      )}
+    </ul>
+
+    <p class="m-grupo">Acessos</p>
+    <ul class="m-lista">
+      {ctas.map((c) => (
+        <li>
+          <a href={c.href} class="m-item">
+            <span class="m-icone"><MenuIcon nome={c.icone} /></span>
+            <span class="m-item-titulo">
+              {c.titulo}
+              <span class="m-nota">{c.descricao}</span>
+            </span>
+            <MenuIcon nome="seta" class="m-seta" />
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  {businessAreas.map((a) => (
+    <section class="m-view" id={`${raiz}-${a.id}`} data-m-view aria-label={a.titulo} hidden>
+      <button type="button" class="m-voltar" data-m-voltar={raiz}>
+        <MenuIcon nome="seta" class="m-voltar-seta" /> Soluções
+      </button>
+      <p class="m-titulo">{a.titulo}</p>
+      <a href={a.href} class="m-ver">Conheça {a.titulo} <MenuIcon nome="seta" /></a>
+      <ul class="m-lista">
+        {a.solucoes.map((s) => (
+          <li>
+            <a href={s.href} class="m-item">
+              <span class="m-icone"><MenuIcon nome={s.icone} /></span>
+              <span class="m-item-titulo">{s.titulo}</span>
+              <MenuIcon nome="seta" class="m-seta" />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</div>
+
+<style>
+  .m-camadas { padding: var(--space-2) var(--space-6) var(--space-8); }
+  .m-view { animation: m-entra 180ms var(--ease-out); }
+  @keyframes m-entra { from { opacity: 0; transform: translateX(14px); } to { opacity: 1; transform: none; } }
+
+  .m-voltar {
+    display: inline-flex; align-items: center; gap: var(--space-2);
+    min-height: 44px; padding: 0; border: 0; background: none;
+    font-size: var(--fs-sm); font-weight: 600; color: var(--ink-300);
+  }
+  .m-voltar :global(.m-voltar-seta) { width: 16px; height: 16px; transform: rotate(180deg); }
+  .m-titulo {
+    margin-top: var(--space-2);
+    font-family: var(--font-display); font-weight: 800; font-size: var(--fs-xl);
+    text-transform: uppercase; letter-spacing: 0.02em; color: var(--white); line-height: 1.15;
+  }
+  .m-grupo {
+    margin-top: var(--space-6); margin-bottom: var(--space-2);
+    font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--ink-500);
+  }
+  .m-lista { display: grid; gap: 2px; }
+  .m-item {
+    display: grid; grid-template-columns: 36px minmax(0, 1fr) 16px; align-items: center; gap: var(--space-3);
+    width: 100%; min-height: 52px; padding: var(--space-2) 0;
+    border: 0; background: none; text-align: left; color: var(--white);
+  }
+  .m-icone {
+    display: grid; place-items: center; width: 36px; height: 36px; border-radius: 9px;
+    background: var(--surface-3); color: var(--ink-300);
+  }
+  .m-icone :global(svg) { width: 20px; height: 20px; }
+  .m-item-titulo { display: grid; gap: 2px; font-size: var(--fs-base); font-weight: 600; line-height: 1.3; }
+  .m-nota { font-size: var(--fs-xs); font-weight: 400; color: var(--ink-500); }
+  .m-item :global(.m-seta) { width: 16px; height: 16px; color: var(--ink-500); }
+  .m-item:active .m-icone, .m-item:hover .m-icone { color: var(--red-400); }
+  .m-externo-li { margin-top: var(--space-2); padding-top: var(--space-2); border-top: 1px solid var(--color-border); }
+  .m-ver {
+    display: inline-flex; align-items: center; gap: var(--space-2);
+    min-height: 44px; margin-top: var(--space-2); margin-bottom: var(--space-2);
+    font-size: var(--fs-sm); font-weight: 700; color: var(--red-400);
+  }
+  .m-ver :global(svg) { width: 16px; height: 16px; }
+
+  @media (prefers-reduced-motion: reduce) { .m-view { animation: none; } }
+</style>
+
+<script>
+  const nav = document.querySelector<HTMLElement>("[data-mobile-nav]");
+  const camadas = nav?.querySelector<HTMLElement>("[data-m-camadas]");
+
+  if (nav && camadas) {
+    const views = Array.from(camadas.querySelectorAll<HTMLElement>("[data-m-view]"));
+
+    function mostrar(id: string | null) {
+      views.forEach((v) => { v.hidden = v.id !== id; });
+      nav!.classList.toggle("m-sub", id !== null);
+      nav!.scrollTop = 0;
+      if (id) camadas!.querySelector<HTMLElement>(`#${CSS.escape(id)} .m-voltar`)?.focus();
+    }
+
+    // Abrir a camada a partir do link "Soluções" da lista principal. O
+    // stopPropagation impede o Header de fechar o menu, que ele faz em todo
+    // clique de link dentro do menu do celular.
+    nav.querySelectorAll<HTMLElement>("[data-m-abrir]").forEach((link) => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        mostrar(link.dataset.mAbrir ?? null);
+      });
+    });
+
+    camadas.addEventListener("click", (e) => {
+      const el = (e.target as HTMLElement).closest<HTMLElement>("[data-m-ir], [data-m-voltar]");
+      if (!el) return;
+      if (el.dataset.mIr) mostrar(el.dataset.mIr);
+      else {
+        const destino = el.dataset.mVoltar || null;
+        mostrar(destino);
+        if (!destino) nav.querySelector<HTMLElement>("[data-m-abrir]")?.focus();
+      }
+    });
+
+    // Quando o menu do celular fecha, a próxima abertura começa do topo.
+    new MutationObserver(() => {
+      if (!nav.classList.contains("is-open")) mostrar(null);
+    }).observe(nav, { attributes: true, attributeFilter: ["class"] });
+  }
+</script>

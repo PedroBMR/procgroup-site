@@ -2,6 +2,8 @@
 import { getMainNav, getCtaNav, getHomeHref, type NavItem } from "../data/nav";
 import Button from "./Button.astro";
 import Logo from "./Logo.astro";
+import SolutionsMegaMenu from "./SolutionsMegaMenu.astro";
+import SolutionsMegaMenuMobile from "./SolutionsMegaMenuMobile.astro";
 import { getLangFromUrl, useTranslations } from "../i18n/utils";
 
 interface Props {
@@ -66,6 +68,9 @@ function itemAtivo(item: { href: string; children?: { href: string }[] }): boole
 }
 const menuLabel = { pt: "Abrir menu", en: "Open menu", es: "Abrir menú" }[lang];
 const homeAria = { pt: "Proc Group, página inicial", en: "Proc Group, home", es: "Proc Group, inicio" }[lang];
+// Mega-menu de Soluções: um por página, então o id é fixo.
+const MEGA_ID = "mega-solucoes";
+const itemMega = mainNav.find((item) => item.mega);
 ---
 
 <header class="site-header" data-header>
@@ -78,24 +83,19 @@ const homeAria = { pt: "Proc Group, página inicial", en: "Proc Group, home", es
     <nav class="main-nav" aria-label={common.navMain}>
       <ul>
         {mainNav.map((item) => (
-          <li class:list={["nav-item", { "has-children": item.children || item.colunas, "tem-mega": item.colunas }]}>
-            <a href={item.href} class:list={{ atual: itemAtivo(item) }} aria-current={ehEstaPagina(item.href) ? "page" : undefined}>
+          <li class:list={["nav-item", { "has-children": item.children && !item.mega, "tem-mega": item.mega }]}>
+            <a
+              href={item.href}
+              class:list={{ atual: itemAtivo(item) }}
+              aria-current={ehEstaPagina(item.href) ? "page" : undefined}
+              aria-expanded={item.mega ? "false" : undefined}
+              aria-controls={item.mega ? MEGA_ID : undefined}
+            >
               {item.label}
-              {(item.children || item.colunas) && <svg aria-hidden="true" focusable="false" class="chev" width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>}
+              {(item.children || item.mega) && <svg aria-hidden="true" focusable="false" class="chev" width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>}
             </a>
-            {item.colunas ? (
-              <div class="dropdown mega">
-                {item.colunas.map((col) => (
-                  <div class="mega-col">
-                    <a href={col.href} class="mega-col-titulo" aria-current={ehEstaPagina(col.href) ? "page" : undefined}>{col.titulo}</a>
-                    <ul>
-                      {col.itens.map((sub) => (
-                        <li><a href={sub.href} class="mega-item">{sub.label}</a></li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
+            {item.mega ? (
+              <SolutionsMegaMenu dados={item.mega} id={MEGA_ID} />
             ) : item.children && (
               <div class="dropdown">
                 {item.children.map((child) => (
@@ -134,17 +134,13 @@ const homeAria = { pt: "Proc Group, página inicial", en: "Proc Group, home", es
     <ul>
       {mainNav.map((item) => (
         <li>
-          <a href={item.href} class:list={{ atual: itemAtivo(item) }} aria-current={ehEstaPagina(item.href) ? "page" : undefined}>{item.label}</a>
-          {item.colunas ? (
-            <ul class="mobile-sub">
-              {item.colunas.map((col) => (
-                <Fragment>
-                  <li><a href={col.href} class="mobile-sub-titulo" aria-current={ehEstaPagina(col.href) ? "page" : undefined}>{col.titulo}</a></li>
-                  {col.itens.map((sub) => <li class="mobile-sub-item"><a href={sub.href}>{sub.label}</a></li>)}
-                </Fragment>
-              ))}
-            </ul>
-          ) : item.children && (
+          <a
+            href={item.href}
+            class:list={{ atual: itemAtivo(item), "abre-camada": item.mega }}
+            aria-current={ehEstaPagina(item.href) ? "page" : undefined}
+            data-m-abrir={item.mega ? `${MEGA_ID}-m` : undefined}
+          >{item.label}</a>
+          {!item.mega && item.children && (
             <ul class="mobile-sub">
               {item.children.map((child) => (
                 <li><a href={child.href} aria-current={ehEstaPagina(child.href) ? "page" : undefined}>{child.label}</a></li>
@@ -155,6 +151,7 @@ const homeAria = { pt: "Proc Group, página inicial", en: "Proc Group, home", es
       ))}
       <li><a href={ctaNav.href} class="mobile-cta">{ctaNav.label}</a></li>
     </ul>
+    {itemMega?.mega && <SolutionsMegaMenuMobile dados={itemMega.mega} id={MEGA_ID} />}
   </nav>
   )}
 </header>
@@ -234,49 +231,13 @@ const homeAria = { pt: "Proc Group, página inicial", en: "Proc Group, home", es
   .dropdown-title { font-weight: 700; font-size: var(--fs-sm); color: var(--white); }
   .dropdown-desc { font-size: var(--fs-xs); color: var(--ink-500); }
 
-  /* Mega-menu em colunas.
-     O item vira `position: static` para o painel ancorar no cabeçalho, e não
-     no item: um painel de três colunas preso a "Soluções", que fica no meio da
-     barra, saía pela esquerda da tela. Centrado no cabeçalho, cabe sempre. */
+  /* Mega-menu de Soluções (SolutionsMegaMenu). O item vira position: static
+     para o painel ancorar no cabeçalho inteiro, e não no item. Ele abre no
+     clique, não no hover, então a seta só gira quando está aberto. */
   .nav-item.tem-mega { position: static; }
-  .dropdown.mega {
-    left: 50%;
-    right: auto;
-    width: min(960px, calc(100vw - 2 * var(--space-6)));
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--space-6);
-    padding: var(--space-6);
-    min-width: 0;
-    transform: translate(-50%, 8px);
-  }
-  .nav-item.has-children:hover .dropdown.mega,
-  .nav-item.has-children:focus-within .dropdown.mega {
-    transform: translate(-50%, 0);
-  }
-  .mega-col-titulo {
-    display: block;
-    padding-bottom: var(--space-3);
-    margin-bottom: var(--space-3);
-    border-bottom: 1px solid var(--color-border);
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: var(--fs-sm);
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    color: var(--white);
-  }
-  .mega-col-titulo:hover { color: var(--red-400); }
-  .mega-col ul { display: grid; gap: 2px; }
-  .mega-item {
-    display: block;
-    padding: var(--space-2) var(--space-2);
-    border-radius: var(--radius-sm);
-    font-size: var(--fs-xs);
-    line-height: 1.35;
-    color: var(--ink-300);
-  }
-  .mega-item:hover { background: var(--surface-3); color: var(--white); }
+  .nav-item.tem-mega:hover .chev { transform: none; }
+  .nav-item.tem-mega > a[aria-expanded="true"] { color: var(--white); }
+  .nav-item.tem-mega > a[aria-expanded="true"] .chev { transform: rotate(180deg); }
 
   .header-cta { flex-shrink: 0; }
   .menu-toggle { display: none; }
@@ -320,8 +281,9 @@ const homeAria = { pt: "Proc Group, página inicial", en: "Proc Group, home", es
   .mobile-nav > ul > li > a:not(.mobile-cta) { display: block; padding: var(--space-3) 0; font-weight: 700; font-size: var(--fs-lg); text-transform: uppercase; letter-spacing: 0.02em; color: var(--white); }
   .mobile-sub { padding-left: var(--space-4); }
   .mobile-sub a { display: block; padding: var(--space-2) 0; color: var(--ink-300); font-size: var(--fs-sm); }
-  .mobile-sub-titulo { color: var(--white) !important; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; font-size: var(--fs-xs) !important; }
-  .mobile-sub-item { padding-left: var(--space-3); }
+  /* Enquanto uma camada do mega-menu está aberta, a lista principal some. */
+  .mobile-nav.m-sub > ul { display: none; }
+  .abre-camada::after { content: "›"; margin-left: var(--space-2); color: var(--ink-500); }
   .mobile-cta { margin-top: var(--space-4); display: inline-block; background: var(--color-primary); color: var(--white) !important; padding: 0.8rem 1.6rem; border-radius: var(--radius-pill); font-weight: 700; }
 
   @media (max-width: 1200px) {

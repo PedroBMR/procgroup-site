@@ -1,0 +1,564 @@
+---
+/**
+ * Mega-menu de Soluções, versão desktop (acima de 1200px).
+ *
+ * Briefing de 2026-10-08. Três colunas com papéis diferentes:
+ *
+ *   esquerda  ÁREAS DE NEGÓCIO, as três abas, e a Proc City separada abaixo
+ *             de um divisor, com o indicador de link externo
+ *   centro    a área visual da categoria e as soluções dela
+ *   direita   ACESSOS: Conheça a Proc, Fale com Vendas, Parcerias. Atalhos,
+ *             não áreas de negócio
+ *
+ * Abre no CLIQUE em "Soluções" (o link continua sendo link: sem JS, ou abaixo
+ * de 1200px, ele leva à página de soluções). Fecha no segundo clique, no
+ * clique fora, no Esc e quando o foco sai do painel. As abas trocam no hover,
+ * no foco e no clique, e respondem às setas.
+ *
+ * Todos os links estão no HTML desde o início, só escondidos, então os
+ * buscadores encontram todas as páginas (item 21 do briefing).
+ *
+ * As imagens só carregam quando o painel abre: o painel nasce com `hidden`, e
+ * imagem lazy dentro de display:none não é baixada. Passar o mouse em
+ * "Soluções" antecipa o download (item 22).
+ *
+ * O botão "Soluções" mora no Header, para herdar o estilo da barra. Este
+ * componente acha o botão pelo aria-controls.
+ */
+import { Picture } from "astro:assets";
+import UnitIcon from "./UnitIcon.astro";
+import MenuIcon from "./MenuIcon.astro";
+import type { SolutionsMenu } from "../data/megaMenu";
+
+interface Props {
+  dados: SolutionsMenu;
+  id: string;
+}
+const { dados, id } = Astro.props;
+const { businessAreas, external, ctas, footer } = dados;
+const primeira = businessAreas[0]?.id;
+---
+
+<div id={id} class="mega" data-mega-painel data-theme="light" hidden>
+  <div class="container mega-grade">
+    <div class="mega-areas">
+      <p class="mega-rotulo" id={`${id}-areas`}>Áreas de negócio</p>
+      <div role="tablist" aria-orientation="vertical" aria-labelledby={`${id}-areas`} class="mega-abas">
+        {businessAreas.map((a) => (
+          <button
+            type="button"
+            role="tab"
+            id={`${id}-aba-${a.id}`}
+            aria-controls={`${id}-painel-${a.id}`}
+            aria-selected={a.id === primeira ? "true" : "false"}
+            tabindex={a.id === primeira ? 0 : -1}
+            class="mega-aba"
+            data-mega-tab={a.id}
+          >
+            <span class="mega-aba-icone"><UnitIcon slug={a.icone} /></span>
+            <span class="mega-aba-titulo">{a.titulo}</span>
+            <MenuIcon nome="seta" class="mega-aba-seta" />
+          </button>
+        ))}
+      </div>
+
+      {external && (
+        <div class="mega-externo-bloco">
+          <a
+            href={external.url ?? undefined}
+            target={external.url ? "_blank" : undefined}
+            rel={external.url ? "noopener noreferrer" : undefined}
+            class="mega-externo"
+            data-mega-previa
+          >
+            <span class="mega-aba-icone"><UnitIcon slug={external.icone} /></span>
+            <span class="mega-externo-texto">
+              <span class="mega-aba-titulo">{external.titulo}</span>
+              <span class="mega-externo-nota">Site da {external.titulo}</span>
+            </span>
+            <MenuIcon nome="externo" class="mega-externo-seta" />
+            {external.url && <span class="visually-hidden">(abre em nova aba)</span>}
+          </a>
+        </div>
+      )}
+    </div>
+
+    <div class="mega-centro">
+      {businessAreas.map((a) => (
+        <div
+          role="tabpanel"
+          id={`${id}-painel-${a.id}`}
+          aria-labelledby={`${id}-aba-${a.id}`}
+          class:list={["mega-conteudo", { muitas: a.solucoes.length > 8 }]}
+          data-mega-alvo={a.id}
+          hidden={a.id !== primeira}
+        >
+          <a href={a.href} class="mega-visual">
+            <Picture
+              src={a.imagem}
+              formats={["avif", "webp"]}
+              widths={[720, 1360]}
+              sizes="680px"
+              alt=""
+              loading="lazy"
+              decoding="async"
+              class="mega-visual-img"
+            />
+            <span class="mega-visual-texto">
+              <span class="mega-conceito">{a.conceito}</span>
+              <span class="mega-ver">Conheça {a.titulo} <MenuIcon nome="seta" /></span>
+            </span>
+          </a>
+
+          <ul class="mega-solucoes">
+            {a.solucoes.map((s) => (
+              <li>
+                <a href={s.href} class="mega-sol">
+                  <span class="mega-sol-icone"><MenuIcon nome={s.icone} /></span>
+                  <span class="mega-sol-texto">
+                    <span class="mega-sol-titulo">{s.titulo}</span>
+                    <span class="mega-sol-desc">{s.descricao}</span>
+                  </span>
+                  <MenuIcon nome="seta" class="mega-sol-seta" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+
+      {external && (
+        <div class="mega-conteudo" data-mega-alvo="externo" hidden>
+          <div class="mega-visual mega-visual-estatico">
+            <Picture
+              src={external.imagem}
+              formats={["avif", "webp"]}
+              widths={[720, 1360]}
+              sizes="680px"
+              alt=""
+              loading="lazy"
+              decoding="async"
+              class="mega-visual-img"
+            />
+            <span class="mega-visual-texto">
+              <span class="mega-conceito">{external.conceito}</span>
+            </span>
+          </div>
+          <div class="mega-externo-corpo">
+            <p>{external.descricao}</p>
+            <ul class="mega-temas">
+              {external.temas.map((t) => <li>{t}</li>)}
+            </ul>
+            {external.url && (
+              <a href={external.url} target="_blank" rel="noopener noreferrer" class="mega-externo-cta">
+                Acessar o site da {external.titulo} <MenuIcon nome="externo" />
+                <span class="visually-hidden">(abre em nova aba)</span>
+              </a>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+
+    <div class="mega-acessos">
+      <p class="mega-rotulo">Acessos</p>
+      <ul>
+        {ctas.map((c) => (
+          <li>
+            <a href={c.href} class="mega-acesso">
+              <span class="mega-acesso-icone"><MenuIcon nome={c.icone} /></span>
+              <span class="mega-sol-texto">
+                <span class="mega-acesso-titulo">{c.titulo}</span>
+                <span class="mega-sol-desc">{c.descricao}</span>
+              </span>
+              <MenuIcon nome="seta" class="mega-sol-seta" />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+
+  {footer && (
+    <div class="mega-rodape">
+      <div class="container mega-rodape-inner">
+        <p>{footer.texto}</p>
+        <a href={footer.href} class="mega-rodape-cta">{footer.cta} <MenuIcon nome="seta" /></a>
+      </div>
+    </div>
+  )}
+</div>
+
+<style>
+  /* Painel claro sob a barra escura. data-theme="light" vira os tokens de cor
+     (texto navy, bordas e superfícies claras) sem redefinir nada aqui. */
+  .mega {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--color-bg);
+    color: var(--color-text);
+    border-top: 1px solid var(--color-border);
+    box-shadow: 0 28px 56px rgba(6, 10, 20, 0.32);
+    max-height: calc(100dvh - var(--topbar-h) - var(--header-h));
+    overflow-y: auto;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 180ms var(--ease-out), transform 180ms var(--ease-out);
+  }
+  .mega.aberto { opacity: 1; transform: none; }
+
+  .mega-grade {
+    display: grid;
+    grid-template-columns: 290px minmax(0, 1fr) 260px;
+    gap: var(--space-8);
+    padding-block: var(--space-6);
+  }
+
+  .mega-rotulo {
+    margin-bottom: var(--space-3);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+  }
+
+  /* ---------- Áreas de negócio ---------- */
+  .mega-abas { display: grid; gap: 2px; }
+  .mega-aba, .mega-externo {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    width: 100%;
+    min-height: 56px;
+    padding: var(--space-2) var(--space-3);
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: none;
+    text-align: left;
+    color: var(--color-text);
+    transition: background 150ms ease, color 150ms ease;
+  }
+  .mega-aba::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 12px;
+    bottom: 12px;
+    width: 3px;
+    border-radius: 2px;
+    background: var(--color-primary);
+    transform: scaleY(0);
+    transition: transform 150ms var(--ease-out);
+  }
+  .mega-aba-icone {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--color-bg-alt);
+    color: var(--navy-700);
+    transition: color 150ms ease, background 150ms ease;
+  }
+  .mega-aba-icone :global(.unit-icon) { width: 22px; height: 22px; }
+  .mega-aba-titulo { flex: 1; font-size: 0.9375rem; font-weight: 600; line-height: 1.25; }
+  .mega-aba :global(.mega-aba-seta) { width: 16px; height: 16px; opacity: 0; transform: translateX(-4px); transition: opacity 150ms ease, transform 150ms ease; }
+
+  .mega-aba:hover { background: var(--color-bg-alt); }
+  .mega-aba[aria-selected="true"] { background: var(--color-bg-alt); color: var(--color-eyebrow); }
+  .mega-aba[aria-selected="true"] .mega-aba-titulo { font-weight: 700; }
+  .mega-aba[aria-selected="true"]::before { transform: scaleY(1); }
+  .mega-aba[aria-selected="true"] .mega-aba-icone { background: var(--color-surface); color: var(--color-eyebrow); box-shadow: inset 0 0 0 1px var(--color-border); }
+  .mega-aba[aria-selected="true"] :global(.mega-aba-seta) { opacity: 1; transform: none; }
+
+  /* Proc City: separada das áreas por um divisor, porque é outra marca. */
+  .mega-externo-bloco { margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--color-border); }
+  .mega-externo { text-decoration: none; }
+  .mega-externo-texto { flex: 1; display: grid; gap: 2px; }
+  .mega-externo-nota { font-size: 0.75rem; color: var(--color-text-faint); }
+  .mega-externo :global(.mega-externo-seta) { width: 16px; height: 16px; color: var(--color-text-faint); transition: color 150ms ease, transform 150ms ease; }
+  .mega-externo:hover, .mega-externo.ativo { background: var(--color-bg-alt); color: var(--color-eyebrow); }
+  .mega-externo:hover .mega-aba-icone, .mega-externo.ativo .mega-aba-icone { color: var(--color-eyebrow); background: var(--color-surface); box-shadow: inset 0 0 0 1px var(--color-border); }
+  .mega-externo:hover :global(.mega-externo-seta), .mega-externo.ativo :global(.mega-externo-seta) { color: var(--color-eyebrow); transform: translate(2px, -2px); }
+  .mega-externo:not([href]) { cursor: default; }
+
+  /* ---------- Centro: área visual + soluções ---------- */
+  .mega-conteudo { animation: mega-troca 200ms var(--ease-out); }
+  @keyframes mega-troca { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+  .mega-visual {
+    position: relative;
+    display: block;
+    height: 96px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--navy-900);
+    text-decoration: none;
+  }
+  .mega-visual :global(picture), .mega-visual :global(img) { display: block; width: 100%; height: 100%; }
+  .mega-visual :global(img) { object-fit: cover; transition: transform 400ms var(--ease-out); }
+  .mega-visual::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(6, 10, 20, 0.94) 0%, rgba(6, 10, 20, 0.72) 48%, rgba(6, 10, 20, 0.2) 100%);
+  }
+  .mega-visual:hover :global(img) { transform: scale(1.03); }
+  .mega-visual-texto {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--space-2);
+    padding-inline: var(--space-6);
+  }
+  .mega-conceito {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.375rem;
+    line-height: 1.1;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    color: var(--white);
+    max-width: 22ch;
+  }
+  .mega-ver { display: inline-flex; align-items: center; gap: 6px; font-size: 0.8125rem; font-weight: 600; color: rgba(255, 255, 255, 0.82); }
+  .mega-ver :global(.menu-icon) { width: 14px; height: 14px; transition: transform 150ms ease; }
+  .mega-visual:hover .mega-ver :global(.menu-icon) { transform: translateX(3px); }
+
+  .mega-solucoes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2px var(--space-4);
+    margin-top: var(--space-4);
+  }
+  .mega-sol, .mega-acesso {
+    display: grid;
+    grid-template-columns: 36px minmax(0, 1fr) 16px;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    color: var(--color-text);
+    transition: background 150ms ease;
+  }
+  .mega-sol-icone {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    background: var(--color-bg-alt);
+    color: var(--navy-700);
+    transition: color 150ms ease;
+  }
+  .mega-sol-icone :global(.menu-icon) { width: 20px; height: 20px; }
+  .mega-sol-texto { display: grid; gap: 1px; min-width: 0; }
+  .mega-sol-titulo { font-size: 0.875rem; font-weight: 600; line-height: 1.3; transition: color 150ms ease; }
+  .mega-sol-desc { font-size: 0.78rem; line-height: 1.35; color: var(--color-text-muted); }
+  .mega-sol :global(.mega-sol-seta), .mega-acesso :global(.mega-sol-seta) {
+    width: 16px; height: 16px; color: var(--color-text-faint); opacity: 0.45;
+    transition: transform 150ms ease, opacity 150ms ease, color 150ms ease;
+  }
+  .mega-sol:hover, .mega-sol:focus-visible { background: var(--color-bg-alt); }
+  .mega-sol:hover .mega-sol-titulo, .mega-sol:focus-visible .mega-sol-titulo { color: var(--color-eyebrow); }
+  .mega-sol:hover .mega-sol-icone, .mega-sol:focus-visible .mega-sol-icone { color: var(--color-eyebrow); }
+  .mega-sol:hover :global(.mega-sol-seta), .mega-sol:focus-visible :global(.mega-sol-seta),
+  .mega-acesso:hover :global(.mega-sol-seta), .mega-acesso:focus-visible :global(.mega-sol-seta) {
+    opacity: 1; color: var(--color-eyebrow); transform: translateX(3px);
+  }
+
+  /* Painel da Proc City */
+  .mega-visual-estatico { height: 96px; }
+  .mega-externo-corpo { margin-top: var(--space-5); max-width: 60ch; }
+  .mega-externo-corpo p { font-size: var(--fs-sm); color: var(--color-text-muted); line-height: 1.55; }
+  .mega-temas { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-4); }
+  .mega-temas li {
+    padding: 6px 12px;
+    border-radius: var(--radius-pill);
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+  .mega-externo-cta {
+    display: inline-flex; align-items: center; gap: var(--space-2);
+    min-height: 44px; margin-top: var(--space-5);
+    font-size: var(--fs-sm); font-weight: 700; color: var(--color-eyebrow);
+  }
+  .mega-externo-cta :global(.menu-icon) { width: 16px; height: 16px; }
+
+  /* ---------- Acessos ---------- */
+  .mega-acessos {
+    align-self: start;
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-alt);
+  }
+  .mega-acessos ul { display: grid; gap: var(--space-1); }
+  .mega-acesso { grid-template-columns: 40px minmax(0, 1fr) 16px; padding: var(--space-3) var(--space-2); }
+  .mega-acesso-icone {
+    display: grid; place-items: center;
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--color-surface);
+    box-shadow: inset 0 0 0 1px var(--color-border);
+    color: var(--navy-700);
+    transition: color 150ms ease;
+  }
+  .mega-acesso-icone :global(.menu-icon) { width: 20px; height: 20px; }
+  .mega-acesso-titulo { font-size: var(--fs-sm); font-weight: 700; line-height: 1.3; transition: color 150ms ease; }
+  .mega-acesso:hover, .mega-acesso:focus-visible { background: var(--color-surface); box-shadow: var(--shadow-sm); }
+  .mega-acesso:hover .mega-acesso-titulo, .mega-acesso:focus-visible .mega-acesso-titulo,
+  .mega-acesso:hover .mega-acesso-icone, .mega-acesso:focus-visible .mega-acesso-icone { color: var(--color-eyebrow); }
+
+  /* ---------- Chamada inferior ---------- */
+  /* Presa no pé do painel: em tela baixa o conteúdo rola por trás e a
+     chamada continua visível. */
+  .mega-rodape { position: sticky; bottom: 0; border-top: 1px solid var(--color-border); background: var(--color-bg-alt); }
+  .mega-rodape-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); padding-block: var(--space-3); }
+  .mega-rodape p { font-size: var(--fs-sm); color: var(--color-text-muted); }
+  .mega-rodape-cta { display: inline-flex; align-items: center; gap: var(--space-2); min-height: 40px; font-size: var(--fs-sm); font-weight: 700; color: var(--color-eyebrow); }
+  .mega-rodape-cta :global(.menu-icon) { width: 16px; height: 16px; transition: transform 150ms ease; }
+  .mega-rodape-cta:hover :global(.menu-icon) { transform: translateX(3px); }
+
+  /* Tela baixa. Com descrição, as 12 soluções de Visão Computacional pedem
+     uns 830px de painel, mais que um notebook de 900px oferece. Nas áreas com
+     muitas soluções a descrição sai e os títulos, que são o que vende, ficam.
+     Abaixo de 760px sai em todas. */
+  @media (max-height: 960px) {
+    .muitas .mega-sol-desc { display: none; }
+    .muitas .mega-sol { padding-block: 6px; }
+  }
+  @media (max-height: 760px) {
+    .mega-sol-desc { display: none; }
+    .mega-sol { padding-block: 6px; }
+    .mega-visual, .mega-visual-estatico { height: 80px; }
+    .mega-conceito { font-size: 1.125rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mega, .mega-conteudo, .mega-visual :global(img) { transition: none; animation: none; }
+  }
+</style>
+
+<script>
+  const painel = document.querySelector<HTMLElement>("[data-mega-painel]");
+  const toggle = painel ? document.querySelector<HTMLElement>(`[aria-controls="${painel.id}"]`) : null;
+
+  if (painel && toggle) {
+    // Mesmo corte do Header: abaixo de 1200px a barra vira menu de celular.
+    const desktop = window.matchMedia("(min-width: 1201px)");
+    const abas = Array.from(painel.querySelectorAll<HTMLButtonElement>("[data-mega-tab]"));
+    const alvos = Array.from(painel.querySelectorAll<HTMLElement>("[data-mega-alvo]"));
+    const previa = painel.querySelector<HTMLElement>("[data-mega-previa]");
+    const ATRASO_HOVER = 110;
+    const DURACAO_SAIDA = 200;
+    let timerSaida: number | undefined;
+    let timerHover: number | undefined;
+    let imagensAntecipadas = false;
+    // O estado mora numa variável, não na classe: a classe "aberto" só entra
+    // no próximo quadro de animação, e um Esc ou um clique fora logo depois de
+    // abrir não podem depender dela.
+    let estaAberto = false;
+    const aberto = () => estaAberto;
+
+    // Aba que recebe o Tab. Na prévia da Proc City nenhuma aba fica
+    // selecionada, mas a última continua alcançável pelo teclado: sem isso as
+    // três ficavam com tabindex -1 e quem navega por Tab perdia as áreas.
+    let abaDoTab = abas[0];
+
+    function mostrar(alvo: string) {
+      alvos.forEach((a) => { a.hidden = a.dataset.megaAlvo !== alvo; });
+      const escolhida = abas.find((aba) => aba.dataset.megaTab === alvo);
+      if (escolhida) abaDoTab = escolhida;
+      abas.forEach((aba) => {
+        aba.setAttribute("aria-selected", String(aba === escolhida));
+        aba.tabIndex = aba === abaDoTab ? 0 : -1;
+      });
+      previa?.classList.toggle("ativo", alvo === "externo");
+    }
+
+    function anteciparImagens() {
+      if (imagensAntecipadas) return;
+      imagensAntecipadas = true;
+      painel.querySelectorAll<HTMLImageElement>("img[loading='lazy']").forEach((img) => { img.loading = "eager"; });
+    }
+
+    function abrir() {
+      estaAberto = true;
+      window.clearTimeout(timerSaida);
+      anteciparImagens();
+      painel.hidden = false;
+      requestAnimationFrame(() => painel.classList.add("aberto"));
+      toggle.setAttribute("aria-expanded", "true");
+    }
+
+    function fechar(devolverFoco = false) {
+      if (!estaAberto) return;
+      estaAberto = false;
+      painel.classList.remove("aberto");
+      toggle.setAttribute("aria-expanded", "false");
+      timerSaida = window.setTimeout(() => { painel.hidden = true; }, DURACAO_SAIDA);
+      if (devolverFoco) toggle.focus();
+    }
+
+    toggle.addEventListener("click", (e) => {
+      if (!desktop.matches) return;
+      e.preventDefault();
+      if (aberto()) fechar();
+      else abrir();
+    });
+    toggle.addEventListener("pointerenter", anteciparImagens);
+
+    document.addEventListener("click", (e) => {
+      const alvo = e.target as Node;
+      if (aberto() && !painel.contains(alvo) && !toggle.contains(alvo)) fechar();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && aberto()) fechar(true);
+    });
+    painel.addEventListener("focusout", (e) => {
+      const para = e.relatedTarget as Node | null;
+      if (para && !painel.contains(para) && para !== toggle) fechar();
+    });
+    desktop.addEventListener("change", () => { if (!desktop.matches) fechar(); });
+
+    // Um pequeno atraso no hover evita trocar de área quando o mouse só
+    // atravessa uma aba a caminho das soluções.
+    const trocarComAtraso = (alvo: string) => {
+      window.clearTimeout(timerHover);
+      timerHover = window.setTimeout(() => mostrar(alvo), ATRASO_HOVER);
+    };
+    const cancelarHover = () => window.clearTimeout(timerHover);
+
+    abas.forEach((aba, i) => {
+      const alvo = aba.dataset.megaTab ?? "";
+      aba.addEventListener("mouseenter", () => trocarComAtraso(alvo));
+      aba.addEventListener("mouseleave", cancelarHover);
+      aba.addEventListener("focus", () => mostrar(alvo));
+      aba.addEventListener("click", () => mostrar(alvo));
+      aba.addEventListener("keydown", (e) => {
+        const mapa: Record<string, number> = { ArrowDown: i + 1, ArrowUp: i - 1, Home: 0, End: abas.length - 1 };
+        if (!(e.key in mapa)) return;
+        e.preventDefault();
+        const proxima = abas[(mapa[e.key] + abas.length) % abas.length];
+        mostrar(proxima.dataset.megaTab ?? "");
+        proxima.focus();
+      });
+    });
+
+    if (previa) {
+      previa.addEventListener("mouseenter", () => trocarComAtraso("externo"));
+      previa.addEventListener("mouseleave", cancelarHover);
+      previa.addEventListener("focus", () => mostrar("externo"));
+    }
+  }
+</script>
