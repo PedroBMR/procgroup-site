@@ -17,7 +17,7 @@ interface Props {
 const { pagina, title, description } = Astro.props;
 ---
 
-<BaseLayout title={title} description={description} nav={navPreview()} noIndex>
+<BaseLayout title={title} description={description} nav={navPreview()}>
   <section class="hero-page">
     <div class="container">
       <p class="eyebrow">{pagina.hero.eyebrow}</p>

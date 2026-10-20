@@ -4,8 +4,8 @@
  * (páginas 5 a 10). Fora do site publicado, sem nada de preview na tela.
  * Conteúdo em src/data/preview/paginas/aproc.ts.
  */
-import PaginaPreview from "../../components/preview/PaginaPreview.astro";
-import { aProc } from "../../data/preview/paginas/aproc";
+import PaginaPreview from "../components/preview/PaginaPreview.astro";
+import { aProc } from "../data/preview/paginas/aproc";
 ---
 
 <PaginaPreview pagina={aProc} title="A Proc" description={aProc.hero.lead ?? aProc.hero.titulo} />

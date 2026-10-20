@@ -6,17 +6,16 @@
  * mesmos estilos do índice de soluções de hoje, só com as três áreas novas no
  * lugar das unidades atuais.
  */
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import UnitIcon from "../../components/UnitIcon.astro";
-import { withBase } from "../../utils/url";
-import { unidades, areas, navPreview } from "../../data/preview/ajustes";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import UnitIcon from "../components/UnitIcon.astro";
+import { withBase } from "../utils/url";
+import { unidades, areas, navPreview } from "../data/preview/ajustes";
 ---
 
 <BaseLayout
   title="Soluções"
   description="Infraestrutura de TI, hospedagem em nuvem e visão computacional com IA. Três áreas de negócio, uma equipe especializada em cada uma."
   nav={navPreview()}
-  noIndex
 >
   <section class="hero-page">
     <div class="container">

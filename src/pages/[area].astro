@@ -8,11 +8,11 @@
  * muita coisa, e faltava: medido, só 27% das palavras do PDF estavam na tela.
  * Agora cada página é transcrita bloco a bloco em src/data/preview/paginas/.
  */
-import PaginaPreview from "../../components/preview/PaginaPreview.astro";
-import { infra } from "../../data/preview/paginas/infra";
-import { nuvem } from "../../data/preview/paginas/nuvem";
-import { visao } from "../../data/preview/paginas/visao";
-import type { Pagina } from "../../data/preview/blocos";
+import PaginaPreview from "../components/preview/PaginaPreview.astro";
+import { infra } from "../data/preview/paginas/infra";
+import { nuvem } from "../data/preview/paginas/nuvem";
+import { visao } from "../data/preview/paginas/visao";
+import type { Pagina } from "../data/preview/blocos";
 
 const PAGINAS: Record<string, { pagina: Pagina; title: string }> = {
   "infraestrutura-de-ti": { pagina: infra, title: "Infraestrutura de TI" },

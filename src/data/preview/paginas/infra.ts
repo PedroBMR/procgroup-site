@@ -198,7 +198,7 @@ export const infra: Pagina = {
       eyebrow: "Proc Group",
       titulo: "Infraestrutura de TI para empresas que precisam de disponibilidade, segurança e continuidade.",
       fecho: ["Sua equipe cuida do negócio.", "A Proc cuida da infraestrutura que faz o negócio acontecer."],
-      ctas: [{ label: "Fale com um especialista", href: "/preview/contato" }],
+      ctas: [{ label: "Fale com um especialista", href: "/contato" }],
     },
   ],
 };

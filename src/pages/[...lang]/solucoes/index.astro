@@ -4,7 +4,9 @@
 import SolucoesIndex from "../../../components/paginas/SolucoesIndex.astro";
 
 export function getStaticPaths() {
-  return [{ params: { lang: undefined } }, { params: { lang: "en" } }, { params: { lang: "es" } }];
+  // PT saiu em 2026-10-20: a versao em portugues e a pagina nova da raiz
+  // (src/pages/), e o endereco antigo redireciona (astro.config.mjs).
+  return [{ params: { lang: "en" } }, { params: { lang: "es" } }];
 }
 ---
 <SolucoesIndex />

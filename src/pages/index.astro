@@ -9,19 +9,18 @@
  * áreas viram um ecossistema ligado por um trilho (CardsEcossistema). Redesign
  * de 2026-10-20: só apresentação, o texto continua todo em ajustes.ts.
  */
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import Button from "../../components/Button.astro";
-import HeroCarrossel from "../../components/preview/HeroCarrossel.astro";
-import CardsEcossistema from "../../components/preview/CardsEcossistema.astro";
-import { withBase } from "../../utils/url";
-import { oQueFazemos, navPreview } from "../../data/preview/ajustes";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Button from "../components/Button.astro";
+import HeroCarrossel from "../components/preview/HeroCarrossel.astro";
+import CardsEcossistema from "../components/preview/CardsEcossistema.astro";
+import { withBase } from "../utils/url";
+import { oQueFazemos, navPreview } from "../data/preview/ajustes";
 ---
 
 <BaseLayout
   title="Tecnologia para operações críticas"
   description="Infraestrutura de TI, hospedagem em nuvem e visão computacional com IA para empresas que não podem parar."
   nav={navPreview()}
-  noIndex
 >
   <HeroCarrossel />
 
@@ -31,7 +30,7 @@ import { oQueFazemos, navPreview } from "../../data/preview/ajustes";
     <div class="container fecho-inner" data-reveal>
       <h2>{oQueFazemos.fecho.titulo}</h2>
       <p>{oQueFazemos.fecho.texto}</p>
-      <Button href={withBase("/preview/contato")} variant="primary" size="lg" data-magnetic>
+      <Button href={withBase("/contato")} variant="primary" size="lg" data-magnetic>
         {oQueFazemos.fecho.cta}
       </Button>
     </div>

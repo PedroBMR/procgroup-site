@@ -44,14 +44,14 @@ interface EntradaMenu {
 // Cada subitem leva direto ao bloco da solução, que é o que o documento pede:
 // o visitante "já ir direto na solução desejada".
 export const menu: EntradaMenu[] = [
-  { label: "A PROC", href: "/preview/a-proc" },
+  { label: "A PROC", href: "/a-proc" },
   {
     label: "Soluções",
-    href: "/preview/solucoes",
+    href: "/solucoes",
     blocos: [
       {
         area: "Infraestrutura de TI",
-        href: "/preview/infraestrutura-de-ti",
+        href: "/infraestrutura-de-ti",
         itens: [
           { label: "Sustentação e governança de ambientes", ancora: "sustentacao" },
           { label: "Backup em nuvem", ancora: "backup" },
@@ -63,7 +63,7 @@ export const menu: EntradaMenu[] = [
       },
       {
         area: "Hospedagem em nuvem",
-        href: "/preview/hospedagem-em-nuvem",
+        href: "/hospedagem-em-nuvem",
         itens: [
           { label: "Proc Cloud", ancora: "proc-cloud" },
           { label: "Oracle Cloud Infrastructure", ancora: "oci" },
@@ -73,7 +73,7 @@ export const menu: EntradaMenu[] = [
       },
       {
         area: "Visão Computacional e Vídeo Analytics",
-        href: "/preview/visao-computacional",
+        href: "/visao-computacional",
         itens: [
           { label: "Inteligência comercial e de marketing", ancora: "inteligencia-comercial" },
           { label: "Analytics do fluxo de pessoas", ancora: "fluxo-de-pessoas" },
@@ -93,7 +93,7 @@ export const menu: EntradaMenu[] = [
   },
   {
     label: "Parcerias",
-    href: "/preview/parcerias",
+    href: "/parcerias",
     filhos: [
       { label: "Indicação de oportunidades", ancora: "indicacao" },
       { label: "Parceria com desenvolvedores de software", ancora: "software" },
@@ -103,7 +103,7 @@ export const menu: EntradaMenu[] = [
   // O PDF não traz o endereço da Proc City (R9 da auditoria).
   { label: "Proc City", href: "#proc-city", externo: true },
   { label: "Blog", href: "/blog" },
-  { label: "Contato", href: "/preview/contato" },
+  { label: "Contato", href: "/contato" },
 ];
 
 /* ══════════════════ HOME: OS QUATRO HERÓIS ══════════════════ */
@@ -116,8 +116,8 @@ export const herois = [
     sub: "Mais segurança e previsibilidade para operações críticas que não podem parar.",
     texto:
       "Infraestrutura de TI, hospedagem em nuvem e inteligência aplicada às operações através de visão computacional e IA. A Proc Group combina tecnologia, experiência e suporte especializado para proteger dados, sustentar ambientes críticos e transformar informações em inteligência para a gestão.",
-    cta: { label: "Conheça nossas soluções", href: "/preview/solucoes" },
-    cta2: { label: "Fale com um especialista", href: "/preview/contato" },
+    cta: { label: "Conheça nossas soluções", href: "/solucoes" },
+    cta2: { label: "Fale com um especialista", href: "/contato" },
   },
   {
     id: "infra",
@@ -126,8 +126,8 @@ export const herois = [
     sub: "Sustentação, segurança e governança para manter seus ambientes de TI estáveis, disponíveis e com alta performance.",
     texto:
       "Cuidamos e protegemos a infraestrutura que sustenta o seu negócio, de ambientes locais e em nuvem a redes, servidores, bancos de dados, segurança, backup e suporte especializado.",
-    cta: { label: "Conheça Infraestrutura de TI", href: "/preview/infraestrutura-de-ti" },
-    cta2: { label: "Fale com um especialista", href: "/preview/contato" },
+    cta: { label: "Conheça Infraestrutura de TI", href: "/infraestrutura-de-ti" },
+    cta2: { label: "Fale com um especialista", href: "/contato" },
   },
   {
     id: "nuvem",
@@ -135,8 +135,8 @@ export const herois = [
     titulo: "Seu ambiente na nuvem. Seguro, disponível e sob gestão especializada.",
     sub: "Hospedagem de aplicações, arquivos e bancos de dados em ambientes preparados para garantir segurança, estabilidade e performance.",
     texto: "Conte com uma infraestrutura robusta e segura, gerenciamento especializado e suporte 24/7.",
-    cta: { label: "Conheça a Hospedagem em Nuvem", href: "/preview/hospedagem-em-nuvem" },
-    cta2: { label: "Fale com um especialista", href: "/preview/contato" },
+    cta: { label: "Conheça a Hospedagem em Nuvem", href: "/hospedagem-em-nuvem" },
+    cta2: { label: "Fale com um especialista", href: "/contato" },
   },
   {
     id: "visao",
@@ -145,8 +145,8 @@ export const herois = [
     sub: "Visão computacional e Inteligência Artificial aplicadas às câmeras da sua empresa para gerar informações inteligentes sobre pessoas, veículos, produtos e processos.",
     texto:
       "A Plataforma Proc transforma imagens capturadas pelas câmeras em dados analíticos que apoiam segurança, gestão, produtividade e tomada de decisão.",
-    cta: { label: "Conheça a Plataforma Proc", href: "/preview/visao-computacional" },
-    cta2: { label: "Fale com um especialista", href: "/preview/contato" },
+    cta: { label: "Conheça a Plataforma Proc", href: "/visao-computacional" },
+    cta2: { label: "Fale com um especialista", href: "/contato" },
   },
 ];
 
@@ -163,21 +163,21 @@ export const oQueFazemos = {
       chamada: "Mantenha sua operação funcionando.",
       texto:
         "Sustentação e governança de ambientes de TI, segurança cibernética, backup, hardware, software e suporte especializado.",
-      cta: { label: "Conheça Infraestrutura de TI", href: "/preview/infraestrutura-de-ti" },
+      cta: { label: "Conheça Infraestrutura de TI", href: "/infraestrutura-de-ti" },
     },
     {
       titulo: "Hospedagem em Nuvem",
       chamada: "Leve seus sistemas para uma infraestrutura preparada e segura para o seu negócio.",
       texto:
         "Hospedagem de aplicações, arquivos e bancos de dados com segurança, disponibilidade, performance e gerenciamento especializado.",
-      cta: { label: "Conheça a Hospedagem em Nuvem", href: "/preview/hospedagem-em-nuvem" },
+      cta: { label: "Conheça a Hospedagem em Nuvem", href: "/hospedagem-em-nuvem" },
     },
     {
       titulo: "Visão Computacional e Vídeo Analytics",
       chamada: "Transforme as imagens capturadas pelas câmeras em informação estratégica para tomada de decisão precisa e assertiva.",
       texto:
         "Inteligência Artificial e visão computacional aplicadas para transformar imagens em dados para análise de pessoas, veículos, produtos e processos, apoiando a gestão com informações de inteligência comercial e de marketing, dados sobre a eficiência da produção e demais processos críticos do negócio.",
-      cta: { label: "Conheça a Plataforma Proc", href: "/preview/visao-computacional" },
+      cta: { label: "Conheça a Plataforma Proc", href: "/visao-computacional" },
     },
   ],
   fecho: {
@@ -210,21 +210,21 @@ export const areas: Area[] = [
     nome: "Infraestrutura de TI",
     menuNome: "Infraestrutura de TI",
     tagline: infra.hero.lead ?? infra.hero.titulo,
-    solucoes: titulosDe("/preview/infraestrutura-de-ti"),
+    solucoes: titulosDe("/infraestrutura-de-ti"),
   },
   {
     slug: "hospedagem-em-nuvem",
     nome: "Hospedagem em Nuvem",
     menuNome: "Hospedagem em nuvem",
     tagline: nuvem.hero.titulo,
-    solucoes: titulosDe("/preview/hospedagem-em-nuvem"),
+    solucoes: titulosDe("/hospedagem-em-nuvem"),
   },
   {
     slug: "visao-computacional",
     nome: "Visão Computacional e Vídeo Analytics",
     menuNome: "Visão Computacional e Vídeo Analytics",
     tagline: visao.hero.titulo,
-    solucoes: titulosDe("/preview/visao-computacional"),
+    solucoes: titulosDe("/visao-computacional"),
   },
 ];
 
@@ -261,7 +261,7 @@ export function unidadeDaArea(area: Area): BusinessUnit {
     shortName: area.menuNome,
     tagline: area.tagline,
     description: area.tagline,
-    href: `/preview/${area.slug}`,
+    href: `/${area.slug}`,
     color: corDaArea[area.slug] ?? "var(--navy-700)",
     team: area.nome,
     solutions: area.solucoes,

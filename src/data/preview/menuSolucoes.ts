@@ -56,19 +56,19 @@ const DETALHE: Record<string, { descricao: string; icone: NomeIconeMenu }> = {
 };
 
 const VISUAL: Record<string, { id: string; icone: string; conceito: string; imagem: ImageMetadata }> = {
-  "/preview/infraestrutura-de-ti": {
+  "/infraestrutura-de-ti": {
     id: "infraestrutura",
     icone: "infraestrutura-de-ti",
     conceito: "A tecnologia que sustenta sua operação.",
     imagem: imgInfra,
   },
-  "/preview/hospedagem-em-nuvem": {
+  "/hospedagem-em-nuvem": {
     id: "nuvem",
     icone: "hospedagem-em-nuvem",
     conceito: "Seus sistemas disponíveis e protegidos.",
     imagem: imgNuvem,
   },
-  "/preview/visao-computacional": {
+  "/visao-computacional": {
     id: "visao",
     icone: "visao-computacional",
     conceito: "Imagens transformadas em inteligência.",
@@ -112,14 +112,14 @@ export function montarMenuSolucoes(blocos: BlocoMenu[], L: (href: string) => str
       imagem: imgCidade,
     },
     ctas: [
-      { titulo: "Conheça a Proc", descricao: "Nossa experiência", href: L("/preview/a-proc"), icone: "predio" },
-      { titulo: "Fale com Vendas", descricao: "Converse com nossa equipe", href: L("/preview/contato"), icone: "conversa" },
-      { titulo: "Parcerias", descricao: "Cresça junto com a Proc", href: L("/preview/parcerias"), icone: "parceria" },
+      { titulo: "Conheça a Proc", descricao: "Nossa experiência", href: L("/a-proc"), icone: "predio" },
+      { titulo: "Fale com Vendas", descricao: "Converse com nossa equipe", href: L("/contato"), icone: "conversa" },
+      { titulo: "Parcerias", descricao: "Cresça junto com a Proc", href: L("/parcerias"), icone: "parceria" },
     ],
     footer: {
       texto: "Precisa de uma solução para sua operação?",
       cta: "Fale com a Proc",
-      href: L("/preview/contato"),
+      href: L("/contato"),
     },
   };
 }

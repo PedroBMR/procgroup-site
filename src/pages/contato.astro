@@ -7,13 +7,13 @@
  * formulário "Fale com vendas" com poucos campos (nome completo, e-mail,
  * WhatsApp, assunto) que envia para esse e-mail.
  *
- * O formulário NÃO envia nada nesta cópia: não existe destino aprovado, e o
- * vendas@ ainda é decisão em aberto (R5 de AUDITORIA-AJUSTES-SITE.md). Quem
- * clica em enviar recebe um aviso dizendo isso, para ninguém achar que a
- * mensagem chegou.
+ * O formulário NÃO envia nada: não existe destino aprovado, e o vendas@ ainda
+ * é decisão em aberto (R5 de AUDITORIA-AJUSTES-SITE.md). No ar ele fica
+ * desligado (components/preview/formularios.ts) e a página mostra só os canais.
  */
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import { navPreview } from "../../data/preview/ajustes";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { navPreview } from "../data/preview/ajustes";
+import { FORMULARIOS_NO_AR } from "../components/preview/formularios";
 
 const EMAIL = "vendas@procgroup.com.br";
 const WHATSAPP_ROTULO = "+55 46 99141-1324";
@@ -24,7 +24,6 @@ const WHATSAPP_LINK = "https://wa.me/5546991411324";
   title="Contato"
   description="Fale com um especialista Proc e descubra a solução ideal para o seu contexto."
   nav={navPreview()}
-  noIndex
 >
   <section class="hero-page">
     <div class="container">
@@ -35,7 +34,7 @@ const WHATSAPP_LINK = "https://wa.me/5546991411324";
   </section>
 
   <section class="section banda" data-theme="light">
-    <div class="container grade">
+    <div class:list={["container", "grade", { "so-canais": !FORMULARIOS_NO_AR }]}>
       <div class="canais" data-reveal>
         <h2>Fale com vendas</h2>
         <ul>
@@ -50,26 +49,28 @@ const WHATSAPP_LINK = "https://wa.me/5546991411324";
         </ul>
       </div>
 
-      <form class="form" data-form-demo novalidate data-reveal>
-        <label>
-          <span>Nome completo</span>
-          <input type="text" name="nome" autocomplete="name" required />
-        </label>
-        <label>
-          <span>E-mail</span>
-          <input type="email" name="email" autocomplete="email" required />
-        </label>
-        <label>
-          <span>WhatsApp</span>
-          <input type="tel" name="whatsapp" autocomplete="tel" required />
-        </label>
-        <label>
-          <span>Assunto</span>
-          <input type="text" name="assunto" required />
-        </label>
-        <button type="submit" class="enviar">Enviar mensagem</button>
-        <p class="status" data-form-status role="status" aria-live="polite" hidden></p>
-      </form>
+      {FORMULARIOS_NO_AR && (
+        <form class="form" data-form-demo novalidate data-reveal>
+          <label>
+            <span>Nome completo</span>
+            <input type="text" name="nome" autocomplete="name" required />
+          </label>
+          <label>
+            <span>E-mail</span>
+            <input type="email" name="email" autocomplete="email" required />
+          </label>
+          <label>
+            <span>WhatsApp</span>
+            <input type="tel" name="whatsapp" autocomplete="tel" required />
+          </label>
+          <label>
+            <span>Assunto</span>
+            <input type="text" name="assunto" required />
+          </label>
+          <button type="submit" class="enviar">Enviar mensagem</button>
+          <p class="status" data-form-status role="status" aria-live="polite" hidden></p>
+        </form>
+      )}
     </div>
   </section>
 </BaseLayout>
@@ -81,6 +82,7 @@ const WHATSAPP_LINK = "https://wa.me/5546991411324";
 
   .section { padding-block: var(--space-16) var(--space-24); }
   .banda { background: var(--color-bg); }
+  .grade.so-canais { grid-template-columns: 1fr; }
   .grade { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: var(--space-16); align-items: start; }
 
   .canais h2 { font-size: var(--fs-2xl); }

@@ -213,8 +213,8 @@ export const aProc: Pagina = {
       ],
       fecho: ["Proc Group. Tecnologia especializada para empresas que não podem parar."],
       ctas: [
-        { label: "Conheça nossas soluções", href: "/preview/solucoes" },
-        { label: "Fale com um especialista", href: "/preview/contato" },
+        { label: "Conheça nossas soluções", href: "/solucoes" },
+        { label: "Fale com um especialista", href: "/contato" },
       ],
     },
   ],

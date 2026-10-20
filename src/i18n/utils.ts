@@ -34,7 +34,10 @@ export function useTranslations(lang: Locale) {
  * Hoje /en/blog e /es/blog são gerados, em pages/[...lang]/blog/, e o caminho
  * recebe prefixo como qualquer outro.
  */
-const SINGLE_VERSION_PREFIXES = ["/404"];
+// As paginas que vieram do documento "Ajustes no site" (2026-10-20) existem so
+// em portugues: o seletor de idioma leva para a home do idioma escolhido.
+// Quando ganharem traducao, saem desta lista.
+const SINGLE_VERSION_PREFIXES = ["/404", "/a-proc", "/infraestrutura-de-ti", "/hospedagem-em-nuvem", "/visao-computacional", "/parcerias"];
 
 export function isSingleVersionPath(path: string): boolean {
   return SINGLE_VERSION_PREFIXES.some((p) => path === p || path.startsWith(`${p}/`));

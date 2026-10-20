@@ -263,7 +263,7 @@ export const nuvem: Pagina = {
       eyebrow: "Proc Group",
       titulo: "Hospedagem em nuvem para empresas que precisam de estabilidade, segurança e performance.",
       paragrafos: ["Conte com uma infraestrutura preparada para o presente e pronta para acompanhar o futuro da sua empresa."],
-      ctas: [{ label: "Fale com um especialista", href: "/preview/contato" }],
+      ctas: [{ label: "Fale com um especialista", href: "/contato" }],
     },
   ],
 };

@@ -65,6 +65,27 @@ for (const pref of ['', '/en', '/es']) {
 }
 
 
+// Virada de 2026-10-20: a reestruturacao do documento "Ajustes no site" (que era
+// o /preview/) assumiu o portugues da raiz. As paginas PT antigas deixaram de
+// ser geradas (EN e ES continuam), e cada endereco antigo leva para a pagina
+// nova que cobre o mesmo assunto. Mesmo mapa da copia de avaliacao
+// (scripts/copia-avaliacao.mjs). Ambientes Inteligentes e IA Industrial nao
+// existem mais como area: o assunto delas vive em Visao Computacional.
+const PT_ANTIGAS = {
+  '/empresa': '/a-proc',
+  '/solucoes/infraestrutura-de-ti': '/infraestrutura-de-ti',
+  '/solucoes/ambientes-inteligentes': '/visao-computacional',
+  '/solucoes/ambientes-inteligentes/visao-computacional': '/visao-computacional',
+  '/solucoes/ia-industrial': '/visao-computacional',
+};
+for (const [de, para] of Object.entries(PT_ANTIGAS)) REDIRECTS[de] = `${BASE}${para}`;
+// /empresas/empresa e afins apontavam para um endereco que agora tambem
+// redireciona: aponta direto para o destino final, sem redirect em cadeia.
+for (const [de, para] of Object.entries(REDIRECTS)) {
+  const final = PT_ANTIGAS[para.slice(BASE.length)];
+  if (final) REDIRECTS[de] = `${BASE}${final}`;
+}
+
 // https://astro.build/config
 export default defineConfig({
   site: SITE,

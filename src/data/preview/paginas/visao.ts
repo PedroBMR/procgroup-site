@@ -417,7 +417,7 @@ export const visao: Pagina = {
         "Com a Plataforma Proc, as câmeras deixam de ser apenas dispositivos de registro e passam a fazer parte de uma estrutura de dados, automação e inteligência operacional.",
       ],
       fecho: ["Veja. Analise. Entenda. Decida."],
-      ctas: [{ label: "Fale com um especialista e monte o seu projeto ideal", href: "/preview/contato" }],
+      ctas: [{ label: "Fale com um especialista e monte o seu projeto ideal", href: "/contato" }],
     },
   ],
 };

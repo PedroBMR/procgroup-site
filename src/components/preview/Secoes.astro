@@ -11,11 +11,16 @@
 import Button from "../Button.astro";
 import { withBase } from "../../utils/url";
 import type { Bloco } from "../../data/preview/blocos";
+import { FORMULARIOS_NO_AR } from "./formularios";
 
 interface Props {
   blocos: Bloco[];
 }
-const { blocos } = Astro.props;
+const { blocos: todos } = Astro.props;
+// Sem formularios no ar, o bloco que so existia para eles sai inteiro, em vez
+// de deixar um titulo sem nada embaixo.
+const soFormularios = (b: Bloco) => b.formularios && !b.paragrafos && !b.itens && !b.cards && !b.fluxo;
+const blocos = FORMULARIOS_NO_AR ? todos : todos.filter((b) => !soFormularios(b));
 
 // Links internos recebem o base path; âncoras e externos ficam como estão.
 const L = (href: string) => (href.startsWith("#") || href.startsWith("http") ? href : withBase(href));
@@ -90,7 +95,7 @@ const L = (href: string) => (href.startsWith("#") || href.startsWith("http") ? h
           </div>
         )}
 
-        {b.formularios && (
+        {FORMULARIOS_NO_AR && b.formularios && (
           <div class:list={["cards", `col-${Math.min(b.formularios.length, 3)}`]}>
             {b.formularios.map((f) => (
               <form class="card form" data-form-demo novalidate data-reveal>
