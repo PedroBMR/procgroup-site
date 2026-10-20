@@ -44,9 +44,10 @@ DirectoryIndex index.html index.php
   # As 59 tags do WordPress nao existem no site novo.
   RewriteRule ^tag/[^/]+/?$ /blog [R=301,L]
 
-  # Paginas que mudaram de endereco.
-  RewriteRule ^infraestrutura-de-ti/?$ /solucoes/infraestrutura-de-ti [R=301,L]
-  RewriteRule ^sobre-nos/?$ /empresa [R=301,L]
+  # Paginas que mudaram de endereco. /infraestrutura-de-ti saiu daqui em
+  # 2026-10-20: virou pagina de novo (a reestruturacao assumiu a raiz), e o 301
+  # para /solucoes/infraestrutura-de-ti fechava um loop com o redirect de volta.
+  RewriteRule ^sobre-nos/?$ /a-proc [R=301,L]
 
   # /seguranca-publica ficou RESERVADA para o site de cidade e governo, que
   # ainda nao existe (decisao do Pedro em 2026-09-25). Ate la, home: cidade e
