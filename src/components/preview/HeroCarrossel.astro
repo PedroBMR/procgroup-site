@@ -1,0 +1,321 @@
+---
+/**
+ * Os quatro heróis da home em carrossel: 10 s cada, em loop, a partir da
+ * entrada na página. Pedido do Pedro em 2026-10-20, substitui o sorteio por
+ * carregamento.
+ *
+ * O relógio é a própria barra de progresso do indicador ativo: uma animação
+ * CSS de 10 s, e o `animationend` dela avança o slide. Assim pausar (hover,
+ * foco, aba escondida) é só `animation-play-state`, e barra e troca nunca
+ * descolam.
+ *
+ * Os quatro painéis ficam empilhados na mesma célula do grid, então a altura
+ * do herói é a do maior e a troca não mexe no layout (zero CLS).
+ *
+ * Só o primeiro título é h1. Os outros três são h2 com o mesmo visual: quatro
+ * h1 na mesma URL era o R6 da auditoria.
+ */
+import Button from "../Button.astro";
+import CenaGlobo from "./CenaGlobo.astro";
+import { withBase } from "../../utils/url";
+import { herois } from "../../data/preview/ajustes";
+
+const DURACAO_MS = 10_000;
+---
+
+<section
+  class="hero"
+  aria-roledescription="carrossel"
+  aria-label="Destaques"
+  data-carrossel
+  style={`--heroi-duracao: ${DURACAO_MS}ms`}
+>
+  <CenaGlobo />
+
+  <div class="container hero-palco">
+    {herois.map((h, i) => {
+      const Titulo = i === 0 ? "h1" : "h2";
+      return (
+        <div
+          class:list={["hero-inner", { ativo: i === 0 }]}
+          data-heroi={i}
+          role="group"
+          aria-roledescription="slide"
+          aria-label={`${i + 1} de ${herois.length}: ${h.rotulo}`}
+          aria-hidden={i === 0 ? undefined : "true"}
+          inert={i !== 0}
+        >
+          <Titulo class="hero-titulo">{h.titulo}</Titulo>
+          <p class="hero-subtitle">{h.sub}</p>
+          <p class="hero-texto">{h.texto}</p>
+          <div class="hero-actions">
+            <Button href={withBase(h.cta.href)} variant="primary" size="md" data-magnetic>{h.cta.label}</Button>
+            <Button href={withBase(h.cta2.href)} variant="ghost" size="md" data-magnetic>{h.cta2.label}</Button>
+          </div>
+        </div>
+      );
+    })}
+
+    <div class="hero-controles">
+      <button type="button" class="hero-seta" data-anterior aria-label="Destaque anterior">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+      </button>
+      <ol class="hero-indicadores">
+        {herois.map((h, i) => (
+          <li>
+            <button
+              type="button"
+              class:list={["hero-indicador", { ativo: i === 0 }]}
+              data-ir={i}
+              aria-label={`Ir para o destaque ${i + 1}: ${h.rotulo}`}
+              aria-current={i === 0 ? "true" : undefined}
+            >
+              <span class="hero-indicador-trilho"><span class="hero-indicador-barra"></span></span>
+            </button>
+          </li>
+        ))}
+      </ol>
+      <button type="button" class="hero-seta" data-proximo aria-label="Próximo destaque">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: calc(100svh - var(--topbar-h) - var(--header-h));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+  }
+  @media (max-width: 1200px) {
+    .hero { min-height: calc(100svh - var(--topbar-h) - var(--header-h-mobile)); }
+  }
+
+  .hero-palco {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    padding-block: var(--space-12) var(--space-8);
+  }
+
+  /* Empilhados: todos na mesma célula. */
+  .hero-inner {
+    grid-area: 1 / 1;
+    max-width: 920px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(28px) scale(0.985);
+    transition:
+      opacity 0.7s var(--ease-out),
+      transform 1.1s var(--ease-out),
+      visibility 0s linear 0.7s;
+  }
+  .hero-inner.ativo {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition:
+      opacity 0.9s var(--ease-out) 0.15s,
+      transform 1.2s var(--ease-out) 0.15s,
+      visibility 0s;
+  }
+  /* Quem sai vai para a esquerda; quem entra vem da direita. Na volta (seta
+     esquerda) o sentido inverte. */
+  .hero[data-sentido="volta"] .hero-inner:not(.ativo) { transform: translateX(-28px) scale(0.985); }
+  .hero-inner.saindo { transform: translateX(-28px) scale(0.985); }
+  .hero[data-sentido="volta"] .hero-inner.saindo { transform: translateX(28px) scale(0.985); }
+
+  /* Entrada em cascata do conteúdo do painel que chega. */
+  .hero-inner > * {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.6s var(--ease-out), transform 0.9s var(--ease-out);
+  }
+  .hero-inner.ativo > * { opacity: 1; transform: none; }
+  .hero-inner.ativo > :nth-child(1) { transition-delay: 0.2s; }
+  .hero-inner.ativo > :nth-child(2) { transition-delay: 0.32s; }
+  .hero-inner.ativo > :nth-child(3) { transition-delay: 0.44s; }
+  .hero-inner.ativo > :nth-child(4) { transition-delay: 0.56s; }
+
+  .hero-titulo {
+    color: var(--white);
+    font-size: clamp(2.25rem, 2.2rem + 2.6vw, 4rem);
+    margin-top: var(--space-4);
+  }
+  .hero-subtitle { margin-top: var(--space-6); font-size: var(--fs-lg); color: rgba(255, 255, 255, 0.75); max-width: 620px; }
+  .hero-texto { margin-top: var(--space-4); font-size: var(--fs-sm); color: rgba(255, 255, 255, 0.58); max-width: 680px; line-height: 1.6; }
+  .hero-actions { display: flex; gap: var(--space-4); margin-top: var(--space-8); flex-wrap: wrap; }
+
+  /* ── Controles: seta · quatro barras · seta ── */
+  .hero-controles {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-top: var(--space-12);
+  }
+  .hero-indicadores { display: flex; gap: var(--space-2); list-style: none; margin: 0; padding: 0; }
+  .hero-indicador {
+    display: block;
+    width: 28px;
+    padding: 12px 0; /* área de toque de 24px+ sem engordar o traço */
+    background: none;
+    border: 0;
+    cursor: pointer;
+    transition: width 0.5s var(--ease-out);
+  }
+  .hero-indicador.ativo { width: 72px; }
+  .hero-indicador-trilho {
+    display: block;
+    height: 3px;
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.22);
+    overflow: hidden;
+    transition: background var(--dur-fast) ease;
+  }
+  .hero-indicador:hover .hero-indicador-trilho { background: rgba(255, 255, 255, 0.4); }
+  .hero-indicador-barra {
+    display: block;
+    height: 100%;
+    background: var(--red-500);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  .hero-indicador.ativo .hero-indicador-barra {
+    animation: heroi-progresso var(--heroi-duracao) linear forwards;
+  }
+  .hero[data-pausado] .hero-indicador.ativo .hero-indicador-barra { animation-play-state: paused; }
+  @keyframes heroi-progresso { to { transform: scaleX(1); } }
+
+  .hero-seta {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    background: rgba(6, 10, 20, 0.35);
+    color: var(--white);
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+    transition: border-color var(--dur-fast) ease, background var(--dur-fast) ease, transform var(--dur-fast) var(--ease-out);
+  }
+  .hero-seta svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .hero-seta:hover { border-color: var(--red-500); background: rgba(226, 8, 29, 0.16); }
+  .hero-seta[data-anterior]:hover { transform: translateX(-2px); }
+  .hero-seta[data-proximo]:hover { transform: translateX(2px); }
+  .hero-seta:focus-visible,
+  .hero-indicador:focus-visible {
+    outline: 2px solid var(--red-400);
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 640px) {
+    .hero-controles { margin-top: var(--space-8); gap: var(--space-3); }
+    .hero-seta { width: 40px; height: 40px; }
+    .hero-indicador { width: 20px; }
+    .hero-indicador.ativo { width: 48px; }
+  }
+
+  /* Sem movimento: troca vira um fade curto, sem deslocamento nem cascata. A
+     barra continua, porque é ela que diz quanto falta. */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-inner,
+    .hero-inner.ativo,
+    .hero-inner.saindo,
+    .hero[data-sentido="volta"] .hero-inner:not(.ativo) {
+      transform: none;
+      transition: opacity 0.3s linear, visibility 0s linear 0.3s;
+    }
+    .hero-inner.ativo { transition: opacity 0.3s linear, visibility 0s; }
+    .hero-inner > *, .hero-inner.ativo > * { opacity: 1; transform: none; transition: none; }
+  }
+</style>
+
+<script>
+  const SWIPE_MIN_PX = 48;
+
+  document.querySelectorAll<HTMLElement>("[data-carrossel]").forEach((hero) => {
+    const paineis = Array.from(hero.querySelectorAll<HTMLElement>("[data-heroi]"));
+    const pontos = Array.from(hero.querySelectorAll<HTMLButtonElement>("[data-ir]"));
+    if (paineis.length < 2) return;
+
+    let atual = 0;
+    const pausas = new Set<string>();
+
+    const ir = (destino: number, sentido: "ida" | "volta" = "ida") => {
+      const novo = (destino + paineis.length) % paineis.length;
+      if (novo === atual) return;
+      hero.dataset.sentido = sentido;
+      const anterior = paineis[atual];
+      anterior.classList.remove("ativo");
+      anterior.classList.add("saindo");
+      anterior.setAttribute("aria-hidden", "true");
+      anterior.inert = true;
+      window.setTimeout(() => anterior.classList.remove("saindo"), 800);
+
+      atual = novo;
+      paineis[atual].classList.add("ativo");
+      paineis[atual].removeAttribute("aria-hidden");
+      paineis[atual].inert = false;
+
+      // Tirar e repor a classe reinicia a animação da barra: o relógio volta a 0.
+      pontos.forEach((p, n) => {
+        p.classList.remove("ativo");
+        p.toggleAttribute("aria-current", n === atual);
+      });
+      void pontos[atual].offsetWidth;
+      pontos[atual].classList.add("ativo");
+    };
+
+    const pausar = (motivo: string, sim: boolean) => {
+      if (sim) pausas.add(motivo);
+      else pausas.delete(motivo);
+      hero.toggleAttribute("data-pausado", pausas.size > 0);
+    };
+
+    // O fim da barra do indicador ativo é o tique do relógio.
+    hero.addEventListener("animationend", (e) => {
+      if ((e.target as Element).classList.contains("hero-indicador-barra")) ir(atual + 1);
+    });
+
+    hero.querySelector("[data-proximo]")?.addEventListener("click", () => ir(atual + 1));
+    hero.querySelector("[data-anterior]")?.addEventListener("click", () => ir(atual - 1, "volta"));
+    pontos.forEach((p, n) => p.addEventListener("click", () => ir(n, n < atual ? "volta" : "ida")));
+
+    // Pausa só com mouse de verdade: em toque o hover "gruda" e travaria o autoplay.
+    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      hero.addEventListener("pointerenter", () => pausar("mouse", true));
+      hero.addEventListener("pointerleave", () => pausar("mouse", false));
+    }
+    // Teclado: quem está lendo ou navegando nos controles não perde o slide.
+    hero.addEventListener("focusin", () => pausar("foco", true));
+    hero.addEventListener("focusout", (e) => {
+      if (!hero.contains(e.relatedTarget as Node | null)) pausar("foco", false);
+    });
+    document.addEventListener("visibilitychange", () => pausar("aba", document.hidden));
+
+    hero.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") ir(atual + 1);
+      else if (e.key === "ArrowLeft") ir(atual - 1, "volta");
+    });
+
+    // Swipe horizontal no toque. Vertical fica com o scroll da página.
+    let x0 = 0;
+    let y0 = 0;
+    hero.addEventListener("touchstart", (e) => {
+      x0 = e.touches[0].clientX;
+      y0 = e.touches[0].clientY;
+    }, { passive: true });
+    hero.addEventListener("touchend", (e) => {
+      const dx = e.changedTouches[0].clientX - x0;
+      const dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dx) < SWIPE_MIN_PX || Math.abs(dx) < Math.abs(dy)) return;
+      if (dx < 0) ir(atual + 1);
+      else ir(atual - 1, "volta");
+    }, { passive: true });
+  });
+</script>

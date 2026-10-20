@@ -1,0 +1,263 @@
+---
+/**
+ * "O que fazemos" da home: as três áreas como um ecossistema só.
+ *
+ * Um trilho horizontal corre atrás dos cards na altura do desenho de cada um.
+ * Como os cards são opacos, ele aparece só nos vãos, saindo de um card e
+ * chegando no outro; dentro do card, duas "portas" no desenho continuam a
+ * linha. Um pulso percorre o trilho devagar, sempre: é o fluxo
+ * infraestrutura → nuvem → visão.
+ *
+ * Cada card abre com uma cena explicativa em linha (CenaArea), que se
+ * desenha quando o ecossistema entra na tela e anda só enquanto ele está
+ * visível. No card em foco (hover, foco de teclado ou, no toque, o card no
+ * meio da tela) o trilho acende e o card sobe.
+ *
+ * O texto vem inteiro de oQueFazemos, sem nenhuma alteração: aqui só muda a
+ * apresentação.
+ */
+import UnitIcon from "../UnitIcon.astro";
+import CenaArea from "./CenaArea.astro";
+import { withBase } from "../../utils/url";
+import { oQueFazemos, unidades } from "../../data/preview/ajustes";
+---
+
+<section class="section oqf" data-theme="light">
+  <div class="container">
+    <div class="oqf-header">
+      <div data-reveal>
+        <p class="eyebrow">{oQueFazemos.eyebrow}</p>
+        <h2>{oQueFazemos.titulo}</h2>
+      </div>
+      <p class="lead" data-reveal>{oQueFazemos.texto}</p>
+    </div>
+
+    <div class="eco" data-eco>
+      <span class="eco-trilho" aria-hidden="true"></span>
+      {oQueFazemos.cards.map((c, i) => (
+        <div class="eco-item" data-reveal>
+        <a href={withBase(c.cta.href)} class="card" style={`--unit-color: ${unidades[i].color}`}>
+          <span class="card-visual" aria-hidden="true">
+            <CenaArea indice={i} />
+          </span>
+          <span class="card-corpo">
+            <span class="card-icone"><UnitIcon slug={unidades[i].slug} /></span>
+            <h3>{c.titulo}</h3>
+            <p class="card-chamada">{c.chamada}</p>
+            <p class="card-texto">{c.texto}</p>
+            <span class="card-ir">{c.cta.label}<span class="card-seta" aria-hidden="true">→</span></span>
+          </span>
+        </a>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .oqf {
+    --visual-h: 160px;
+    position: relative;
+    padding-block: var(--space-24);
+    background: var(--color-bg);
+    overflow: hidden;
+  }
+  /* Malha de pontos bem fraca no topo da faixa, que some antes dos cards. */
+  .oqf::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 520px;
+    background-image: radial-gradient(rgba(11, 23, 48, 0.14) 1px, transparent 1.2px);
+    background-size: 22px 22px;
+    mask-image: radial-gradient(70% 90% at 85% 0%, black 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .oqf .container { position: relative; }
+
+  .oqf-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: var(--space-12);
+    align-items: end;
+    margin-bottom: var(--space-16);
+  }
+  .oqf-header h2 { margin-top: var(--space-4); font-size: var(--fs-3xl); max-width: 18ch; }
+  .lead {
+    font-size: var(--fs-base);
+    color: var(--color-text-muted);
+    line-height: 1.65;
+    padding-left: var(--space-6);
+    border-left: 2px solid color-mix(in srgb, var(--red-600), white 70%);
+  }
+
+  /* ── Ecossistema ── */
+  .eco {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-8);
+    align-items: stretch;
+  }
+
+  .eco-trilho {
+    position: absolute;
+    left: calc(-1 * var(--space-8));
+    right: calc(-1 * var(--space-8));
+    top: calc(var(--visual-h) / 2 - 1px);
+    height: 2px;
+    background: var(--color-border-strong);
+    overflow: hidden;
+    transition: background var(--dur-med) ease;
+  }
+  .eco-trilho::after {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 22%;
+    background: linear-gradient(90deg, transparent, var(--red-500), transparent);
+    animation: eco-pulso 7s linear infinite;
+  }
+  @keyframes eco-pulso {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(460%); }
+  }
+  .eco:has(.card:hover, .card:focus-visible, .card.em-foco) .eco-trilho {
+    background: color-mix(in srgb, var(--red-500), white 55%);
+  }
+
+  /* O reveal (GSAP) escreve transform inline: fica no invólucro, para não
+     brigar com o transform do hover no card. */
+  .eco-item { position: relative; z-index: 1; display: flex; }
+  .card {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    box-shadow: 0 1px 2px rgba(11, 23, 48, 0.04), 0 12px 32px -18px rgba(11, 23, 48, 0.18);
+    overflow: hidden;
+    transition:
+      transform 0.6s var(--ease-out),
+      box-shadow 0.6s var(--ease-out),
+      border-color 0.4s ease;
+  }
+  .card:hover,
+  .card:focus-visible,
+  .card.em-foco {
+    transform: translateY(-8px) scale(1.012);
+    border-color: color-mix(in srgb, var(--unit-color), white 45%);
+    box-shadow: 0 2px 4px rgba(11, 23, 48, 0.05), 0 28px 56px -24px rgba(11, 23, 48, 0.32);
+  }
+  .card:focus-visible { outline: 2px solid var(--red-600); outline-offset: 4px; }
+
+  /* ── Desenho de cada área ── */
+  .card-visual {
+    position: relative;
+    display: grid;
+    place-items: center;
+    height: var(--visual-h);
+    /* Painel escuro, a "tela" onde a cena acontece, como no Sinal. */
+    background:
+      radial-gradient(70% 90% at 70% 20%, rgba(226, 8, 29, 0.1), transparent 60%),
+      radial-gradient(120% 100% at 50% 0%, var(--navy-800), var(--navy-950) 80%);
+  }
+  /* Portas: continuam o trilho da borda do card até o desenho. */
+  .card-visual::before,
+  .card-visual::after {
+    content: "";
+    position: absolute;
+    top: calc(50% - 1px);
+    height: 2px;
+    width: max(0px, calc(50% - 140px));
+    background: rgba(230, 238, 248, 0.5);
+    transition: background var(--dur-med) ease;
+  }
+  .card-visual::before { left: 0; }
+  .card-visual::after { right: 0; }
+  .card:hover .card-visual::before, .card:hover .card-visual::after,
+  .card:focus-visible .card-visual::before, .card:focus-visible .card-visual::after,
+  .card.em-foco .card-visual::before, .card.em-foco .card-visual::after {
+    background: var(--red-400);
+  }
+
+  /* ── Texto do card ── */
+  .card-corpo { display: flex; flex-direction: column; flex: 1; padding: var(--space-8); }
+  .card-icone { color: var(--unit-color); }
+  .card-icone :global(.unit-icon) { width: 28px; height: 28px; }
+  .card h3 { margin-top: var(--space-4); font-size: var(--fs-lg); transition: color 0.4s ease; }
+  .card:is(:hover, :focus-visible, .em-foco) h3 { color: var(--unit-color); }
+  .card-chamada { margin-top: var(--space-3); font-size: var(--fs-sm); font-weight: 600; color: var(--color-text); }
+  .card-texto { margin-top: var(--space-3); font-size: var(--fs-sm); color: var(--color-text-muted); line-height: 1.55; flex: 1; }
+  .card-ir {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-6);
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    color: var(--color-eyebrow);
+  }
+  .card-seta { display: inline-block; transition: transform 0.5s var(--ease-out); }
+  .card:is(:hover, :focus-visible, .em-foco) .card-seta { transform: translateX(6px); }
+
+  @media (max-width: 900px) {
+    .oqf-header { grid-template-columns: 1fr; gap: var(--space-6); margin-bottom: var(--space-12); }
+    .eco { grid-template-columns: 1fr; gap: var(--space-6); }
+    /* Uma coluna: o trilho vira a espinha vertical que liga um card ao outro. */
+    .eco-trilho {
+      left: calc(50% - 1px);
+      right: auto;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      height: auto;
+    }
+    .eco-trilho::after {
+      inset: 0 0 auto;
+      width: auto;
+      height: 22%;
+      background: linear-gradient(180deg, transparent, var(--red-500), transparent);
+      animation-name: eco-pulso-v;
+    }
+    @keyframes eco-pulso-v {
+      from { transform: translateY(-100%); }
+      to { transform: translateY(460%); }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .eco-trilho::after { animation: none; }
+    .card, .card-seta { transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+    .card:hover, .card:focus-visible, .card.em-foco, .card:is(:hover, :focus-visible, .em-foco) .card-seta { transform: none; }
+  }
+</style>
+
+<script>
+  const semMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  document.querySelectorAll<HTMLElement>("[data-eco]").forEach((eco) => {
+    const cenas = Array.from(eco.querySelectorAll<SVGSVGElement>("svg[data-cena-area]"));
+
+    // Desenha uma vez ao entrar; anda (CSS e SMIL) só enquanto está na tela.
+    new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) eco.classList.add("desenhado");
+        eco.classList.toggle("vivo", e.isIntersecting);
+        cenas.forEach((s) => (e.isIntersecting && !semMovimento ? s.unpauseAnimations() : s.pauseAnimations()));
+      },
+      { threshold: 0.2 },
+    ).observe(eco);
+
+    // Sem mouse não existe hover: o card que passa pelo meio da tela vira o
+    // card em foco, e o destaque acompanha a rolagem.
+    if (window.matchMedia("(hover: hover)").matches) return;
+    const io = new IntersectionObserver(
+      (entradas) => entradas.forEach((e) => e.target.classList.toggle("em-foco", e.isIntersecting)),
+      { rootMargin: "-45% 0px -45% 0px" },
+    );
+    eco.querySelectorAll(".card").forEach((c) => io.observe(c));
+  });
+</script>

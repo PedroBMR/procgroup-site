@@ -5,17 +5,16 @@
  * Fora do site publicado, mas sem nada de preview na tela. Mesmo herói da home
  * de hoje, com a CenaTelemetria atrás, e as mesmas faixas de seção.
  *
- * Os quatro heróis do documento alternam por sorteio a cada carregamento, que
- * é o que o documento pede. Recarregue para ver outro. O efeito colateral está
- * no R6 da auditoria: cada herói traz um h1 diferente para a mesma URL, e o
- * Google indexa um deles por sorte.
+ * Os quatro heróis alternam em carrossel de 10 s (HeroCarrossel), e as três
+ * áreas viram um ecossistema ligado por um trilho (CardsEcossistema). Redesign
+ * de 2026-10-20: só apresentação, o texto continua todo em ajustes.ts.
  */
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Button from "../../components/Button.astro";
-import CenaTelemetria from "../../components/CenaTelemetria.astro";
-import UnitIcon from "../../components/UnitIcon.astro";
+import HeroCarrossel from "../../components/preview/HeroCarrossel.astro";
+import CardsEcossistema from "../../components/preview/CardsEcossistema.astro";
 import { withBase } from "../../utils/url";
-import { herois, oQueFazemos, unidades, navPreview } from "../../data/preview/ajustes";
+import { oQueFazemos, navPreview } from "../../data/preview/ajustes";
 ---
 
 <BaseLayout
@@ -24,42 +23,9 @@ import { herois, oQueFazemos, unidades, navPreview } from "../../data/preview/aj
   nav={navPreview()}
   noIndex
 >
-  <section class="hero">
-    <CenaTelemetria />
+  <HeroCarrossel />
 
-    {herois.map((h, i) => (
-      <div class:list={["container", "hero-inner", { ativo: i === 0 }]} data-heroi={i}>
-        <h1>{h.titulo}</h1>
-        <p class="hero-subtitle">{h.sub}</p>
-        <p class="hero-texto">{h.texto}</p>
-        <div class="hero-actions">
-          <Button href={withBase(h.cta.href)} variant="primary" size="md" data-magnetic>{h.cta.label}</Button>
-          <Button href={withBase(h.cta2.href)} variant="ghost" size="md" data-magnetic>{h.cta2.label}</Button>
-        </div>
-      </div>
-    ))}
-  </section>
-
-  <section class="section" data-theme="light">
-    <div class="container">
-      <div class="section-header" data-reveal>
-        <p class="eyebrow">{oQueFazemos.eyebrow}</p>
-        <h2>{oQueFazemos.titulo}</h2>
-        <p class="lead">{oQueFazemos.texto}</p>
-      </div>
-      <div class="cards">
-        {oQueFazemos.cards.map((c, i) => (
-          <a href={withBase(c.cta.href)} class="card" data-reveal style={`--unit-color: ${unidades[i].color}`}>
-            <span class="card-icone"><UnitIcon slug={unidades[i].slug} /></span>
-            <h3>{c.titulo}</h3>
-            <p class="card-chamada">{c.chamada}</p>
-            <p class="card-texto">{c.texto}</p>
-            <span class="card-ir">{c.cta.label}</span>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
+  <CardsEcossistema />
 
   <section class="section fecho">
     <div class="container fecho-inner" data-reveal>
@@ -73,69 +39,32 @@ import { herois, oQueFazemos, unidades, navPreview } from "../../data/preview/aj
 </BaseLayout>
 
 <style>
-  /* Mesmos valores do herói da home publicada. */
-  .hero {
-    position: relative;
-    min-height: calc(100svh - var(--topbar-h) - var(--header-h));
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+  .fecho { position: relative; text-align: center; padding-block: var(--space-16) var(--space-24); background: var(--color-bg); }
+  /* Fim do fluxo da página: o trilho dos cards desce e termina num ponto, a decisão. */
+  .fecho-inner::before {
+    content: "";
+    display: block;
+    width: 2px;
+    height: 56px;
+    margin: 0 auto var(--space-8);
+    background: linear-gradient(180deg, transparent, var(--red-500));
+    mask-image: linear-gradient(180deg, transparent, black 40%);
   }
-  @media (max-width: 1200px) {
-    .hero { min-height: calc(100svh - var(--topbar-h) - var(--header-h-mobile)); }
+  .fecho-inner { position: relative; }
+  .fecho-inner::after {
+    content: "";
+    position: absolute;
+    top: calc(56px - 5px);
+    left: calc(50% - 5px);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--red-500);
+    box-shadow: 0 0 0 0 rgba(226, 8, 29, 0.35);
+    animation: fecho-pulso 2.8s ease-out infinite;
   }
-  .hero-inner { position: relative; z-index: 2; max-width: 920px; padding-block: var(--space-12); display: none; }
-  .hero-inner.ativo { display: block; }
-  .hero h1 { color: var(--white); font-size: clamp(2.25rem, 2.2rem + 2.6vw, 4rem); margin-top: var(--space-4); }
-  .hero-subtitle { margin-top: var(--space-6); font-size: var(--fs-lg); color: rgba(255, 255, 255, 0.75); max-width: 620px; }
-  .hero-texto { margin-top: var(--space-4); font-size: var(--fs-sm); color: rgba(255, 255, 255, 0.58); max-width: 680px; line-height: 1.6; }
-  .hero-actions { display: flex; gap: var(--space-4); margin-top: var(--space-8); flex-wrap: wrap; }
-
-  .section { padding-block: var(--space-24); background: var(--color-bg); }
-  .section-header { max-width: 760px; margin-bottom: var(--space-12); }
-  .section-header h2 { margin-top: var(--space-4); font-size: var(--fs-3xl); }
-  .lead { margin-top: var(--space-6); font-size: var(--fs-base); color: var(--color-text-muted); max-width: 70ch; line-height: 1.6; }
-
-  .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); }
-  .card {
-    position: relative;
-    display: flex; flex-direction: column;
-    padding: var(--space-8);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    background: var(--color-surface);
-    box-shadow: var(--shadow-sm);
-    transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out), border-color var(--dur-fast) ease;
-  }
-  .card::before {
-    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px;
-    border-radius: var(--radius-md) var(--radius-md) 0 0;
-    background: color-mix(in srgb, var(--unit-color), white 24%);
-  }
-  .card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); border-color: color-mix(in srgb, var(--unit-color), white 36%); }
-  /* Cor cheia da unidade: esta faixa é clara, e o tom clareado com branco que
-     os cards escuros usam some sobre o branco. */
-  .card-icone { color: var(--unit-color); }
-  .card-icone :global(.unit-icon) { width: 28px; height: 28px; }
-  .card h3 { margin-top: var(--space-4); font-size: var(--fs-lg); }
-  .card-chamada { margin-top: var(--space-3); font-size: var(--fs-sm); font-weight: 600; color: var(--color-text); }
-  .card-texto { margin-top: var(--space-3); font-size: var(--fs-sm); color: var(--color-text-muted); line-height: 1.55; flex: 1; }
-  .card-ir { margin-top: var(--space-6); font-size: var(--fs-sm); font-weight: 700; color: var(--color-eyebrow); }
-
-  .fecho { text-align: center; padding-block: var(--space-16) var(--space-24); }
+  @keyframes fecho-pulso { to { box-shadow: 0 0 0 14px rgba(226, 8, 29, 0); } }
   .fecho-inner h2 { font-size: var(--fs-3xl); max-width: 26ch; margin-inline: auto; }
   .fecho-inner p { margin: var(--space-5) auto var(--space-8); max-width: 72ch; color: var(--color-text-muted); line-height: 1.6; }
-
-  @media (max-width: 900px) { .cards { grid-template-columns: 1fr; } }
+  @media (prefers-reduced-motion: reduce) { .fecho-inner::after { animation: none; } }
 </style>
-
-<script>
-  // Sorteia um dos quatro heróis a cada carregamento, que é o que o documento
-  // pede. O primeiro já vem marcado no HTML, então quem entra sem JS vê um
-  // herói inteiro em vez de nenhum.
-  const paineis = Array.from(document.querySelectorAll<HTMLElement>("[data-heroi]"));
-  if (paineis.length > 0) {
-    const sorteado = Math.floor(Math.random() * paineis.length);
-    paineis.forEach((p, n) => p.classList.toggle("ativo", n === sorteado));
-  }
-</script>

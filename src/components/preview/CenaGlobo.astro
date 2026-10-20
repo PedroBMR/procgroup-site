@@ -1,0 +1,185 @@
+---
+/**
+ * Fundo do herói do preview: o globo de rede do login do Proc City
+ * (pto.proccity.com.br), pedido do Pedro em 2026-10-20.
+ *
+ * Mesma geometria do original em three.js: 280 pontos numa esfera de
+ * Fibonacci (raio 1,2), cada ponto ligado a até 3 vizinhos a menos de 0,55,
+ * câmera de 45° a 3,2. Aqui é Canvas 2D com projeção feita à mão: são ~800
+ * segmentos por quadro, e carregar o three.js (~150 KB) só para isso pesaria
+ * mais que o resto da página.
+ *
+ * Gira devagar e inclina na direção do mouse, como o original. Para fora da
+ * tela ou com a aba escondida. Com prefers-reduced-motion desenha um quadro só.
+ *
+ * Decorativo: aria-hidden.
+ */
+---
+
+<div class="cena-globo" aria-hidden="true">
+  <canvas data-globo></canvas>
+  <span class="globo-veu"></span>
+  <span class="globo-grao"></span>
+</div>
+
+<style>
+  .cena-globo {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background:
+      radial-gradient(60% 75% at 72% 50%, rgba(37, 56, 102, 0.42), transparent 70%),
+      radial-gradient(120% 100% at 50% 0%, var(--navy-800) 0%, var(--navy-950) 74%);
+  }
+  .cena-globo canvas {
+    position: absolute;
+    top: 0;
+    right: -4%;
+    width: 64%;
+    height: 100%;
+    display: block;
+  }
+  /* O texto vive na esquerda: o véu escurece ali e abre à direita, onde o globo gira. */
+  .globo-veu {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(100deg, rgba(6, 10, 20, 0.9) 0%, rgba(6, 10, 20, 0.6) 34%, rgba(6, 10, 20, 0.08) 62%, transparent 80%),
+      linear-gradient(0deg, var(--navy-950) 0%, transparent 20%);
+  }
+  .globo-grao {
+    position: absolute;
+    inset: -50%;
+    pointer-events: none;
+    opacity: 0.16;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='r'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23r)'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+  }
+  /* Uma coluna: o globo vai para trás do texto, maior e mais apagado. */
+  @media (max-width: 900px) {
+    .cena-globo canvas { right: -30%; width: 120%; opacity: 0.55; }
+    .globo-veu { background: linear-gradient(180deg, rgba(6, 10, 20, 0.55) 0%, rgba(6, 10, 20, 0.75) 60%, var(--navy-950) 100%); }
+  }
+</style>
+
+<script>
+  const RAIO = 1.2;
+  const PONTOS = 280;
+  const VIZINHOS = 3;
+  const DIST_LIGACAO = 0.55;
+  const CAMERA_Z = 3.2;
+  const TAN_MEIO_FOV = Math.tan((45 / 2) * (Math.PI / 180));
+  const COR_PONTO = "96, 165, 250"; // #60A5FA, igual ao original
+  const COR_LINHA = "rgba(59, 130, 246, 0.25)"; // #3B82F6 a 25%
+
+  // Esfera de Fibonacci: pontos quase equidistantes, sem polo amontoado.
+  const pts: [number, number, number][] = [];
+  for (let i = 0; i < PONTOS; i++) {
+    const phi = Math.acos(1 - (2 * (i + 0.5)) / PONTOS);
+    const theta = Math.PI * (1 + Math.sqrt(5)) * i;
+    pts.push([RAIO * Math.sin(phi) * Math.cos(theta), RAIO * Math.sin(phi) * Math.sin(theta), RAIO * Math.cos(phi)]);
+  }
+  const arestas: [number, number][] = [];
+  for (let i = 0; i < PONTOS; i++) {
+    let n = 0;
+    for (let j = i + 1; j < PONTOS && n < VIZINHOS; j++) {
+      if (Math.hypot(pts[i][0] - pts[j][0], pts[i][1] - pts[j][1], pts[i][2] - pts[j][2]) < DIST_LIGACAO) {
+        arestas.push([i, j]);
+        n++;
+      }
+    }
+  }
+
+  document.querySelectorAll<HTMLCanvasElement>("canvas[data-globo]").forEach((cv) => {
+    const ctx = cv.getContext("2d");
+    if (!ctx) return;
+    const parado = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const proj = new Float32Array(PONTOS * 3);
+    let w = 0, h = 0, dpr = 1;
+    let rx = 0, ry = 0, alvoX = 0, alvoY = 0;
+    let visivel = true;
+    let raf = 0;
+
+    const medir = () => {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = cv.clientWidth;
+      h = cv.clientHeight;
+      cv.width = Math.round(w * dpr);
+      cv.height = Math.round(h * dpr);
+    };
+
+    const desenhar = () => {
+      const f = h / 2 / TAN_MEIO_FOV;
+      const cx = w / 2, cy = h / 2;
+      const sx = Math.sin(rx), cxr = Math.cos(rx), sy = Math.sin(ry), cyr = Math.cos(ry);
+      for (let i = 0; i < PONTOS; i++) {
+        const [x, y, z] = pts[i];
+        // rotação em Y, depois em X (mesma ordem do Euler do three.js para este caso)
+        const x1 = x * cyr + z * sy;
+        const z1 = -x * sy + z * cyr;
+        const y2 = y * cxr - z1 * sx;
+        const z2 = y * sx + z1 * cxr;
+        const k = f / (CAMERA_Z - z2);
+        proj[i * 3] = cx + x1 * k;
+        proj[i * 3 + 1] = cy - y2 * k;
+        proj[i * 3 + 2] = z2;
+      }
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, w, h);
+
+      ctx.strokeStyle = COR_LINHA;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (const [a, b] of arestas) {
+        ctx.moveTo(proj[a * 3], proj[a * 3 + 1]);
+        ctx.lineTo(proj[b * 3], proj[b * 3 + 1]);
+      }
+      ctx.stroke();
+
+      // Ponto com tamanho em perspectiva; os de trás um pouco mais apagados.
+      const base = (0.022 * f) / 2;
+      for (let i = 0; i < PONTOS; i++) {
+        const z = proj[i * 3 + 2];
+        const r = Math.max(0.6, base / (CAMERA_Z - z));
+        ctx.fillStyle = `rgba(${COR_PONTO}, ${(0.5 + 0.4 * ((z + RAIO) / (2 * RAIO))).toFixed(2)})`;
+        ctx.beginPath();
+        ctx.arc(proj[i * 3], proj[i * 3 + 1], r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    };
+
+    const quadro = () => {
+      raf = 0;
+      if (!visivel || document.hidden) return;
+      ry += 0.0025;
+      rx += 0.0008;
+      rx += (alvoY * 0.3 - rx) * 0.02;
+      ry += (alvoX * 0.3 - ry) * 0.01;
+      desenhar();
+      raf = requestAnimationFrame(quadro);
+    };
+    const tocar = () => {
+      if (!parado && !raf) raf = requestAnimationFrame(quadro);
+    };
+
+    medir();
+    desenhar();
+    window.addEventListener("resize", () => { medir(); desenhar(); });
+    if (parado) return;
+
+    // O mouse vale na seção inteira, não só sobre o canvas (o texto fica por cima).
+    const area = cv.closest("section") ?? cv;
+    area.addEventListener("pointermove", (e) => {
+      const r = cv.getBoundingClientRect();
+      alvoX = ((e.clientX - r.left) / r.width - 0.5) * 2;
+      alvoY = -((e.clientY - r.top) / r.height - 0.5) * 2;
+    });
+    new IntersectionObserver(([e]) => {
+      visivel = e.isIntersecting;
+      tocar();
+    }).observe(cv);
+    document.addEventListener("visibilitychange", tocar);
+    tocar();
+  });
+</script>

@@ -1,0 +1,237 @@
+---
+/**
+ * Cena explicativa no topo de cada card de área, na linguagem do descanso de
+ * tela "Sinal" (PROC-GROUP-Sinal.html, 2026-10-08): tudo em linha, traço claro
+ * sobre navy, um ou dois pontos vermelhos, e o desenho que se traça da
+ * esquerda para a direita quando entra na tela.
+ *
+ *   0 Infraestrutura de TI   racks com LEDs e pacotes descendo da nuvem
+ *   1 Hospedagem em Nuvem    o prédio da empresa trocando dados com a nuvem
+ *   2 Visão Computacional    câmera no poste, carro passa no cone, quadro de
+ *                            detecção acende e o dado segue pelo cabo
+ *
+ * Movimento só com CSS e SMIL (animateMotion), sem canvas: são três cenas
+ * pequenas e paradas fora da tela. O pai (CardsEcossistema) liga a classe
+ * .vivo no .eco quando ele entra na tela; sem ela tudo fica pausado.
+ *
+ * Coordenadas: viewBox 280 × 160. As portas do trilho entram e saem em y = 80.
+ * Decorativo: aria-hidden no pai, e nenhuma palavra aqui dentro.
+ */
+interface Props {
+  indice: number;
+}
+const { indice } = Astro.props;
+
+const f = (n: number) => +n.toFixed(1);
+const d = (pts: number[][]) => "M" + pts.map(([x, y]) => `${f(x)} ${f(y)}`).join(" L");
+const arcoPts = (cx: number, cy: number, r: number, a0: number, a1: number, n = 10) =>
+  Array.from({ length: n + 1 }, (_, i) => {
+    const a = a0 + ((a1 - a0) * i) / n;
+    return [cx + Math.cos(a) * r, cy + Math.sin(a) * r];
+  });
+
+// A nuvem do Sinal (cena de Infraestrutura), em escala: base reta e três arcos
+// cortados nas interseções, sem ponta sobrando.
+function nuvem(ox: number, oy: number, s: number): string {
+  const M = (x: number, y: number) => [ox + (x - 684) * s, oy + (y - 164) * s];
+  const DEG = Math.PI / 180;
+  const arco = (x: number, y: number, r: number, a0: number, a1: number) => {
+    const [cx, cy] = M(x, y);
+    return d(arcoPts(cx, cy, r * s, a0 * DEG, a1 * DEG, 14));
+  };
+  return [d([M(684, 118), M(684, 164), M(928, 164), M(928, 112)]), arco(730, 118, 46, 180, 282), arco(800, 86, 62, 192, 341), arco(878, 112, 50, 247, 360)].join(" ");
+}
+
+// O carro do Sinal, em escala, com a linha de base em y = 0.
+const S = 0.36;
+const P = (x: number, y: number) => [x * S, y * S];
+const carroCorpo = d([
+  P(4, -18), P(3, -42), P(10, -50), P(32, -52), P(54, -76), P(104, -76), P(128, -53),
+  P(160, -48), P(168, -40), P(168, -22), P(164, -18), P(151, -18),
+  ...arcoPts(132 * S, -18 * S, 19 * S, 0, -Math.PI), P(59, -18),
+  ...arcoPts(40 * S, -18 * S, 19 * S, 0, -Math.PI), P(4, -18),
+]) + "Z";
+const carroJanela = d([P(58, -54), P(72, -71), P(100, -71), P(120, -54), P(58, -54)]);
+
+const RACKS = [62, 122, 182];
+const UNIDADES = [68, 80, 92, 104, 116, 128];
+---
+
+<svg class="cena" viewBox="0 0 280 160" data-cena-area={indice}>
+  {indice === 0 && (
+    <>
+      <path class="s fraco" style="--o:0" d="M40 140 H240" pathLength="1" />
+      <path class="s" style="--o:0" d="M0 80 H62 M218 80 H280" pathLength="1" />
+      {RACKS.map((x, r) => (
+        <g style={`--o:${0.15 + r * 0.2}`}>
+          <rect class="s solido" x={x} y="60" width="36" height="80" rx="2" pathLength="1" />
+          {UNIDADES.map((y) => <path class="s fraco" d={`M${x + 5} ${y} H${x + 19}`} pathLength="1" />)}
+          {UNIDADES.map((y, u) => (
+            <path
+              class:list={["led", { vermelho: u === (r * 2 + 1) % 6 }]}
+              style={`--atraso:${((r * 6 + u) * 0.37) % 2.6}s`}
+              d={`M${x + 24} ${y} H${x + 31}`}
+            />
+          ))}
+        </g>
+      ))}
+      <path class="s" style="--o:.35" d={nuvem(106, 40, 0.28)} pathLength="1" />
+      <path class="s fraco" style="--o:.45" d="M140 40 V50 M80 50 H200 M80 50 V60 M140 50 V60 M200 50 V60" pathLength="1" />
+      {RACKS.map((x, i) => (
+        <rect class:list={["pacote", { claro: i % 2 }]} x="-2.5" y="-2.5" width="5" height="5">
+          <animateMotion
+            dur="2.6s"
+            begin={`${i * 0.85}s`}
+            repeatCount="indefinite"
+            path={`M140 40 V50 H${x + 18} V60`}
+            keyPoints={i % 2 ? "1;0" : "0;1"}
+            keyTimes="0;1"
+            calcMode="linear"
+          />
+        </rect>
+      ))}
+    </>
+  )}
+
+  {indice === 1 && (
+    <>
+      <path class="s fraco" style="--o:0" d="M10 140 H90" pathLength="1" />
+      <path class="s" style="--o:0" d="M0 80 H24" pathLength="1" />
+      <g style="--o:.1">
+        <rect class="s solido" x="24" y="66" width="40" height="74" pathLength="1" />
+        {[76, 92, 108, 124].map((y) => [32, 46].map((x) => <rect class="s fraco janela" x={x} y={y} width="8" height="9" pathLength="1" />))}
+      </g>
+      <path class="s fraco" style="--o:.3" d="M64 96 H104" pathLength="1" />
+      <path class="s" style="--o:.45" d={nuvem(104, 104, 0.36)} pathLength="1" />
+      <g style="--o:.6">
+        <rect class="s" x="126" y="78" width="44" height="8" rx="2" pathLength="1" />
+        <rect class="s" x="126" y="90" width="44" height="8" rx="2" pathLength="1" />
+        <path class="led" style="--atraso:.4s" d="M156 82 H164" />
+        <path class="led vermelho" style="--atraso:1.3s" d="M156 94 H164" />
+      </g>
+      <path class="s" style="--o:.8" d="M192 96 H236 V80 H280" pathLength="1" />
+      {[0, 1, 2].map((i) => (
+        <rect class:list={["pacote", { claro: i % 2 }]} x="-2.5" y="-2.5" width="5" height="5">
+          <animateMotion
+            dur="1.8s"
+            begin={`${i * 0.6}s`}
+            repeatCount="indefinite"
+            path="M64 96 H104"
+            keyPoints={i % 2 ? "1;0" : "0;1"}
+            keyTimes="0;1"
+            calcMode="linear"
+          />
+        </rect>
+      ))}
+    </>
+  )}
+
+  {indice === 2 && (
+    <>
+      <path class="s fraco" style="--o:0" d="M0 80 H10 M10 128 V70 H40 V128 M44 128 V92 H70 V128 M74 128 V62 H108 V128" pathLength="1" />
+      <path class="s" style="--o:.1" d="M0 128 H280 M0 152 H280" pathLength="1" />
+      <path class="s fraco" style="--o:.15" d="M8 140 H24 M44 140 H60 M80 140 H96 M116 140 H132 M152 140 H168 M188 140 H204 M224 140 H240 M260 140 H276" pathLength="1" />
+      <path class="cone" d="M188 50 L104 150 L200 150 Z" />
+      <g class="carro">
+        <path class="s solido" d={carroCorpo} pathLength="1" />
+        <path class="s" d={carroJanela} pathLength="1" />
+        <circle class="s" cx={40 * S} cy={-17 * S} r={13 * S} pathLength="1" />
+        <circle class="s" cx={132 * S} cy={-17 * S} r={13 * S} pathLength="1" />
+        <path class="quadro" d="M-5 -26 V-33 H2 M58 -33 H65 V-26 M65 -2 V5 H58 M2 5 H-5 V-2" />
+        <circle class="quadro ponto" cx="-2" cy="-39" r="2.2" />
+      </g>
+      <g style="--o:.6">
+        <path class="s" d="M236 128 V36 H206" pathLength="1" />
+        <rect class="s solido" x="180" y="34" width="28" height="12" rx="3" transform="rotate(-18 206 40)" pathLength="1" />
+        <circle class="led vermelho fixo" cx="186" cy="46" r="2" />
+      </g>
+      <path class="s" style="--o:.8" d="M236 80 H280" pathLength="1" />
+      <path class="dado" d="M206 36 H236 V80 H280" pathLength="1" />
+    </>
+  )}
+</svg>
+
+<style>
+  .cena {
+    width: 280px;
+    max-width: 100%;
+    height: 160px;
+    overflow: visible;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* Traço: claro e fino; o "fraco" é o detalhe (unidades do rack, janelas, chão). */
+  .s { stroke: #e6eef8; stroke-width: 1.4; }
+  .fraco { stroke: #7688a3; stroke-width: 1; }
+  /* Objeto sólido tapa o que passa atrás, como no Sinal. */
+  .solido { fill: var(--navy-950); }
+
+  /* Desenho entra da esquerda para a direita quando o ecossistema aparece. */
+  .s {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 1.3s cubic-bezier(0.33, 1, 0.68, 1) calc(var(--o, 0) * 1.4s + 0.2s);
+  }
+  :global(.eco.desenhado) .s { stroke-dashoffset: 0; }
+
+  /* LEDs piscam fora de fase; o vermelho pisca seco, como no Sinal. */
+  .led { stroke: #e6eef8; stroke-width: 2; animation: led 2.6s ease-in-out var(--atraso, 0s) infinite; }
+  .led.vermelho { stroke: #ff4a54; filter: drop-shadow(0 0 3px rgba(255, 74, 84, 0.8)); animation: led-seco 1.9s steps(1) var(--atraso, 0s) infinite; }
+  circle.led { stroke: none; fill: #ff4a54; }
+  @keyframes led { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+  @keyframes led-seco { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  /* Pacotes no barramento: só depois que o desenho terminou. */
+  .pacote { fill: #ff4a54; opacity: 0; transition: opacity 0.6s ease 2.4s; }
+  .pacote.claro { fill: #e6eef8; }
+  :global(.eco.desenhado) .pacote { opacity: 1; }
+
+  /* ── Visão: o carro passa, o quadro acende no cone, o dado sai pelo cabo ── */
+  .cone {
+    fill: rgba(230, 238, 248, 0.07);
+    stroke: rgba(230, 238, 248, 0.22);
+    stroke-width: 0.8;
+    opacity: 0;
+    transition: opacity 0.8s ease 2s;
+  }
+  :global(.eco.desenhado) .cone { opacity: 1; }
+  .carro { transform: translate(-70px, 150px); animation: carro 8s linear infinite; }
+  @keyframes carro {
+    from { transform: translate(-70px, 150px); }
+    to { transform: translate(290px, 150px); }
+  }
+  .quadro { stroke: #ff4a54; stroke-width: 1.4; opacity: 0; animation: quadro 8s linear infinite; }
+  .quadro.ponto { stroke: none; fill: #ff4a54; filter: drop-shadow(0 0 3px rgba(255, 74, 84, 0.8)); }
+  @keyframes quadro {
+    0%, 38% { opacity: 0; }
+    41%, 58% { opacity: 1; }
+    61%, 100% { opacity: 0; }
+  }
+  .dado {
+    stroke: #ff4a54;
+    stroke-width: 2;
+    stroke-dasharray: 0.14 2;
+    stroke-dashoffset: 0.14;
+    filter: drop-shadow(0 0 3px rgba(255, 74, 84, 0.8));
+    animation: dado 8s linear infinite;
+  }
+  @keyframes dado {
+    0%, 52% { stroke-dashoffset: 0.14; }
+    76%, 100% { stroke-dashoffset: -1; }
+  }
+
+  /* Fora da tela, nada anda. */
+  :global(.eco:not(.vivo)) :is(.led, .carro, .quadro, .dado) { animation-play-state: paused; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .s { stroke-dasharray: none; stroke-dashoffset: 0; transition: none; }
+    .led, .led.vermelho, .quadro, .dado { animation: none; }
+    .pacote, .dado { display: none; }
+    .cone { opacity: 1; transition: none; }
+    /* Carro parado dentro do cone, já marcado. */
+    .carro { animation: none; transform: translate(118px, 150px); }
+    .quadro { opacity: 1; }
+  }
+</style>
