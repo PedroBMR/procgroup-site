@@ -1,0 +1,74 @@
+---
+/**
+ * "Infraestrutura escalável com a rapidez que acompanha o crescimento da sua
+ * empresa": texto à esquerda e, à direita, as quatro perguntas do texto
+ * ("Mais usuários?", "Mais processamento?"...) como quatro recursos que
+ * crescem. Cada pergunta tem uma barra que, quando a seção aparece, sobe até
+ * um ponto, para e volta a subir: a infraestrutura sendo ajustada à operação.
+ * Sem número nem escala: as barras não medem nada, só mostram o movimento.
+ *
+ * Texto: titulo, subtitulo, paragrafos, itens, depois e fecho do bloco, sem
+ * alteração.
+ */
+import MenuIcon from "../MenuIcon.astro";
+import type { Bloco } from "../../data/preview/blocos";
+import type { NomeIconeMenu } from "../../data/iconesMenu";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+const ICONES: NomeIconeMenu[] = ["pessoas", "chip", "servidores", "modulos"];
+---
+
+<section class="ap-secao escura escala" data-cena>
+  <div class="container grade">
+    <div class="texto">
+      <div class="ap-cabeca">
+        {bloco.titulo && <h2 class="ap-entra">{bloco.titulo}</h2>}
+        {bloco.subtitulo && <p class="ap-sub ap-entra" style="--i:1">{bloco.subtitulo}</p>}
+        {bloco.paragrafos?.map((p, i) => <p class="ap-p ap-entra" style={`--i:${i + 2}`}>{p}</p>)}
+      </div>
+    </div>
+
+    <div class="painel">
+      <ul class="recursos">
+        {bloco.itens?.map((it, k) => (
+          <li style={`--k:${k}`}>
+            <span class="r-icone" aria-hidden="true"><MenuIcon nome={ICONES[k] ?? "modulos"} /></span>
+            <span class="r-nome">{it}</span>
+            <span class="r-barra" aria-hidden="true"><span></span></span>
+          </li>
+        ))}
+      </ul>
+      {bloco.depois?.map((p) => <p class="ap-p depois">{p}</p>)}
+      {bloco.fecho?.map((p) => <p class="ap-fecho">{p}</p>)}
+    </div>
+  </div>
+</section>
+
+<style>
+  .grade { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-12); align-items: start; }
+  .escala h2 { color: var(--white); }
+  .painel { padding: var(--space-8); border-radius: var(--radius-lg); background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1); }
+  .recursos { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-5); }
+  .recursos li { display: grid; grid-template-columns: 44px 1fr; grid-template-rows: auto auto; column-gap: var(--space-4); row-gap: var(--space-2); align-items: center; }
+  .r-icone { grid-row: span 2; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: var(--navy-900); border: 1px solid rgba(230, 238, 248, 0.2); color: #e6eef8; }
+  .r-icone :global(.menu-icon) { width: 22px; height: 22px; }
+  .r-nome { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-lg); text-transform: uppercase; color: var(--white); }
+  .r-barra { display: block; height: 6px; border-radius: 6px; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
+  .r-barra span { display: block; height: 100%; border-radius: 6px; background: linear-gradient(90deg, var(--red-600), var(--red-400)); transform: scaleX(0.18); transform-origin: left; }
+  .em-cena .r-barra span { animation: es-cresce 2.2s cubic-bezier(0.22, 1, 0.36, 1) calc(0.5s + var(--k) * 0.25s) forwards; }
+  @keyframes es-cresce { 0% { transform: scaleX(0.18); } 45% { transform: scaleX(0.55); } 60% { transform: scaleX(0.55); } 100% { transform: scaleX(0.92); } }
+  .depois { margin-top: var(--space-8); color: rgba(230, 238, 248, 0.82); }
+  .painel .ap-fecho { color: var(--red-400); }
+
+  @media (max-width: 900px) {
+    .grade { grid-template-columns: 1fr; }
+    .painel { padding: var(--space-5); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .r-barra span { transform: scaleX(0.92); }
+    .em-cena .r-barra span { animation: none; }
+  }
+</style>

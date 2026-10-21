@@ -1,0 +1,86 @@
+---
+/**
+ * Herói de Hospedagem em Nuvem: texto à esquerda e, à direita, a fotografia
+ * do corredor de datacenter num quadro com cantos de enquadramento (o mesmo
+ * desenho dos quadros de detecção do site). A imagem entra com uma aproximação
+ * lenta, de uma vez só, e uma varredura de luz passa pelo piso. Sem vídeo: a
+ * foto otimizada (AVIF/WebP) carrega bem mais rápido e diz o mesmo.
+ *
+ * Texto: o hero de nuvem.ts, sem alteração. O hero do documento não tem CTA.
+ */
+import { Picture } from "astro:assets";
+import foto from "../../assets/images/corredor-datacenter-ilustracao.png";
+
+interface Props {
+  hero: { eyebrow: string; titulo: string; lead?: string };
+}
+const { hero } = Astro.props;
+---
+
+<section class="ap-secao escura hero" data-cena>
+  <div class="container grade">
+    <div class="texto">
+      <p class="eyebrow ap-entra" style="--i:0">{hero.eyebrow}</p>
+      <h1 class="ap-entra" style="--i:1">{hero.titulo}</h1>
+      {hero.lead && <p class="lead ap-entra" style="--i:2">{hero.lead}</p>}
+    </div>
+
+    <figure class="quadro">
+      <div class="foto">
+        <Picture
+          src={foto}
+          formats={["avif", "webp"]}
+          widths={[640, 960, 1360]}
+          sizes="(max-width: 900px) 100vw, 50vw"
+          alt="Corredor de um datacenter com fileiras de racks de servidores iluminados"
+          loading="eager"
+          fetchpriority="high"
+          class="foto-img"
+        />
+        <span class="varredura" aria-hidden="true"></span>
+      </div>
+      <span class="canto c1" aria-hidden="true"></span>
+      <span class="canto c2" aria-hidden="true"></span>
+      <span class="canto c3" aria-hidden="true"></span>
+      <span class="canto c4" aria-hidden="true"></span>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .hero { padding-block: var(--space-16); }
+  .grade { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: var(--space-12); align-items: center; }
+  .hero h1 { margin-top: var(--space-5); font-size: clamp(2.1rem, 1.5rem + 2.2vw, 3.5rem); color: var(--white); }
+  .lead { margin-top: var(--space-8); max-width: 46ch; padding-left: var(--space-6); border-left: 2px solid var(--red-500); font-size: var(--fs-lg); line-height: 1.6; color: rgba(230, 238, 248, 0.8); }
+
+  .quadro { position: relative; margin: 0; padding: 14px; }
+  .foto {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1672 / 941;
+    border-radius: var(--radius-md);
+    box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+  .foto :global(.foto-img) { display: block; width: 100%; height: 100%; object-fit: cover; transform: scale(1.08); transition: transform 3s cubic-bezier(0.22, 1, 0.36, 1); }
+  .em-cena .foto :global(.foto-img) { transform: none; }
+  /* Luz que passa pelo piso uma vez, da esquerda para a direita. */
+  .varredura { position: absolute; inset: 55% 0 0; background: linear-gradient(90deg, transparent 0%, rgba(96, 165, 250, 0.22) 50%, transparent 100%); transform: translateX(-100%); mix-blend-mode: screen; }
+  .em-cena .varredura { animation: nv-varre 2.6s ease-in-out 0.6s forwards; }
+  @keyframes nv-varre { to { transform: translateX(100%); } }
+
+  .canto { position: absolute; width: 34px; height: 34px; border-color: var(--red-500); border-style: solid; border-width: 0; opacity: 0; transition: opacity 0.5s ease 1.2s, transform 0.6s var(--ease-out) 1.2s; }
+  .c1 { top: 0; left: 0; border-top-width: 2px; border-left-width: 2px; transform: translate(8px, 8px); }
+  .c2 { top: 0; right: 0; border-top-width: 2px; border-right-width: 2px; transform: translate(-8px, 8px); }
+  .c3 { bottom: 0; right: 0; border-bottom-width: 2px; border-right-width: 2px; transform: translate(-8px, -8px); }
+  .c4 { bottom: 0; left: 0; border-bottom-width: 2px; border-left-width: 2px; transform: translate(8px, -8px); }
+  .em-cena .canto { opacity: 1; transform: none; }
+
+  @media (max-width: 900px) {
+    .grade { grid-template-columns: 1fr; gap: var(--space-8); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .foto :global(.foto-img) { transform: none; transition: none; }
+    .em-cena .varredura { animation: none; }
+    .canto { transition: none; opacity: 1; transform: none; }
+  }
+</style>

@@ -1,0 +1,75 @@
+---
+/**
+ * O manifesto da página ("Sua empresa não precisa investir em uma
+ * infraestrutura..."). Acima do texto, o que o segundo parágrafo diz: a
+ * tecnologia para operar um ERP, uma aplicação ou um sistema corporativo não
+ * precisa estar dentro da empresa. Três ícones (ERP, aplicação, sistema) saem
+ * do prédio da empresa, à esquerda, e seguem pela linha até a nuvem, à direita,
+ * uma vez, quando a seção aparece.
+ *
+ * Texto: paragrafos e fecho do bloco, sem alteração.
+ */
+import MenuIcon from "../MenuIcon.astro";
+import type { Bloco } from "../../data/preview/blocos";
+import type { NomeIconeMenu } from "../../data/iconesMenu";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+const VIAJANTES: NomeIconeMenu[] = ["erp", "aplicativo", "codigo"];
+---
+
+<section class="ap-secao escura manifesto" data-cena>
+  <div class="container">
+    <div class="viagem" aria-hidden="true">
+      <span class="ponta empresa"><MenuIcon nome="predio" /></span>
+      <span class="linha"></span>
+      {VIAJANTES.map((icone, k) => <span class="viajante" style={`--k:${k}`}><MenuIcon nome={icone} /></span>)}
+      <span class="ponta nuvem"><MenuIcon nome="nuvem" /></span>
+    </div>
+
+    <div class="texto">
+      {bloco.paragrafos?.map((p, i) => <p class:list={["ap-entra", { primeiro: i === 0 }]} style={`--i:${i}`}>{p}</p>)}
+      {bloco.fecho?.map((p) => <p class="ap-fecho ap-entra" style="--i:4">{p}</p>)}
+    </div>
+  </div>
+</section>
+
+<style>
+  .manifesto { text-align: center; background: radial-gradient(70% 60% at 50% 0%, rgba(37, 56, 102, 0.5), transparent 70%), var(--navy-950); }
+
+  .viagem { position: relative; display: flex; align-items: center; justify-content: space-between; max-width: 640px; height: 96px; margin: 0 auto var(--space-12); }
+  .ponta { position: relative; z-index: 1; display: grid; place-items: center; width: 80px; height: 80px; border-radius: 22px; background: var(--navy-900); border: 1px solid rgba(230, 238, 248, 0.2); color: #e6eef8; }
+  .ponta :global(.menu-icon) { width: 36px; height: 36px; }
+  .nuvem { border: 2px solid var(--red-500); color: var(--white); box-shadow: 0 0 40px -6px rgba(226, 8, 29, 0.5); }
+  .linha { position: absolute; left: 80px; right: 80px; top: 50%; height: 2px; background: repeating-linear-gradient(90deg, rgba(230, 238, 248, 0.3) 0 8px, transparent 8px 16px); }
+  .viajante { position: absolute; left: 80px; top: 50%; display: grid; place-items: center; width: 40px; height: 40px; margin-top: -20px; border-radius: 10px; background: var(--navy-800); border: 1px solid rgba(255, 74, 84, 0.6); color: #e6eef8; opacity: 0; }
+  .viajante :global(.menu-icon) { width: 20px; height: 20px; }
+  /* Cada um faz a viagem uma vez e fica encostado na nuvem. */
+  .em-cena .viajante { animation: mf-viagem 1.8s cubic-bezier(0.65, 0, 0.35, 1) calc(0.6s + var(--k) * 0.45s) forwards; }
+  @keyframes mf-viagem {
+    0% { opacity: 0; left: 80px; }
+    10% { opacity: 1; }
+    100% { opacity: 1; left: calc(100% - 80px - 40px - (2 - var(--k)) * 46px); }
+  }
+
+  .texto p { max-width: 64ch; margin: var(--space-4) auto 0; font-size: var(--fs-base); line-height: 1.65; color: rgba(230, 238, 248, 0.78); }
+  .texto .primeiro { margin-top: 0; font-size: var(--fs-xl); line-height: 1.45; font-weight: 600; color: var(--white); }
+  .texto .ap-fecho { margin-top: var(--space-8); max-width: none; font-size: var(--fs-xl); line-height: var(--lh-snug); color: var(--white); }
+
+  @media (max-width: 560px) {
+    .ponta { width: 60px; height: 60px; }
+    .linha { left: 60px; right: 60px; }
+    .viajante { left: 60px; }
+    @keyframes mf-viagem {
+      0% { opacity: 0; left: 60px; }
+      10% { opacity: 1; }
+      100% { opacity: 1; left: calc(100% - 60px - 40px - (2 - var(--k)) * 44px); }
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .viajante { opacity: 1; left: calc(100% - 80px - 40px - (2 - var(--k)) * 46px); }
+    .em-cena .viajante { animation: none; }
+  }
+</style>

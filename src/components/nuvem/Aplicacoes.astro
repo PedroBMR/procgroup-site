@@ -1,0 +1,132 @@
+---
+/**
+ * Hospedagem de ERP e Hospedagem de outros projetos. Os dois cards têm pesos
+ * diferentes no próprio texto (o de ERP é bem maior), então a composição é
+ * assimétrica: ERP à esquerda, largo; outros projetos à direita, estreito.
+ *
+ *   ERP              os fatores de dimensionamento viram uma grade de
+ *                    etiquetas em volta de um ícone de ERP, que acendem em
+ *                    sequência quando o card aparece
+ *   outros projetos  cada tipo de projeto da lista ganha um ícone próprio
+ *
+ * Texto: os dois cards do bloco (n, titulo, subtitulo, paragrafos,
+ * itensTitulo, itens, depois), sem alteração.
+ */
+import MenuIcon from "../MenuIcon.astro";
+import type { Bloco } from "../../data/preview/blocos";
+import type { NomeIconeMenu } from "../../data/iconesMenu";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+const [erp, outros] = bloco.cards ?? [];
+
+// Ícone de cada tipo de projeto, pelo texto do item.
+const iconeDe = (t: string): NomeIconeMenu =>
+  /site|portal/i.test(t) ? "globo"
+  : /corporativ/i.test(t) ? "erp"
+  : /arquivo|document/i.test(t) ? "arquivo"
+  : /compartilhado/i.test(t) ? "pessoas"
+  : /e-mail/i.test(t) ? "envelope"
+  : /aplicativo/i.test(t) ? "aplicativo"
+  : "modulos";
+---
+
+<section class="ap-secao aplicacoes" data-theme="light" data-cena>
+  <div class="container grade">
+    {erp && (
+      <article class="card erp ap-entra" id={erp.id}>
+        <header class="cab">
+          <span class="icone-grande" aria-hidden="true"><MenuIcon nome="erp" /></span>
+          <div>
+            {erp.n && <p class="n" aria-hidden="true">{erp.n}</p>}
+            <h3>{erp.titulo}</h3>
+          </div>
+        </header>
+        {erp.subtitulo && <p class="sub">{erp.subtitulo}</p>}
+        {erp.paragrafos?.map((p) => <p class="p">{p}</p>)}
+        {erp.itensTitulo && <p class="itens-titulo">{erp.itensTitulo}</p>}
+        {erp.itens && (
+          <ul class="fatores">
+            {erp.itens.map((it, k) => <li style={`--k:${k}`}>{it}</li>)}
+          </ul>
+        )}
+        {erp.depois?.map((p, k) => <p class:list={["p", { parceria: k === erp.depois!.length - 1 }]}>{p}</p>)}
+      </article>
+    )}
+
+    {outros && (
+      <article class="card outros ap-entra" style="--i:2" id={outros.id}>
+        <header class="cab">
+          <span class="icone-grande" aria-hidden="true"><MenuIcon nome="camadas" /></span>
+          <div>
+            {outros.n && <p class="n" aria-hidden="true">{outros.n}</p>}
+            <h3>{outros.titulo}</h3>
+          </div>
+        </header>
+        {outros.paragrafos?.map((p) => <p class="p">{p}</p>)}
+        {outros.itens && (
+          <ul class="tipos">
+            {outros.itens.map((it, k) => (
+              <li style={`--k:${k}`}>
+                <span class="tipo-icone" aria-hidden="true"><MenuIcon nome={iconeDe(it)} /></span>
+                <span>{it}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </article>
+    )}
+  </div>
+</section>
+
+<style>
+  .grade { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: var(--space-6); align-items: stretch; }
+  .card {
+    padding: var(--space-8);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 1px 2px rgba(11, 23, 48, 0.04), 0 18px 40px -28px rgba(11, 23, 48, 0.3);
+    scroll-margin-top: calc(var(--topbar-h) + var(--header-h) + var(--space-6));
+  }
+  .outros { background: linear-gradient(180deg, var(--color-bg-alt), var(--color-surface)); }
+  .cab { display: flex; align-items: center; gap: var(--space-4); }
+  .icone-grande { display: grid; place-items: center; flex: none; width: 64px; height: 64px; border-radius: 18px; background: var(--navy-900); color: var(--white); }
+  .icone-grande :global(.menu-icon) { width: 30px; height: 30px; }
+  .n { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-base); line-height: 1; color: var(--red-600); }
+  .card h3 { margin-top: 2px; font-size: var(--fs-xl); }
+  .sub { margin-top: var(--space-5); font-size: var(--fs-base); font-weight: 600; line-height: 1.45; color: var(--red-600); }
+  .p { margin-top: var(--space-4); font-size: var(--fs-sm); line-height: 1.65; color: var(--color-text-muted); }
+  .parceria { padding: var(--space-4) var(--space-5); border-radius: var(--radius-sm); background: var(--color-bg-alt); border-left: 3px solid var(--red-600); color: var(--color-text); }
+  .itens-titulo { margin-top: var(--space-6); font-size: var(--fs-sm); font-weight: 700; color: var(--color-text); }
+
+  /* Fatores de dimensionamento: etiquetas que acendem em sequência. */
+  .fatores { list-style: none; margin: var(--space-3) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .fatores li {
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    padding: 7px 12px;
+    border-radius: var(--radius-pill);
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    transition: background 0.4s ease, border-color 0.4s ease, color 0.4s ease;
+    transition-delay: calc(0.6s + var(--k) * 0.08s);
+  }
+  .em-cena .fatores li { border-color: rgba(184, 8, 26, 0.35); background: rgba(226, 8, 29, 0.05); }
+
+  .tipos { list-style: none; margin: var(--space-6) 0 0; padding: 0; display: grid; gap: var(--space-2); }
+  .tipos li { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-size: var(--fs-sm); font-weight: 600; color: var(--color-text); transition: background 0.2s ease; }
+  .tipos li:hover { background: var(--color-surface); }
+  .tipo-icone { display: grid; place-items: center; flex: none; width: 36px; height: 36px; border-radius: 10px; background: var(--color-surface); border: 1px solid var(--color-border); color: var(--navy-700); }
+  .tipo-icone :global(.menu-icon) { width: 18px; height: 18px; }
+
+  @media (max-width: 900px) {
+    .grade { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .fatores li { transition: none; }
+  }
+</style>

@@ -1,0 +1,105 @@
+---
+/**
+ * "Segurança como parte da arquitetura": as diferentes camadas de proteção que
+ * o próprio texto menciona, desenhadas como anéis concêntricos em volta dos
+ * dados (um cadeado no centro). Os anéis se fecham de dentro para fora quando a
+ * seção aparece. Ao lado, a lista de recursos.
+ *
+ * Texto: titulo, subtitulo, paragrafos, itensTitulo, itens e depois do bloco,
+ * sem alteração.
+ */
+import MenuIcon from "../MenuIcon.astro";
+import type { Bloco } from "../../data/preview/blocos";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+const ANEIS = [62, 96, 130, 164];
+---
+
+<section class="ap-secao escura seguranca" data-cena>
+  <div class="container grade">
+    <div class="camadas" aria-hidden="true">
+      <svg viewBox="0 0 360 360">
+        {ANEIS.map((r, k) => (
+          <circle class="ap-traco anel" cx="180" cy="180" r={r} pathLength="1" style={`--o:${(0.2 + k * 0.3).toFixed(2)}; --k:${k}`} />
+        ))}
+        {ANEIS.map((r, k) => (
+          <circle class="no" cx={180 + Math.cos((-60 + k * 75) * Math.PI / 180) * r} cy={180 + Math.sin((-60 + k * 75) * Math.PI / 180) * r} r="5" style={`--k:${k}`} />
+        ))}
+      </svg>
+      <span class="nucleo"><MenuIcon nome="cadeado" /></span>
+    </div>
+
+    <div>
+      <div class="ap-cabeca">
+        {bloco.titulo && <h2 class="ap-entra">{bloco.titulo}</h2>}
+        {bloco.subtitulo && <p class="ap-sub ap-entra" style="--i:1">{bloco.subtitulo}</p>}
+        {bloco.paragrafos?.map((p, i) => <p class="ap-p ap-entra" style={`--i:${i + 2}`}>{p}</p>)}
+      </div>
+      {bloco.itensTitulo && <p class="itens-titulo ap-entra" style="--i:3">{bloco.itensTitulo}</p>}
+      <ul class="recursos">
+        {bloco.itens?.map((it, k) => <li style={`--k:${k}`}>{it}</li>)}
+      </ul>
+      {bloco.depois?.map((p) => <p class="ap-p depois ap-entra" style="--i:5">{p}</p>)}
+    </div>
+  </div>
+</section>
+
+<style>
+  .grade { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: var(--space-12); align-items: center; }
+  .seguranca h2 { color: var(--white); }
+
+  .camadas { position: relative; width: 100%; max-width: 420px; aspect-ratio: 1; margin-inline: auto; }
+  .camadas svg { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; overflow: visible; }
+  .anel { stroke: rgba(96, 165, 250, calc(0.55 - var(--k) * 0.1)); stroke-width: calc(3px - var(--k) * 0.5px); }
+  .no { fill: var(--red-500); opacity: 0; filter: drop-shadow(0 0 5px rgba(226, 8, 29, 0.7)); transition: opacity 0.4s ease calc(1.4s + var(--k) * 0.3s); }
+  .em-cena .no { opacity: 1; }
+  .nucleo {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    display: grid;
+    place-items: center;
+    width: 26%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 35%, var(--navy-700), var(--navy-950));
+    border: 2px solid var(--red-500);
+    color: var(--white);
+    box-shadow: 0 0 40px rgba(226, 8, 29, 0.3);
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0;
+    transition: opacity 0.5s ease, transform 0.6s var(--ease-out);
+  }
+  .nucleo :global(.menu-icon) { width: 40%; height: 40%; }
+  .em-cena .nucleo { opacity: 1; transform: translate(-50%, -50%); }
+
+  .itens-titulo { margin-top: var(--space-6); font-size: var(--fs-sm); font-weight: 700; color: var(--white); }
+  .recursos { list-style: none; margin: var(--space-3) 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2) var(--space-5); }
+  .recursos li {
+    position: relative;
+    padding: var(--space-2) var(--space-3) var(--space-2) var(--space-6);
+    border-radius: var(--radius-sm);
+    font-size: var(--fs-sm);
+    color: rgba(230, 238, 248, 0.9);
+    background: rgba(255, 255, 255, 0.03);
+    opacity: 0;
+    transition: opacity 0.4s ease calc(0.6s + var(--k) * 0.08s);
+  }
+  .recursos li::before { content: ""; position: absolute; left: var(--space-3); top: 50%; width: 6px; height: 6px; margin-top: -3px; border-radius: 50%; background: var(--red-500); }
+  .em-cena .recursos li { opacity: 1; }
+  .depois { color: rgba(230, 238, 248, 0.82); }
+
+  @media (max-width: 900px) {
+    .grade { grid-template-columns: 1fr; }
+    .camadas { max-width: 280px; }
+  }
+  @media (max-width: 520px) {
+    .recursos { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .no, .nucleo, .recursos li { transition: none; }
+  }
+</style>

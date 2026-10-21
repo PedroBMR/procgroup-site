@@ -1,0 +1,65 @@
+---
+/**
+ * "Mais de 10 anos hospedando ambientes em nuvem": composição assimétrica,
+ * título grande à esquerda e os parágrafos à direita.
+ *
+ * Atrás do título, anéis concêntricos levemente irregulares se desenham de
+ * dentro para fora, como os anéis de crescimento de uma árvore: experiência
+ * acumulada camada por camada. É só desenho: o número de anéis não conta nada.
+ *
+ * Texto: titulo, paragrafos e fecho do bloco, sem alteração.
+ */
+import type { Bloco } from "../../data/preview/blocos";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+
+// Anéis com raio crescente e um leve deslocamento de centro, para não parecer
+// alvo nem gráfico.
+const ANEIS = Array.from({ length: 9 }, (_, k) => ({
+  r: 30 + k * 26,
+  dx: Math.sin(k * 1.7) * 6,
+  dy: Math.cos(k * 1.3) * 5,
+}));
+---
+
+<section class="ap-secao escura experiencia" data-cena>
+  <svg class="aneis" viewBox="0 0 560 560" aria-hidden="true">
+    {ANEIS.map((a, k) => (
+      <ellipse class="ap-traco anel" cx={280 + a.dx} cy={280 + a.dy} rx={a.r} ry={a.r * 0.96} pathLength="1" style={`--o:${(k * 0.16).toFixed(2)}`} />
+    ))}
+    <circle class="centro" cx="280" cy="280" r="7" />
+  </svg>
+
+  <div class="container grade">
+    {bloco.titulo && <h2 class="ap-entra">{bloco.titulo}</h2>}
+    <div class="texto">
+      {bloco.paragrafos?.map((p, i) => <p class:list={["ap-p ap-entra", { forte: i === bloco.paragrafos!.length - 1 }]} style={`--i:${i + 1}`}>{p}</p>)}
+      {bloco.fecho?.map((p) => <p class="ap-fecho ap-entra" style="--i:6">{p}</p>)}
+    </div>
+  </div>
+</section>
+
+<style>
+  .grade { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: var(--space-16); align-items: center; }
+  .experiencia h2 { font-size: clamp(2.5rem, 1.8rem + 2.8vw, 4.25rem); line-height: 1; color: var(--white); }
+  .texto { padding-left: var(--space-8); border-left: 1px solid rgba(255, 255, 255, 0.12); }
+  .texto .ap-p:first-child { margin-top: 0; }
+  .forte { color: var(--white); font-weight: 600; }
+  .texto .ap-fecho { color: var(--red-400); }
+
+  /* O centro dos anéis fica fora da tela, à esquerda: só os arcos passam
+     atrás do título, sem nada em cima das letras. */
+  .aneis { position: absolute; left: -340px; top: 50%; width: 620px; height: 620px; transform: translateY(-50%); pointer-events: none; fill: none; }
+  .anel { stroke: rgba(96, 165, 250, 0.18); stroke-width: 1.2; }
+  .centro { fill: var(--red-500); opacity: 0; transition: opacity 0.5s ease 0.2s; }
+  .em-cena .centro { opacity: 1; }
+
+  @media (max-width: 900px) {
+    .grade { grid-template-columns: 1fr; gap: var(--space-8); }
+    .texto { padding-left: var(--space-5); }
+    .aneis { left: -220px; top: 0; transform: none; opacity: 0.6; }
+  }
+</style>

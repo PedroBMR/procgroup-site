@@ -1,0 +1,96 @@
+---
+/**
+ * "Escalabilidade sem grandes investimentos em infraestrutura": a lista do que
+ * manter infraestrutura própria exige vira uma pilha pesada de blocos à
+ * esquerda; uma seta leva a um único bloco à direita, a nuvem gerenciada pela
+ * Proc. É a frase do texto ("transforma grande parte dessa estrutura em um
+ * serviço gerenciado") desenhada.
+ *
+ * Os blocos da pilha SÃO os itens da lista, no HTML, na ordem da página.
+ *
+ * Texto: titulo, paragrafos, itensTitulo, itens, depois e fecho do bloco, sem
+ * alteração.
+ */
+import MenuIcon from "../MenuIcon.astro";
+import type { Bloco } from "../../data/preview/blocos";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+---
+
+<section class="ap-secao escura investimento" data-cena>
+  <div class="container">
+    <div class="ap-cabeca">
+      {bloco.titulo && <h2 class="ap-entra">{bloco.titulo}</h2>}
+      {bloco.paragrafos?.map((p, i) => <p class="ap-p ap-entra" style={`--i:${i + 1}`}>{p}</p>)}
+    </div>
+
+    <div class="troca">
+      <div class="lado">
+        {bloco.itensTitulo && <p class="lado-titulo">{bloco.itensTitulo}</p>}
+        <ul class="pilha">
+          {bloco.itens?.map((it, k) => <li style={`--k:${k}`}>{it}</li>)}
+        </ul>
+      </div>
+
+      <div class="seta" aria-hidden="true"><MenuIcon nome="seta" /></div>
+
+      <div class="lado servico">
+        <span class="servico-icone" aria-hidden="true"><MenuIcon nome="nuvem" /></span>
+        {bloco.depois?.map((p) => <p class="ap-p">{p}</p>)}
+        {bloco.fecho?.map((p) => <p class="ap-fecho">{p}</p>)}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .investimento h2 { color: var(--white); }
+  .troca { display: grid; grid-template-columns: minmax(0, 1.1fr) 64px minmax(0, 1fr); gap: var(--space-6); align-items: center; margin-top: var(--space-12); }
+  .lado-titulo { font-size: var(--fs-sm); font-weight: 700; color: var(--white); margin-bottom: var(--space-3); }
+
+  /* Pilha: cada item é um bloco; entram de baixo para cima, e o conjunto fica pesado. */
+  .pilha { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+  .pilha li {
+    display: grid;
+    place-items: center;
+    min-height: 56px;
+    padding: var(--space-2);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.25;
+    color: rgba(230, 238, 248, 0.85);
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.35s ease calc(0.3s + var(--k) * 0.07s), transform 0.45s var(--ease-out) calc(0.3s + var(--k) * 0.07s);
+  }
+  .em-cena .pilha li { opacity: 1; transform: none; }
+
+  .seta { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; border: 2px solid var(--red-500); color: var(--red-400); opacity: 0; transform: translateX(-10px); transition: opacity 0.5s ease 1.4s, transform 0.6s var(--ease-out) 1.4s; }
+  .seta :global(.menu-icon) { width: 28px; height: 28px; }
+  .em-cena .seta { opacity: 1; transform: none; }
+
+  .servico { padding: var(--space-8); border-radius: var(--radius-lg); background: linear-gradient(160deg, rgba(37, 56, 102, 0.6), rgba(6, 10, 20, 0.6)); border: 1px solid rgba(255, 74, 84, 0.35); box-shadow: 0 0 60px -20px rgba(226, 8, 29, 0.35); }
+  .servico-icone { display: grid; place-items: center; width: 72px; height: 56px; border-radius: 16px; background: var(--navy-950); color: var(--white); border: 1px solid rgba(255, 74, 84, 0.5); }
+  .servico-icone :global(.menu-icon) { width: 32px; height: 32px; }
+  .servico .ap-p { color: rgba(230, 238, 248, 0.85); }
+  .servico .ap-fecho { color: var(--white); }
+
+  @media (max-width: 900px) {
+    .troca { grid-template-columns: 1fr; justify-items: stretch; }
+    .seta { justify-self: center; transform: rotate(90deg); }
+    .em-cena .seta { transform: rotate(90deg); }
+  }
+  @media (max-width: 480px) {
+    .pilha { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pilha li, .seta { transition: none; }
+  }
+</style>

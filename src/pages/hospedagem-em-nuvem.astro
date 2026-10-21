@@ -1,0 +1,67 @@
+---
+/**
+ * Página de Hospedagem em Nuvem, com o conteúdo INTEGRAL do documento "Ajustes
+ * no site". Conteúdo em src/data/preview/paginas/nuvem.ts.
+ *
+ * Redesign de 2026-10-21: saiu do molde genérico ([area].astro + Secoes) para
+ * seções próprias em src/components/nuvem/, cada uma com um desenho adequado
+ * ao assunto dela. O texto continua vindo inteiro do mesmo arquivo de dados,
+ * na mesma ordem. Mesma base visual da A Proc e da Infraestrutura de TI
+ * (src/styles/aproc.css e src/scripts/aprocCenas.ts).
+ *
+ * As âncoras do mega-menu (#proc-cloud, #oci, #erp, #outros-projetos) estão
+ * nos cards de Datacenters e de Aplicacoes.
+ *
+ * A ordem dos blocos em nuvem.ts é a ordem do documento. Se ela mudar lá, a
+ * lista abaixo muda junto.
+ */
+import "../styles/aproc.css";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { navPreview } from "../data/preview/ajustes";
+import { nuvem } from "../data/preview/paginas/nuvem";
+import Hero from "../components/nuvem/Hero.astro";
+import Atributos from "../components/nuvem/Atributos.astro";
+import Datacenters from "../components/nuvem/Datacenters.astro";
+import Ciclo from "../components/nuvem/Ciclo.astro";
+import Experiencia from "../components/nuvem/Experiencia.astro";
+import Aplicacoes from "../components/nuvem/Aplicacoes.astro";
+import Escala from "../components/nuvem/Escala.astro";
+import Performance from "../components/nuvem/Performance.astro";
+import Seguranca from "../components/nuvem/Seguranca.astro";
+import Backup from "../components/nuvem/Backup.astro";
+import Gestao from "../components/nuvem/Gestao.astro";
+import Monitoramento from "../components/nuvem/Monitoramento.astro";
+import Investimento from "../components/nuvem/Investimento.astro";
+import PorQue from "../components/nuvem/PorQue.astro";
+import Manifesto from "../components/nuvem/Manifesto.astro";
+import Fecho from "../components/nuvem/Fecho.astro";
+
+const [
+  intro, datacenters, ciclo, experiencia, aplicacoes, escala, performance,
+  seguranca, backup, gestao, monitoramento, investimento, porque, manifesto, fecho,
+] = nuvem.blocos;
+---
+
+<BaseLayout title="Hospedagem em Nuvem" description={nuvem.hero.lead ?? nuvem.hero.titulo} nav={navPreview()}>
+  <Hero hero={nuvem.hero} />
+  <Atributos bloco={intro} />
+  <Datacenters bloco={datacenters} />
+  <Ciclo bloco={ciclo} />
+  <Experiencia bloco={experiencia} />
+  <Aplicacoes bloco={aplicacoes} />
+  <Escala bloco={escala} />
+  <Performance bloco={performance} />
+  <Seguranca bloco={seguranca} />
+  <Backup bloco={backup} />
+  <Gestao bloco={gestao} />
+  <Monitoramento bloco={monitoramento} />
+  <Investimento bloco={investimento} />
+  <PorQue bloco={porque} />
+  <Manifesto bloco={manifesto} />
+  <Fecho bloco={fecho} />
+</BaseLayout>
+
+<script>
+  import { montarCenas } from "../scripts/aprocCenas";
+  montarCenas();
+</script>

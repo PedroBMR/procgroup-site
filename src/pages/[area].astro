@@ -20,10 +20,11 @@ const PAGINAS: Record<string, { pagina: Pagina; title: string }> = {
   "visao-computacional": { pagina: visao, title: "Visão Computacional e Vídeo Analytics" },
 };
 
-// Infraestrutura de TI tem página própria desde 2026-10-21
-// (src/pages/infraestrutura-de-ti.astro). As outras duas seguem aqui.
+// Infraestrutura de TI e Hospedagem em Nuvem têm página própria desde
+// 2026-10-21 (src/pages/infraestrutura-de-ti.astro e hospedagem-em-nuvem.astro).
+// Só Visão Computacional segue aqui.
 export function getStaticPaths() {
-  return ["hospedagem-em-nuvem", "visao-computacional"].map((area) => ({
+  return ["visao-computacional"].map((area) => ({
     params: { area },
   }));
 }

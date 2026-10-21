@@ -1,0 +1,101 @@
+---
+/**
+ * "Performance para aplicações críticas": texto à esquerda e, à direita, os
+ * aspectos monitorados como um painel de acompanhamento. Cada item da lista
+ * vira um bloco com ícone, o nome (texto da página) e uma linha de sinal que
+ * se desenha quando a seção aparece.
+ *
+ * As linhas de sinal são desenho, não dado: não têm eixo, escala nem número.
+ *
+ * Texto: titulo, paragrafos, itensTitulo, itens e depois do bloco, sem
+ * alteração.
+ */
+import MenuIcon from "../MenuIcon.astro";
+import type { Bloco } from "../../data/preview/blocos";
+import type { NomeIconeMenu } from "../../data/iconesMenu";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+const iconeDe = (t: string): NomeIconeMenu =>
+  /process/i.test(t) ? "chip"
+  : /mem/i.test(t) ? "camadas"
+  : /armazen/i.test(t) ? "servidores"
+  : /^rede/i.test(t) ? "rede"
+  : /disponib/i.test(t) ? "globo"
+  : /desempenho/i.test(t) ? "medidor"
+  : /utiliza/i.test(t) ? "grafico"
+  : "sino";
+// Formas de sinal diferentes por bloco, para o painel não parecer repetido.
+const SINAIS = [
+  "M0 22 L14 18 L26 20 L40 10 L54 14 L68 8 L80 12",
+  "M0 16 L12 16 L22 12 L36 14 L50 10 L64 12 L80 10",
+  "M0 24 L16 22 L30 20 L44 18 L58 14 L70 12 L80 10",
+  "M0 14 L10 20 L22 8 L34 18 L46 10 L58 16 L80 12",
+];
+---
+
+<section class="ap-secao performance" data-theme="light" data-cena>
+  <div class="container grade">
+    <div class="ap-cabeca">
+      {bloco.titulo && <h2 class="ap-entra">{bloco.titulo}</h2>}
+      {bloco.paragrafos?.map((p, i) => <p class="ap-p ap-entra" style={`--i:${i + 1}`}>{p}</p>)}
+      {bloco.depois?.map((p) => <p class="ap-p destaque ap-entra" style="--i:4">{p}</p>)}
+    </div>
+
+    <div class="painel ap-entra" style="--i:2">
+      {bloco.itensTitulo && <p class="painel-titulo"><span class="ponto" aria-hidden="true"></span>{bloco.itensTitulo}</p>}
+      <ul class="metricas">
+        {bloco.itens?.map((it, k) => (
+          <li style={`--k:${k}`}>
+            <span class="m-icone" aria-hidden="true"><MenuIcon nome={iconeDe(it)} /></span>
+            <span class="m-nome">{it}</span>
+            <svg class="sinal" viewBox="0 0 80 28" aria-hidden="true"><path d={SINAIS[k % SINAIS.length]} pathLength="1" /></svg>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .grade { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: var(--space-12); align-items: center; }
+  .destaque { padding-left: var(--space-4); border-left: 3px solid var(--red-600); color: var(--color-text); font-weight: 600; }
+
+  .painel { padding: var(--space-6); border-radius: var(--radius-lg); background: var(--navy-950); box-shadow: 0 30px 60px -36px rgba(11, 23, 48, 0.7); }
+  .painel-titulo { display: flex; align-items: center; gap: var(--space-3); font-size: var(--fs-sm); font-weight: 700; color: var(--white); }
+  .ponto { width: 8px; height: 8px; border-radius: 50%; background: var(--color-success); box-shadow: 0 0 8px rgba(22, 163, 74, 0.8); }
+  .metricas { list-style: none; margin: var(--space-5) 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); }
+  .metricas li {
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    grid-template-rows: auto 28px;
+    column-gap: var(--space-3);
+    align-items: center;
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.4s ease calc(0.4s + var(--k) * 0.1s), transform 0.5s var(--ease-out) calc(0.4s + var(--k) * 0.1s);
+  }
+  .em-cena .metricas li { opacity: 1; transform: none; }
+  .m-icone { grid-row: span 2; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; background: var(--navy-800); color: #e6eef8; }
+  .m-icone :global(.menu-icon) { width: 18px; height: 18px; }
+  .m-nome { font-size: var(--fs-sm); font-weight: 600; color: var(--white); line-height: 1.25; }
+  .sinal { width: 100%; height: 28px; fill: none; }
+  .sinal path { stroke: #60a5fa; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.2s ease calc(0.8s + var(--k) * 0.1s); }
+  .em-cena .sinal path { stroke-dashoffset: 0; }
+
+  @media (max-width: 900px) {
+    .grade { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 520px) {
+    .metricas { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .metricas li, .sinal path { transition: none; opacity: 1; transform: none; stroke-dashoffset: 0; }
+  }
+</style>

@@ -56,6 +56,10 @@ export const ICONES_MENU = {
   crescimento: '<path d="M4 20h16"/><rect x="5" y="14" width="3" height="6"/><rect x="10.5" y="10" width="3" height="10"/><rect x="16" y="6" width="3" height="14"/><path d="m4.5 9.5 5-4 3 2 6-4.5"/>',
   checklist: '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="m8 8 1.3 1.3L11.5 7M8 13l1.3 1.3 2.2-2.3M8 18h.01M13.5 8H16M13.5 13H16M13.5 18H16"/>',
   modulos: '<rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><path d="M17.25 14v6.5M14 17.25h6.5"/>',
+  // Da página de Hospedagem em Nuvem (2026-10-21).
+  envelope: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/>',
+  aplicativo: '<rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2M9.5 7h5M9.5 10.5h5"/>',
+  relogio: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>',
   seta: '<path d="M5 12h14M13 6l6 6-6 6"/>',
   externo: '<path d="M7 17 17 7M9 7h8v8"/>',
 } as const;

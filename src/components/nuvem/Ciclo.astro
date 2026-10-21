@@ -1,0 +1,131 @@
+---
+/**
+ * "Uma nuvem preparada para o seu negócio" e o ciclo que a Proc cuida:
+ * Dimensionar, Configurar, Hospedar, Monitorar, Suportar, Evoluir.
+ *
+ * O ciclo é um arco: as seis etapas em semicírculo, da esquerda para a
+ * direita, cada uma com ícone próprio e o nome dela (que é texto da página).
+ * Uma volta tracejada por baixo liga Evoluir de novo a Dimensionar: o ciclo
+ * recomeça quando a operação muda.
+ *
+ * Entrada: o arco se desenha, as etapas acendem uma a uma, e a volta aparece
+ * por último. Depois fica parado.
+ *
+ * Texto: titulo, subtitulo, paragrafos, fluxoTitulo, fluxo e depois do bloco,
+ * sem alteração.
+ */
+import MenuIcon from "../MenuIcon.astro";
+import type { Bloco } from "../../data/preview/blocos";
+import type { NomeIconeMenu } from "../../data/iconesMenu";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+const etapas = bloco.fluxo ?? [];
+const ICONES: NomeIconeMenu[] = ["modulos", "engrenagem", "nuvem", "monitor", "suporte", "crescimento"];
+
+const W = 800;
+const H = 480;
+const C = [400, 330];
+const R = 270;
+const pt = (k: number) => {
+  const a = Math.PI + (k * Math.PI) / Math.max(1, etapas.length - 1);
+  return [C[0] + Math.cos(a) * R, C[1] + Math.sin(a) * R];
+};
+const [x0, y0] = pt(0);
+const [x1, y1] = pt(etapas.length - 1);
+const arco = `M${x0} ${y0} A${R} ${R} 0 0 1 ${x1} ${y1}`;
+// A volta passa por baixo dos nomes das pontas, sem encostar neles.
+const volta = `M${x1} ${y1 + 78} Q${C[0]} ${C[1] + 170} ${x0} ${y0 + 78}`;
+---
+
+<section class="ap-secao ciclo" data-theme="light" data-cena>
+  <div class="container">
+    <div class="ap-cabeca">
+      {bloco.titulo && <h2 class="ap-entra">{bloco.titulo}</h2>}
+      {bloco.subtitulo && <p class="ap-sub ap-entra" style="--i:1">{bloco.subtitulo}</p>}
+      {bloco.paragrafos?.map((p, i) => <p class="ap-p ap-entra" style={`--i:${i + 2}`}>{p}</p>)}
+    </div>
+
+    <div class="arco-wrap">
+      {bloco.fluxoTitulo && <p class="fluxo-titulo ap-entra" style="--i:3">{bloco.fluxoTitulo}</p>}
+      <div class="arco" style={`--n:${etapas.length}`}>
+        <svg viewBox={`0 0 ${W} ${H}`} aria-hidden="true">
+          <path class="ap-traco linha" d={arco} pathLength="1" style="--o:0.4" />
+          <path class="ap-traco volta" d={volta} pathLength="1" style="--o:2.6" />
+          <path class="seta-volta" d={`M${x0 - 9} ${y0 + 67} L${x0} ${y0 + 79} L${x0 + 11} ${y0 + 71}`} />
+        </svg>
+        <ol class="etapas">
+          {etapas.map((nome, k) => {
+            const [x, y] = pt(k);
+            return (
+              <li class="etapa" style={`--x:${((x / W) * 100).toFixed(2)}%; --y:${((y / H) * 100).toFixed(2)}%; --k:${k}`}>
+                <span class="etapa-icone" aria-hidden="true"><MenuIcon nome={ICONES[k] ?? "modulos"} /></span>
+                <span class="etapa-nome">{nome}</span>
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+      {bloco.depois?.map((p) => <p class="depois ap-entra" style="--i:6">{p}</p>)}
+    </div>
+  </div>
+</section>
+
+<style>
+  .arco-wrap { margin-top: var(--space-12); text-align: center; }
+  .fluxo-titulo { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-xl); text-transform: uppercase; color: var(--color-text); }
+  .arco { position: relative; max-width: 820px; margin: var(--space-8) auto 0; aspect-ratio: 800 / 480; }
+  .arco svg { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; overflow: visible; }
+  .linha { stroke: var(--navy-700); stroke-width: 2.5; }
+  .volta { stroke: var(--red-500); stroke-width: 1.6; stroke-dasharray: 1; }
+  .seta-volta { fill: none; stroke: var(--red-500); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; opacity: 0; transition: opacity 0.4s ease 3.6s; }
+  .em-cena .seta-volta { opacity: 1; }
+
+  .etapas { list-style: none; margin: 0; padding: 0; }
+  .etapa {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    display: grid;
+    justify-items: center;
+    gap: var(--space-2);
+    width: 120px;
+    transform: translate(-50%, -32px) scale(0.85);
+    opacity: 0;
+    transition:
+      opacity 0.45s ease calc(0.6s + var(--k) * 0.32s),
+      transform 0.55s var(--ease-out) calc(0.6s + var(--k) * 0.32s);
+  }
+  .em-cena .etapa { opacity: 1; transform: translate(-50%, -32px); }
+  .etapa-icone {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--white);
+    border: 2px solid var(--navy-700);
+    color: var(--navy-800);
+    box-shadow: 0 12px 26px -14px rgba(11, 23, 48, 0.45);
+  }
+  .etapa-icone :global(.menu-icon) { width: 28px; height: 28px; }
+  .etapa:last-child .etapa-icone { border-color: var(--red-600); color: var(--red-600); }
+  .etapa-nome { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-lg); text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-text); background: var(--color-bg); padding: 0 6px; }
+  .depois { max-width: 56ch; margin: var(--space-4) auto 0; font-size: var(--fs-lg); font-weight: 600; line-height: 1.5; color: var(--color-text); }
+
+  /* Celular: o arco não cabe com seis nomes legíveis. Vira uma sequência
+     vertical ligada por uma linha, com a volta indicada no fim. */
+  @media (max-width: 700px) {
+    .arco { aspect-ratio: auto; }
+    .arco svg { display: none; }
+    .etapas { position: relative; display: grid; gap: var(--space-4); justify-items: start; padding-left: var(--space-2); }
+    .etapas::before { content: ""; position: absolute; left: calc(var(--space-2) + 31px); top: 32px; bottom: 32px; width: 2px; background: var(--navy-700); }
+    .etapa { position: relative; left: auto; top: auto; width: auto; grid-template-columns: 64px auto; align-items: center; gap: var(--space-4); transform: translateY(10px); }
+    .em-cena .etapa { transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .etapa, .seta-volta { transition: none; }
+  }
+</style>

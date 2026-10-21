@@ -1,0 +1,54 @@
+---
+/**
+ * Último bloco: "Hospedagem em nuvem para empresas que precisam de
+ * estabilidade, segurança e performance.", o parágrafo e o botão.
+ *
+ * Faixa clara com uma malha discreta de pontos e uma nuvem de linha grande ao
+ * fundo, à direita, que se desenha uma vez: fecha a página no mesmo motivo do
+ * começo, sem repetir a foto do herói.
+ *
+ * Texto: eyebrow, titulo, paragrafos e ctas do bloco, sem alteração.
+ */
+import Button from "../Button.astro";
+import { withBase } from "../../utils/url";
+import type { Bloco } from "../../data/preview/blocos";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+const L = (href: string) => (href.startsWith("#") || href.startsWith("http") ? href : withBase(href));
+---
+
+<section class="ap-secao fecho" data-theme="light" data-cena>
+  <svg class="nuvem-fundo" viewBox="0 0 24 24" aria-hidden="true">
+    <path class="ap-traco" pathLength="1" d="M7 18h10a4 4 0 0 0 .5-7.97A6 6 0 0 0 6.1 9.4 4.3 4.3 0 0 0 7 18z" />
+  </svg>
+  <div class="container texto">
+    {bloco.eyebrow && <p class="eyebrow ap-entra">{bloco.eyebrow}</p>}
+    {bloco.titulo && <h2 class="ap-entra" style="--i:1">{bloco.titulo}</h2>}
+    {bloco.paragrafos?.map((p) => <p class="ap-p ap-entra" style="--i:2">{p}</p>)}
+    {bloco.ctas && (
+      <div class="ctas ap-entra" style="--i:3">
+        {bloco.ctas.map((c, n) => <Button href={L(c.href)} variant={n === 0 ? "primary" : "secondary"} size="lg">{c.label}</Button>)}
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .fecho {
+    background:
+      radial-gradient(rgba(11, 23, 48, 0.12) 1px, transparent 1.2px) 0 0 / 22px 22px,
+      var(--color-bg-alt);
+  }
+  .nuvem-fundo { position: absolute; right: -10%; top: 50%; width: min(42vw, 540px); height: auto; transform: translateY(-50%); fill: none; pointer-events: none; }
+  .nuvem-fundo path { stroke: rgba(184, 8, 26, 0.22); stroke-width: 0.35; stroke-linejoin: round; }
+  .texto { position: relative; max-width: var(--container-max); }
+  .fecho h2 { margin-top: var(--space-4); max-width: 22ch; font-size: var(--fs-3xl); }
+  .fecho .ap-p { max-width: 52ch; font-size: var(--fs-lg); color: var(--color-text); }
+  .ctas { display: flex; flex-wrap: wrap; gap: var(--space-4); margin-top: var(--space-8); }
+  @media (max-width: 900px) {
+    .nuvem-fundo { opacity: 0.5; right: -30%; width: 90vw; }
+  }
+</style>
