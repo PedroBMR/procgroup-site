@@ -7,6 +7,9 @@
  *   Soluções   Áreas de negócio (3), Proc City, e o grupo Acessos à parte
  *   Área       as soluções daquela área e o link para a página dela
  *
+ * Na lista de áreas, o nome é link para a página geral da área (2026-10-21) e
+ * a seta ao lado, um botão separado, abre a camada com as soluções.
+ *
  * A mesma separação do desktop: Acessos nunca se mistura com as áreas.
  *
  * O link "Soluções" da lista principal mora no Header e aponta para esta
@@ -37,10 +40,12 @@ const raiz = `${id}-m`;
     <p class="m-grupo">Áreas de negócio</p>
     <ul class="m-lista">
       {businessAreas.map((a) => (
-        <li>
-          <button type="button" class="m-item" data-m-ir={`${raiz}-${a.id}`}>
+        <li class="m-area">
+          <a href={a.href} class="m-item">
             <span class="m-icone"><UnitIcon slug={a.icone} /></span>
             <span class="m-item-titulo">{a.titulo}</span>
+          </a>
+          <button type="button" class="m-abrir" data-m-ir={`${raiz}-${a.id}`} aria-label={`Ver as soluções de ${a.titulo}`}>
             <MenuIcon nome="seta" class="m-seta" />
           </button>
         </li>
@@ -139,6 +144,16 @@ const raiz = `${id}-m`;
   .m-nota { font-size: var(--fs-xs); font-weight: 400; color: var(--ink-500); }
   .m-item :global(.m-seta) { width: 16px; height: 16px; color: var(--ink-500); }
   .m-item:active .m-icone, .m-item:hover .m-icone { color: var(--red-400); }
+  /* Área: o nome leva à página dela, a seta à direita abre as soluções. */
+  .m-area { display: grid; grid-template-columns: minmax(0, 1fr) 48px; align-items: center; }
+  .m-area .m-item { grid-template-columns: 36px minmax(0, 1fr); }
+  .m-abrir {
+    display: grid; place-items: center; width: 48px; height: 48px;
+    border: 0; border-left: 1px solid var(--color-border); background: none; color: var(--ink-300);
+  }
+  .m-abrir :global(.m-seta) { width: 18px; height: 18px; }
+  .m-abrir:hover, .m-abrir:active { color: var(--red-400); }
+  .m-abrir:focus-visible, .m-area .m-item:focus-visible { outline: 2px solid var(--red-400); outline-offset: 2px; }
   .m-externo-li { margin-top: var(--space-2); padding-top: var(--space-2); border-top: 1px solid var(--color-border); }
   .m-ver {
     display: inline-flex; align-items: center; gap: var(--space-2);

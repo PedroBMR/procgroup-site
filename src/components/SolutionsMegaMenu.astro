@@ -13,7 +13,12 @@
  * Abre no CLIQUE em "Soluções" (o link continua sendo link: sem JS, ou abaixo
  * de 1200px, ele leva à página de soluções). Fecha no segundo clique, no
  * clique fora, no Esc e quando o foco sai do painel. As abas trocam no hover,
- * no foco e no clique, e respondem às setas.
+ * no foco, e respondem às setas.
+ *
+ * Desde 2026-10-21 cada área é um LINK para a página geral dela (antes era um
+ * botão de aba, e clicar no nome não levava a lugar nenhum). Passar o mouse ou
+ * focar mostra as soluções da área; clicar abre a página da área; clicar numa
+ * solução abre a solução.
  *
  * Todos os links estão no HTML desde o início, só escondidos, então os
  * buscadores encontram todas as páginas (item 21 do briefing).
@@ -43,24 +48,23 @@ const primeira = businessAreas[0]?.id;
   <div class="container mega-grade">
     <div class="mega-areas">
       <p class="mega-rotulo" id={`${id}-areas`}>Áreas de negócio</p>
-      <div role="tablist" aria-orientation="vertical" aria-labelledby={`${id}-areas`} class="mega-abas">
+      <ul aria-labelledby={`${id}-areas`} class="mega-abas">
         {businessAreas.map((a) => (
-          <button
-            type="button"
-            role="tab"
-            id={`${id}-aba-${a.id}`}
-            aria-controls={`${id}-painel-${a.id}`}
-            aria-selected={a.id === primeira ? "true" : "false"}
-            tabindex={a.id === primeira ? 0 : -1}
-            class="mega-aba"
-            data-mega-tab={a.id}
-          >
-            <span class="mega-aba-icone"><UnitIcon slug={a.icone} /></span>
-            <span class="mega-aba-titulo">{a.titulo}</span>
-            <MenuIcon nome="seta" class="mega-aba-seta" />
-          </button>
+          <li>
+            <a
+              href={a.href}
+              id={`${id}-aba-${a.id}`}
+              aria-describedby={`${id}-painel-${a.id}`}
+              class:list={["mega-aba", { ativa: a.id === primeira }]}
+              data-mega-tab={a.id}
+            >
+              <span class="mega-aba-icone"><UnitIcon slug={a.icone} /></span>
+              <span class="mega-aba-titulo">{a.titulo}</span>
+              <MenuIcon nome="seta" class="mega-aba-seta" />
+            </a>
+          </li>
         ))}
-      </div>
+      </ul>
 
       {external && (
         <div class="mega-externo-bloco">
@@ -86,9 +90,7 @@ const primeira = businessAreas[0]?.id;
     <div class="mega-centro">
       {businessAreas.map((a) => (
         <div
-          role="tabpanel"
           id={`${id}-painel-${a.id}`}
-          aria-labelledby={`${id}-aba-${a.id}`}
           class:list={["mega-conteudo", { muitas: a.solucoes.length > 8 }]}
           data-mega-alvo={a.id}
           hidden={a.id !== primeira}
@@ -226,7 +228,7 @@ const primeira = businessAreas[0]?.id;
   }
 
   /* ---------- Áreas de negócio ---------- */
-  .mega-abas { display: grid; gap: 2px; }
+  .mega-abas { display: grid; gap: 2px; list-style: none; margin: 0; padding: 0; }
   .mega-aba, .mega-externo {
     position: relative;
     display: flex;
@@ -270,11 +272,15 @@ const primeira = businessAreas[0]?.id;
   .mega-aba :global(.mega-aba-seta) { width: 16px; height: 16px; opacity: 0; transform: translateX(-4px); transition: opacity 150ms ease, transform 150ms ease; }
 
   .mega-aba:hover { background: var(--color-bg-alt); }
-  .mega-aba[aria-selected="true"] { background: var(--color-bg-alt); color: var(--color-eyebrow); }
-  .mega-aba[aria-selected="true"] .mega-aba-titulo { font-weight: 700; }
-  .mega-aba[aria-selected="true"]::before { transform: scaleY(1); }
-  .mega-aba[aria-selected="true"] .mega-aba-icone { background: var(--color-surface); color: var(--color-eyebrow); box-shadow: inset 0 0 0 1px var(--color-border); }
-  .mega-aba[aria-selected="true"] :global(.mega-aba-seta) { opacity: 1; transform: none; }
+  /* A área é link para a página dela: o título sublinha e a seta aparece no
+     hover e no foco, como nos outros links do painel. */
+  .mega-aba:hover .mega-aba-titulo, .mega-aba:focus-visible .mega-aba-titulo { text-decoration: underline; text-underline-offset: 3px; }
+  .mega-aba:hover :global(.mega-aba-seta), .mega-aba:focus-visible :global(.mega-aba-seta) { opacity: 1; transform: none; }
+  .mega-aba.ativa { background: var(--color-bg-alt); color: var(--color-eyebrow); }
+  .mega-aba.ativa .mega-aba-titulo { font-weight: 700; }
+  .mega-aba.ativa::before { transform: scaleY(1); }
+  .mega-aba.ativa .mega-aba-icone { background: var(--color-surface); color: var(--color-eyebrow); box-shadow: inset 0 0 0 1px var(--color-border); }
+  .mega-aba.ativa :global(.mega-aba-seta) { opacity: 1; transform: none; }
 
   /* Proc City: separada das áreas por um divisor, porque é outra marca. */
   .mega-externo-bloco { margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--color-border); }
@@ -456,7 +462,7 @@ const primeira = businessAreas[0]?.id;
   if (painel && toggle) {
     // Mesmo corte do Header: abaixo de 1200px a barra vira menu de celular.
     const desktop = window.matchMedia("(min-width: 1201px)");
-    const abas = Array.from(painel.querySelectorAll<HTMLButtonElement>("[data-mega-tab]"));
+    const abas = Array.from(painel.querySelectorAll<HTMLAnchorElement>("[data-mega-tab]"));
     const alvos = Array.from(painel.querySelectorAll<HTMLElement>("[data-mega-alvo]"));
     const previa = painel.querySelector<HTMLElement>("[data-mega-previa]");
     const ATRASO_HOVER = 110;
@@ -470,19 +476,11 @@ const primeira = businessAreas[0]?.id;
     let estaAberto = false;
     const aberto = () => estaAberto;
 
-    // Aba que recebe o Tab. Na prévia da Proc City nenhuma aba fica
-    // selecionada, mas a última continua alcançável pelo teclado: sem isso as
-    // três ficavam com tabindex -1 e quem navega por Tab perdia as áreas.
-    let abaDoTab = abas[0];
-
+    // As áreas são links comuns: todas recebem o Tab, e focar uma mostra as
+    // soluções dela.
     function mostrar(alvo: string) {
       alvos.forEach((a) => { a.hidden = a.dataset.megaAlvo !== alvo; });
-      const escolhida = abas.find((aba) => aba.dataset.megaTab === alvo);
-      if (escolhida) abaDoTab = escolhida;
-      abas.forEach((aba) => {
-        aba.setAttribute("aria-selected", String(aba === escolhida));
-        aba.tabIndex = aba === abaDoTab ? 0 : -1;
-      });
+      abas.forEach((aba) => aba.classList.toggle("ativa", aba.dataset.megaTab === alvo));
       previa?.classList.toggle("ativo", alvo === "externo");
     }
 
@@ -544,7 +542,6 @@ const primeira = businessAreas[0]?.id;
       aba.addEventListener("mouseenter", () => trocarComAtraso(alvo));
       aba.addEventListener("mouseleave", cancelarHover);
       aba.addEventListener("focus", () => mostrar(alvo));
-      aba.addEventListener("click", () => mostrar(alvo));
       aba.addEventListener("keydown", (e) => {
         const mapa: Record<string, number> = { ArrowDown: i + 1, ArrowUp: i - 1, Home: 0, End: abas.length - 1 };
         if (!(e.key in mapa)) return;
