@@ -1,0 +1,67 @@
+/*
+ * Base das páginas A Proc e Infraestrutura de TI (redesign de 2026-10-21): o
+ * que as seções compartilham. Cada seção mora em src/components/aproc/ ou
+ * src/components/infra/ com os próprios
+ * estilos; aqui ficam só o ritmo vertical, a tipografia de cabeçalho e o
+ * gatilho de cena.
+ *
+ * Gatilho de cena: toda seção com [data-cena] ganha a classe .em-cena uma
+ * única vez, quando entra na tela (src/scripts/aprocCenas.ts). As animações
+ * partem dela e terminam num estado estável. Sem JS, ou com
+ * prefers-reduced-motion, a classe entra de cara e tudo aparece pronto.
+ */
+
+.ap-secao {
+  position: relative;
+  padding-block: var(--space-24);
+  background: var(--color-bg);
+  overflow: hidden;
+}
+.ap-secao.escura {
+  background:
+    radial-gradient(80% 60% at 85% 0%, rgba(37, 56, 102, 0.35), transparent 70%),
+    var(--navy-950);
+}
+
+.ap-cabeca { max-width: 760px; }
+.ap-cabeca h2 { font-size: var(--fs-3xl); }
+.ap-cabeca .eyebrow + h2 { margin-top: var(--space-4); }
+.ap-sub { margin-top: var(--space-5); font-size: var(--fs-lg); font-weight: 600; color: var(--color-text); line-height: 1.45; }
+.ap-p { margin-top: var(--space-4); font-size: var(--fs-base); color: var(--color-text-muted); max-width: 68ch; line-height: 1.65; }
+.ap-fecho {
+  margin-top: var(--space-6);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-xl);
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  line-height: var(--lh-tight);
+  color: var(--color-text);
+}
+
+/* Entrada padrão: sobe e aparece. --i escalona dentro do grupo. */
+.ap-entra {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.7s var(--ease-out) calc(var(--i, 0) * 0.12s),
+    transform 0.8s var(--ease-out) calc(var(--i, 0) * 0.12s);
+}
+.em-cena .ap-entra { opacity: 1; transform: none; }
+
+/* Traço que se desenha (SVG com pathLength="1"). */
+.ap-traco {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1.4s cubic-bezier(0.33, 1, 0.68, 1) calc(var(--o, 0) * 1s);
+}
+.em-cena .ap-traco { stroke-dashoffset: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ap-entra { opacity: 1; transform: none; transition: none; }
+  .ap-traco { stroke-dasharray: none; stroke-dashoffset: 0; transition: none; }
+}
+
+@media (max-width: 900px) {
+  .ap-secao { padding-block: var(--space-16); }
+}

@@ -1,0 +1,148 @@
+---
+/**
+ * "Proc Group hoje": texto à esquerda, mapa da América Latina à direita.
+ *
+ * Destaque SÓ nos países que o próprio texto cita: Brasil, Paraguai,
+ * Argentina e Bolívia (ver src/data/aproc/mapaAmericaLatina.ts, gerado de
+ * Natural Earth 1:50m). Nada de país inferido. Um ponto em Pato Branco, sede e
+ * datacenter próprio, e linhas finas dele até os outros três países.
+ *
+ * Entrada: os contornos aparecem, os quatro países acendem em sequência (na
+ * ordem em que o texto os cita), os pontos surgem e as linhas se desenham.
+ * Depois fica parado, só o ponto da sede respira.
+ *
+ * Texto: eyebrow, titulo, paragrafos e cards do bloco, sem alteração. O nome
+ * de cada país fica num <title> do SVG, para quem passa o mouse.
+ */
+import type { Bloco } from "../../data/preview/blocos";
+import { PAISES, MAPA_VIEWBOX, PATO_BRANCO } from "../../data/aproc/mapaAmericaLatina";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+
+// Ordem de acendimento = ordem em que o texto cita os países.
+const ORDEM = ["076", "600", "032", "068"];
+const destaques = ORDEM.map((id) => PAISES.find((p) => p.id === id)).filter((p) => p !== undefined);
+const fundo = PAISES.filter((p) => !p.destaque);
+const curva = (x: number, y: number) => {
+  const mx = (PATO_BRANCO.x + x) / 2;
+  const my = (PATO_BRANCO.y + y) / 2;
+  // Arco suave para a esquerda do trajeto.
+  const dx = x - PATO_BRANCO.x;
+  const dy = y - PATO_BRANCO.y;
+  return `M${PATO_BRANCO.x} ${PATO_BRANCO.y} Q${(mx - dy * 0.25).toFixed(1)} ${(my + dx * 0.25).toFixed(1)} ${x} ${y}`;
+};
+---
+
+<section class="ap-secao escura hoje" data-cena>
+  <div class="container grade">
+    <div class="texto">
+      <div class="ap-cabeca">
+        {bloco.eyebrow && <p class="eyebrow ap-entra" style="--i:0">{bloco.eyebrow}</p>}
+        {bloco.titulo && <h2 class="ap-entra" style="--i:1">{bloco.titulo}</h2>}
+        {bloco.paragrafos?.map((p, i) => <p class="ap-p ap-entra" style={`--i:${i + 2}`}>{p}</p>)}
+      </div>
+      <ul class="regioes">
+        {bloco.cards?.map((c, i) => (
+          <li class="regiao ap-entra" style={`--i:${i + 5}`}>
+            <h3>{c.titulo}</h3>
+            {c.paragrafos?.map((p) => <p>{p}</p>)}
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <figure class="mapa" aria-hidden="true">
+      <svg viewBox={MAPA_VIEWBOX}>
+        <g class="fundo">
+          {fundo.map((p) => <path d={p.d}><title>{p.nome}</title></path>)}
+        </g>
+        <g class="destaques">
+          {destaques.map((p, k) => <path class="pais" d={p.d} style={`--k:${k}`}><title>{p.nome}</title></path>)}
+        </g>
+        <g class="rotas">
+          {destaques.filter((p) => p.id !== "076").map((p, k) => (
+            <path class="ap-traco rota" d={curva(p.cx, p.cy)} pathLength="1" style={`--o:${2.2 + k * 0.25}`} />
+          ))}
+        </g>
+        <g class="pontos">
+          {destaques.filter((p) => p.id !== "076").map((p, k) => (
+            <circle class="ponto" cx={p.cx} cy={p.cy} r="6" style={`--k:${k}`} />
+          ))}
+          <circle class="sede-onda" cx={PATO_BRANCO.x} cy={PATO_BRANCO.y} r="9" />
+          <circle class="sede" cx={PATO_BRANCO.x} cy={PATO_BRANCO.y} r="8" />
+        </g>
+      </svg>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .grade { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-12); align-items: center; }
+
+  .regioes { list-style: none; margin: var(--space-10, 2.5rem) 0 0; padding: 0; display: grid; gap: var(--space-4); }
+  .regiao {
+    position: relative;
+    padding: var(--space-4) var(--space-5) var(--space-4) var(--space-8);
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+  }
+  .regiao::before {
+    content: "";
+    position: absolute;
+    left: var(--space-4);
+    top: 1.35em;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--red-500);
+    box-shadow: 0 0 10px rgba(226, 8, 29, 0.6);
+  }
+  .regiao h3 { font-size: var(--fs-base); color: var(--white); }
+  .regiao p { margin-top: var(--space-1); font-size: var(--fs-sm); line-height: 1.55; color: var(--color-text-muted); }
+
+  .mapa { margin: 0; }
+  .mapa svg { width: 100%; max-height: 640px; height: auto; display: block; overflow: visible; }
+
+  .fundo path {
+    fill: rgba(28, 45, 82, 0.55);
+    stroke: rgba(148, 163, 184, 0.35);
+    stroke-width: 1;
+    stroke-linejoin: round;
+    opacity: 0;
+    transition: opacity 1s ease 0.1s;
+  }
+  .pais {
+    fill: rgba(28, 45, 82, 0.55);
+    stroke: rgba(148, 163, 184, 0.35);
+    stroke-width: 1;
+    stroke-linejoin: round;
+    opacity: 0;
+    transition: opacity 1s ease 0.1s, fill 0.8s ease calc(1s + var(--k) * 0.35s), stroke 0.8s ease calc(1s + var(--k) * 0.35s);
+  }
+  .em-cena .fundo path, .em-cena .pais { opacity: 1; }
+  .em-cena .pais { fill: rgba(226, 8, 29, 0.55); stroke: var(--red-400); stroke-width: 1.5; }
+  /* Brasil, onde fica a sede: um tom mais forte. */
+  .em-cena .pais:first-child { fill: rgba(226, 8, 29, 0.7); }
+
+  .rota { fill: none; stroke: rgba(255, 255, 255, 0.75); stroke-width: 1.5; stroke-linecap: round; }
+  .ponto { fill: var(--white); opacity: 0; transform-box: fill-box; transform-origin: center; transform: scale(0.4); transition: opacity 0.4s ease calc(2.6s + var(--k) * 0.25s), transform 0.5s var(--ease-out) calc(2.6s + var(--k) * 0.25s); }
+  .em-cena .ponto { opacity: 1; transform: none; }
+  .sede { fill: var(--white); stroke: var(--red-500); stroke-width: 4; opacity: 0; transition: opacity 0.5s ease 1.6s; }
+  .em-cena .sede { opacity: 1; }
+  .sede-onda { fill: none; stroke: var(--white); stroke-width: 2; opacity: 0; transform-box: fill-box; transform-origin: center; }
+  .em-cena .sede-onda { animation: hj-onda 2.8s ease-out 2s infinite; }
+  @keyframes hj-onda { from { opacity: 0.7; transform: scale(1); } to { opacity: 0; transform: scale(3.2); } }
+
+  @media (max-width: 900px) {
+    .grade { grid-template-columns: 1fr; }
+    .mapa { max-width: 420px; margin-inline: auto; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .fundo path, .pais, .ponto, .sede { transition: none; }
+    .em-cena .sede-onda { animation: none; }
+  }
+</style>

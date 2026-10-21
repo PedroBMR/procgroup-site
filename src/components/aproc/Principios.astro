@@ -1,0 +1,110 @@
+---
+/**
+ * "Acreditamos que tecnologia não deve existir apenas pela tecnologia." e a
+ * lista do que ela precisa fazer, em dois blocos lado a lado.
+ *
+ * Os itens entram um de cada vez, com 1,5 s entre um e outro (pedido do
+ * Pedro), e uma linha liga cada item ao próximo enquanto o seguinte não
+ * chega: é uma sequência de princípios, não uma lista solta. Entra uma vez,
+ * quando a seção aparece, e fica. O texto está no HTML desde o início; a
+ * animação só mexe em opacidade e posição.
+ *
+ * Ordem de leitura preservada: o primeiro bloco tem os primeiros itens.
+ *
+ * Texto: titulo e paragrafos do bloco, sem alteração.
+ */
+import type { Bloco } from "../../data/preview/blocos";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+const itens = bloco.paragrafos ?? [];
+const meio = Math.ceil(itens.length / 2);
+const colunas = [itens.slice(0, meio), itens.slice(meio)];
+const INTERVALO_S = 1.5;
+---
+
+<section class="ap-secao escura principios" data-cena>
+  <div class="container">
+    {bloco.titulo && <h2 class="titulo ap-entra">{bloco.titulo}</h2>}
+
+    <div class="blocos" style={`--intervalo:${INTERVALO_S}s`}>
+      {colunas.map((col, c) => (
+        <ol class="bloco" start={c === 0 ? 1 : meio + 1}>
+          {col.map((texto, j) => {
+            const k = c === 0 ? j : meio + j;
+            return (
+              <li class:list={["item", { ultimo: j === col.length - 1 }]} style={`--k:${k}`}>
+                <span class="item-n" aria-hidden="true">{String(k + 1).padStart(2, "0")}</span>
+                <span class="item-no" aria-hidden="true"></span>
+                <p>{texto}</p>
+              </li>
+            );
+          })}
+        </ol>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .principios { padding-block: var(--space-24); }
+  .titulo { max-width: 22ch; margin-inline: auto; text-align: center; font-size: var(--fs-3xl); color: var(--white); }
+
+  .blocos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6) var(--space-16); max-width: 1000px; margin: var(--space-16) auto 0; }
+  .bloco { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-6); align-content: start; }
+
+  .item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2.5rem 14px 1fr;
+    align-items: center;
+    gap: var(--space-4);
+    min-height: 56px;
+    padding: var(--space-3) var(--space-5) var(--space-3) var(--space-4);
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 0.6s var(--ease-out) calc(var(--k) * var(--intervalo) + 0.3s),
+      transform 0.7s var(--ease-out) calc(var(--k) * var(--intervalo) + 0.3s),
+      border-color 0.6s ease calc(var(--k) * var(--intervalo) + 0.3s);
+  }
+  .em-cena .item { opacity: 1; transform: none; border-color: rgba(255, 255, 255, 0.12); }
+  .item-n { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-lg); color: var(--red-400); }
+  .item-no {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid var(--red-500);
+    background: var(--navy-950);
+    box-shadow: 0 0 10px rgba(226, 8, 29, 0.45);
+  }
+  .item p { font-size: var(--fs-base); font-weight: 500; line-height: 1.45; color: rgba(230, 238, 248, 0.92); }
+
+  /* Ligação até o próximo item: cresce durante o intervalo entre os dois. */
+  .item:not(.ultimo)::after {
+    content: "";
+    position: absolute;
+    left: calc(var(--space-4) + 2.5rem + var(--space-4) + 6px);
+    top: calc(50% + 7px);
+    width: 2px;
+    height: calc(100% - 14px + var(--space-6));
+    background: linear-gradient(180deg, var(--red-500), rgba(226, 8, 29, 0.25));
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform var(--intervalo) linear calc(var(--k) * var(--intervalo) + 0.6s);
+  }
+  .em-cena .item:not(.ultimo)::after { transform: scaleY(1); }
+
+  @media (max-width: 760px) {
+    .blocos { grid-template-columns: 1fr; gap: var(--space-6); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .item { opacity: 1; transform: none; transition: none; }
+    .item:not(.ultimo)::after { transform: none; transition: none; }
+  }
+</style>

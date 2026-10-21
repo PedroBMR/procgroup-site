@@ -1,0 +1,116 @@
+---
+/**
+ * Abertura da página A Proc: eyebrow, título e lead do documento.
+ *
+ * Fundo: uma rede discreta de nós e ligações à direita, que se desenha ao
+ * carregar e depois só respira (deriva lenta, um nó acende de vez em quando).
+ * Os arcos concêntricos antecipam a mandala dos três pilares, lá embaixo: a
+ * página começa e termina no mesmo desenho.
+ *
+ * Decorativo: aria-hidden. O texto é o do hero de aproc.ts, sem alteração.
+ */
+interface Props {
+  hero: { eyebrow: string; titulo: string; lead?: string };
+}
+const { hero } = Astro.props;
+
+// Rede fixa (coordenadas do viewBox 600 x 520), desenhada à mão para não ter
+// nó em cima do texto e manter o peso na diagonal superior direita.
+const NOS: [number, number][] = [
+  [420, 70], [520, 120], [360, 160], [470, 210], [570, 250], [300, 250],
+  [400, 300], [520, 340], [340, 380], [450, 430], [560, 450], [250, 360],
+];
+const LIGACOES: [number, number][] = [
+  [0, 1], [0, 2], [1, 3], [2, 3], [3, 4], [2, 5], [3, 6], [5, 6], [6, 7],
+  [4, 7], [6, 8], [8, 9], [7, 9], [9, 10], [7, 10], [5, 11], [8, 11],
+];
+---
+
+<section class="ap-secao escura abertura" data-cena>
+  <svg class="rede" viewBox="0 0 600 520" aria-hidden="true">
+    <g class="arcos">
+      <circle cx="470" cy="250" r="150" pathLength="1" class="ap-traco" style="--o:.2" />
+      <circle cx="470" cy="250" r="215" pathLength="1" class="ap-traco" style="--o:.4" />
+    </g>
+    <g class="deriva">
+      {LIGACOES.map(([a, b], i) => (
+        <line
+          class="ap-traco ligacao"
+          x1={NOS[a][0]} y1={NOS[a][1]} x2={NOS[b][0]} y2={NOS[b][1]}
+          pathLength="1"
+          style={`--o:${(0.1 + i * 0.05).toFixed(2)}`}
+        />
+      ))}
+      {NOS.map(([x, y], i) => (
+        <circle class:list={["no", { quente: i === 3 || i === 9 }]} cx={x} cy={y} r={i === 3 ? 5 : 3.5} style={`--i:${i}`} />
+      ))}
+    </g>
+  </svg>
+
+  <div class="container conteudo">
+    <p class="eyebrow ap-entra" style="--i:0">{hero.eyebrow}</p>
+    <h1 class="ap-entra" style="--i:1">{hero.titulo}</h1>
+    {hero.lead && <p class="lead ap-entra" style="--i:2">{hero.lead}</p>}
+  </div>
+</section>
+
+<style>
+  .abertura {
+    min-height: min(78svh, 720px);
+    display: flex;
+    align-items: center;
+    padding-block: var(--space-24) var(--space-16);
+  }
+  .conteudo { position: relative; z-index: 1; }
+  .abertura h1 {
+    margin-top: var(--space-5);
+    max-width: 22ch;
+    font-size: clamp(2.25rem, 1.6rem + 2.4vw, 3.75rem);
+    color: var(--white);
+  }
+  .lead {
+    margin-top: var(--space-8);
+    max-width: 56ch;
+    padding-left: var(--space-6);
+    border-left: 2px solid var(--red-500);
+    font-size: var(--fs-lg);
+    line-height: 1.6;
+    color: rgba(230, 238, 248, 0.78);
+  }
+
+  .rede {
+    position: absolute;
+    top: 50%;
+    right: -4%;
+    width: min(62vw, 860px);
+    height: auto;
+    transform: translateY(-50%);
+    fill: none;
+    pointer-events: none;
+    /* O texto vive à esquerda: a rede some antes de chegar nele. */
+    mask-image: linear-gradient(90deg, transparent 0%, black 38%);
+  }
+  .arcos circle { stroke: rgba(230, 238, 248, 0.08); stroke-width: 1; }
+  .ligacao { stroke: rgba(96, 165, 250, 0.28); stroke-width: 1; }
+  .no {
+    fill: #60a5fa;
+    opacity: 0;
+    transition: opacity 0.6s ease calc(0.6s + var(--i) * 0.06s);
+  }
+  .em-cena .no { opacity: 0.85; }
+  .no.quente { fill: var(--red-500); filter: drop-shadow(0 0 6px rgba(226, 8, 29, 0.7)); animation: quente 3.2s ease-in-out infinite; }
+  @keyframes quente { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+
+  /* Deriva bem lenta: a rede está viva, sem chamar atenção. */
+  .deriva { animation: deriva 22s ease-in-out infinite alternate; }
+  @keyframes deriva { to { transform: translate(-14px, 10px); } }
+
+  @media (max-width: 900px) {
+    .rede { right: -30%; width: 120vw; opacity: 0.45; }
+    .lead { padding-left: var(--space-4); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .deriva, .no.quente { animation: none; }
+    .no { opacity: 0.85; transition: none; }
+  }
+</style>

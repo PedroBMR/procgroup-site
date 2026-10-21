@@ -1,0 +1,118 @@
+---
+/**
+ * Missão, Visão e Propósito, na ordem de aproc.ts (Missão primeiro), como três
+ * módulos com um desenho próprio cada, na mesma linguagem de linha:
+ *
+ *   Missão     ação e entrega: um vetor que sai do núcleo e chega ao alvo
+ *   Visão      direção e futuro: horizonte com arcos que sobem e uma bússola
+ *   Propósito  pessoas e proteção: um escudo com três pessoas e ondas de impacto
+ *
+ * O desenho é escolhido pelo título do card, não pela posição, para não trocar
+ * de desenho se a ordem mudar em aproc.ts. Entram um de cada vez e ficam.
+ *
+ * Texto: os três cards do bloco, sem alteração.
+ */
+import type { Bloco } from "../../data/preview/blocos";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+const desenhoDe = (titulo: string) =>
+  /miss/i.test(titulo) ? "missao" : /vis/i.test(titulo) ? "visao" : "proposito";
+---
+
+<section class="ap-secao mvp" data-theme="light" data-cena>
+  <div class="container">
+    <div class="grade">
+      {bloco.cards?.map((c, i) => {
+        const tipo = desenhoDe(c.titulo);
+        const o = (n: number) => `--o:${(0.3 + i * 0.45 + n * 0.12).toFixed(2)}`;
+        return (
+          <article class="modulo ap-entra" style={`--i:${i * 3}`}>
+            <svg class="icone" viewBox="0 0 120 120" aria-hidden="true">
+              <circle class="ap-traco anel" cx="60" cy="60" r="54" pathLength="1" style={o(0)} />
+              {tipo === "missao" && (
+                <g>
+                  <circle class="ap-traco" cx="34" cy="78" r="9" pathLength="1" style={o(1)} />
+                  <path class="ap-traco" d="M41 71 L78 34" pathLength="1" style={o(2)} />
+                  <path class="ap-traco forte" d="M66 33 L80 32 L79 46" pathLength="1" style={o(3)} />
+                  <circle class="ap-traco" cx="84" cy="28" r="14" pathLength="1" style={o(3)} />
+                  <circle class="alvo" cx="84" cy="28" r="4" />
+                  <path class="ap-traco fraco" d="M24 96 H52 M30 102 H46" pathLength="1" style={o(4)} />
+                </g>
+              )}
+              {tipo === "visao" && (
+                <g>
+                  <path class="ap-traco fraco" d="M14 80 H106" pathLength="1" style={o(1)} />
+                  <path class="ap-traco" d="M36 80 A24 24 0 0 1 84 80" pathLength="1" style={o(2)} />
+                  <path class="ap-traco fraco" d="M24 80 A36 36 0 0 1 96 80" pathLength="1" style={o(3)} />
+                  <path class="ap-traco forte" d="M60 80 L60 40 M53 47 L60 40 L67 47" pathLength="1" style={o(4)} />
+                  <circle class="alvo" cx="60" cy="80" r="4" />
+                </g>
+              )}
+              {tipo === "proposito" && (
+                <g>
+                  <path class="ap-traco" d="M60 20 L90 31 V58 C90 80 76 94 60 100 C44 94 30 80 30 58 V31 Z" pathLength="1" style={o(1)} />
+                  {[[48, 58], [60, 52], [72, 58]].map(([x, y], k) => (
+                    <g>
+                      <circle class="ap-traco" cx={x} cy={y} r="4.5" pathLength="1" style={o(2 + k * 0.5)} />
+                      <path class="ap-traco" d={`M${x - 7} ${y + 16} q7 -12 14 0`} pathLength="1" style={o(2 + k * 0.5)} />
+                    </g>
+                  ))}
+                  <circle class="alvo" cx="60" cy="20" r="3.5" />
+                </g>
+              )}
+            </svg>
+            <h3>{c.titulo}</h3>
+            {c.paragrafos?.map((p) => <p>{p}</p>)}
+          </article>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<style>
+  .mvp { background: linear-gradient(180deg, var(--color-bg-alt), var(--color-bg)); }
+  .grade { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); align-items: stretch; }
+  .modulo {
+    position: relative;
+    padding: var(--space-8);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 1px 2px rgba(11, 23, 48, 0.04), 0 18px 40px -26px rgba(11, 23, 48, 0.28);
+  }
+  /* Faixa vermelha no topo, que se estende quando o módulo entra. */
+  .modulo::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: var(--space-8);
+    width: 48px;
+    height: 3px;
+    background: var(--red-600);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.8s var(--ease-out) calc(var(--i) * 0.12s + 0.3s);
+  }
+  .em-cena .modulo::before { transform: scaleX(1); }
+  .icone { width: 96px; height: 96px; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .icone :global(.ap-traco) { stroke: var(--navy-800); stroke-width: 2; }
+  .icone .anel { stroke: rgba(11, 23, 48, 0.12); stroke-width: 1.5; }
+  .icone .fraco { stroke: rgba(11, 23, 48, 0.3); }
+  .icone .forte { stroke: var(--red-600); stroke-width: 2.4; }
+  .alvo { fill: var(--red-600); opacity: 0; transition: opacity 0.4s ease calc(var(--i) * 0.12s + 1.4s); }
+  .em-cena .alvo { opacity: 1; }
+  .modulo h3 { margin-top: var(--space-5); font-size: var(--fs-xl); }
+  .modulo p { margin-top: var(--space-3); font-size: var(--fs-sm); line-height: 1.65; color: var(--color-text-muted); }
+
+  @media (max-width: 900px) {
+    .grade { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .modulo::before { transform: none; transition: none; }
+    .alvo { opacity: 1; transition: none; }
+  }
+</style>

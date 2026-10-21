@@ -1,0 +1,325 @@
+---
+/**
+ * "Nosso diferencial": os cinco diferenciais como abas automáticas, no
+ * desenho do mega-menu de Soluções (lista à esquerda, painel à direita).
+ *
+ * Autoplay de 10 s por aba, em loop, que só começa quando a seção aparece na
+ * tela. O relógio é a barra de progresso da aba ativa (animação CSS): o fim
+ * dela avança para a próxima, então barra e troca nunca descolam. Clicar numa
+ * aba mostra ela na hora e recomeça os 10 s a partir dela.
+ *
+ * Pausa: com o mouse em cima, com o foco dentro, com a seção fora da tela ou
+ * com a aba do navegador escondida. Ao sair da pausa o intervalo recomeça do
+ * zero, para a troca nunca acontecer logo depois de o visitante soltar. Com
+ * prefers-reduced-motion não há autoplay: as abas viram troca manual.
+ *
+ * Padrão de abas do WAI-ARIA (tablist, tab, tabpanel), com setas, Home e End.
+ * Todos os painéis estão no HTML; os inativos usam hidden.
+ *
+ * Texto: eyebrow, titulo, subtitulo, paragrafos e cards do bloco, sem
+ * alteração. Cada painel tem um desenho próprio, sem palavra nenhuma dentro.
+ */
+import type { Bloco } from "../../data/preview/blocos";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+const itens = bloco.cards ?? [];
+const DURACAO_MS = 10_000;
+---
+
+<section class="ap-secao escura diferenciais" data-cena>
+  <div class="container">
+    <div class="ap-cabeca">
+      {bloco.eyebrow && <p class="eyebrow ap-entra" style="--i:0">{bloco.eyebrow}</p>}
+      {bloco.titulo && <h2 class="ap-entra" style="--i:1">{bloco.titulo}</h2>}
+      {bloco.subtitulo && <p class="ap-sub ap-entra" style="--i:2">{bloco.subtitulo}</p>}
+      {bloco.paragrafos?.map((p) => <p class="ap-p ap-entra" style="--i:3">{p}</p>)}
+    </div>
+
+    <div class="abas ap-entra" style={`--i:4; --duracao:${DURACAO_MS}ms`} data-abas>
+      <div class="lista" role="tablist" aria-orientation="vertical" aria-label={bloco.eyebrow}>
+        {itens.map((c, i) => (
+          <button
+            type="button"
+            class="aba"
+            role="tab"
+            id={`dif-aba-${i}`}
+            aria-controls={`dif-painel-${i}`}
+            aria-selected={i === 0 ? "true" : "false"}
+            tabindex={i === 0 ? 0 : -1}
+          >
+            <span class="aba-n" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+            <span class="aba-titulo">{c.titulo}</span>
+            <span class="aba-barra" aria-hidden="true"><span></span></span>
+          </button>
+        ))}
+      </div>
+
+      <div class="paineis">
+        {itens.map((c, i) => (
+          <div class="painel" role="tabpanel" id={`dif-painel-${i}`} aria-labelledby={`dif-aba-${i}`} hidden={i !== 0} tabindex="0">
+            <div class="painel-texto">
+              <h3>{c.titulo}</h3>
+              {c.paragrafos?.map((p) => <p>{p}</p>)}
+            </div>
+            <svg class="painel-desenho" viewBox="0 0 320 220" aria-hidden="true">
+              {i === 0 && (
+                <g>
+                  {[[70, 70], [250, 70], [160, 175]].map(([x, y], k) => (
+                    <g>
+                      <path class="tr fraco" d={`M160 115 L${x} ${y}`} pathLength="1" />
+                      <circle class="tr" cx={x} cy={y} r="30" pathLength="1" />
+                      {[-12, 0, 12].map((dx) => (
+                        <g>
+                          <circle class="tr claro" cx={x + dx} cy={y - 6} r="4.5" pathLength="1" />
+                          <path class="tr claro" d={`M${x + dx - 7} ${y + 12} q7 -12 14 0`} pathLength="1" />
+                        </g>
+                      ))}
+                      <circle class="ponto" cx={x} cy={y - 30} r="3" style={`--d:${k * 0.4}s`} />
+                    </g>
+                  ))}
+                  <circle class="nucleo" cx="160" cy="115" r="6" />
+                </g>
+              )}
+              {i === 1 && (
+                <g>
+                  <path class="tr fraco" d="M30 190 H290" pathLength="1" />
+                  {[0, 1, 2, 3, 4, 5].map((k) => (
+                    <rect class="tr" x={40 + k * 42} y={170 - k * 22} width="30" height={20 + k * 22} rx="3" pathLength="1" />
+                  ))}
+                  <path class="tr destaque" d="M55 160 L97 138 L139 116 L181 94 L223 72 L265 50" pathLength="1" />
+                  {[0, 1, 2, 3, 4, 5].map((k) => (
+                    <circle class="ponto" cx={55 + k * 42} cy={160 - k * 22} r="3.5" style={`--d:${k * 0.25}s`} />
+                  ))}
+                </g>
+              )}
+              {i === 2 && (
+                <g>
+                  <path class="tr" d="M60 70 L30 110 L60 150 M260 70 L290 110 L260 150 M175 52 L145 168" pathLength="1" />
+                  <rect class="tr claro" x="110" y="80" width="100" height="60" rx="8" pathLength="1" />
+                  <path class="tr fraco" d="M125 80 V68 M145 80 V68 M165 80 V68 M185 80 V68 M125 140 V152 M145 140 V152 M165 140 V152 M185 140 V152" pathLength="1" />
+                  <path class="tr destaque" d="M130 120 L150 98 L170 116 L190 100" pathLength="1" />
+                  <circle class="ponto" cx="150" cy="98" r="3.5" style="--d:0s" />
+                  <circle class="ponto" cx="170" cy="116" r="3.5" style="--d:.4s" />
+                </g>
+              )}
+              {i === 3 && (
+                <g>
+                  <circle class="tr fraco" cx="160" cy="110" r="78" pathLength="1" />
+                  {[0, 1, 2, 3, 4].map((k) => {
+                    const a = (-90 + k * 72) * (Math.PI / 180);
+                    const x = 160 + Math.cos(a) * 78;
+                    const y = 110 + Math.sin(a) * 78;
+                    return (
+                      <g>
+                        <path class="tr" d={`M160 110 L${x.toFixed(1)} ${y.toFixed(1)}`} pathLength="1" />
+                        <rect class="tr claro" x={(x - 16).toFixed(1)} y={(y - 16).toFixed(1)} width="32" height="32" rx="7" pathLength="1" />
+                        <circle class="ponto" cx={x.toFixed(1)} cy={y.toFixed(1)} r="3" style={`--d:${k * 0.3}s`} />
+                      </g>
+                    );
+                  })}
+                  <circle class="tr destaque" cx="160" cy="110" r="22" pathLength="1" />
+                  <circle class="nucleo" cx="160" cy="110" r="6" />
+                </g>
+              )}
+              {i === 4 && (
+                <g>
+                  <circle class="tr fraco" cx="160" cy="105" r="72" pathLength="1" />
+                  {Array.from({ length: 24 }, (_, k) => {
+                    const a = (k * 15 - 90) * (Math.PI / 180);
+                    const r0 = k % 6 === 0 ? 58 : 64;
+                    return (
+                      <path
+                        class="tr claro"
+                        d={`M${(160 + Math.cos(a) * r0).toFixed(1)} ${(105 + Math.sin(a) * r0).toFixed(1)} L${(160 + Math.cos(a) * 70).toFixed(1)} ${(105 + Math.sin(a) * 70).toFixed(1)}`}
+                        pathLength="1"
+                      />
+                    );
+                  })}
+                  <g class="ponteiro"><path class="tr destaque" d="M160 105 L160 52" pathLength="1" /></g>
+                  <path class="tr destaque batida" d="M20 200 H110 L122 180 L134 214 L146 190 L156 200 H300" pathLength="1" />
+                  <circle class="nucleo" cx="160" cy="105" r="5" />
+                </g>
+              )}
+            </svg>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .abas {
+    display: grid;
+    grid-template-columns: minmax(260px, 0.8fr) minmax(0, 2fr);
+    gap: var(--space-8);
+    margin-top: var(--space-12);
+    padding: var(--space-4);
+    border-radius: var(--radius-lg);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  /* ── Lista (no desenho do mega-menu) ── */
+  .lista { display: grid; gap: var(--space-1); align-content: start; }
+  .aba {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: baseline;
+    gap: var(--space-3);
+    padding: var(--space-4) var(--space-4) var(--space-5);
+    border: 0;
+    border-left: 2px solid transparent;
+    border-radius: var(--radius-sm);
+    background: none;
+    color: rgba(230, 238, 248, 0.6);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+  }
+  .aba:hover { color: var(--white); background: rgba(255, 255, 255, 0.04); }
+  .aba[aria-selected="true"] { color: var(--white); background: rgba(255, 255, 255, 0.07); border-left-color: var(--red-500); }
+  .aba:focus-visible { outline: 2px solid var(--red-400); outline-offset: 2px; }
+  .aba-n { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-sm); color: var(--red-400); }
+  .aba-titulo { font-weight: 600; font-size: var(--fs-sm); line-height: 1.35; }
+
+  /* Barra de progresso: o relógio do autoplay. */
+  .aba-barra { position: absolute; left: var(--space-4); right: var(--space-4); bottom: 6px; height: 2px; background: rgba(255, 255, 255, 0.08); border-radius: 2px; overflow: hidden; opacity: 0; transition: opacity 0.2s ease; }
+  .aba-barra span { display: block; height: 100%; background: var(--red-500); transform: scaleX(0); transform-origin: left; }
+  .abas[data-rodando] .aba[aria-selected="true"] .aba-barra { opacity: 1; }
+  .abas[data-rodando] .aba[aria-selected="true"] .aba-barra span { animation: dif-progresso var(--duracao) linear forwards; }
+  @keyframes dif-progresso { to { transform: scaleX(1); } }
+
+  /* ── Painel ── */
+  .paineis { min-height: 320px; }
+  .painel {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: var(--space-8);
+    align-items: center;
+    height: 100%;
+    padding: var(--space-6);
+    border-radius: var(--radius-md);
+    outline: none;
+    animation: painel-entra 0.5s var(--ease-out);
+  }
+  /* display: grid acima venceria o hidden do navegador. */
+  .painel[hidden] { display: none; }
+  .painel:focus-visible { box-shadow: 0 0 0 2px var(--red-400); }
+  @keyframes painel-entra { from { opacity: 0; transform: translateX(16px); } }
+  .painel h3 { font-size: var(--fs-xl); color: var(--white); }
+  .painel-texto p { margin-top: var(--space-4); font-size: var(--fs-base); line-height: 1.65; color: var(--color-text-muted); }
+  .painel-texto p:first-of-type { color: rgba(230, 238, 248, 0.88); }
+
+  /* Desenho: linha clara sobre navy, vermelho só no que importa (Sinal). */
+  .painel-desenho { width: 100%; height: auto; fill: none; stroke-linecap: round; stroke-linejoin: round; overflow: visible; }
+  .tr { stroke: rgba(230, 238, 248, 0.55); stroke-width: 1.4; stroke-dasharray: 1; stroke-dashoffset: 1; animation: dif-traco 1.2s cubic-bezier(0.33, 1, 0.68, 1) 0.15s forwards; }
+  .tr.fraco { stroke: rgba(230, 238, 248, 0.18); }
+  .tr.claro { stroke: rgba(230, 238, 248, 0.85); }
+  .tr.destaque { stroke: var(--red-400); stroke-width: 2; animation-delay: 0.6s; filter: drop-shadow(0 0 4px rgba(255, 74, 84, 0.5)); }
+  @keyframes dif-traco { to { stroke-dashoffset: 0; } }
+  .ponto { fill: var(--red-500); opacity: 0; animation: dif-ponto 2.4s ease-in-out calc(1.2s + var(--d, 0s)) infinite; }
+  @keyframes dif-ponto { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
+  .nucleo { fill: var(--red-500); filter: drop-shadow(0 0 6px rgba(226, 8, 29, 0.7)); }
+  .ponteiro { transform-origin: 160px 105px; animation: dif-giro 10s linear 1s infinite; }
+  @keyframes dif-giro { to { transform: rotate(360deg); } }
+
+  @media (max-width: 960px) {
+    .abas { grid-template-columns: 1fr; }
+    .lista { grid-auto-flow: column; grid-auto-columns: minmax(160px, 1fr); overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: var(--space-2); }
+    .aba { scroll-snap-align: start; border-left: 0; border-bottom: 2px solid transparent; }
+    .aba[aria-selected="true"] { border-bottom-color: var(--red-500); }
+    .painel { grid-template-columns: 1fr; padding: var(--space-4); }
+    .painel-desenho { max-width: 320px; justify-self: center; order: -1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .painel { animation: none; }
+    .tr { animation: none; stroke-dasharray: none; stroke-dashoffset: 0; }
+    .ponto { animation: none; opacity: 0.8; }
+    .ponteiro { animation: none; }
+  }
+</style>
+
+<script>
+  import { semMovimento } from "../../scripts/aprocCenas";
+
+  document.querySelectorAll<HTMLElement>("[data-abas]").forEach((raiz) => {
+    const abas = Array.from(raiz.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+    const paineis = Array.from(raiz.querySelectorAll<HTMLElement>('[role="tabpanel"]'));
+    const secao = raiz.closest<HTMLElement>("[data-cena]");
+    let atual = 0;
+    let visivel = false;
+    const pausas = new Set<string>();
+
+    // Liga ou desliga o relógio. Religar recomeça a barra do zero.
+    const relogio = () => {
+      raiz.removeAttribute("data-rodando");
+      if (semMovimento || !visivel || pausas.size > 0) return;
+      void raiz.offsetWidth;
+      raiz.setAttribute("data-rodando", "");
+    };
+
+    const mostrar = (n: number, focar = false) => {
+      atual = (n + abas.length) % abas.length;
+      abas.forEach((a, k) => {
+        const sim = k === atual;
+        a.setAttribute("aria-selected", String(sim));
+        a.tabIndex = sim ? 0 : -1;
+        paineis[k].hidden = !sim;
+      });
+      if (focar) abas[atual].focus();
+      // Na lista horizontal do celular, a aba ativa entra na tela sem rolar a página.
+      const lista = abas[atual].parentElement;
+      if (lista && lista.scrollWidth > lista.clientWidth) {
+        lista.scrollTo({ left: abas[atual].offsetLeft - lista.offsetLeft, behavior: semMovimento ? "auto" : "smooth" });
+      }
+      relogio();
+    };
+
+    const pausar = (motivo: string, sim: boolean) => {
+      const antes = pausas.size;
+      if (sim) pausas.add(motivo);
+      else pausas.delete(motivo);
+      if ((antes > 0) !== (pausas.size > 0)) relogio();
+    };
+
+    raiz.addEventListener("animationend", (e) => {
+      if ((e.target as Element).closest(".aba-barra")) mostrar(atual + 1);
+    });
+
+    abas.forEach((a, k) => a.addEventListener("click", () => mostrar(k)));
+    raiz.querySelector('[role="tablist"]')?.addEventListener("keydown", (e) => {
+      const ev = e as KeyboardEvent;
+      const mapa: Record<string, number> = { ArrowDown: atual + 1, ArrowRight: atual + 1, ArrowUp: atual - 1, ArrowLeft: atual - 1, Home: 0, End: abas.length - 1 };
+      if (!(ev.key in mapa)) return;
+      ev.preventDefault();
+      mostrar(mapa[ev.key], true);
+    });
+
+    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      raiz.addEventListener("pointerenter", () => pausar("mouse", true));
+      raiz.addEventListener("pointerleave", () => pausar("mouse", false));
+    }
+    raiz.addEventListener("focusin", () => pausar("foco", true));
+    raiz.addEventListener("focusout", (e) => {
+      if (!raiz.contains(e.relatedTarget as Node | null)) pausar("foco", false);
+    });
+    document.addEventListener("visibilitychange", () => pausar("aba", document.hidden));
+
+    // Só começa a contar quando a seção está mesmo na tela.
+    new IntersectionObserver(
+      ([e]) => {
+        visivel = e.isIntersecting;
+        relogio();
+      },
+      { threshold: 0.35 },
+    ).observe(raiz);
+    secao?.addEventListener("cena", relogio);
+  });
+</script>

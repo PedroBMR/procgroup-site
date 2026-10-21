@@ -1,0 +1,216 @@
+---
+/**
+ * "Nossa história" como timeline: uma linha que se desenha da esquerda para a
+ * direita e acende os três marcos (2014, 2019, Hoje) conforme passa por eles.
+ * Cada card sobe quando o marco dele acende e fica visível.
+ *
+ * Desktop: sequência por tempo, só CSS. A linha anda em velocidade constante
+ * por 3 s; os marcos ficam a 1/6, 3/6 e 5/6 dela, então acendem em 0,5 s,
+ * 1,5 s e 2,5 s depois do início.
+ *
+ * Celular: a linha vira vertical e acompanha a rolagem (script abaixo): ela
+ * cresce conforme a seção sobe na tela, e cada marco acende quando a linha
+ * chega nele.
+ *
+ * Texto: eyebrow, titulo, paragrafos e cards do bloco, sem alteração.
+ */
+import type { Bloco } from "../../data/preview/blocos";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+const marcos = bloco.cards ?? [];
+---
+
+<section class="ap-secao escura historia" data-cena>
+  <div class="container">
+    <div class="ap-cabeca">
+      {bloco.eyebrow && <p class="eyebrow ap-entra" style="--i:0">{bloco.eyebrow}</p>}
+      {bloco.titulo && <h2 class="ap-entra" style="--i:1">{bloco.titulo}</h2>}
+      {bloco.paragrafos?.map((p, i) => <p class="ap-p ap-entra" style={`--i:${i + 2}`}>{p}</p>)}
+    </div>
+
+    <div class="tl-wrap" data-timeline>
+    <span class="tl-linha" aria-hidden="true"><span class="tl-tinta"></span></span>
+    <ol class="tl" style={`--n:${marcos.length}`}>
+      {marcos.map((m, k) => (
+        <li class="marco" style={`--k:${k}`}>
+          <span class="marco-ponto" aria-hidden="true"></span>
+          <article class="marco-card">
+            {m.n && <p class="marco-ano">{m.n}</p>}
+            <h3>{m.titulo}</h3>
+            {m.paragrafos?.map((p) => <p class="marco-p">{p}</p>)}
+          </article>
+        </li>
+      ))}
+    </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .tl-wrap { position: relative; margin-top: var(--space-16); }
+  .tl {
+    display: grid;
+    grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+    gap: var(--space-8);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Linha: trilho fraco e a tinta que anda por cima. */
+  .tl-linha {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 9px;
+    height: 2px;
+    background: rgba(230, 238, 248, 0.1);
+  }
+  .tl-tinta {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(255, 74, 84, 0.4), var(--red-500));
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  .marco { position: relative; padding-top: var(--space-12); }
+  .marco-ponto {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin-left: -10px;
+    border-radius: 50%;
+    background: var(--navy-950);
+    border: 2px solid rgba(230, 238, 248, 0.25);
+    transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.6s ease;
+  }
+  /* Haste do ponto até o card. */
+  .marco-ponto::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 20px;
+    width: 1px;
+    height: calc(var(--space-12) - 20px);
+    background: linear-gradient(180deg, var(--red-500), transparent);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.4s ease 0.15s;
+  }
+
+  .marco-card {
+    position: relative;
+    height: 100%;
+    padding: var(--space-8);
+    border-radius: var(--radius-md);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 24px 48px -32px rgba(0, 0, 0, 0.8);
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s var(--ease-out), transform 0.7s var(--ease-out);
+  }
+  /* Canto marcado, como um quadro de detecção, só no alto do card. */
+  .marco-card::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    width: 28px;
+    height: 28px;
+    border-top: 2px solid var(--red-500);
+    border-left: 2px solid var(--red-500);
+    border-top-left-radius: var(--radius-md);
+  }
+  .marco-ano {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--fs-2xl);
+    line-height: 1;
+    color: var(--red-400);
+  }
+  .marco-card h3 { margin-top: var(--space-3); font-size: var(--fs-lg); color: var(--white); }
+  .marco-p { margin-top: var(--space-3); font-size: var(--fs-sm); line-height: 1.6; color: var(--color-text-muted); }
+
+  /* Estado aceso, comum aos dois modos. */
+  .marco.aceso .marco-ponto { border-color: var(--red-500); background: var(--red-500); box-shadow: 0 0 0 6px rgba(226, 8, 29, 0.15), 0 0 18px rgba(226, 8, 29, 0.5); }
+
+  /* ── Desktop: sequência por tempo ── */
+  @media (min-width: 761px) {
+    .em-cena .tl-tinta { transform: scaleX(1); transition: transform 3s linear 0.2s; }
+    .em-cena .marco .marco-ponto {
+      border-color: var(--red-500);
+      background: var(--red-500);
+      box-shadow: 0 0 0 6px rgba(226, 8, 29, 0.15), 0 0 18px rgba(226, 8, 29, 0.5);
+      transition-delay: calc(0.7s + var(--k) * 1s);
+    }
+    .em-cena .marco .marco-ponto::after { transform: scaleY(1); transition-delay: calc(0.85s + var(--k) * 1s); }
+    .em-cena .marco .marco-card {
+      opacity: 1;
+      transform: none;
+      transition-delay: calc(0.95s + var(--k) * 1s);
+    }
+  }
+
+  /* ── Celular: vertical, guiada pela rolagem ── */
+  @media (max-width: 760px) {
+    .tl { grid-template-columns: 1fr; gap: var(--space-8); padding-left: var(--space-8); }
+    .tl-linha { left: 9px; right: auto; top: 10px; bottom: 10px; width: 2px; height: auto; }
+    .tl-tinta { transform: scaleY(var(--p, 0)); transform-origin: top; background: linear-gradient(180deg, rgba(255, 74, 84, 0.4), var(--red-500)); }
+    .marco { padding-top: 0; }
+    .marco-ponto { left: calc(-1 * var(--space-8)); margin-left: 0; top: 4px; }
+    .marco-ponto::after { display: none; }
+    .marco-card { padding: var(--space-6); }
+    .marco.aceso .marco-card { opacity: 1; transform: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tl-tinta { transform: none !important; transition: none !important; }
+    .marco-card { opacity: 1 !important; transform: none !important; transition: none !important; }
+    .marco-ponto { border-color: var(--red-500); background: var(--red-500); }
+    .marco-ponto::after { transform: scaleY(1); }
+  }
+</style>
+
+<script>
+  import { semMovimento } from "../../scripts/aprocCenas";
+
+  // Celular: a tinta cresce com a rolagem e acende os marcos que alcança.
+  const estreito = window.matchMedia("(max-width: 760px)");
+  document.querySelectorAll<HTMLElement>("[data-timeline]").forEach((tl) => {
+    const marcos = Array.from(tl.querySelectorAll<HTMLElement>(".marco"));
+    let pedido = 0;
+
+    const medir = () => {
+      pedido = 0;
+      if (!estreito.matches) return;
+      const r = tl.getBoundingClientRect();
+      // 0 quando o topo da timeline chega a 85% da tela, 1 quando o fim chega a 55%.
+      const vh = window.innerHeight;
+      const inicio = vh * 0.85;
+      const p = Math.min(1, Math.max(0, (inicio - r.top) / (r.height + inicio - vh * 0.55)));
+      tl.style.setProperty("--p", p.toFixed(3));
+      marcos.forEach((m) => {
+        const pos = (m.getBoundingClientRect().top - r.top + 10) / r.height;
+        if (p >= pos - 0.02) m.classList.add("aceso");
+      });
+    };
+
+    if (semMovimento) {
+      marcos.forEach((m) => m.classList.add("aceso"));
+      return;
+    }
+    const agendar = () => {
+      if (!pedido) pedido = requestAnimationFrame(medir);
+    };
+    window.addEventListener("scroll", agendar, { passive: true });
+    window.addEventListener("resize", agendar);
+    medir();
+  });
+</script>

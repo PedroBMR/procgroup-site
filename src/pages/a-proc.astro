@@ -1,11 +1,50 @@
 ---
 /**
  * A página A Proc, com o conteúdo INTEGRAL do documento "Ajustes no site"
- * (páginas 5 a 10). Fora do site publicado, sem nada de preview na tela.
- * Conteúdo em src/data/preview/paginas/aproc.ts.
+ * (páginas 5 a 10). Conteúdo em src/data/preview/paginas/aproc.ts.
+ *
+ * Redesign de 2026-10-21: em vez do molde genérico (Secoes), cada bloco tem
+ * uma seção própria em src/components/aproc/, que conta a mesma coisa com
+ * desenho e movimento. O texto continua vindo inteiro do mesmo arquivo de
+ * dados, na mesma ordem; as seções só recebem o bloco e o desenham.
+ *
+ * A ordem dos blocos em aproc.ts é a ordem do documento. Se ela mudar lá, a
+ * lista abaixo muda junto.
  */
-import PaginaPreview from "../components/preview/PaginaPreview.astro";
+import "../styles/aproc.css";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { navPreview } from "../data/preview/ajustes";
 import { aProc } from "../data/preview/paginas/aproc";
+import Abertura from "../components/aproc/Abertura.astro";
+import Areas from "../components/aproc/Areas.astro";
+import Historia from "../components/aproc/Historia.astro";
+import Expertise from "../components/aproc/Expertise.astro";
+import Diferenciais from "../components/aproc/Diferenciais.astro";
+import SobMedida from "../components/aproc/SobMedida.astro";
+import Hoje from "../components/aproc/Hoje.astro";
+import MissaoVisao from "../components/aproc/MissaoVisao.astro";
+import Principios from "../components/aproc/Principios.astro";
+import Pilares from "../components/aproc/Pilares.astro";
+import Encerramento from "../components/aproc/Encerramento.astro";
+
+const [areas, historia, expertise, diferencial, sobMedida, hoje, mvp, principios, pilares, encerramento] = aProc.blocos;
 ---
 
-<PaginaPreview pagina={aProc} title="A Proc" description={aProc.hero.lead ?? aProc.hero.titulo} />
+<BaseLayout title="A Proc" description={aProc.hero.lead ?? aProc.hero.titulo} nav={navPreview()}>
+  <Abertura hero={aProc.hero} />
+  <Areas bloco={areas} />
+  <Historia bloco={historia} />
+  <Expertise bloco={expertise} />
+  <Diferenciais bloco={diferencial} />
+  <SobMedida bloco={sobMedida} />
+  <Hoje bloco={hoje} />
+  <MissaoVisao bloco={mvp} />
+  <Principios bloco={principios} />
+  <Pilares bloco={pilares} />
+  <Encerramento bloco={encerramento} />
+</BaseLayout>
+
+<script>
+  import { montarCenas } from "../scripts/aprocCenas";
+  montarCenas();
+</script>

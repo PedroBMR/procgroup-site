@@ -1,0 +1,177 @@
+---
+/**
+ * "Tecnologia que se adapta à operação": texto à esquerda e, à direita, uma
+ * composição modular. Módulos das três áreas (infraestrutura, nuvem, visão)
+ * se aproximam, encaixam numa grade e se ligam; depois se reorganizam em outra
+ * configuração. Cada configuração é uma operação diferente: a mensagem é que o
+ * projeto se monta conforme a realidade de cada empresa.
+ *
+ * Três configurações, trocando a cada 6 s só enquanto a seção está na tela.
+ * Com prefers-reduced-motion a composição fica parada na mais completa.
+ *
+ * Texto: titulo, subtitulo, paragrafos e fecho do bloco, sem alteração. O
+ * desenho não tem palavra nenhuma.
+ */
+import type { Bloco } from "../../data/preview/blocos";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+
+// Peças disponíveis: 3 de infraestrutura, 2 de nuvem, 3 de visão.
+const PECAS = ["i", "i", "i", "n", "n", "v", "v", "v"] as const;
+---
+
+<section class="ap-secao sob-medida" data-theme="light" data-cena>
+  <div class="container grade">
+    <div class="texto">
+      <div class="ap-cabeca">
+        {bloco.titulo && <h2 class="ap-entra" style="--i:0">{bloco.titulo}</h2>}
+        {bloco.subtitulo && <p class="ap-sub ap-entra" style="--i:1">{bloco.subtitulo}</p>}
+        {bloco.paragrafos?.map((p, i) => <p class="ap-p ap-entra" style={`--i:${i + 2}`}>{p}</p>)}
+      </div>
+      {bloco.fecho?.map((p) => <p class="ap-fecho ap-entra" style="--i:6">{p}</p>)}
+    </div>
+
+    <div class="palco ap-entra" style="--i:3" aria-hidden="true" data-modulos>
+      <svg viewBox="0 0 360 360">
+        <path class="cantos" d="M18 52 V18 H52 M308 18 H342 V52 M342 308 V342 H308 M52 342 H18 V308" />
+        <g class="grade-fundo">
+          {[0, 1, 2].map((c) => [0, 1, 2].map((r) => <rect x={45 + c * 95} y={45 + r * 95} width="80" height="80" rx="14" />))}
+        </g>
+        <path class="ligacoes" data-ligacoes pathLength="1" d="" />
+        {PECAS.map((t, k) => (
+          <g class={`peca ${t}`} data-peca={t} data-k={k}>
+            <rect x="-40" y="-40" width="80" height="80" rx="14" />
+            {t === "i" && <path d="M-18 -16 H18 V-2 H-18 Z M-18 4 H18 V18 H-18 Z M-12 -9 H-6 M-12 11 H-6" />}
+            {t === "n" && <path d="M-20 12 H18 A11 11 0 0 0 16 -9 A15 15 0 0 0 -11 -12 A11 11 0 0 0 -22 2 A8 8 0 0 0 -20 12 Z" />}
+            {t === "v" && <path d="M-20 -8 V-20 H-8 M8 -20 H20 V-8 M20 8 V20 H8 M-8 20 H-20 V8 M0 -7 A7 7 0 1 1 0 7 A7 7 0 1 1 0 -7" />}
+          </g>
+        ))}
+      </svg>
+    </div>
+  </div>
+</section>
+
+<style>
+  .grade { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: var(--space-16); align-items: center; }
+  .palco { position: relative; }
+  .palco svg { width: 100%; max-width: 460px; height: auto; display: block; margin-inline: auto; overflow: visible; }
+  .cantos { fill: none; stroke: var(--red-600); stroke-width: 2; stroke-linecap: round; opacity: 0.7; }
+  .grade-fundo rect { fill: none; stroke: rgba(11, 23, 48, 0.08); stroke-dasharray: 4 5; }
+  .ligacoes { fill: none; stroke: var(--red-500); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .ligacoes.desenhar { animation: sm-ligar 0.9s cubic-bezier(0.33, 1, 0.68, 1) 0.65s forwards; }
+  @keyframes sm-ligar { to { stroke-dashoffset: 0; } }
+
+  .peca {
+    transition: transform 0.9s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.6s ease;
+    opacity: 0;
+  }
+  .peca.no-ar { opacity: 1; }
+  .peca rect { fill: var(--white); stroke: rgba(11, 23, 48, 0.18); stroke-width: 1.5; filter: drop-shadow(0 8px 14px rgba(11, 23, 48, 0.12)); }
+  .peca path { fill: none; stroke: var(--navy-800); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .peca.n path { stroke: var(--navy-600); }
+  .peca.v path { stroke: var(--red-600); }
+
+  @media (max-width: 900px) {
+    .grade { grid-template-columns: 1fr; gap: var(--space-12); }
+    .palco svg { max-width: 340px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .peca { transition: none; }
+    .ligacoes, .ligacoes.desenhar { animation: none; stroke-dasharray: none; stroke-dashoffset: 0; }
+  }
+</style>
+
+<script>
+  import { semMovimento } from "../../scripts/aprocCenas";
+
+  type Tipo = "i" | "n" | "v";
+  // Cada configuração: [tipo, coluna, linha] numa grade 3 x 3.
+  const CONFIGS: [Tipo, number, number][][] = [
+    [["i", 0, 1], ["n", 1, 1], ["v", 2, 1]],
+    [["i", 0, 2], ["i", 1, 2], ["n", 1, 1], ["v", 1, 0], ["v", 2, 0]],
+    [["n", 0, 0], ["n", 1, 0], ["i", 0, 1], ["v", 1, 1], ["v", 2, 1], ["i", 0, 2], ["i", 1, 2], ["v", 2, 2]],
+  ];
+  const TROCA_MS = 6000;
+  const centro = (c: number, r: number) => [85 + c * 95, 85 + r * 95];
+
+  document.querySelectorAll<HTMLElement>("[data-modulos]").forEach((palco) => {
+    const pecas = Array.from(palco.querySelectorAll<SVGGElement>("[data-peca]"));
+    const ligacoes = palco.querySelector<SVGPathElement>("[data-ligacoes]");
+    // Posição de espera de cada peça: fora da grade, espalhada em volta.
+    const espera = pecas.map((_, k) => {
+      const a = (k / pecas.length) * Math.PI * 2 + 0.4;
+      return [180 + Math.cos(a) * 230, 180 + Math.sin(a) * 230];
+    });
+    let n = 0;
+    let timer = 0;
+    let visivel = false;
+
+    const montar = (cfg: [Tipo, number, number][]) => {
+      const livres = new Set(pecas);
+      const ocupado: [number, number][] = [];
+      for (const [tipo, c, r] of cfg) {
+        const p = [...livres].find((g) => g.dataset.peca === tipo);
+        if (!p) continue;
+        livres.delete(p);
+        const [x, y] = centro(c, r);
+        p.style.transform = `translate(${x}px, ${y}px)`;
+        p.classList.add("no-ar");
+        ocupado.push([c, r]);
+      }
+      livres.forEach((p) => {
+        const [x, y] = espera[Number(p.dataset.k)];
+        p.style.transform = `translate(${x}px, ${y}px) scale(0.6)`;
+        p.classList.remove("no-ar");
+      });
+      // Liga vizinhos de lado e de cima/baixo: é assim que a solução se integra.
+      let d = "";
+      for (const [c, r] of ocupado) {
+        for (const [dc, dr] of [[1, 0], [0, 1]]) {
+          if (!ocupado.some(([c2, r2]) => c2 === c + dc && r2 === r + dr)) continue;
+          const [x1, y1] = centro(c, r);
+          const [x2, y2] = centro(c + dc, r + dr);
+          d += `M${x1 + dc * 40} ${y1 + dr * 40} L${x2 - dc * 40} ${y2 - dr * 40} `;
+        }
+      }
+      if (ligacoes) {
+        ligacoes.setAttribute("d", d.trim() || "M0 0");
+        ligacoes.classList.remove("desenhar");
+        void ligacoes.getBoundingClientRect();
+        ligacoes.classList.add("desenhar");
+      }
+    };
+
+    const ciclo = () => {
+      window.clearTimeout(timer);
+      if (!visivel || document.hidden) return;
+      timer = window.setTimeout(() => {
+        n = (n + 1) % CONFIGS.length;
+        montar(CONFIGS[n]);
+        ciclo();
+      }, TROCA_MS);
+    };
+
+    // Estado inicial: tudo espalhado; ao aparecer, a primeira configuração encaixa.
+    montar([]);
+    if (semMovimento) {
+      montar(CONFIGS[CONFIGS.length - 1]);
+      return;
+    }
+    new IntersectionObserver(
+      ([e]) => {
+        const primeira = e.isIntersecting && !visivel && !palco.dataset.montado;
+        visivel = e.isIntersecting;
+        if (primeira) {
+          palco.dataset.montado = "1";
+          window.setTimeout(() => montar(CONFIGS[0]), 300);
+        }
+        ciclo();
+      },
+      { threshold: 0.3 },
+    ).observe(palco);
+    document.addEventListener("visibilitychange", ciclo);
+  });
+</script>

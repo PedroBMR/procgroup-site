@@ -1,0 +1,110 @@
+---
+/**
+ * Encerramento da página: "Mais de uma década de experiência. Uma visão
+ * voltada para o futuro." com o fecho e os dois botões.
+ *
+ * Acima do texto, uma trajetória: uma linha que atravessa a faixa da esquerda
+ * (o começo) para a direita (hoje), passando por nós. Em cada nó sobe uma
+ * camada um pouco maior que a anterior (o conhecimento que se acumula), os nós
+ * se ligam entre si, e a linha termina num anel com a marca da Proc, o mesmo
+ * desenho da mandala. Sem datas nem números: só o desenho.
+ *
+ * Texto: titulo, paragrafos, fecho e ctas do bloco, sem alteração.
+ */
+import Button from "../Button.astro";
+import { withBase } from "../../utils/url";
+import type { Bloco } from "../../data/preview/blocos";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+
+const NOS = [60, 170, 280, 390, 500, 610, 720];
+const Y = 120;
+const L = (href: string) => (href.startsWith("#") || href.startsWith("http") ? href : withBase(href));
+---
+
+<section class="ap-secao escura encerramento" data-cena>
+  <div class="trajetoria" aria-hidden="true">
+    <svg viewBox="0 0 900 200">
+      {NOS.slice(0, -1).map((x, k) => (
+        <path class="ap-traco ponte" d={`M${x} ${Y - 18 - k * 6} Q${x + 55} ${Y - 70 - k * 8} ${NOS[k + 1]} ${Y - 18 - (k + 1) * 6}`} pathLength="1" style={`--o:${(0.9 + k * 0.2).toFixed(2)}`} />
+      ))}
+      <path class="ap-traco eixo" d={`M20 ${Y} H812`} pathLength="1" style="--o:0" />
+      {NOS.map((x, k) => (
+        <g style={`--k:${k}`}>
+          <rect class="camada" x={x - 7} y={Y - 18 - k * 6} width="14" height={18 + k * 6} rx="2" />
+          <circle class="no" cx={x} cy={Y} r="5" />
+        </g>
+      ))}
+      <circle class="ap-traco anel" cx="850" cy={Y} r="38" pathLength="1" style="--o:1.6" />
+      <circle class="disco" cx="850" cy={Y} r="31" />
+    </svg>
+    <img class="marca-proc" src={withBase("/brand/logo-white.png")} alt="" width="234" height="74" loading="lazy" decoding="async" />
+  </div>
+
+  <div class="container texto">
+    {bloco.titulo && <h2 class="ap-entra" style="--i:0">{bloco.titulo}</h2>}
+    {bloco.paragrafos?.map((p, i) => <p class="ap-p ap-entra" style={`--i:${i + 1}`}>{p}</p>)}
+    {bloco.fecho?.map((p) => <p class="ap-fecho ap-entra" style="--i:5">{p}</p>)}
+    {bloco.ctas && (
+      <div class="ctas ap-entra" style="--i:6">
+        {bloco.ctas.map((c, n) => (
+          <Button href={L(c.href)} variant={n === 0 ? "primary" : "ghost"} size="lg">{c.label}</Button>
+        ))}
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .encerramento {
+    text-align: center;
+    background:
+      radial-gradient(70% 60% at 50% 0%, rgba(226, 8, 29, 0.1), transparent 65%),
+      linear-gradient(180deg, var(--navy-900), var(--navy-950));
+  }
+
+  .trajetoria { position: relative; width: min(100% - 2 * var(--space-6), 900px); margin: 0 auto var(--space-12); }
+  .trajetoria svg { display: block; width: 100%; height: auto; overflow: visible; fill: none; stroke-linecap: round; }
+  .eixo { stroke: rgba(230, 238, 248, 0.35); stroke-width: 1.5; }
+  .ponte { stroke: rgba(96, 165, 250, 0.45); stroke-width: 1.2; }
+  .anel { stroke: var(--red-500); stroke-width: 2; }
+  .disco { fill: var(--navy-950); opacity: 0; transition: opacity 0.6s ease 1.9s; }
+  .em-cena .disco { opacity: 1; }
+  .camada {
+    fill: rgba(230, 238, 248, 0.08);
+    stroke: rgba(230, 238, 248, 0.35);
+    stroke-width: 1;
+    transform-box: fill-box;
+    transform-origin: bottom;
+    transform: scaleY(0);
+    transition: transform 0.6s var(--ease-out) calc(0.3s + var(--k) * 0.18s);
+  }
+  .em-cena .camada { transform: none; }
+  .no { fill: var(--navy-950); stroke: var(--red-400); stroke-width: 2; opacity: 0; transition: opacity 0.3s ease calc(0.2s + var(--k) * 0.18s); }
+  .em-cena .no { opacity: 1; }
+  .marca-proc {
+    position: absolute;
+    /* Centro do anel: x 850 e y 120 de um viewBox 900 x 200. */
+    left: calc(850 / 900 * 100%);
+    top: calc(120 / 200 * 100%);
+    width: calc(50 / 900 * 100%);
+    min-width: 36px;
+    height: auto;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.6s ease 2.1s;
+  }
+  .em-cena .marca-proc { opacity: 1; }
+
+  .texto h2 { max-width: 24ch; margin-inline: auto; font-size: var(--fs-3xl); color: var(--white); }
+  .texto .ap-p { margin-inline: auto; }
+  .texto .ap-fecho { color: var(--white); }
+  .ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-4); margin-top: var(--space-8); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .camada, .no, .disco, .marca-proc { transition: none; transform: none; opacity: 1; }
+  }
+</style>

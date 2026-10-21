@@ -1,0 +1,180 @@
+---
+/**
+ * As três áreas de atuação logo depois da abertura, como um ecossistema:
+ * três nós num triângulo, um núcleo no meio, e as ligações entre todos.
+ *
+ * Entrada (ao aparecer na tela): os nós surgem, as ligações se desenham, e
+ * pequenos pulsos passam a percorrer as arestas. Depois a composição fica
+ * estável. Passar o mouse (ou o foco) numa área acende o nó dela e as
+ * ligações que saem dele. Não é menu: os nomes não são links.
+ *
+ * Texto: subtitulo, itens, depois e fecho do bloco, nessa ordem, sem
+ * alteração.
+ */
+import UnitIcon from "../UnitIcon.astro";
+import type { Bloco } from "../../data/preview/blocos";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+const itens = bloco.itens ?? [];
+const SLUGS = ["infraestrutura-de-ti", "hospedagem-em-nuvem", "visao-computacional"];
+
+// Vértices no viewBox 600 x 420 e o núcleo.
+const V: [number, number][] = [[300, 70], [110, 340], [490, 340]];
+const C: [number, number] = [300, 250];
+const ARESTAS: [number, number][] = [[0, 1], [1, 2], [2, 0]];
+---
+
+<section class="ap-secao areas" data-theme="light" data-cena>
+  <div class="container">
+    {bloco.subtitulo && <p class="ap-sub ap-entra titulo-areas">{bloco.subtitulo}</p>}
+
+    <div class="eco" data-eco-areas>
+      <svg class="eco-svg" viewBox="0 0 600 420" aria-hidden="true">
+        {ARESTAS.map(([a, b], i) => (
+          <path
+            class="ap-traco aresta"
+            data-liga={`${a} ${b}`}
+            d={`M${V[a][0]} ${V[a][1]} L${V[b][0]} ${V[b][1]}`}
+            pathLength="1"
+            style={`--o:${0.5 + i * 0.25}`}
+          />
+        ))}
+        {V.map(([x, y], i) => (
+          <path class="ap-traco raio" data-liga={`${i}`} d={`M${C[0]} ${C[1]} L${x} ${y}`} pathLength="1" style={`--o:${0.3 + i * 0.15}`} />
+        ))}
+        <circle class="nucleo-anel" cx={C[0]} cy={C[1]} r="22" />
+        <circle class="nucleo" cx={C[0]} cy={C[1]} r="7" />
+        {ARESTAS.map(([a, b], i) => (
+          <circle class="pulso" r="3.5">
+            <animateMotion
+              dur="4.5s"
+              begin={`${2.4 + i * 1.5}s`}
+              repeatCount="indefinite"
+              path={`M${V[a][0]} ${V[a][1]} L${V[b][0]} ${V[b][1]}`}
+            />
+          </circle>
+        ))}
+      </svg>
+
+      <ul class="nos">
+        {itens.map((nome, i) => (
+          <li class="no" data-no={i} style={`--x:${(V[i][0] / 600) * 100}%; --y:${(V[i][1] / 420) * 100}%; --i:${i}`}>
+            <span class="no-icone"><UnitIcon slug={SLUGS[i]} /></span>
+            <span class="no-nome">{nome}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="pe">
+      {bloco.depois?.map((p) => <p class="ap-p ap-entra" style="--i:3">{p}</p>)}
+      {bloco.fecho?.map((p) => <p class="ap-fecho ap-entra" style="--i:4">{p}</p>)}
+    </div>
+  </div>
+</section>
+
+<style>
+  .titulo-areas { text-align: center; margin: 0 auto; font-size: var(--fs-xl); max-width: 30ch; }
+
+  .eco { position: relative; max-width: 760px; margin: var(--space-8) auto 0; aspect-ratio: 600 / 420; }
+  .eco-svg { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; overflow: visible; }
+  .aresta, .raio { stroke: rgba(11, 23, 48, 0.2); stroke-width: 1.5; transition: stroke 0.35s ease, stroke-dashoffset 1.4s cubic-bezier(0.33, 1, 0.68, 1) calc(var(--o, 0) * 1s); }
+  .raio { stroke-dasharray: 1; stroke: rgba(11, 23, 48, 0.12); }
+  .nucleo { fill: var(--red-600); opacity: 0; transition: opacity 0.5s ease 0.3s; }
+  .nucleo-anel { stroke: rgba(184, 8, 26, 0.25); stroke-width: 1; opacity: 0; transition: opacity 0.5s ease 0.5s; }
+  .em-cena .nucleo, .em-cena .nucleo-anel { opacity: 1; }
+  .pulso { fill: var(--red-500); opacity: 0; transition: opacity 0.6s ease 2.2s; }
+  .em-cena .pulso { opacity: 0.9; }
+
+  /* Foco numa área: o nó e as ligações dele acendem. */
+  .eco[data-foco="0"] [data-liga~="0"],
+  .eco[data-foco="1"] [data-liga~="1"],
+  .eco[data-foco="2"] [data-liga~="2"] { stroke: var(--red-500); }
+
+  .nos { list-style: none; margin: 0; padding: 0; }
+  .no {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    display: grid;
+    justify-items: center;
+    gap: var(--space-3);
+    width: 200px;
+    transform: translate(-50%, -32px) scale(0.92);
+    opacity: 0;
+    outline: none;
+    transition:
+      opacity 0.6s var(--ease-out) calc(var(--i) * 0.15s),
+      transform 0.7s var(--ease-out) calc(var(--i) * 0.15s);
+  }
+  .em-cena .no { opacity: 1; transform: translate(-50%, -32px); }
+  .no-icone {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--white);
+    border: 1px solid var(--color-border-strong);
+    box-shadow: 0 10px 30px -14px rgba(11, 23, 48, 0.35);
+    color: var(--navy-800);
+    transition: transform 0.35s var(--ease-out), border-color 0.35s ease, color 0.35s ease, box-shadow 0.35s ease;
+  }
+  .no-icone :global(.unit-icon) { width: 28px; height: 28px; }
+  .no-nome { text-align: center; font-weight: 700; font-size: var(--fs-base); color: var(--color-text); line-height: 1.3; }
+  .no:hover .no-icone,
+  .no:focus-visible .no-icone {
+    transform: scale(1.08);
+    border-color: var(--red-500);
+    color: var(--red-600);
+    box-shadow: 0 0 0 6px rgba(226, 8, 29, 0.08), 0 14px 34px -14px rgba(11, 23, 48, 0.4);
+  }
+  .no:focus-visible .no-nome { text-decoration: underline; text-underline-offset: 4px; }
+
+  .pe { max-width: 760px; margin: var(--space-12) auto 0; text-align: center; }
+  .pe .ap-p { margin-inline: auto; }
+
+  /* Uma coluna: o triângulo vira uma espinha vertical com os três nós. */
+  @media (max-width: 700px) {
+    .eco { aspect-ratio: auto; }
+    .eco-svg { display: none; }
+    .nos { display: grid; gap: var(--space-8); position: relative; padding-block: var(--space-4); }
+    .nos::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 32px;
+      bottom: 60px;
+      width: 2px;
+      background: linear-gradient(180deg, rgba(11, 23, 48, 0.15), var(--red-500), rgba(11, 23, 48, 0.15));
+      transform: translateX(-50%) scaleY(0);
+      transform-origin: top;
+      transition: transform 1.2s var(--ease-out) 0.3s;
+    }
+    .em-cena .nos::before { transform: translateX(-50%) scaleY(1); }
+    .no { position: relative; left: auto; top: auto; width: auto; transform: translateY(16px); }
+    .em-cena .no { transform: none; }
+    .no-nome { background: var(--color-bg); padding: 2px 8px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .no, .em-cena .no { opacity: 1; transition: none; }
+    .pulso { display: none; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-eco-areas]").forEach((eco) => {
+    eco.querySelectorAll<HTMLElement>("[data-no]").forEach((no) => {
+      const acende = () => (eco.dataset.foco = no.dataset.no);
+      const apaga = () => delete eco.dataset.foco;
+      no.addEventListener("pointerenter", acende);
+      no.addEventListener("pointerleave", apaga);
+      no.addEventListener("focus", acende);
+      no.addEventListener("blur", apaga);
+    });
+  });
+</script>
