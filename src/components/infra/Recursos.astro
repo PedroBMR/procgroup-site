@@ -58,6 +58,9 @@ const pos = RECURSOS.map((_, k) => {
         {pos.map(([x, y], k) => (
           <path class="ap-traco lig" data-k={k} d={`M${C} ${C} L${f(x)} ${f(y)}`} pathLength="1" style={`--o:${(0.4 + k * 0.22).toFixed(2)}`} />
         ))}
+        {pos.map(([x, y], k) => (
+          <path class="ap-fluxo" d={`M${C} ${C} L${f(x)} ${f(y)}`} pathLength="1" style={`--k:${k}; --dur:2.8s; --atraso:3s`} />
+        ))}
       </svg>
       <span class="centro" aria-hidden="true"><MenuIcon nome="predio" /></span>
       <ul class="modulos">

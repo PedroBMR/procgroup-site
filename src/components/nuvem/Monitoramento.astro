@@ -54,7 +54,8 @@ const MARCAS = Array.from({ length: 24 }, (_, k) => {
   .em-cena .marca { stroke: var(--red-500); }
   .ponteiro { transform-origin: 160px 160px; transform: rotate(0deg); }
   .ponteiro path { stroke: var(--white); stroke-width: 3; stroke-linecap: round; }
-  .em-cena .ponteiro { transform: rotate(360deg); transition: transform 2.4s linear 0.5s; }
+  .em-cena .ponteiro { transform: rotate(360deg); transition: transform 2.4s linear 0.5s; animation: mn-gira 24s linear 2.9s infinite; }
+  @keyframes mn-gira { from { transform: rotate(360deg); } to { transform: rotate(720deg); } }
   .eixo { fill: var(--red-500); }
   .olho { position: absolute; left: 50%; top: 66%; display: grid; place-items: center; width: 44px; height: 44px; margin-left: -22px; border-radius: 12px; background: var(--navy-800); color: var(--white); }
   .olho :global(.menu-icon) { width: 22px; height: 22px; }
@@ -65,6 +66,6 @@ const MARCAS = Array.from({ length: 24 }, (_, k) => {
   }
   @media (prefers-reduced-motion: reduce) {
     .marca { transition: none; }
-    .em-cena .ponteiro { transition: none; }
+    .em-cena .ponteiro { transition: none; animation: none; }
   }
 </style>

@@ -78,6 +78,10 @@ const iconeDe = (t: string): NomeIconeMenu =>
     transition: transform calc(var(--passo) * (var(--n) - 1)) linear 0.4s;
   }
   .em-cena .fluxo::after { transform: scaleX(1); }
+  /* Depois de desenhada, um brilho corre pela linha: o suporte acompanhando. */
+  .fluxo::after { background-image: linear-gradient(90deg, var(--red-600) 0%, var(--red-500) 42%, #ffd2d6 50%, var(--red-500) 58%, var(--red-600) 100%); background-size: 300% 100%; background-position: 100% 0; }
+  .em-cena .fluxo::after { animation: sp-brilho 3.2s linear 3.4s infinite; }
+  @keyframes sp-brilho { from { background-position: 100% 0; } to { background-position: 0% 0; } }
 
   .etapa { position: relative; display: grid; justify-items: center; gap: var(--space-5); }
   .etapa-icone {
@@ -128,7 +132,8 @@ const iconeDe = (t: string): NomeIconeMenu =>
   @media (max-width: 1000px) {
     .fluxo { grid-template-columns: 1fr; gap: var(--space-5); }
     .fluxo::before, .fluxo::after { top: 28px; bottom: 28px; left: 27px; right: auto; width: 2px; height: auto; }
-    .fluxo::after { background: linear-gradient(180deg, var(--red-500), rgba(255, 74, 84, 0.7)); transform: scaleY(0); transform-origin: top; }
+    .fluxo::after { background-image: linear-gradient(180deg, var(--red-600) 0%, var(--red-500) 42%, #ffd2d6 50%, var(--red-500) 58%, var(--red-600) 100%); background-size: 100% 300%; transform: scaleY(0); transform-origin: top; }
+    @keyframes sp-brilho { from { background-position: 0 100%; } to { background-position: 0 0%; } }
     .em-cena .fluxo::after { transform: scaleY(1); }
     .etapa { grid-template-columns: 56px 1fr; justify-items: stretch; align-items: start; gap: var(--space-4); }
     .etapa-card { text-align: left; }
@@ -136,5 +141,6 @@ const iconeDe = (t: string): NomeIconeMenu =>
   }
   @media (prefers-reduced-motion: reduce) {
     .fluxo::after, .etapa-icone, .etapa-card, .volta { transition: none; }
+    .em-cena .fluxo::after { animation: none; }
   }
 </style>

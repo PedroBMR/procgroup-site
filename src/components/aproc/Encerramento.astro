@@ -38,6 +38,10 @@ const L = (href: string) => (href.startsWith("#") || href.startsWith("http") ? h
           <circle class="no" cx={x} cy={Y} r="5" />
         </g>
       ))}
+      <path class="ap-fluxo" d={`M20 ${Y} H812`} pathLength="1" style="--dur:4.5s; --atraso:2.6s" />
+      {NOS.slice(0, -1).map((x, k) => (
+        <path class="ap-fluxo" d={`M${x} ${Y - 18 - k * 6} Q${x + 55} ${Y - 70 - k * 8} ${NOS[k + 1]} ${Y - 18 - (k + 1) * 6}`} pathLength="1" style={`--k:${k}; --dur:2.2s; --atraso:3s`} />
+      ))}
       <circle class="ap-traco anel" cx="850" cy={Y} r="38" pathLength="1" style="--o:1.6" />
       <circle class="disco" cx="850" cy={Y} r="31" />
     </svg>

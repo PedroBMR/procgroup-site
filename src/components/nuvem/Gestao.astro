@@ -55,7 +55,9 @@ const iconeDe = (t: string): NomeIconeMenu =>
 
   /* Trilho: o marco no topo do card e a ligação até o próximo da mesma linha. */
   .marco { position: absolute; top: -7px; left: var(--space-5); width: 14px; height: 14px; border-radius: 50%; background: var(--navy-950); border: 2px solid rgba(230, 238, 248, 0.25); transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.4s ease; transition-delay: calc(0.4s + var(--k) * 0.22s); }
-  .em-cena .marco { border-color: var(--red-500); background: var(--red-500); box-shadow: 0 0 10px rgba(226, 8, 29, 0.6); }
+  .em-cena .marco { border-color: var(--red-500); background: var(--red-500); box-shadow: 0 0 10px rgba(226, 8, 29, 0.6); animation: gs-pulso 4.8s ease-in-out calc(2.4s + var(--k) * 0.6s) infinite; }
+  /* Um marco de cada vez ganha brilho: o trabalho passando de papel em papel. */
+  @keyframes gs-pulso { 0%, 20%, 100% { box-shadow: 0 0 10px rgba(226, 8, 29, 0.6); } 8% { box-shadow: 0 0 0 7px rgba(226, 8, 29, 0.2), 0 0 18px rgba(226, 8, 29, 0.9); } }
   .papel:not(:nth-child(4n))::after {
     content: "";
     position: absolute;
@@ -86,6 +88,7 @@ const iconeDe = (t: string): NomeIconeMenu =>
   }
   @media (prefers-reduced-motion: reduce) {
     .marco, .papel::after { transition: none; }
+    .em-cena .marco { animation: none; }
     .papel:hover { transform: none; }
   }
 </style>

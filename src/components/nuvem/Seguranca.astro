@@ -26,6 +26,9 @@ const ANEIS = [62, 96, 130, 164];
           <circle class="ap-traco anel" cx="180" cy="180" r={r} pathLength="1" style={`--o:${(0.2 + k * 0.3).toFixed(2)}; --k:${k}`} />
         ))}
         {ANEIS.map((r, k) => (
+          <circle class="ap-fluxo orbita" cx="180" cy="180" r={r} pathLength="1" style={`--k:${k}; --dur:${6 + k * 2}s; --atraso:2.4s`} />
+        ))}
+        {ANEIS.map((r, k) => (
           <circle class="no" cx={180 + Math.cos((-60 + k * 75) * Math.PI / 180) * r} cy={180 + Math.sin((-60 + k * 75) * Math.PI / 180) * r} r="5" style={`--k:${k}`} />
         ))}
       </svg>

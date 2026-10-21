@@ -54,6 +54,8 @@ const volta = `M${x1} ${y1 + 78} Q${C[0]} ${C[1] + 170} ${x0} ${y0 + 78}`;
         <svg viewBox={`0 0 ${W} ${H}`} aria-hidden="true">
           <path class="ap-traco linha" d={arco} pathLength="1" style="--o:0.4" />
           <path class="ap-traco volta" d={volta} pathLength="1" style="--o:2.6" />
+          <path class="ap-fluxo" d={arco} pathLength="1" style="--dur:4s; --atraso:3s" />
+          <path class="ap-fluxo" d={volta} pathLength="1" style="--dur:3s; --atraso:5s" />
           <path class="seta-volta" d={`M${x0 - 9} ${y0 + 67} L${x0} ${y0 + 79} L${x0 + 11} ${y0 + 71}`} />
         </svg>
         <ol class="etapas">

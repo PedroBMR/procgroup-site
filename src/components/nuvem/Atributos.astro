@@ -11,7 +11,8 @@
  *
  * Entrada: a nuvem aparece, as hastes descem até a linha, um pulso percorre a
  * linha da esquerda para a direita uma vez e acende cada atributo quando passa
- * por ele. Depois fica parado.
+ * por ele. Depois, o pulso volta a passar de tempos em tempos e pacotes de
+ * dados descem da nuvem para cada atributo (pedido do Pedro, 2026-10-21).
  *
  * Texto: paragrafos do bloco, sem alteração.
  */
@@ -46,6 +47,9 @@ const onda = xs.slice(1).reduce((d, x, k) => {
         {xs.map((x, k) => (
           <path class="ap-traco haste" d={`M500 70 C500 130 ${x} 120 ${x} ${Y}`} pathLength="1" style={`--o:${(0.3 + Math.abs(k - 3) * 0.12).toFixed(2)}`} />
         ))}
+        {xs.map((x, k) => (
+          <path class="fluxo" d={`M500 70 C500 130 ${x} 120 ${x} ${Y}`} pathLength="1" style={`--k:${k}`} />
+        ))}
         <path class="ap-traco onda" d={onda} pathLength="1" style="--o:0.2" />
         <path class="pulso" d={onda} pathLength="1" />
       </svg>
@@ -67,8 +71,13 @@ const onda = xs.slice(1).reduce((d, x, k) => {
   .haste { stroke: rgba(11, 23, 48, 0.14); stroke-width: 1.2; }
   .onda { stroke: rgba(11, 23, 48, 0.25); stroke-width: 2; }
   .pulso { stroke: var(--red-500); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 0.06 2; stroke-dashoffset: 0.06; opacity: 0; filter: drop-shadow(0 0 5px rgba(226, 8, 29, 0.6)); }
-  .em-cena .pulso { animation: nv-pulso 2.8s linear 1.2s forwards; }
-  @keyframes nv-pulso { 0% { opacity: 1; stroke-dashoffset: 0.06; } 96% { opacity: 1; } 100% { opacity: 0; stroke-dashoffset: -1; } }
+  /* Depois da entrada, o pulso volta a percorrer a linha de tempos em tempos,
+     e dados descem da nuvem para cada atributo, devagar e fora de fase. */
+  .em-cena .pulso { animation: nv-pulso 5s linear 1.2s infinite; }
+  @keyframes nv-pulso { 0% { opacity: 1; stroke-dashoffset: 0.06; } 55% { opacity: 1; stroke-dashoffset: -1; } 56%, 100% { opacity: 0; stroke-dashoffset: -1; } }
+  .fluxo { stroke: var(--red-500); stroke-width: 2.4; stroke-linecap: round; stroke-dasharray: 0.05 0.95; stroke-dashoffset: 0.05; opacity: 0; }
+  .em-cena .fluxo { opacity: 0.8; animation: nv-desce 3.2s linear calc(2.4s + var(--k) * 0.45s) infinite; }
+  @keyframes nv-desce { to { stroke-dashoffset: -0.95; } }
 
   .nuvem-no {
     position: absolute;
@@ -123,6 +132,6 @@ const onda = xs.slice(1).reduce((d, x, k) => {
   }
   @media (prefers-reduced-motion: reduce) {
     .nuvem-no, .atributo { transition: none; }
-    .em-cena .pulso { animation: none; }
+    .em-cena .pulso, .em-cena .fluxo { animation: none; opacity: 0; }
   }
 </style>

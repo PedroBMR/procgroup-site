@@ -60,6 +60,7 @@ const voltaInteira = `M${f(tx)} ${f(ty)} A${R} ${R} 0 1 1 ${f(tx - 0.01)} ${f(ty
           const [x, y] = pt(k);
           return <path class="ap-traco raio" d={`M${C} ${C} L${f(x)} ${f(y)}`} pathLength="1" style={`--o:${(0.4 + k * 0.25).toFixed(2)}`} />;
         })}
+        <path class="ap-fluxo" d={voltaInteira} pathLength="1" style="--dur:8s; --atraso:6s" />
         <circle class="indicador" r="7">
           <animateMotion begin="indefinite" dur="3.2s" fill="freeze" path={voltaInteira} keyPoints="0;0.875" keyTimes="0;1" calcMode="linear" data-indicador />
         </circle>

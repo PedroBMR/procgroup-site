@@ -143,7 +143,10 @@ const marcos = bloco.cards ?? [];
 
   /* ── Desktop: sequência por tempo ── */
   @media (min-width: 761px) {
-    .em-cena .tl-tinta { transform: scaleX(1); transition: transform 3s linear 0.2s; }
+    .em-cena .tl-tinta { transform: scaleX(1); transition: transform 3s linear 0.2s; animation: hs-brilho 4s linear 4s infinite; }
+    /* Depois de desenhada, um brilho percorre a trajetória de 2014 até hoje. */
+    .tl-tinta { background-image: linear-gradient(90deg, rgba(255, 74, 84, 0.4) 0%, var(--red-500) 42%, #ffd2d6 50%, var(--red-500) 58%, var(--red-500) 100%); background-size: 300% 100%; background-position: 100% 0; }
+    @keyframes hs-brilho { from { background-position: 100% 0; } to { background-position: 0% 0; } }
     .em-cena .marco .marco-ponto {
       border-color: var(--red-500);
       background: var(--red-500);
@@ -171,7 +174,7 @@ const marcos = bloco.cards ?? [];
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .tl-tinta { transform: none !important; transition: none !important; }
+    .tl-tinta { transform: none !important; transition: none !important; animation: none !important; }
     .marco-card { opacity: 1 !important; transform: none !important; transition: none !important; }
     .marco-ponto { border-color: var(--red-500); background: var(--red-500); }
     .marco-ponto::after { transform: scaleY(1); }

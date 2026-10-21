@@ -79,7 +79,8 @@ const cards = bloco.cards ?? [];
   .lig.curta { max-width: 32px; }
   .lig::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, var(--red-500), transparent); transform: translateX(-100%); }
   .modulo:hover .lig { background: rgba(255, 74, 84, 0.45); }
-  .modulo:hover .lig::after { animation: cn-fluxo 1.4s linear infinite; }
+  .em-cena .lig::after { animation: cn-fluxo 2.4s linear 1.5s infinite; }
+  .modulo:hover .lig::after { animation-duration: 1.2s; }
   @keyframes cn-fluxo { to { transform: translateX(100%); } }
   /* Gestão de ponta a ponta: anel em volta da base e da equipe Proc. */
   .gestao { display: flex; align-items: center; padding: 8px 10px; border-radius: 999px; border: 1px dashed rgba(255, 74, 84, 0.55); }
@@ -95,6 +96,6 @@ const cards = bloco.cards ?? [];
   }
   @media (prefers-reduced-motion: reduce) {
     .em-cena .modulo:hover { transform: none; }
-    .modulo:hover .lig::after { animation: none; }
+    .em-cena .lig::after, .modulo:hover .lig::after { animation: none; }
   }
 </style>

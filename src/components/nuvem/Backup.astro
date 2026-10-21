@@ -21,6 +21,8 @@ const DESENHO =
   '<rect class="caixa" x="440" y="30" width="120" height="120" rx="22"/>' + ic("nuvemBackup", 464, 54, 3) +
   '<path class="ida" pathLength="1" d="M176 74 H424 M410 62 L424 74 L410 86"/>' +
   '<path class="volta" pathLength="1" d="M424 112 H176 M190 100 L176 112 L190 124"/>' +
+  '<path class="ap-fluxo" style="--dur:2.4s; --atraso:2.8s" pathLength="1" d="M176 74 H424"/>' +
+  '<path class="ap-fluxo volta-fluxo" style="--dur:2.4s; --atraso:4s" pathLength="1" d="M424 112 H176"/>' +
   '<circle class="pacote" r="5"><animateMotion dur="2.4s" begin="indefinite" fill="freeze" path="M176 74 H424" data-pacote/></circle>';
 ---
 
@@ -45,6 +47,7 @@ const DESENHO =
   .percurso :global(.ida) { stroke: var(--red-600); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.2s ease 0.4s; }
   .percurso :global(.volta) { stroke: var(--navy-600); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 0.02 0.02; opacity: 0; transition: opacity 0.6s ease 2.6s; }
   .percurso :global(.pacote) { fill: var(--red-600); opacity: 0; }
+  .percurso :global(.volta-fluxo) { stroke: var(--navy-600); filter: none; }
   .em-cena .percurso :global(.ida) { stroke-dashoffset: 0; }
   .em-cena .percurso :global(.volta) { opacity: 1; }
 

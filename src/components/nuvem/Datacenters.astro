@@ -38,13 +38,23 @@ const DIAGRAMAS: Record<string, string> = {
     '<path class="tr fraco" pathLength="1" d="M32 82 H96 M264 82 H300"/>' +
     ic("predio", 6, 66, 1.4) +
     '<circle class="no-proc" cx="300" cy="82" r="18"/>' + ic("pessoas", 288, 70, 1) +
-    '<path class="tr destaque" pathLength="1" d="M120 146 H240"/>',
+    '<path class="tr destaque" pathLength="1" d="M120 146 H240"/>' +
+    // Vida contínua: dados entre a empresa, a estrutura e a equipe Proc, e
+    // os LEDs dos racks piscando fora de fase.
+    '<path class="fluxo" style="--k:0" pathLength="1" d="M32 82 H96"/>' +
+    '<path class="fluxo" style="--k:1" pathLength="1" d="M300 82 H264"/>' +
+    [112, 160, 208].flatMap((x, r) => [[x + 11.9, 69.9], [x + 11.9, 86.9]].map(([cx, cy], j) =>
+      `<circle class="led" style="--k:${r * 2 + j}" cx="${cx}" cy="${cy}" r="1.8"/>`)).join(""),
   oci:
     REGIOES.map(([x, y]) => `<path class="tr fraco" pathLength="1" d="M180 98 L${x} ${y}"/>`).join("") +
     ic("globo", 146, 64, 2.8) +
-    REGIOES.map(([x, y]) => `<circle class="regiao" cx="${x}" cy="${y}" r="6"/>`).join("") +
+    REGIOES.map(([x, y], k) => `<circle class="regiao" style="--k:${k}" cx="${x}" cy="${y}" r="6"/>`).join("") +
     '<rect class="tr destaque camada" x="40" y="12" width="280" height="18" rx="9" pathLength="1"/>' +
-    '<path class="tr destaque" pathLength="1" d="M180 30 V60"/>',
+    '<path class="tr destaque" pathLength="1" d="M180 30 V60"/>' +
+    // Vida contínua: dados entre o globo e as regiões, e a gestão da Proc
+    // descendo para a infraestrutura.
+    REGIOES.map(([x, y], k) => `<path class="fluxo" style="--k:${k}" pathLength="1" d="M180 98 L${x} ${y}"/>`).join("") +
+    '<path class="fluxo" style="--k:5" pathLength="1" d="M180 30 V60"/>',
 };
 ---
 
@@ -99,7 +109,14 @@ const DIAGRAMAS: Record<string, string> = {
   .diagrama :global(.tr.destaque) { stroke: #ff4a54; stroke-width: 2; filter: drop-shadow(0 0 4px rgba(255, 74, 84, 0.5)); transition-delay: 1.1s; }
   .diagrama :global(.no-proc) { fill: var(--navy-900); stroke: #ff4a54; stroke-width: 1.6; }
   .diagrama :global(.regiao) { fill: #60a5fa; stroke: none; opacity: 0; transition: opacity 0.4s ease 1.3s; }
-  .em-cena .diagrama :global(.regiao) { opacity: 1; }
+  .em-cena .diagrama :global(.regiao) { opacity: 1; animation: dc-regiao 2.8s ease-in-out calc(2s + var(--k, 0) * 0.3s) infinite; transform-box: fill-box; transform-origin: center; }
+  @keyframes dc-regiao { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.35); } }
+  .diagrama :global(.fluxo) { stroke: #ff4a54; stroke-width: 2.6; stroke-dasharray: 0.08 0.92; stroke-dashoffset: 0.08; opacity: 0; filter: drop-shadow(0 0 3px rgba(255, 74, 84, 0.7)); }
+  .em-cena .diagrama :global(.fluxo) { opacity: 1; animation: dc-fluxo 2.2s linear calc(1.8s + var(--k) * 0.35s) infinite; }
+  @keyframes dc-fluxo { to { stroke-dashoffset: -0.92; } }
+  .diagrama :global(.led) { fill: #60a5fa; stroke: none; opacity: 0.25; }
+  .em-cena .diagrama :global(.led) { animation: dc-led 1.6s steps(1) calc(1.6s + var(--k) * 0.27s) infinite; }
+  @keyframes dc-led { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
 
   .corpo { padding: var(--space-8); }
   .n { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-2xl); line-height: 1; color: var(--red-400); }
@@ -113,5 +130,7 @@ const DIAGRAMAS: Record<string, string> = {
   @media (prefers-reduced-motion: reduce) {
     .em-cena .opcao:hover { transform: none; }
     .diagrama :global(.tr) { transition: none; stroke-dasharray: none; stroke-dashoffset: 0; }
+    .em-cena .diagrama :global(.fluxo), .em-cena .diagrama :global(.led), .em-cena .diagrama :global(.regiao) { animation: none; }
+    .diagrama :global(.fluxo) { display: none; }
   }
 </style>

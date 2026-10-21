@@ -65,3 +65,27 @@
 @media (max-width: 900px) {
   .ap-secao { padding-block: var(--space-16); }
 }
+
+/* Fluxo contínuo (pedido do Pedro, 2026-10-21: "faz isso pra tudo que é
+   gráfico desse estilo"). Um traço curto que percorre uma linha de diagrama,
+   em loop, depois que a cena entrou: dados passando. Usar num <path> com
+   pathLength="1" por cima da linha desenhada. --k escalona; --dur muda o
+   ritmo. Some com prefers-reduced-motion. */
+.ap-fluxo {
+  fill: none;
+  stroke: var(--red-500);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-dasharray: 0.06 0.94;
+  stroke-dashoffset: 0.06;
+  opacity: 0;
+  filter: drop-shadow(0 0 3px rgba(226, 8, 29, 0.6));
+}
+.em-cena .ap-fluxo {
+  opacity: 0.9;
+  animation: ap-fluxo var(--dur, 3s) linear calc(var(--atraso, 2s) + var(--k, 0) * 0.4s) infinite;
+}
+@keyframes ap-fluxo { to { stroke-dashoffset: -0.94; } }
+@media (prefers-reduced-motion: reduce) {
+  .ap-fluxo { display: none; }
+}

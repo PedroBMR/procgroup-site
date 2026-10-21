@@ -67,6 +67,11 @@ const curva = (x: number, y: number) => {
             <path class="ap-traco rota" d={curva(p.cx, p.cy)} pathLength="1" style={`--o:${2.2 + k * 0.25}`} />
           ))}
         </g>
+        <g>
+          {destaques.filter((p) => p.id !== "076").map((p, k) => (
+            <path class="ap-fluxo" d={curva(p.cx, p.cy)} pathLength="1" style={`--k:${k}; --dur:2.6s; --atraso:3.2s`} />
+          ))}
+        </g>
         <g class="pontos">
           {destaques.filter((p) => p.id !== "076").map((p, k) => (
             <circle class="ponto" cx={p.cx} cy={p.cy} r="6" style={`--k:${k}`} />
