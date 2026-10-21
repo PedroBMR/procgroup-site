@@ -1,0 +1,274 @@
+---
+/**
+ * "Nossas soluções em Infraestrutura de TI" como Feature Tabs: lista à
+ * esquerda, painel à direita. As seis soluções na ordem da página e, por
+ * último, "Outros serviços que a Proc oferece" (o bloco seguinte do documento,
+ * que deixou de ser uma seção separada: briefing de 2026-10-21).
+ *
+ * Sem autoplay: aqui o visitante procura uma solução, não assiste a uma
+ * sequência. Padrão de abas do WAI-ARIA, com setas, Home e End.
+ *
+ * Âncoras: o mega-menu leva a /infraestrutura-de-ti#sustentacao e afins. Cada
+ * aba tem o id da solução, então o navegador rola até ela, e o script abre a
+ * aba certa (na carga e a cada troca de hash).
+ *
+ * Cada painel abre com uma cena em linha própria, montada com os ícones do
+ * mega-menu (src/data/iconesMenu.ts). Sem palavra dentro das cenas.
+ *
+ * Texto: titulo e cards do bloco de soluções, e titulo e itens do bloco de
+ * outros serviços, sem alteração.
+ */
+import MenuIcon from "../MenuIcon.astro";
+import { ICONES_MENU, type NomeIconeMenu } from "../../data/iconesMenu";
+import type { Bloco, Card } from "../../data/preview/blocos";
+
+interface Props {
+  solucoes: Bloco;
+  outros: Bloco;
+}
+const { solucoes, outros } = Astro.props;
+
+interface Aba {
+  id: string;
+  n?: string;
+  icone?: NomeIconeMenu;
+  card: Card;
+}
+const OUTROS_ID = "outros-servicos";
+const abas: Aba[] = [
+  ...(solucoes.cards ?? []).map((c, i) => ({ id: c.id ?? `solucao-${i + 1}`, n: c.n, card: c })),
+  { id: OUTROS_ID, icone: "modulos", card: { titulo: outros.titulo ?? "", itens: outros.itens } },
+];
+
+// Ícone posicionado dentro de uma cena (ícone de 24 unidades, escalado).
+const ic = (nome: NomeIconeMenu, x: number, y: number, s = 2.4) =>
+  `<g transform="translate(${x} ${y}) scale(${s})">${ICONES_MENU[nome]}</g>`;
+const ICONES_OUTROS: NomeIconeMenu[] = ["servidores", "caixas", "rede", "conversa", "computador", "selo"];
+
+const CENAS: Record<string, string> = {
+  sustentacao:
+    ic("servidores", 22, 37, 3.2) +
+    '<path class="tr destaque" pathLength="1" d="M108 75 H140 L150 52 L164 98 L174 75 H212"/>' +
+    ic("escudo", 222, 37, 3.2),
+  backup:
+    ic("servidores", 22, 37, 3.2) +
+    '<path class="tr destaque" pathLength="1" d="M108 62 H206 M196 54 L206 62 L196 70"/>' +
+    '<path class="tr fraco tracejado" pathLength="1" d="M206 92 H108 M118 84 L108 92 L118 100"/>' +
+    ic("nuvemBackup", 222, 37, 3.2),
+  checklist:
+    ic("computador", 14, 45, 2.6) +
+    '<path class="tr fraco" pathLength="1" d="M82 75 H118 M202 75 H238"/>' +
+    ic("checklist", 122, 30, 3.4) +
+    ic("carrinho", 244, 45, 2.6),
+  antivirus:
+    ic("escudo", 128, 6, 2.7) +
+    '<path class="tr fraco" pathLength="1" d="M160 72 V86 M60 86 H260 M60 86 V96 M160 86 V96 M260 86 V96"/>' +
+    ic("computador", 36, 96, 2) +
+    ic("computador", 136, 96, 2) +
+    ic("servidores", 236, 96, 2),
+  firewall:
+    ic("rede", 14, 40, 2.8) +
+    '<path class="tr destaque" pathLength="1" d="M88 64 H222"/>' +
+    '<path class="tr fraco" pathLength="1" d="M88 96 H134 M140 90 l12 12 M152 90 l-12 12"/>' +
+    ic("firewall", 128, 40, 2.6) +
+    ic("globo", 236, 40, 2.8),
+  recuperacao:
+    ic("arquivo", 18, 38, 3) +
+    '<path class="tr fraco" pathLength="1" d="M96 75 H126 M196 75 H226"/>' +
+    ic("engrenagem", 128, 38, 3) +
+    ic("selo", 230, 38, 3),
+  [OUTROS_ID]: ICONES_OUTROS.map((nome, k) => ic(nome, 14 + k * 50, 51, 2)).join("") +
+    '<path class="tr fraco" pathLength="1" d="M18 112 H306"/>',
+};
+---
+
+<section class="ap-secao solucoes" data-theme="light" data-cena id="solucoes">
+  <div class="container">
+    <div class="ap-cabeca">
+      {solucoes.titulo && <h2 class="ap-entra">{solucoes.titulo}</h2>}
+    </div>
+
+    <div class="abas ap-entra" style="--i:1" data-solucoes>
+      <div class="lista" role="tablist" aria-orientation="vertical" aria-label={solucoes.titulo}>
+        {abas.map((a, i) => (
+          <button
+            type="button"
+            class:list={["aba", { outros: a.id === OUTROS_ID }]}
+            role="tab"
+            id={a.id}
+            aria-controls={`painel-${a.id}`}
+            aria-selected={i === 0 ? "true" : "false"}
+            tabindex={i === 0 ? 0 : -1}
+          >
+            {a.n ? <span class="aba-n" aria-hidden="true">{a.n}</span> : <span class="aba-n" aria-hidden="true"><MenuIcon nome={a.icone ?? "modulos"} /></span>}
+            <span class="aba-titulo">{a.card.titulo}</span>
+          </button>
+        ))}
+      </div>
+
+      <div class="paineis">
+        {abas.map((a, i) => (
+          <div class="painel" role="tabpanel" id={`painel-${a.id}`} aria-labelledby={a.id} hidden={i !== 0} tabindex="0">
+            <svg class="cena" viewBox="0 0 320 150" aria-hidden="true" set:html={CENAS[a.id] ?? ""} />
+            <h3>{a.card.titulo}</h3>
+            {a.card.subtitulo && <p class="sub">{a.card.subtitulo}</p>}
+            {a.card.paragrafos?.map((p) => <p class="p">{p}</p>)}
+            {a.card.itensTitulo && <p class="itens-titulo">{a.card.itensTitulo}</p>}
+            {a.card.itens && (
+              <ul class="check">
+                {a.card.itens.map((it) => <li>{it}</li>)}
+              </ul>
+            )}
+            {a.card.depois?.map((p) => <p class="p">{p}</p>)}
+            {a.card.fecho?.map((p) => <p class="fecho">{p}</p>)}
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .abas {
+    display: grid;
+    grid-template-columns: minmax(260px, 0.75fr) minmax(0, 2fr);
+    gap: var(--space-6);
+    margin-top: var(--space-12);
+    padding: var(--space-3);
+    border-radius: var(--radius-lg);
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+  }
+
+  /* Lista no desenho do mega-menu: barra vermelha à esquerda na ativa. */
+  .lista { display: grid; gap: 2px; align-content: start; }
+  .aba {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: 56px;
+    padding: var(--space-3) var(--space-4);
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: none;
+    color: var(--color-text-muted);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    scroll-margin-top: calc(var(--topbar-h) + var(--header-h) + var(--space-6));
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .aba::before { content: ""; position: absolute; left: 0; top: 10px; bottom: 10px; width: 3px; border-radius: 3px; background: var(--red-600); transform: scaleY(0); transition: transform 0.25s var(--ease-out); }
+  .aba:hover { background: var(--color-surface); color: var(--color-text); }
+  .aba[aria-selected="true"] { background: var(--color-surface); color: var(--color-text); box-shadow: 0 1px 2px rgba(11, 23, 48, 0.06); }
+  .aba[aria-selected="true"]::before { transform: scaleY(1); }
+  .aba:focus-visible { outline: 2px solid var(--red-600); outline-offset: 2px; }
+  .aba-n { display: grid; place-items: center; font-family: var(--font-display); font-weight: 800; font-size: var(--fs-base); color: var(--red-600); }
+  .aba-n :global(.menu-icon) { width: 20px; height: 20px; }
+  .aba-titulo { font-size: var(--fs-sm); font-weight: 600; line-height: 1.35; }
+  .aba.outros { margin-top: var(--space-2); border-top: 1px solid var(--color-border); border-radius: 0 0 var(--radius-sm) var(--radius-sm); }
+
+  /* Painel: altura mínima para a troca não sacudir a página. */
+  .paineis { min-height: 560px; }
+  .painel {
+    height: 100%;
+    padding: var(--space-6) var(--space-8) var(--space-8);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 18px 40px -30px rgba(11, 23, 48, 0.35);
+    outline: none;
+    animation: sl-entra 0.4s var(--ease-out);
+  }
+  .painel[hidden] { display: none; }
+  .painel:focus-visible { box-shadow: 0 0 0 2px var(--red-600); }
+  @keyframes sl-entra { from { opacity: 0; transform: translateY(10px); } }
+
+  .cena {
+    display: block;
+    width: 100%;
+    height: 150px;
+    margin-bottom: var(--space-6);
+    border-radius: var(--radius-sm);
+    background:
+      radial-gradient(70% 90% at 70% 20%, rgba(226, 8, 29, 0.12), transparent 60%),
+      radial-gradient(120% 100% at 50% 0%, var(--navy-800), var(--navy-950) 80%);
+    fill: none;
+    stroke: #e6eef8;
+    stroke-width: 0.65;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    animation: sl-cena 0.7s ease 0.1s both;
+  }
+  @keyframes sl-cena { from { opacity: 0; } }
+  .cena :global(.tr) { stroke-width: 1.6; stroke-dasharray: 1; stroke-dashoffset: 1; animation: sl-traco 1s cubic-bezier(0.33, 1, 0.68, 1) 0.35s forwards; }
+  .cena :global(.tr.destaque) { stroke: #ff4a54; stroke-width: 2; filter: drop-shadow(0 0 4px rgba(255, 74, 84, 0.55)); }
+  .cena :global(.tr.fraco) { stroke: rgba(230, 238, 248, 0.35); }
+  .cena :global(.tr.tracejado) { stroke-dasharray: 1; }
+  @keyframes sl-traco { to { stroke-dashoffset: 0; } }
+
+  .painel h3 { font-size: var(--fs-xl); }
+  .sub { margin-top: var(--space-2); font-size: var(--fs-base); font-weight: 600; color: var(--red-600); line-height: 1.45; }
+  .p { margin-top: var(--space-4); font-size: var(--fs-sm); line-height: 1.65; color: var(--color-text-muted); max-width: 72ch; }
+  .itens-titulo { margin-top: var(--space-6); font-size: var(--fs-sm); font-weight: 700; color: var(--color-text); }
+  .check { list-style: none; margin: var(--space-3) 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2) var(--space-6); }
+  .check li { position: relative; padding-left: 26px; font-size: var(--fs-sm); line-height: 1.5; color: var(--color-text); }
+  .check li::before { content: ""; position: absolute; left: 2px; top: 0.45em; width: 12px; height: 7px; border-left: 2px solid var(--red-600); border-bottom: 2px solid var(--red-600); transform: rotate(-45deg); }
+  .fecho { margin-top: var(--space-6); font-family: var(--font-display); font-weight: 800; font-size: var(--fs-lg); text-transform: uppercase; line-height: var(--lh-snug); color: var(--color-text); }
+
+  @media (max-width: 960px) {
+    .abas { grid-template-columns: 1fr; }
+    .lista { grid-auto-flow: column; grid-auto-columns: minmax(200px, 72%); overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: var(--space-2); }
+    .aba { scroll-snap-align: start; }
+    .aba.outros { margin-top: 0; border-top: 0; }
+    .paineis { min-height: 0; }
+    .painel { padding: var(--space-5); }
+    .check { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .painel, .cena { animation: none; }
+    .cena :global(.tr) { animation: none; stroke-dashoffset: 0; stroke-dasharray: none; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-solucoes]").forEach((raiz) => {
+    const abas = Array.from(raiz.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+    const paineis = Array.from(raiz.querySelectorAll<HTMLElement>('[role="tabpanel"]'));
+    let atual = 0;
+
+    const mostrar = (n: number, focar = false) => {
+      atual = (n + abas.length) % abas.length;
+      abas.forEach((a, k) => {
+        const sim = k === atual;
+        a.setAttribute("aria-selected", String(sim));
+        a.tabIndex = sim ? 0 : -1;
+        paineis[k].hidden = !sim;
+      });
+      if (focar) abas[atual].focus();
+      const lista = abas[atual].parentElement;
+      if (lista && lista.scrollWidth > lista.clientWidth) {
+        lista.scrollTo({ left: abas[atual].offsetLeft - lista.offsetLeft, behavior: "smooth" });
+      }
+    };
+
+    abas.forEach((a, k) => a.addEventListener("click", () => mostrar(k)));
+    raiz.querySelector('[role="tablist"]')?.addEventListener("keydown", (e) => {
+      const ev = e as KeyboardEvent;
+      const mapa: Record<string, number> = { ArrowDown: atual + 1, ArrowRight: atual + 1, ArrowUp: atual - 1, ArrowLeft: atual - 1, Home: 0, End: abas.length - 1 };
+      if (!(ev.key in mapa)) return;
+      ev.preventDefault();
+      mostrar(mapa[ev.key], true);
+    });
+
+    // Âncora do mega-menu (#sustentacao, #backup...) abre a aba certa.
+    const pelaAncora = () => {
+      const k = abas.findIndex((a) => `#${a.id}` === decodeURIComponent(location.hash));
+      if (k >= 0) mostrar(k);
+    };
+    pelaAncora();
+    window.addEventListener("hashchange", pelaAncora);
+  });
+</script>

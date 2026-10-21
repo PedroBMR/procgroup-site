@@ -1,0 +1,123 @@
+---
+/**
+ * Diagrama da infraestrutura funcionando integrada: um núcleo (servidores) e
+ * oito componentes em volta (rede, firewall, antivírus, backup, sistemas,
+ * monitoramento, suporte, conectividade), ligados ao núcleo e entre si.
+ *
+ * Entrada (classe .em-cena no ancestral com data-cena): o núcleo aparece, os
+ * raios se desenham um a um e cada componente acende quando o raio chega
+ * nele; o anel externo fecha a volta. Depois, pacotes percorrem os raios e um
+ * componente de cada vez ganha um brilho leve, devagar. Os pacotes (SMIL)
+ * param fora da tela.
+ *
+ * Usado no herói da página (grande) e no fecho (compacto). Sem palavra
+ * nenhuma: decorativo, aria-hidden.
+ */
+import MenuIcon from "../MenuIcon.astro";
+import type { NomeIconeMenu } from "../../data/iconesMenu";
+
+interface Props {
+  compacto?: boolean;
+}
+const { compacto = false } = Astro.props;
+
+const W = 480;
+const C = 240;
+const R = 172;
+const SATELITES: NomeIconeMenu[] = ["rede", "firewall", "escudo", "nuvemBackup", "erp", "monitor", "suporte", "globo"];
+const pos = SATELITES.map((_, k) => {
+  const a = ((-90 + k * 45) * Math.PI) / 180;
+  return [C + Math.cos(a) * R, C + Math.sin(a) * R];
+});
+const f = (n: number) => n.toFixed(1);
+---
+
+<div class:list={["hub", { compacto }]} aria-hidden="true" data-hub>
+  <svg viewBox={`0 0 ${W} ${W}`}>
+    <circle class="ap-traco anel" cx={C} cy={C} r={R} pathLength="1" style="--o:1.6" />
+    <circle class="ap-traco anel-fino" cx={C} cy={C} r={R + 34} pathLength="1" style="--o:1.9" />
+    {pos.map(([x, y], k) => (
+      <path class="ap-traco raio" d={`M${C} ${C} L${f(x)} ${f(y)}`} pathLength="1" style={`--o:${(0.35 + k * 0.14).toFixed(2)}`} />
+    ))}
+    {pos.map(([x, y], k) => (
+      <circle class="pacote" r="3.5">
+        <animateMotion dur="2.8s" begin={`${2.6 + k * 0.45}s`} repeatCount="indefinite" path={`M${f(x)} ${f(y)} L${C} ${C}`} />
+      </circle>
+    ))}
+  </svg>
+
+  <span class="no nucleo" style={`--x:50%; --y:50%; --k:0`}><MenuIcon nome="servidores" /></span>
+  {SATELITES.map((icone, k) => (
+    <span class="no satelite" style={`--x:${f((pos[k][0] / W) * 100)}%; --y:${f((pos[k][1] / W) * 100)}%; --k:${k}`}>
+      <MenuIcon nome={icone} />
+    </span>
+  ))}
+</div>
+
+<style>
+  .hub { position: relative; width: 100%; aspect-ratio: 1; max-width: 520px; margin-inline: auto; }
+  .hub svg { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; overflow: visible; }
+  .anel { stroke: rgba(230, 238, 248, 0.22); stroke-width: 1.2; }
+  .anel-fino { stroke: rgba(230, 238, 248, 0.08); stroke-width: 1; stroke-dasharray: 2 7; }
+  .raio { stroke: rgba(96, 165, 250, 0.45); stroke-width: 1.4; }
+  .pacote { fill: var(--red-500); opacity: 0; transition: opacity 0.6s ease 2.6s; }
+  :global(.em-cena) .pacote { opacity: 0.9; }
+
+  .no {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0.6);
+    opacity: 0;
+    color: #e6eef8;
+    background: var(--navy-900);
+    border: 1px solid rgba(230, 238, 248, 0.22);
+    transition:
+      opacity 0.5s ease calc(0.55s + var(--k) * 0.14s),
+      transform 0.6s var(--ease-out) calc(0.55s + var(--k) * 0.14s);
+  }
+  :global(.em-cena) .no { opacity: 1; transform: translate(-50%, -50%); }
+  .satelite { width: 15%; aspect-ratio: 1; }
+  .satelite :global(.menu-icon) { width: 46%; height: 46%; }
+  /* Um componente de cada vez ganha brilho: oito componentes, 2 s cada. */
+  .satelite { animation: hub-destaque 16s ease-in-out calc(3s + var(--k) * 2s) infinite; }
+  @keyframes hub-destaque {
+    0%, 14%, 100% { border-color: rgba(230, 238, 248, 0.22); box-shadow: none; color: #e6eef8; }
+    5%, 9% { border-color: var(--red-400); box-shadow: 0 0 0 6px rgba(226, 8, 29, 0.12), 0 0 22px rgba(226, 8, 29, 0.35); color: var(--red-400); }
+  }
+  .nucleo {
+    width: 24%;
+    aspect-ratio: 1;
+    transition-delay: 0.1s;
+    background: radial-gradient(circle at 50% 35%, var(--navy-700), var(--navy-950));
+    border: 2px solid var(--red-500);
+    box-shadow: 0 0 0 10px rgba(226, 8, 29, 0.08), 0 0 50px rgba(226, 8, 29, 0.25);
+  }
+  .nucleo :global(.menu-icon) { width: 42%; height: 42%; }
+
+  .compacto { max-width: 340px; }
+  .compacto .satelite { animation: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .no { transition: none; opacity: 1; transform: translate(-50%, -50%); }
+    .satelite { animation: none; }
+    .pacote { display: none; }
+  }
+</style>
+
+<script>
+  import { semMovimento } from "../../scripts/aprocCenas";
+  // Pacotes (SMIL) só andam com o diagrama na tela.
+  document.querySelectorAll<HTMLElement>("[data-hub]").forEach((hub) => {
+    const svg = hub.querySelector("svg");
+    if (!svg) return;
+    if (semMovimento) {
+      svg.pauseAnimations();
+      return;
+    }
+    new IntersectionObserver(([e]) => (e.isIntersecting ? svg.unpauseAnimations() : svg.pauseAnimations())).observe(hub);
+  });
+</script>

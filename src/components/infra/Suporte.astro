@@ -1,0 +1,140 @@
+---
+/**
+ * "Nosso suporte técnico 24/7": o texto e, abaixo, os cinco cards como um
+ * fluxo só, na ordem da página: monitoramento contínuo, alertas em tempo real,
+ * atendimento técnico, relatórios e indicadores, atuação preventiva.
+ *
+ * Uma linha passa pelos ícones de todos os cards. Quando a seção aparece, o
+ * primeiro acende, a linha avança até o próximo, e assim até o último. Uma
+ * volta tracejada liga o último ao primeiro: a atuação preventiva alimenta o
+ * monitoramento de novo. No fim, tudo fica aceso e parado.
+ *
+ * Celular: o fluxo fica vertical, com a linha à esquerda.
+ *
+ * Texto: titulo, paragrafos e cards do bloco, sem alteração.
+ */
+import MenuIcon from "../MenuIcon.astro";
+import type { Bloco } from "../../data/preview/blocos";
+import type { NomeIconeMenu } from "../../data/iconesMenu";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+const cards = bloco.cards ?? [];
+// Ícone pelo título do card, para não trocar se a ordem mudar.
+const iconeDe = (t: string): NomeIconeMenu =>
+  /monitor/i.test(t) ? "monitor" : /alerta/i.test(t) ? "sino" : /atendimento/i.test(t) ? "suporte" : /relat/i.test(t) ? "grafico" : "escudo";
+---
+
+<section class="ap-secao escura suporte" data-cena>
+  <div class="container">
+    <div class="ap-cabeca">
+      {bloco.titulo && <h2 class="ap-entra">{bloco.titulo}</h2>}
+      {bloco.paragrafos?.map((p, i) => <p class="ap-p ap-entra" style={`--i:${i + 1}`}>{p}</p>)}
+    </div>
+
+    <ol class="fluxo" style={`--n:${cards.length}`}>
+      {cards.map((c, k) => (
+        <li class="etapa" style={`--k:${k}`}>
+          <span class="etapa-icone" aria-hidden="true"><MenuIcon nome={iconeDe(c.titulo)} /></span>
+          <div class="etapa-card">
+            <h3>{c.titulo}</h3>
+            {c.paragrafos?.map((p) => <p>{p}</p>)}
+          </div>
+        </li>
+      ))}
+    </ol>
+    <div class="volta" aria-hidden="true"></div>
+  </div>
+</section>
+
+<style>
+  .suporte { --passo: 0.55s; }
+  .fluxo {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+    gap: var(--space-4);
+    list-style: none;
+    margin: var(--space-16) 0 0;
+    padding: 0;
+  }
+  /* Linha que liga os ícones, do centro do primeiro ao centro do último. */
+  .fluxo::before,
+  .fluxo::after {
+    content: "";
+    position: absolute;
+    top: 27px;
+    left: calc(100% / var(--n) / 2);
+    right: calc(100% / var(--n) / 2);
+    height: 2px;
+  }
+  .fluxo::before { background: rgba(230, 238, 248, 0.12); }
+  .fluxo::after {
+    background: linear-gradient(90deg, var(--red-500), rgba(255, 74, 84, 0.7));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform calc(var(--passo) * (var(--n) - 1)) linear 0.4s;
+  }
+  .em-cena .fluxo::after { transform: scaleX(1); }
+
+  .etapa { position: relative; display: grid; justify-items: center; gap: var(--space-5); }
+  .etapa-icone {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--navy-950);
+    border: 2px solid rgba(230, 238, 248, 0.2);
+    color: rgba(230, 238, 248, 0.6);
+    transition: border-color 0.4s ease, color 0.4s ease, box-shadow 0.6s ease;
+    transition-delay: calc(0.4s + var(--k) * var(--passo));
+  }
+  .etapa-icone :global(.menu-icon) { width: 24px; height: 24px; }
+  .em-cena .etapa-icone { border-color: var(--red-500); color: var(--white); box-shadow: 0 0 0 6px rgba(226, 8, 29, 0.12), 0 0 20px rgba(226, 8, 29, 0.35); }
+  .etapa-card {
+    width: 100%;
+    height: 100%;
+    padding: var(--space-5);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    text-align: center;
+    opacity: 0.35;
+    transform: translateY(10px);
+    transition: opacity 0.5s ease, transform 0.6s var(--ease-out), border-color 0.4s ease;
+    transition-delay: calc(0.5s + var(--k) * var(--passo));
+  }
+  .em-cena .etapa-card { opacity: 1; transform: none; border-color: rgba(255, 255, 255, 0.14); }
+  .etapa-card h3 { font-size: var(--fs-base); color: var(--white); }
+  .etapa-card p { margin-top: var(--space-2); font-size: var(--fs-sm); line-height: 1.55; color: var(--color-text-muted); }
+
+  /* Volta tracejada do último ao primeiro, por baixo dos cards. */
+  .volta {
+    height: 28px;
+    margin: var(--space-4) calc(100% / 10) 0;
+    border: 2px dashed rgba(255, 74, 84, 0.4);
+    border-top: 0;
+    border-radius: 0 0 24px 24px;
+    opacity: 0;
+    transition: opacity 0.6s ease calc(0.6s + 5 * var(--passo));
+  }
+  .em-cena .volta { opacity: 1; }
+
+  @media (max-width: 1000px) {
+    .fluxo { grid-template-columns: 1fr; gap: var(--space-5); }
+    .fluxo::before, .fluxo::after { top: 28px; bottom: 28px; left: 27px; right: auto; width: 2px; height: auto; }
+    .fluxo::after { background: linear-gradient(180deg, var(--red-500), rgba(255, 74, 84, 0.7)); transform: scaleY(0); transform-origin: top; }
+    .em-cena .fluxo::after { transform: scaleY(1); }
+    .etapa { grid-template-columns: 56px 1fr; justify-items: stretch; align-items: start; gap: var(--space-4); }
+    .etapa-card { text-align: left; }
+    .volta { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .fluxo::after, .etapa-icone, .etapa-card, .volta { transition: none; }
+  }
+</style>

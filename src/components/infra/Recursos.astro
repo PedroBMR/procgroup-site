@@ -1,0 +1,163 @@
+---
+/**
+ * "Uma infraestrutura. Uma equipe. Uma visão completa.": texto à esquerda e,
+ * à direita, um conjunto só, não uma lista solta. No centro, a infraestrutura
+ * da empresa; em volta, os nove recursos, cada um ligado ao centro.
+ *
+ * Os rótulos dos nove módulos são os nomes que o Pedro pediu no briefing de
+ * 2026-10-21 (Tecnologia, Antivírus, Firewall, Suporte Técnico, Servidores,
+ * Hardware, Software, Backup, Rede), usados como etiqueta do desenho. Não são
+ * texto novo da página: não afirmam nada além do que o parágrafo ao lado já
+ * diz.
+ *
+ * Entrada: o centro aparece, cada módulo surge e a ligação dele ao centro se
+ * desenha, um de cada vez. Hover num módulo acende ele e a ligação dele.
+ *
+ * Texto: titulo e paragrafos do bloco, sem alteração.
+ */
+import MenuIcon from "../MenuIcon.astro";
+import type { Bloco } from "../../data/preview/blocos";
+import type { NomeIconeMenu } from "../../data/iconesMenu";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+
+const RECURSOS: [string, NomeIconeMenu][] = [
+  ["Tecnologia", "chip"],
+  ["Antivírus", "escudo"],
+  ["Firewall", "firewall"],
+  ["Suporte Técnico", "suporte"],
+  ["Servidores", "servidores"],
+  ["Hardware", "computador"],
+  ["Software", "codigo"],
+  ["Backup", "nuvemBackup"],
+  ["Rede", "rede"],
+];
+const W = 520;
+const C = 260;
+const R = 196;
+const f = (n: number) => n.toFixed(1);
+const pos = RECURSOS.map((_, k) => {
+  const a = ((-90 + k * 40) * Math.PI) / 180;
+  return [C + Math.cos(a) * R, C + Math.sin(a) * R];
+});
+---
+
+<section class="ap-secao recursos" data-theme="light" data-cena>
+  <div class="container grade">
+    <div class="texto ap-cabeca">
+      {bloco.titulo && <h2 class="ap-entra">{bloco.titulo}</h2>}
+      {bloco.paragrafos?.map((p, i) => <p class="ap-p ap-entra" style={`--i:${i + 1}`}>{p}</p>)}
+    </div>
+
+    <div class="conjunto" data-recursos>
+      <svg viewBox={`0 0 ${W} ${W}`} aria-hidden="true">
+        <circle class="ap-traco anel" cx={C} cy={C} r={R} pathLength="1" style="--o:2.6" />
+        {pos.map(([x, y], k) => (
+          <path class="ap-traco lig" data-k={k} d={`M${C} ${C} L${f(x)} ${f(y)}`} pathLength="1" style={`--o:${(0.4 + k * 0.22).toFixed(2)}`} />
+        ))}
+      </svg>
+      <span class="centro" aria-hidden="true"><MenuIcon nome="predio" /></span>
+      <ul class="modulos">
+        {RECURSOS.map(([nome, icone], k) => (
+          <li class="modulo" data-k={k} style={`--x:${f((pos[k][0] / W) * 100)}%; --y:${f((pos[k][1] / W) * 100)}%; --k:${k}`}>
+            <span class="modulo-icone" aria-hidden="true"><MenuIcon nome={icone} /></span>
+            <span class="modulo-nome">{nome}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .grade { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: var(--space-12); align-items: center; }
+
+  .conjunto { position: relative; width: 100%; max-width: 560px; aspect-ratio: 1; margin-inline: auto; }
+  .conjunto svg { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; overflow: visible; }
+  .anel { stroke: rgba(11, 23, 48, 0.12); stroke-width: 1; }
+  .lig { stroke: rgba(11, 23, 48, 0.2); stroke-width: 1.5; transition: stroke 0.25s ease, stroke-dashoffset 1.2s cubic-bezier(0.33, 1, 0.68, 1) calc(var(--o) * 1s); }
+  .conjunto[data-foco="0"] .lig[data-k="0"], .conjunto[data-foco="1"] .lig[data-k="1"], .conjunto[data-foco="2"] .lig[data-k="2"],
+  .conjunto[data-foco="3"] .lig[data-k="3"], .conjunto[data-foco="4"] .lig[data-k="4"], .conjunto[data-foco="5"] .lig[data-k="5"],
+  .conjunto[data-foco="6"] .lig[data-k="6"], .conjunto[data-foco="7"] .lig[data-k="7"], .conjunto[data-foco="8"] .lig[data-k="8"] { stroke: var(--red-500); stroke-width: 2.5; }
+
+  .centro {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    display: grid;
+    place-items: center;
+    width: 22%;
+    aspect-ratio: 1;
+    border-radius: 24px;
+    background: var(--navy-900);
+    color: var(--white);
+    box-shadow: 0 0 0 10px rgba(11, 23, 48, 0.06), 0 20px 40px -18px rgba(11, 23, 48, 0.6);
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0;
+    transition: opacity 0.5s ease 0.1s, transform 0.6s var(--ease-out) 0.1s;
+  }
+  .centro :global(.menu-icon) { width: 44%; height: 44%; }
+  .em-cena .centro { opacity: 1; transform: translate(-50%, -50%); }
+
+  .modulos { list-style: none; margin: 0; padding: 0; }
+  .modulo {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+    width: 104px;
+    transform: translate(-50%, -26px) scale(0.85);
+    opacity: 0;
+    transition:
+      opacity 0.45s ease calc(0.5s + var(--k) * 0.22s),
+      transform 0.55s var(--ease-out) calc(0.5s + var(--k) * 0.22s);
+  }
+  .em-cena .modulo { opacity: 1; transform: translate(-50%, -26px); }
+  .modulo-icone {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: var(--white);
+    border: 1px solid var(--color-border-strong);
+    color: var(--navy-800);
+    box-shadow: 0 10px 22px -14px rgba(11, 23, 48, 0.4);
+    transition: transform 0.25s var(--ease-out), border-color 0.25s ease, color 0.25s ease;
+  }
+  .modulo-icone :global(.menu-icon) { width: 24px; height: 24px; }
+  .modulo-nome { font-size: var(--fs-xs); font-weight: 700; text-align: center; line-height: 1.2; color: var(--color-text); background: var(--color-bg); padding: 1px 6px; border-radius: 6px; }
+  .modulo:hover .modulo-icone { transform: translateY(-3px); border-color: var(--red-500); color: var(--red-600); }
+
+  @media (max-width: 900px) {
+    .grade { grid-template-columns: 1fr; }
+  }
+  /* Celular: o círculo não cabe com nove rótulos. Vira uma grade 3 x 3 em
+     volta do centro, com o mesmo desenho dos módulos. */
+  @media (max-width: 560px) {
+    .conjunto { aspect-ratio: auto; display: grid; gap: var(--space-5); justify-items: center; }
+    .conjunto svg { display: none; }
+    .centro { position: relative; left: auto; top: auto; width: 88px; transform: none; }
+    .em-cena .centro { transform: none; }
+    .modulos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4) var(--space-2); width: 100%; }
+    .modulo { position: relative; left: auto; top: auto; width: auto; transform: translateY(10px); }
+    .em-cena .modulo { transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .centro, .modulo { transition: none; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-recursos]").forEach((c) => {
+    c.querySelectorAll<HTMLElement>(".modulo").forEach((m) => {
+      m.addEventListener("pointerenter", () => (c.dataset.foco = m.dataset.k));
+      m.addEventListener("pointerleave", () => delete c.dataset.foco);
+    });
+  });
+</script>

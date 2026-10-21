@@ -1,0 +1,152 @@
+---
+/**
+ * Primeiro bloco depois do herói: o texto sobre o que uma infraestrutura bem
+ * administrada precisa ser, e ao lado um ciclo que vai da base tecnológica
+ * até o cliente satisfeito.
+ *
+ * Oito pontos num círculo, nesta ordem (briefing do Pedro, 2026-10-21):
+ * tecnologia, gerenciamento, segurança, performance, estabilidade,
+ * escalabilidade, suporte e cliente satisfeito. Só ícones, sem rótulo: esses
+ * nomes não estão no texto da seção, e o briefing proíbe acrescentá-los.
+ *
+ * Entrada: o núcleo aparece, os pontos acendem um a um, os arcos entre eles se
+ * desenham e um indicador percorre o ciclo uma vez, parando no cliente, que
+ * fica em destaque. Depois tudo para.
+ *
+ * Texto: paragrafos e fecho do bloco, sem alteração.
+ */
+import MenuIcon from "../MenuIcon.astro";
+import UnitIcon from "../UnitIcon.astro";
+import type { Bloco } from "../../data/preview/blocos";
+import type { NomeIconeMenu } from "../../data/iconesMenu";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+
+const W = 480;
+const C = 240;
+const R = 170;
+const ETAPAS: NomeIconeMenu[] = ["chip", "engrenagem", "cadeado", "medidor", "nivel", "crescimento", "suporte", "cliente"];
+const f = (n: number) => n.toFixed(1);
+const pt = (k: number) => {
+  const a = ((-90 + k * 45) * Math.PI) / 180;
+  return [C + Math.cos(a) * R, C + Math.sin(a) * R];
+};
+const arco = (k: number) => {
+  const [x0, y0] = pt(k);
+  const [x1, y1] = pt(k + 1);
+  return `M${f(x0)} ${f(y0)} A${R} ${R} 0 0 1 ${f(x1)} ${f(y1)}`;
+};
+const [tx, ty] = pt(0);
+const voltaInteira = `M${f(tx)} ${f(ty)} A${R} ${R} 0 1 1 ${f(tx - 0.01)} ${f(ty)}`;
+---
+
+<section class="ap-secao ciclo" data-theme="light" data-cena>
+  <div class="container grade">
+    <div class="texto">
+      {bloco.paragrafos?.map((p, i) => <p class:list={["ap-p ap-entra", { primeiro: i === 0 }]} style={`--i:${i}`}>{p}</p>)}
+      {bloco.fecho?.map((p) => <p class="ap-fecho ap-entra" style="--i:4">{p}</p>)}
+    </div>
+
+    <div class="roda" aria-hidden="true" data-ciclo>
+      <svg viewBox={`0 0 ${W} ${W}`}>
+        <circle class="trilho" cx={C} cy={C} r={R} />
+        {ETAPAS.slice(0, -1).map((_, k) => (
+          <path class="ap-traco arco" d={arco(k)} pathLength="1" style={`--o:${(0.6 + k * 0.25).toFixed(2)}`} />
+        ))}
+        {ETAPAS.map((_, k) => {
+          const [x, y] = pt(k);
+          return <path class="ap-traco raio" d={`M${C} ${C} L${f(x)} ${f(y)}`} pathLength="1" style={`--o:${(0.4 + k * 0.25).toFixed(2)}`} />;
+        })}
+        <circle class="indicador" r="7">
+          <animateMotion begin="indefinite" dur="3.2s" fill="freeze" path={voltaInteira} keyPoints="0;0.875" keyTimes="0;1" calcMode="linear" data-indicador />
+        </circle>
+      </svg>
+
+      <span class="no nucleo" style="--x:50%; --y:50%; --k:0"><UnitIcon slug="infraestrutura-de-ti" /></span>
+      {ETAPAS.map((icone, k) => {
+        const [x, y] = pt(k);
+        return (
+          <span class:list={["no etapa", { final: k === ETAPAS.length - 1 }]} style={`--x:${f((x / W) * 100)}%; --y:${f((y / W) * 100)}%; --k:${k}`}>
+            <MenuIcon nome={icone} />
+          </span>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<style>
+  .grade { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-16); align-items: center; }
+  .primeiro { margin-top: 0; font-size: var(--fs-lg); color: var(--color-text); font-weight: 500; }
+
+  .roda { position: relative; width: 100%; max-width: 480px; aspect-ratio: 1; margin-inline: auto; }
+  .roda svg { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; overflow: visible; }
+  .trilho { stroke: rgba(11, 23, 48, 0.08); stroke-width: 10; }
+  .arco { stroke: var(--navy-700); stroke-width: 2; }
+  .raio { stroke: rgba(11, 23, 48, 0.12); stroke-width: 1; stroke-dasharray: 1; }
+  .indicador { fill: var(--red-500); opacity: 0; filter: drop-shadow(0 0 6px rgba(226, 8, 29, 0.6)); }
+  .roda.rodou .indicador { opacity: 1; }
+
+  .no {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--white);
+    border: 1px solid var(--color-border-strong);
+    color: var(--navy-800);
+    box-shadow: 0 10px 24px -14px rgba(11, 23, 48, 0.4);
+    transform: translate(-50%, -50%) scale(0.6);
+    opacity: 0;
+    transition:
+      opacity 0.45s ease calc(0.4s + var(--k) * 0.25s),
+      transform 0.55s var(--ease-out) calc(0.4s + var(--k) * 0.25s),
+      border-color 0.4s ease,
+      color 0.4s ease;
+  }
+  .em-cena .no { opacity: 1; transform: translate(-50%, -50%); }
+  .etapa { width: 13%; aspect-ratio: 1; }
+  .etapa :global(.menu-icon) { width: 46%; height: 46%; }
+  .nucleo { width: 24%; aspect-ratio: 1; background: var(--navy-900); color: var(--white); border: 0; transition-delay: 0.1s; }
+  .nucleo :global(.unit-icon) { width: 42%; height: 42%; }
+  /* O cliente é o resultado: acende quando o indicador chega nele. */
+  .roda.chegou .final { border: 2px solid var(--red-600); color: var(--red-600); box-shadow: 0 0 0 8px rgba(226, 8, 29, 0.1), 0 12px 28px -12px rgba(184, 8, 26, 0.5); }
+
+  @media (max-width: 900px) {
+    .grade { grid-template-columns: 1fr; gap: var(--space-12); }
+    .roda { max-width: 360px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .no { transition: none; opacity: 1; transform: translate(-50%, -50%); }
+    .indicador { display: none; }
+  }
+</style>
+
+<script>
+  import { semMovimento } from "../../scripts/aprocCenas";
+
+  // O indicador percorre o ciclo uma vez, depois que os pontos acenderam.
+  document.querySelectorAll<HTMLElement>("[data-ciclo]").forEach((roda) => {
+    const secao = roda.closest<HTMLElement>("[data-cena]");
+    const ind = roda.querySelector<SVGAnimateMotionElement>("[data-indicador]");
+    const DURACAO_MS = 3200;
+    const comecar = () => {
+      if (semMovimento) {
+        roda.classList.add("chegou");
+        return;
+      }
+      window.setTimeout(() => {
+        roda.classList.add("rodou");
+        ind?.beginElement();
+        window.setTimeout(() => roda.classList.add("chegou"), DURACAO_MS);
+      }, 2400);
+    };
+    if (secao?.classList.contains("em-cena")) comecar();
+    else secao?.addEventListener("cena", comecar, { once: true });
+  });
+</script>

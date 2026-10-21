@@ -1,0 +1,100 @@
+---
+/**
+ * Os dois cenários: empresa que já tem equipe de TI e empresa que não tem.
+ * Dois módulos lado a lado, mesmo desenho, sem um parecer melhor que o outro.
+ *
+ * O diagrama no topo de cada módulo usa as mesmas três peças em linha:
+ *   com equipe   equipe interna e equipe Proc, lado a lado, as duas ligadas à
+ *                infraestrutura (a Proc como extensão do time, não substituta)
+ *   sem equipe   a empresa ligada à infraestrutura, e a equipe Proc cuidando
+ *                dela de ponta a ponta (um anel de gestão em volta das duas)
+ *
+ * Hover: o módulo sobe um pouco e as ligações acendem.
+ *
+ * Texto: os dois cards do bloco (titulo, subtitulo, paragrafos, fecho), sem
+ * alteração.
+ */
+import MenuIcon from "../MenuIcon.astro";
+import type { Bloco } from "../../data/preview/blocos";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+const cards = bloco.cards ?? [];
+---
+
+<section class="ap-secao escura cenarios" data-cena>
+  <div class="container grade">
+    {cards.map((c, i) => (
+      <article class="modulo ap-entra" style={`--i:${i * 2}`}>
+        <div class="diagrama" aria-hidden="true">
+          {i === 0 ? (
+            <>
+              <span class="peca"><MenuIcon nome="pessoas" /></span>
+              <span class="lig"></span>
+              <span class="peca base"><MenuIcon nome="servidores" /></span>
+              <span class="lig"></span>
+              <span class="peca proc"><MenuIcon nome="pessoas" /></span>
+            </>
+          ) : (
+            <>
+              <span class="peca"><MenuIcon nome="predio" /></span>
+              <span class="lig"></span>
+              <span class="gestao">
+                <span class="peca base"><MenuIcon nome="servidores" /></span>
+                <span class="lig curta"></span>
+                <span class="peca proc"><MenuIcon nome="pessoas" /></span>
+              </span>
+            </>
+          )}
+        </div>
+        <h3>{c.titulo}</h3>
+        {c.subtitulo && <p class="sub">{c.subtitulo}</p>}
+        {c.paragrafos?.map((p) => <p class="p">{p}</p>)}
+        {c.fecho && <div class="fecho">{c.fecho.map((p) => <p>{p}</p>)}</div>}
+      </article>
+    ))}
+  </div>
+</section>
+
+<style>
+  .grade { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6); align-items: stretch; }
+  .modulo {
+    padding: var(--space-8);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .em-cena .modulo { transition: opacity 0.7s var(--ease-out) calc(var(--i) * 0.12s), transform 0.35s var(--ease-out), border-color 0.3s ease, box-shadow 0.35s ease; }
+  .em-cena .modulo:hover { transform: translateY(-6px); border-color: rgba(255, 74, 84, 0.45); box-shadow: 0 28px 56px -30px rgba(0, 0, 0, 0.9); }
+
+  /* Diagrama: peças em linha ligadas por traços. */
+  .diagrama { display: flex; align-items: center; justify-content: center; gap: 0; min-height: 96px; margin-bottom: var(--space-6); padding: var(--space-4); border-radius: var(--radius-md); background: rgba(6, 10, 20, 0.5); border: 1px solid rgba(255, 255, 255, 0.06); }
+  .peca { display: grid; place-items: center; flex: none; width: 56px; height: 56px; border-radius: 50%; background: var(--navy-900); border: 1px solid rgba(230, 238, 248, 0.25); color: #e6eef8; }
+  .peca :global(.menu-icon) { width: 24px; height: 24px; }
+  .peca.base { width: 64px; height: 64px; border-radius: 16px; }
+  .peca.proc { border: 2px solid var(--red-500); color: var(--red-400); box-shadow: 0 0 18px rgba(226, 8, 29, 0.3); }
+  .lig { flex: 1; max-width: 72px; height: 2px; background: rgba(230, 238, 248, 0.2); position: relative; overflow: hidden; }
+  .lig.curta { max-width: 32px; }
+  .lig::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, var(--red-500), transparent); transform: translateX(-100%); }
+  .modulo:hover .lig { background: rgba(255, 74, 84, 0.45); }
+  .modulo:hover .lig::after { animation: cn-fluxo 1.4s linear infinite; }
+  @keyframes cn-fluxo { to { transform: translateX(100%); } }
+  /* Gestão de ponta a ponta: anel em volta da base e da equipe Proc. */
+  .gestao { display: flex; align-items: center; padding: 8px 10px; border-radius: 999px; border: 1px dashed rgba(255, 74, 84, 0.55); }
+
+  .modulo h3 { font-size: var(--fs-xl); color: var(--white); }
+  .sub { margin-top: var(--space-3); font-size: var(--fs-base); font-weight: 600; color: var(--red-400); line-height: 1.45; }
+  .p { margin-top: var(--space-4); font-size: var(--fs-sm); line-height: 1.65; color: var(--color-text-muted); }
+  .fecho { margin-top: var(--space-6); padding-top: var(--space-5); border-top: 1px solid rgba(255, 255, 255, 0.08); }
+  .fecho p { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-lg); text-transform: uppercase; line-height: var(--lh-snug); color: var(--white); }
+
+  @media (max-width: 900px) {
+    .grade { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .em-cena .modulo:hover { transform: none; }
+    .modulo:hover .lig::after { animation: none; }
+  }
+</style>

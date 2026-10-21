@@ -1,0 +1,93 @@
+---
+/**
+ * "Tecnologia para quem não pode parar.": a infraestrutura como a base de
+ * tudo. Abaixo do texto, uma base em camadas que se acende da esquerda para a
+ * direita e, apoiados nela, os quatro elementos que o segundo parágrafo cita
+ * (sistemas funcionando, pessoas conectadas, dados protegidos, operações
+ * disponíveis), que sobem um a um quando a base fica pronta.
+ *
+ * Só ícones, sem rótulo: as palavras já estão no parágrafo logo acima.
+ *
+ * Texto: titulo e paragrafos do bloco, sem alteração.
+ */
+import MenuIcon from "../MenuIcon.astro";
+import type { Bloco } from "../../data/preview/blocos";
+import type { NomeIconeMenu } from "../../data/iconesMenu";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+const APOIADOS: NomeIconeMenu[] = ["erp", "pessoas", "cadeado", "engrenagem"];
+---
+
+<section class="ap-secao escura base" data-cena>
+  <div class="container">
+    {bloco.titulo && <h2 class="ap-entra">{bloco.titulo}</h2>}
+    {bloco.paragrafos?.map((p, i) => <p class:list={["ap-p ap-entra", { primeiro: i === 0 }]} style={`--i:${i + 1}`}>{p}</p>)}
+
+    <div class="palco" aria-hidden="true">
+      <ul class="apoiados">
+        {APOIADOS.map((icone, k) => (
+          <li style={`--k:${k}`}>
+            <span class="haste"></span>
+            <span class="peca"><MenuIcon nome={icone} /></span>
+          </li>
+        ))}
+      </ul>
+      <div class="camadas">
+        <span style="--c:0"></span>
+        <span style="--c:1"></span>
+        <span style="--c:2"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .base { text-align: center; background: radial-gradient(70% 70% at 50% 100%, rgba(226, 8, 29, 0.12), transparent 60%), var(--navy-950); }
+  .base h2 { max-width: 20ch; margin-inline: auto; font-size: var(--fs-3xl); color: var(--white); }
+  .base .ap-p { margin-inline: auto; }
+  .primeiro { font-size: var(--fs-xl); font-weight: 600; color: var(--white); }
+
+  .palco { max-width: 760px; margin: var(--space-12) auto 0; }
+  .apoiados { list-style: none; margin: 0; padding: 0 6%; display: flex; justify-content: space-between; align-items: flex-end; }
+  .apoiados li { display: flex; flex-direction: column-reverse; align-items: center; }
+  .peca {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    background: var(--navy-900);
+    border: 1px solid rgba(230, 238, 248, 0.22);
+    color: #e6eef8;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.5s ease calc(1.4s + var(--k) * 0.2s), transform 0.6s var(--ease-out) calc(1.4s + var(--k) * 0.2s);
+  }
+  .peca :global(.menu-icon) { width: 28px; height: 28px; }
+  .haste { width: 2px; height: 36px; background: linear-gradient(180deg, rgba(255, 74, 84, 0.8), rgba(255, 74, 84, 0.1)); transform: scaleY(0); transform-origin: bottom; transition: transform 0.4s ease calc(1.2s + var(--k) * 0.2s); }
+  .em-cena .peca { opacity: 1; transform: none; }
+  .em-cena .haste { transform: scaleY(1); }
+
+  /* A base: três camadas que se acendem da esquerda para a direita. */
+  .camadas { display: grid; gap: 6px; }
+  .camadas span {
+    display: block;
+    height: calc(10px - var(--c) * 3px);
+    margin-inline: calc(var(--c) * 4%);
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--red-600), var(--red-500) 50%, rgba(255, 74, 84, 0.6));
+    opacity: calc(1 - var(--c) * 0.3);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 1s cubic-bezier(0.33, 1, 0.68, 1) calc(0.3s + var(--c) * 0.15s);
+  }
+  .camadas span:first-child { box-shadow: 0 0 24px rgba(226, 8, 29, 0.45); }
+  .em-cena .camadas span { transform: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .peca, .haste, .camadas span { transition: none; }
+  }
+</style>

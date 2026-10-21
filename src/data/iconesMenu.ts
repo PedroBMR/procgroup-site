@@ -43,6 +43,19 @@ export const ICONES_MENU = {
     '<path d="M20 12a8 8 0 0 1-11.6 7.1L4 20l1-4.2A8 8 0 1 1 20 12z"/><path d="M8.5 12h.01M12 12h.01M15.5 12h.01"/>',
   parceria:
     '<path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3M3 4h8"/>',
+  // A partir daqui, os da página de Infraestrutura de TI (2026-10-21), no mesmo traço.
+  rede: '<circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><circle cx="12" cy="13" r="2"/><path d="M12 7v4M10.6 14.4 6.4 17.6M13.4 14.4l4.2 3.2"/>',
+  firewall: '<rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="M3 9.7h18M3 14.3h18M9 5v4.7M15 9.7v4.6M9 14.3V19"/>',
+  monitor: '<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4M6 11h3l1.5-3 2.5 5 1.5-2H18"/>',
+  suporte: '<path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="13" width="4" height="6" rx="1.5"/><rect x="17" y="13" width="4" height="6" rx="1.5"/><path d="M19 19c0 1.5-1.5 2.5-4 2.5h-2"/>',
+  computador: '<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20M9 16l-.5 4M15 16l.5 4"/>',
+  codigo: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="m9.5 10-2.5 2.5 2.5 2.5M14.5 10l2.5 2.5-2.5 2.5M3 8h18"/>',
+  sino: '<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 21h4"/>',
+  cliente: '<circle cx="10" cy="8" r="3.5"/><path d="M3.5 20c.7-3.6 3.3-6 6.5-6 1.4 0 2.7.4 3.7 1.2"/><path d="m15 18.5 2 2 4-4"/>',
+  nivel: '<path d="M3 17h18M5 17v-3M19 17v-3"/><rect x="7" y="9" width="10" height="5" rx="2.5"/><circle cx="12" cy="11.5" r="1"/>',
+  crescimento: '<path d="M4 20h16"/><rect x="5" y="14" width="3" height="6"/><rect x="10.5" y="10" width="3" height="10"/><rect x="16" y="6" width="3" height="14"/><path d="m4.5 9.5 5-4 3 2 6-4.5"/>',
+  checklist: '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="m8 8 1.3 1.3L11.5 7M8 13l1.3 1.3 2.2-2.3M8 18h.01M13.5 8H16M13.5 13H16M13.5 18H16"/>',
+  modulos: '<rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><path d="M17.25 14v6.5M14 17.25h6.5"/>',
   seta: '<path d="M5 12h14M13 6l6 6-6 6"/>',
   externo: '<path d="M7 17 17 7M9 7h8v8"/>',
 } as const;

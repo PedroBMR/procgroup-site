@@ -1,0 +1,47 @@
+---
+/**
+ * Página geral de Infraestrutura de TI, com o conteúdo INTEGRAL do documento
+ * "Ajustes no site". Conteúdo em src/data/preview/paginas/infra.ts.
+ *
+ * Redesign de 2026-10-21: saiu do molde genérico ([area].astro + Secoes) para
+ * seções próprias em src/components/infra/. O texto continua vindo inteiro do
+ * mesmo arquivo de dados, na mesma ordem. O bloco "Outros serviços que a Proc
+ * oferece" deixou de ser seção separada e virou a última aba de Soluções.
+ *
+ * Usa a mesma base visual da página A Proc (src/styles/aproc.css e o gatilho
+ * de cena src/scripts/aprocCenas.ts).
+ *
+ * A ordem dos blocos em infra.ts é a ordem do documento. Se ela mudar lá, a
+ * lista abaixo muda junto.
+ */
+import "../styles/aproc.css";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { navPreview } from "../data/preview/ajustes";
+import { infra } from "../data/preview/paginas/infra";
+import Hero from "../components/infra/Hero.astro";
+import Ciclo from "../components/infra/Ciclo.astro";
+import Cenarios from "../components/infra/Cenarios.astro";
+import Solucoes from "../components/infra/Solucoes.astro";
+import Suporte from "../components/infra/Suporte.astro";
+import Recursos from "../components/infra/Recursos.astro";
+import Base from "../components/infra/Base.astro";
+import Fecho from "../components/infra/Fecho.astro";
+
+const [intro, cenarios, solucoes, outros, suporte, recursos, base, fecho] = infra.blocos;
+---
+
+<BaseLayout title="Infraestrutura de TI" description={infra.hero.lead ?? infra.hero.titulo} nav={navPreview()}>
+  <Hero hero={infra.hero} />
+  <Ciclo bloco={intro} />
+  <Cenarios bloco={cenarios} />
+  <Solucoes solucoes={solucoes} outros={outros} />
+  <Suporte bloco={suporte} />
+  <Recursos bloco={recursos} />
+  <Base bloco={base} />
+  <Fecho bloco={fecho} />
+</BaseLayout>
+
+<script>
+  import { montarCenas } from "../scripts/aprocCenas";
+  montarCenas();
+</script>
