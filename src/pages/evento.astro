@@ -1,143 +1,58 @@
 ---
 // Landing page de evento (mobile-first) — acessada via chaveiro NFC/RFID.
-// URL fixa /evento; o conteúdo PT vem do bloco `evento` em src/data/events.ts
-// (edite lá a cada evento). Fora do menu e do sitemap; noindex. Sem chrome do site.
+// URL fixa /evento; o que muda por evento (textos PT/EN/ES, estande, imagem)
+// vem do bloco `evento` em src/data/events.ts (edite lá a cada evento). Fora do
+// menu e do sitemap; noindex. Sem chrome do site.
 //
 // Trilíngue (PT/EN/ES): renderiza PT no servidor (resiliente sem JS) e traz um
-// seletor de idioma que troca todo o conteúdo no cliente — as traduções EN/ES
-// e a UI ficam em src/data/eventoContent.ts. Auto-detecta o idioma do navegador
+// seletor de idioma que troca todo o conteúdo no cliente. A UI fixa e as 3
+// áreas ficam em src/data/eventoContent.ts. Auto-detecta o idioma do navegador
 // e memoriza a escolha do visitante.
 import "../styles/tokens.css";
 import "../styles/base.css";
 import "../styles/fonts.css";
 import barlow800Url from "../assets/fonts/barlow-condensed-800.woff2?url";
 import spaceGroteskUrl from "../assets/fonts/space-grotesk-var.woff2?url";
-import { businessUnits } from "../data/businessUnits";
-import { evento } from "../data/events";
+import { Image } from "astro:assets";
+import { evento, type EventoTexto } from "../data/events";
 import { whatsapp } from "../data/contact";
 import { homeStats } from "../data/stats";
 import { withBase } from "../utils/url";
 import { locales, defaultLocale, type Locale } from "../i18n/config";
-import { eventoUI, eventoUnitsI18n, unitTags } from "../data/eventoContent";
+import { eventoUI, eventoAreas, type EventoUI, type EventoArea } from "../data/eventoContent";
 import ProcMark from "../components/ProcMark.astro";
 
-interface UnitView {
-  color: string;
-  tag: string;
-  name: string;
-  tagline: string;
-  description: string;
-  solutions: string[];
-}
-interface EventoView {
-  langName: string;
-  docTitle: string;
-  metaDescription: string;
-  skipLink: string;
-  eyebrow: string;
-  titulo: string;
-  subtitulo: string;
-  waBtn: string;
-  ghostBtn: string;
-  waMsg: string;
-  waHref: string;
-  solutionsKicker: string;
-  units: UnitView[];
-  proof: { value: string; label: string }[];
-  why: string[];
-  formKicker: string;
-  formTitle: string;
-  fName: string;
-  fPhone: string;
-  fCity: string;
-  fNamePh: string;
-  fPhonePh: string;
-  fCityPh: string;
-  submit: string;
-  submitting: string;
-  sentOk: string;
-  sentFail: string;
-  sentBtn: string;
-  footerFine: string;
-}
+type EventoView = EventoUI &
+  EventoTexto & {
+    waHref: string;
+    areas: EventoArea[];
+    proof: { value: string; label: string }[];
+  };
 
 const statValues = [
   `${homeStats[0].value}${homeStats[0].suffix ?? ""}`,
   `${homeStats[1].value}${homeStats[1].suffix ?? ""}`,
 ];
 
-// PT unit copy vem de businessUnits; EN/ES de eventoUnitsI18n.
-function unitsFor(lang: Locale): UnitView[] {
-  return evento.unidades
-    .map((slug): UnitView | null => {
-      const base = businessUnits.find((u) => u.slug === slug);
-      if (!base) return null;
-      const tag = unitTags[lang][slug] ?? base.shortName;
-      if (lang === "pt") {
-        return { color: base.color, tag, name: base.name, tagline: base.tagline, description: base.description, solutions: base.solutions };
-      }
-      const tr = eventoUnitsI18n[lang][slug];
-      return { color: base.color, tag, name: tr.name, tagline: tr.tagline, description: tr.description, solutions: tr.solutions };
-    })
-    .filter((u): u is UnitView => Boolean(u));
-}
-
-// Hero PT é editável por evento em events.ts; EN/ES vêm de eventoUI.
-const heroPt = {
-  eyebrow: evento.eyebrow,
-  titulo: evento.titulo,
-  subtitulo: evento.subtitulo,
-  waMsg: evento.whatsappMsg || eventoUI.pt.waMsg,
-};
-
-// Com cidade definida em events.ts, o <title> a cita em cada idioma; sem
-// cidade, cai no genérico de eventoUI. O SSR usa o PT; o applyLang troca.
-const cityTitles: Record<Locale, string> = {
-  pt: `Proc em ${evento.cidade}`,
-  en: `Proc in ${evento.cidade}`,
-  es: `Proc en ${evento.cidade}`,
-};
-
+// UI fixa (eventoContent.ts) + textos do evento (events.ts), por idioma.
+// O SSR usa o PT; o applyLang troca no cliente.
 const content = {} as Record<Locale, EventoView>;
 for (const lang of locales) {
   const ui = eventoUI[lang];
-  const hero = lang === "pt" ? heroPt : { eyebrow: ui.eyebrow, titulo: ui.titulo, subtitulo: ui.subtitulo, waMsg: ui.waMsg };
+  const tx = evento.texto[lang];
   content[lang] = {
-    langName: ui.langName,
-    docTitle: evento.cidade ? cityTitles[lang] : ui.docTitle,
-    metaDescription: ui.metaDescription,
-    skipLink: ui.skipLink,
-    eyebrow: hero.eyebrow,
-    titulo: hero.titulo,
-    subtitulo: hero.subtitulo,
-    waBtn: ui.waBtn,
-    ghostBtn: ui.ghostBtn,
-    waMsg: hero.waMsg,
-    waHref: whatsapp(hero.waMsg),
-    solutionsKicker: ui.solutionsKicker,
-    units: unitsFor(lang),
+    ...ui,
+    ...tx,
+    waHref: whatsapp(tx.waMsg),
+    areas: eventoAreas[lang].map((a) => ({ ...a, href: withBase(a.href) })),
     proof: ui.proofLabels.map((label, i) => ({ value: statValues[i], label })),
-    why: [...ui.why],
-    formKicker: ui.formKicker,
-    formTitle: ui.formTitle,
-    fName: ui.fName,
-    fPhone: ui.fPhone,
-    fCity: ui.fCity,
-    fNamePh: ui.fNamePh,
-    fPhonePh: ui.fPhonePh,
-    fCityPh: ui.fCityPh,
-    submit: ui.submit,
-    submitting: ui.submitting,
-    sentOk: ui.sentOk,
-    sentFail: ui.sentFail,
-    sentBtn: ui.sentBtn,
-    footerFine: ui.footerFine,
   };
 }
 
 const d = content[defaultLocale]; // SSR default (pt)
-const formEvent = evento.cidade || "Evento";
+const formEvent = evento.nome || "Evento";
 const pageTitle = d.docTitle;
+const hasDestaque = Boolean(d.destaqueTitulo);
 
 // Card social (WhatsApp/LinkedIn/etc). Esta página monta o próprio <head> (não
 // usa o BaseLayout), então as tags OG vivem aqui. Sem elas o WhatsApp chutava um
@@ -230,20 +145,55 @@ const WA_ICON =
         </div>
       </section>
 
+      <section class="ev-section ev-info">
+        {evento.imagem && (
+          <figure class="ev-figure">
+            <Image src={evento.imagem} alt="" widths={[560, 1120]} sizes="(min-width: 560px) 560px, 100vw" loading="eager" />
+            <figcaption data-t="imagemLegenda">{d.imagemLegenda}</figcaption>
+          </figure>
+        )}
+        <dl class="ev-facts">
+          <div><dt data-t="lblQuando">{d.lblQuando}</dt><dd data-t="quando">{d.quando}</dd></div>
+          {evento.estande && <div><dt data-t="lblEstande">{d.lblEstande}</dt><dd class="ev-booth">{evento.estande}</dd></div>}
+          <div class="ev-facts-wide"><dt data-t="lblOnde">{d.lblOnde}</dt><dd data-t="onde">{d.onde}</dd></div>
+        </dl>
+        {evento.mapsUrl && (
+          <a class="ev-btn ev-btn-ghost ev-btn-sm" href={evento.mapsUrl} rel="noopener" target="_blank" data-t="comoChegar">{d.comoChegar}</a>
+        )}
+        {hasDestaque && (
+          <div class="ev-highlight">
+            <p class="ev-highlight-t" data-t="destaqueTitulo">{d.destaqueTitulo}</p>
+            <p data-t="destaqueTexto">{d.destaqueTexto}</p>
+          </div>
+        )}
+      </section>
+
       <section class="ev-section">
         <h2 class="ev-kicker" data-t="solutionsKicker">{d.solutionsKicker}</h2>
         <div class="ev-solutions" id="ev-solutions">
-          {d.units.map((u) => (
-            <article class="ev-sol" style={`--u: ${u.color}`}>
-              <span class="ev-sol-tag">{u.tag}</span>
-              <h3>{u.name}</h3>
-              <p class="ev-sol-lead">{u.tagline}</p>
-              <p class="ev-sol-desc">{u.description}</p>
+          {d.areas.map((a) => (
+            <article class="ev-sol">
+              <span class="ev-sol-tag">{a.tag}</span>
+              <h3>{a.name}</h3>
+              <p class="ev-sol-lead">{a.tagline}</p>
               <ul class="ev-chips">
-                {u.solutions.map((s) => <li>{s}</li>)}
+                {a.solutions.map((s) => <li>{s}</li>)}
               </ul>
+              <a class="ev-sol-link" href={a.href}>{d.areaLink} →</a>
             </article>
           ))}
+        </div>
+      </section>
+
+      <section class="ev-section">
+        <div class="ev-diag">
+          <p class="ev-kicker" data-t="diagKicker">{d.diagKicker}</p>
+          <h2 class="ev-form-title" data-t="diagTitle">{d.diagTitle}</h2>
+          <p class="ev-diag-text" data-t="diagText">{d.diagText}</p>
+          <div class="ev-actions">
+            <a class="ev-btn ev-btn-primary" href={withBase("/mapa-interativo/#diagnostico")} data-t="diagBtn">{d.diagBtn}</a>
+            <a class="ev-btn ev-btn-ghost" href={withBase("/mapa-interativo/")} data-t="mapaBtn">{d.mapaBtn}</a>
+          </div>
         </div>
       </section>
 
@@ -274,7 +224,7 @@ const WA_ICON =
             <input id="ev-phone" type="tel" name="phone" required autocomplete="tel" inputmode="tel" placeholder={d.fPhonePh} />
           </label>
           <label><span data-t="fCity">{d.fCity}</span>
-            <input id="ev-city" type="text" name="organization" autocomplete="address-level2" placeholder={d.fCityPh} value={evento.cidade} />
+            <input id="ev-city" type="text" name="organization" autocomplete="address-level2" placeholder={d.fCityPh} />
           </label>
           <button type="submit" class="ev-btn ev-btn-primary" data-t="submit">{d.submit}</button>
           <p class="ev-status" data-ev-status role="status" aria-live="polite" hidden></p>
@@ -331,17 +281,17 @@ const WA_ICON =
           });
         }
 
-        function renderUnits(units) {
-          return units
-            .map(function (u) {
-              var chips = u.solutions.map(function (s) { return "<li>" + esc(s) + "</li>"; }).join("");
+        function renderAreas(areas, linkLabel) {
+          return areas
+            .map(function (a) {
+              var chips = a.solutions.map(function (s) { return "<li>" + esc(s) + "</li>"; }).join("");
               return (
-                '<article class="ev-sol" style="--u: ' + esc(u.color) + '">' +
-                '<span class="ev-sol-tag">' + esc(u.tag) + "</span>" +
-                "<h3>" + esc(u.name) + "</h3>" +
-                '<p class="ev-sol-lead">' + esc(u.tagline) + "</p>" +
-                '<p class="ev-sol-desc">' + esc(u.description) + "</p>" +
+                '<article class="ev-sol">' +
+                '<span class="ev-sol-tag">' + esc(a.tag) + "</span>" +
+                "<h3>" + esc(a.name) + "</h3>" +
+                '<p class="ev-sol-lead">' + esc(a.tagline) + "</p>" +
                 '<ul class="ev-chips">' + chips + "</ul>" +
+                '<a class="ev-sol-link" href="' + esc(a.href) + '">' + esc(linkLabel) + " →</a>" +
                 "</article>"
               );
             })
@@ -379,7 +329,7 @@ const WA_ICON =
           });
 
           var sol = document.getElementById("ev-solutions");
-          if (sol) sol.innerHTML = renderUnits(v.units);
+          if (sol) sol.innerHTML = renderAreas(v.areas, v.areaLink);
           var proof = document.getElementById("ev-proof");
           if (proof) proof.innerHTML = renderProof(v.proof);
           var why = document.getElementById("ev-why");
@@ -493,21 +443,34 @@ const WA_ICON =
          saltar h1→h3); font-family/line-height neutralizam o estilo de h2 do base.css. */
       .ev-kicker { font-family: var(--font-sans); font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.14em; line-height: var(--lh-normal); text-transform: uppercase; color: var(--red-400); margin-bottom: var(--space-5); }
 
+      .ev-info { padding-top: 0; display: grid; gap: var(--space-4); }
+      .ev-figure { position: relative; margin: 0; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--color-border); }
+      .ev-figure img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 8; object-fit: cover; object-position: center top; }
+      .ev-figure figcaption { position: absolute; left: 10px; bottom: 10px; font-size: var(--fs-xs); color: rgba(255,255,255,0.85); background: rgba(6,10,20,0.7); padding: 4px 10px; border-radius: var(--radius-pill); }
+      .ev-facts { display: grid; grid-template-columns: minmax(0, 1fr) auto; margin: 0; background: var(--surface-2); border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; }
+      .ev-facts > div { padding: var(--space-4) var(--space-5); }
+      .ev-facts > div + div { border-left: 1px solid var(--color-border); }
+      .ev-facts .ev-facts-wide { grid-column: 1 / -1; border-left: none; border-top: 1px solid var(--color-border); }
+      .ev-facts dt { font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--red-400); }
+      .ev-facts dd { margin: 4px 0 0; font-family: var(--font-display); font-weight: 800; font-size: var(--fs-xl); text-transform: uppercase; color: var(--white); line-height: 1.1; }
+      .ev-facts .ev-facts-wide dd { font-family: var(--font-sans); font-weight: 600; font-size: var(--fs-base); text-transform: none; }
+      .ev-facts dd.ev-booth { font-size: var(--fs-2xl); color: var(--red-400); }
+      .ev-btn-sm { padding: 0.75rem 1.2rem; font-size: var(--fs-sm); }
+      .ev-highlight { background: linear-gradient(135deg, var(--red-tint), transparent 70%), var(--surface-2); border: 1px solid rgba(226,8,29,0.35); border-radius: var(--radius-md); padding: var(--space-5); color: rgba(255,255,255,0.85); font-size: var(--fs-sm); }
+      .ev-highlight-t { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-xl); text-transform: uppercase; color: var(--white); margin-bottom: 4px; }
+
       .ev-solutions { display: grid; gap: var(--space-4); }
-      /* --u é a cor de marca da unidade, e duas das quatro são navy
-         (--navy-900 e --navy-700). Sobre este card, que também é navy, elas
-         mediam 1,03:1 e 1,28:1 — a barra lateral sumia e o texto da etiqueta
-         era literalmente invisível. Clarear a cor devolve o contraste. */
-      .ev-sol { background: var(--surface-2); border: 1px solid var(--color-border); border-left: 4px solid color-mix(in srgb, var(--u), white 36%); border-radius: var(--radius-md); padding: var(--space-6); }
-      /* O texto da etiqueta é branco, não a cor da unidade: clarear --u o
-         suficiente para 4,5:1 deixaria as quatro cores quase iguais entre si,
-         perdendo justamente a codificação que a etiqueta existe para dar. Com
-         texto branco a legibilidade fica garantida e a cor continua presente
-         no fundo do chip e na barra lateral do card. */
-      .ev-sol-tag { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--white); background: color-mix(in srgb, var(--u), transparent 70%); padding: 4px 10px; border-radius: var(--radius-pill); }
+      .ev-sol { background: var(--surface-2); border: 1px solid var(--color-border); border-left: 4px solid var(--red-500); border-radius: var(--radius-md); padding: var(--space-6); }
+      .ev-sol-tag { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--white); background: var(--red-tint); padding: 4px 10px; border-radius: var(--radius-pill); }
       .ev-sol h3 { margin-top: var(--space-3); font-size: var(--fs-xl); color: var(--white); }
       .ev-sol-lead { margin-top: var(--space-1); font-size: var(--fs-sm); font-weight: 600; color: rgba(255,255,255,0.85); }
-      .ev-sol-desc { margin-top: var(--space-3); font-size: var(--fs-sm); color: var(--color-text-muted); line-height: 1.5; }
+      .ev-sol-link { display: inline-block; margin-top: var(--space-5); font-size: var(--fs-sm); font-weight: 700; color: var(--red-400); }
+      .ev-sol-link:focus-visible { outline: 2px solid var(--red-400); outline-offset: 2px; }
+
+      .ev-diag { background: var(--surface-1); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-6); }
+      .ev-diag .ev-form-title { margin-bottom: var(--space-3); }
+      .ev-diag-text { font-size: var(--fs-sm); color: rgba(255,255,255,0.8); }
+      .ev-diag .ev-actions { margin-top: var(--space-5); }
       .ev-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: var(--space-5); }
       .ev-chips li { font-size: var(--fs-xs); font-weight: 600; color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.06); border: 1px solid var(--color-border); padding: 6px 12px; border-radius: var(--radius-pill); }
 

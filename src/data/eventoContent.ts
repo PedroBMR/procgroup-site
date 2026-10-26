@@ -1,26 +1,28 @@
 // Conteúdo trilíngue da landing de evento (/evento), acessada via chaveiro NFC.
 // A landing tem seletor de idioma PT/EN/ES na própria página (não usa rotas /en /es,
-// pois o chaveiro aponta sempre para /evento). O PT dos cards de solução vem de
-// businessUnits.ts; aqui ficam apenas as traduções EN/ES e toda a UI da landing.
+// pois o chaveiro aponta sempre para /evento). O que muda a cada evento fica em
+// src/data/events.ts; aqui ficam a UI fixa da landing e as 3 áreas de negócio.
 import type { Locale } from "../i18n/config";
 
-/** Textos da interface da landing (hero + seções + formulário), por idioma. */
+/** Textos fixos da interface da landing, por idioma. */
 export interface EventoUI {
   langName: string;
-  /** <title> do documento quando events.ts não define cidade (o caso com cidade é montado em evento.astro). */
-  docTitle: string;
-  /** meta[name=description]; também é a og:description do SSR (PT). */
-  metaDescription: string;
   /** Texto do skip link (acessibilidade). */
   skipLink: string;
-  eyebrow: string;
-  titulo: string;
-  subtitulo: string;
   waBtn: string;
   ghostBtn: string;
-  /** Mensagem já preenchida no WhatsApp. */
-  waMsg: string;
+  lblQuando: string;
+  lblOnde: string;
+  lblEstande: string;
+  comoChegar: string;
   solutionsKicker: string;
+  /** Link de cada card de área para a página dela no site (só em PT). */
+  areaLink: string;
+  diagKicker: string;
+  diagTitle: string;
+  diagText: string;
+  diagBtn: string;
+  mapaBtn: string;
   /** Rótulos das provas sociais, na ordem: clientes, anos. */
   proofLabels: [string, string];
   why: [string, string, string];
@@ -40,22 +42,23 @@ export interface EventoUI {
   footerFine: string;
 }
 
-// Hero PT: o texto genérico atual do evento. Para um evento específico, o PT
-// continua editável em src/data/events.ts; ajuste aqui os equivalentes EN/ES.
 export const eventoUI: Record<Locale, EventoUI> = {
   pt: {
     langName: "Português",
-    docTitle: "Proc: Soluções de IA, Segurança e Infraestrutura",
-    metaDescription: "Conheça as soluções da Proc e fale com um especialista.",
     skipLink: "Pular para o conteúdo",
-    eyebrow: "Proc no evento",
-    titulo: "Tecnologia inteligente para proteger, conectar e transformar",
-    subtitulo:
-      "IA, Visão Computacional, Segurança e Infraestrutura de TI com engenharia própria. Conheça as soluções da Proc e fale com um especialista.",
     waBtn: "Falar no WhatsApp",
     ghostBtn: "Deixar meu contato",
-    waMsg: "Olá! Conheci a Proc num evento e quero saber mais sobre as soluções de vocês.",
-    solutionsKicker: "O que a Proc traz para você",
+    lblQuando: "Quando",
+    lblOnde: "Onde",
+    lblEstande: "Estande",
+    comoChegar: "Como chegar",
+    solutionsKicker: "O que a PROC GROUP traz para você",
+    areaLink: "Ver no site",
+    diagKicker: "Diagnóstico gratuito",
+    diagTitle: "Conte o seu desafio",
+    diagText: "Se a PROC conseguir ajudar, você ganha 2 horas de consultoria gratuita com a nossa equipe.",
+    diagBtn: "Quero meu diagnóstico",
+    mapaBtn: "Explorar o mapa interativo",
     proofLabels: ["Clientes atendidos", "Anos de experiência"],
     why: [
       "IA própria: LPR e analytics desenvolvidos pela Proc.",
@@ -79,17 +82,20 @@ export const eventoUI: Record<Locale, EventoUI> = {
   },
   en: {
     langName: "English",
-    docTitle: "Proc: AI, Security and IT Infrastructure Solutions",
-    metaDescription: "Explore Proc's solutions and talk to a specialist.",
     skipLink: "Skip to content",
-    eyebrow: "Proc at the event",
-    titulo: "Intelligent technology to protect, connect, and transform",
-    subtitulo:
-      "AI, Computer Vision, Security and IT Infrastructure built by our own engineering. Explore Proc's solutions and talk to a specialist.",
     waBtn: "Chat on WhatsApp",
     ghostBtn: "Leave my contact",
-    waMsg: "Hi! I met Proc at an event and I'd like to know more about your solutions.",
-    solutionsKicker: "What Proc brings to you",
+    lblQuando: "When",
+    lblOnde: "Where",
+    lblEstande: "Booth",
+    comoChegar: "Get directions",
+    solutionsKicker: "What PROC GROUP brings to you",
+    areaLink: "See on our site (PT)",
+    diagKicker: "Free assessment",
+    diagTitle: "Tell us your challenge",
+    diagText: "If PROC can help, you get 2 hours of free consulting with our team.",
+    diagBtn: "Get my assessment",
+    mapaBtn: "Explore the interactive map",
     proofLabels: ["Clients served", "Years of experience"],
     why: [
       "In-house AI: LPR and analytics built by Proc.",
@@ -113,17 +119,20 @@ export const eventoUI: Record<Locale, EventoUI> = {
   },
   es: {
     langName: "Español",
-    docTitle: "Proc: Soluciones de IA, Seguridad e Infraestructura",
-    metaDescription: "Conoce las soluciones de Proc y habla con un especialista.",
     skipLink: "Saltar al contenido",
-    eyebrow: "Proc en el evento",
-    titulo: "Tecnología inteligente para proteger, conectar y transformar",
-    subtitulo:
-      "IA, Visión Artificial, Seguridad e Infraestructura de TI con ingeniería propia. Conoce las soluciones de Proc y habla con un especialista.",
     waBtn: "Hablar por WhatsApp",
     ghostBtn: "Dejar mi contacto",
-    waMsg: "¡Hola! Conocí a Proc en un evento y quiero saber más sobre sus soluciones.",
-    solutionsKicker: "Lo que Proc trae para ti",
+    lblQuando: "Cuándo",
+    lblOnde: "Dónde",
+    lblEstande: "Stand",
+    comoChegar: "Cómo llegar",
+    solutionsKicker: "Lo que PROC GROUP trae para ti",
+    areaLink: "Ver en el sitio (PT)",
+    diagKicker: "Diagnóstico gratuito",
+    diagTitle: "Cuéntanos tu desafío",
+    diagText: "Si PROC puede ayudar, recibes 2 horas de consultoría gratuita con nuestro equipo.",
+    diagBtn: "Quiero mi diagnóstico",
+    mapaBtn: "Explorar el mapa interactivo",
     proofLabels: ["Clientes atendidos", "Años de experiencia"],
     why: [
       "IA propia: LPR y analytics desarrollados por Proc.",
@@ -147,136 +156,91 @@ export const eventoUI: Record<Locale, EventoUI> = {
   },
 };
 
-/** Tag curta (badge) de cada unidade, por idioma. */
-export const unitTags: Record<Locale, Record<string, string>> = {
-  pt: {
-    "ambientes-inteligentes": "Ambientes",
-    "infraestrutura-de-ti": "Infra TI",
-    "ia-industrial": "Indústria",
-  },
-  en: {
-    "ambientes-inteligentes": "Environments",
-    "infraestrutura-de-ti": "IT Infra",
-    "ia-industrial": "Industry",
-  },
-  es: {
-    "ambientes-inteligentes": "Ambientes",
-    "infraestrutura-de-ti": "Infra TI",
-    "ia-industrial": "Industria",
-  },
-};
-
-/** Copy EN/ES dos cards de solução (o PT vem de businessUnits.ts). */
-export interface UnitI18n {
+/** Card de área de negócio na landing. */
+export interface EventoArea {
+  tag: string;
   name: string;
   tagline: string;
-  description: string;
   solutions: string[];
+  /** Página da área no site (as três só existem em PT). */
+  href: string;
 }
 
-export const eventoUnitsI18n: Record<"en" | "es", Record<string, UnitI18n>> = {
-  en: {
-    "ambientes-inteligentes": {
-      name: "Smart Environments",
-      tagline: "Intelligent protection for businesses and industries",
-      description:
-        "AI-powered video surveillance, access control and alarm management to protect assets, people and corporate operations, with the platform running 24x7 and alerting your team.",
-      solutions: [
-        "AI Video Surveillance",
-        "Contactless Access Control",
-        "Visitor Management",
-        "Perimeter Monitoring",
-        "Alarm Management",
-        "Access Audit",
-        "Parking LPR",
-        "Analytics",
-      ],
+// As 3 áreas do site publicado (2026-10-21). Vocabulário tirado das páginas de cada área.
+const HREF = {
+  infra: "/infraestrutura-de-ti/",
+  nuvem: "/hospedagem-em-nuvem/",
+  visao: "/visao-computacional/",
+};
+
+export const eventoAreas: Record<Locale, EventoArea[]> = {
+  pt: [
+    {
+      tag: "Infra TI",
+      name: "Infraestrutura de TI",
+      tagline: "Sustentação e governança para empresas que não podem parar",
+      solutions: ["Sustentação de ambientes", "Backup em nuvem", "Firewall corporativo", "Antivírus corporativo", "Suporte técnico 24/7", "Checklist de abertura de lojas"],
+      href: HREF.infra,
     },
-    "infraestrutura-de-ti": {
+    {
+      tag: "Nuvem",
+      name: "Hospedagem em Nuvem",
+      tagline: "Sistemas, ERPs e aplicações hospedados com gestão completa",
+      solutions: ["Proc Cloud em Pato Branco", "Oracle Cloud Infrastructure", "Hospedagem de ERP", "Escalabilidade", "Monitoramento e suporte 24/7"],
+      href: HREF.nuvem,
+    },
+    {
+      tag: "Visão",
+      name: "Visão Computacional e Vídeo Analytics",
+      tagline: "A Plataforma Proc transforma imagens de câmera em dados, indicadores e alertas",
+      solutions: ["Fluxo de pessoas e veículos", "Controle de produção", "Inspeção de qualidade", "Estoque e expedição", "Alertas inteligentes"],
+      href: HREF.visao,
+    },
+  ],
+  en: [
+    {
+      tag: "IT Infra",
       name: "IT Infrastructure",
-      tagline: "High availability for mission-critical operations",
-      description:
-        "Cloud, backup, NOC and infrastructure governance for companies that need operational continuity, data security and performance at scale.",
-      solutions: [
-        "Cloud",
-        "Backup",
-        "NOC",
-        "Monitoring",
-        "Firewall",
-        "Service Desk",
-        "Governance",
-        "Infrastructure",
-        "Database",
-        "Virtualization",
-      ],
+      tagline: "Support and governance for companies that can't stop",
+      solutions: ["Environment support", "Cloud backup", "Corporate firewall", "Corporate antivirus", "24/7 technical support", "Store opening checklist"],
+      href: HREF.infra,
     },
-    "ia-industrial": {
-      name: "Industrial AI",
-      tagline: "Computer vision for Industry 4.0",
-      description:
-        "Automated visual inspection, quality control and traceability with Edge AI, reducing losses and boosting production-line efficiency.",
-      solutions: [
-        "Quality Control",
-        "Visual Inspection",
-        "Counting",
-        "OCR",
-        "Traceability",
-        "Analytics",
-        "Edge AI",
-        "Defect Detection",
-      ],
+    {
+      tag: "Cloud",
+      name: "Cloud Hosting",
+      tagline: "Systems, ERPs and applications hosted with full management",
+      solutions: ["Proc Cloud in Pato Branco", "Oracle Cloud Infrastructure", "ERP hosting", "Scalability", "24/7 monitoring and support"],
+      href: HREF.nuvem,
     },
-  },
-  es: {
-    "ambientes-inteligentes": {
-      name: "Ambientes Inteligentes",
-      tagline: "Protección inteligente para empresas e industrias",
-      description:
-        "Soluciones de videovigilancia con IA, control de acceso y gestión de alarmas para proteger patrimonio, personas y operaciones corporativas, con la plataforma operando 24x7 y alertando a tu equipo.",
-      solutions: [
-        "Videovigilancia con IA",
-        "Control de Acceso sin Contacto",
-        "Control de Visitantes",
-        "Monitoreo Perimetral",
-        "Gestión de Alarmas",
-        "Auditoría de Acceso",
-        "LPR para Estacionamientos",
-        "Analytics",
-      ],
+    {
+      tag: "Vision",
+      name: "Computer Vision and Video Analytics",
+      tagline: "The Proc Platform turns camera images into data, metrics and alerts",
+      solutions: ["People and vehicle flow", "Production control", "Quality inspection", "Inventory and shipping", "Smart alerts"],
+      href: HREF.visao,
     },
-    "infraestrutura-de-ti": {
+  ],
+  es: [
+    {
+      tag: "Infra TI",
       name: "Infraestructura de TI",
-      tagline: "Alta disponibilidad para operaciones críticas",
-      description:
-        "Cloud, backup, NOC y gobernanza de infraestructura para empresas que necesitan continuidad operativa, seguridad de datos y rendimiento a escala.",
-      solutions: [
-        "Cloud",
-        "Backup",
-        "NOC",
-        "Monitoreo",
-        "Firewall",
-        "Service Desk",
-        "Gobernanza",
-        "Infraestructura",
-        "Base de Datos",
-        "Virtualización",
-      ],
+      tagline: "Soporte y gobernanza para empresas que no pueden parar",
+      solutions: ["Soporte de entornos", "Backup en la nube", "Firewall corporativo", "Antivirus corporativo", "Soporte técnico 24/7", "Checklist de apertura de tiendas"],
+      href: HREF.infra,
     },
-    "ia-industrial": {
-      name: "IA Industrial",
-      tagline: "Visión artificial para la industria 4.0",
-      description:
-        "Inspección visual automatizada, control de calidad y trazabilidad con Edge AI, reduciendo pérdidas y aumentando la eficiencia de las líneas de producción.",
-      solutions: [
-        "Control de Calidad",
-        "Inspección Visual",
-        "Conteo",
-        "OCR",
-        "Trazabilidad",
-        "Analytics",
-        "Edge AI",
-        "Detección de Defectos",
-      ],
+    {
+      tag: "Nube",
+      name: "Hosting en la Nube",
+      tagline: "Sistemas, ERPs y aplicaciones alojados con gestión completa",
+      solutions: ["Proc Cloud en Pato Branco", "Oracle Cloud Infrastructure", "Hosting de ERP", "Escalabilidad", "Monitoreo y soporte 24/7"],
+      href: HREF.nuvem,
     },
-  },
+    {
+      tag: "Visión",
+      name: "Visión Artificial y Video Analytics",
+      tagline: "La Plataforma Proc transforma imágenes de cámara en datos, indicadores y alertas",
+      solutions: ["Flujo de personas y vehículos", "Control de producción", "Inspección de calidad", "Inventario y expedición", "Alertas inteligentes"],
+      href: HREF.visao,
+    },
+  ],
 };
