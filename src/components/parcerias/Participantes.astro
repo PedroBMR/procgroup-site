@@ -1,0 +1,142 @@
+---
+/**
+ * "Quem pode participar?": os dois parágrafos e o "Pode ser:" como uma órbita.
+ * A marca da Proc no centro e os perfis em volta, numa elipse, cada um com
+ * um ícone e ligado ao centro por um raio por onde passam dados em loop. O
+ * último item ("Ou qualquer pessoa que conheça uma empresa...") fecha a
+ * órbita por baixo, em faixa larga: é o que abre o programa para todo mundo.
+ *
+ * Abaixo de 900px a elipse não cabe com nomes legíveis e vira uma nuvem de
+ * etiquetas. Continua uma lista só, na ordem do documento.
+ *
+ * Texto: titulo, paragrafos, itensTitulo e itens do bloco, sem alteração.
+ */
+import MenuIcon from "../MenuIcon.astro";
+import { withBase } from "../../utils/url";
+import type { Bloco } from "../../data/preview/blocos";
+import type { NomeIconeMenu } from "../../data/iconesMenu";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+const itens = bloco.itens ?? [];
+const orbita = itens.slice(0, -1);
+const ultimo = itens.at(-1);
+const ICONES: NomeIconeMenu[] = ["computador", "conversa", "predio", "grafico", "engrenagem", "parceria", "cliente", "pessoas"];
+
+const W = 900;
+const H = 380;
+const pos = (k: number) => {
+  const a = -Math.PI / 2 + (k * 2 * Math.PI) / orbita.length;
+  return [W / 2 + Math.cos(a) * 320, H / 2 + Math.sin(a) * 150];
+};
+---
+
+<section class="ap-secao participantes" data-cena>
+  <div class="container">
+    <div class="ap-cabeca">
+      {bloco.titulo && <h2 class="ap-entra">{bloco.titulo}</h2>}
+      {bloco.paragrafos?.map((p, i) => <p class:list={["ap-p ap-entra", { forte: i === 1 }]} style={`--i:${i + 1}`}>{p}</p>)}
+    </div>
+
+    {bloco.itensTitulo && <p class="pc-titulo-lista titulo ap-entra" style="--i:3">{bloco.itensTitulo}</p>}
+    <div class="orbita" style={`--n:${orbita.length}`}>
+      <svg viewBox={`0 0 ${W} ${H}`} aria-hidden="true">
+        <ellipse class="ap-traco anel" cx={W / 2} cy={H / 2} rx="320" ry="150" pathLength="1" style="--o:0.2" />
+        {orbita.map((_, k) => {
+          const [x, y] = pos(k);
+          return <path class="ap-traco raio" d={`M${W / 2} ${H / 2} L${x} ${y}`} pathLength="1" style={`--o:${(0.5 + k * 0.08).toFixed(2)}`} />;
+        })}
+        {orbita.map((_, k) => {
+          const [x, y] = pos(k);
+          return <path class="ap-fluxo" d={`M${x} ${y} L${W / 2} ${H / 2}`} pathLength="1" style={`--k:${k}; --dur:2.8s`} />;
+        })}
+        <circle class="disco" cx={W / 2} cy={H / 2} r="46" />
+      </svg>
+      <img class="marca" src={withBase("/brand/logo-white.png")} alt="" width="234" height="74" loading="lazy" decoding="async" />
+      <ul class="perfis">
+        {orbita.map((it, k) => {
+          const [x, y] = pos(k);
+          return (
+            <li class="perfil" style={`--x:${((x / W) * 100).toFixed(2)}%; --y:${(y / W).toFixed(4)}; --k:${k}`}>
+              <MenuIcon nome={ICONES[k] ?? "pessoas"} />
+              <span>{it}</span>
+            </li>
+          );
+        })}
+        {ultimo && <li class="perfil todos" style={`--k:${orbita.length}`}><MenuIcon nome="globo" /><span>{ultimo}</span></li>}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .forte { color: var(--color-text); font-weight: 600; }
+  .titulo { margin-top: var(--space-12); text-align: center; text-transform: uppercase; letter-spacing: 0.08em; }
+
+  /* Posições em fração da largura (cqw): a faixa larga embaixo não mexe nelas. */
+  .orbita { position: relative; margin-top: var(--space-4); container-type: inline-size; }
+  .orbita svg { display: block; width: 100%; height: auto; overflow: visible; fill: none; }
+  .anel { stroke: rgba(230, 238, 248, 0.16); stroke-width: 1.2; }
+  .raio { stroke: rgba(96, 165, 250, 0.35); stroke-width: 1.2; }
+  .disco { fill: var(--navy-950); stroke: var(--red-500); stroke-width: 2; }
+  .marca { position: absolute; left: 50%; top: calc(190 / 900 * 100cqw); width: 84px; height: auto; transform: translate(-50%, -50%); }
+
+  .perfis { list-style: none; margin: 0; padding: 0; }
+  .perfil {
+    position: absolute;
+    left: var(--x);
+    top: calc(var(--y) * 100cqw);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 10px 16px;
+    border-radius: var(--radius-pill);
+    background: var(--navy-900);
+    border: 1px solid rgba(230, 238, 248, 0.2);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-text);
+    white-space: nowrap;
+    transform: translate(-50%, -50%) scale(0.9);
+    opacity: 0;
+    transition: opacity 0.4s ease calc(0.7s + var(--k) * 0.12s), transform 0.5s var(--ease-out) calc(0.7s + var(--k) * 0.12s), border-color 0.3s ease;
+  }
+  .perfil :global(.menu-icon) { flex: none; width: 18px; height: 18px; color: var(--red-400); }
+  .em-cena .perfil { opacity: 1; transform: translate(-50%, -50%); }
+  .perfil:hover { border-color: var(--red-500); }
+  .todos {
+    position: relative;
+    left: auto;
+    top: auto;
+    display: flex;
+    justify-content: center;
+    max-width: 640px;
+    margin: var(--space-10, 2.5rem) auto 0;
+    padding: var(--space-4) var(--space-6);
+    border-radius: var(--radius-md);
+    border-color: var(--red-500);
+    white-space: normal;
+    text-align: left;
+    font-size: var(--fs-base);
+    transform: translateY(12px);
+  }
+  .em-cena .todos { transform: none; }
+
+  @media (max-width: 900px) {
+    .orbita svg, .marca { display: none; }
+    .perfis { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-3); }
+    .perfil { position: relative; left: auto; top: auto; transform: translateY(10px); white-space: normal; }
+    .em-cena .perfil { transform: none; }
+    .todos { flex-basis: 100%; margin-top: var(--space-3); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .perfil { transition: none; opacity: 1; }
+    .orbita .perfil:not(.todos) { transform: translate(-50%, -50%); }
+    .todos { transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) and (max-width: 900px) {
+    .orbita .perfil:not(.todos) { transform: none; }
+  }
+</style>

@@ -25,7 +25,9 @@ export function montarCenas() {
         io.unobserve(e.target);
       }
     },
-    { threshold: 0.25 },
+    // Entra quando o topo passa de 75% da tela. threshold: 0.25 deixava
+    // invisível no celular toda seção com mais de 4 telas de altura.
+    { rootMargin: "0px 0px -25% 0px" },
   );
   cenas.forEach((c) => io.observe(c));
 }

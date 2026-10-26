@@ -1,0 +1,107 @@
+---
+/**
+ * Primeiro bloco: os dois parágrafos, o fecho "Encontre o modelo de parceria
+ * que mais combina com você." e os três modelos como cartões-link (#indicacao,
+ * #software, #tecnicos).
+ *
+ * Acima dos cartões, um tronco que nasce do centro e se abre em três ramos,
+ * um para cada cartão: três caminhos que saem do mesmo lugar. Os ramos se
+ * desenham uma vez e depois dados descem por eles em loop. Cada cartão tem o
+ * ícone do modelo.
+ *
+ * Texto: paragrafos, fecho e cards do bloco, sem alteração.
+ */
+import MenuIcon from "../MenuIcon.astro";
+import { withBase } from "../../utils/url";
+import type { Bloco } from "../../data/preview/blocos";
+import type { NomeIconeMenu } from "../../data/iconesMenu";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+const cards = bloco.cards ?? [];
+const ICONES: NomeIconeMenu[] = ["parceria", "nuvem", "capacete"];
+const L = (href: string) => (href.startsWith("#") || href.startsWith("http") ? href : withBase(href));
+// Ramos de um viewBox 900 x 120: do centro do alto até o centro de cada coluna.
+const xs = cards.map((_, k) => (900 / cards.length) * (k + 0.5));
+const ramo = (x: number) => `M450 0 V24 C450 90 ${x} 40 ${x} 120`;
+---
+
+<section class="ap-secao modelos" data-theme="light" data-cena>
+  <div class="container">
+    <div class="topo">
+      {bloco.paragrafos?.map((p, i) => <p class:list={["ap-entra", { primeiro: i === 0 }]} style={`--i:${i}`}>{p}</p>)}
+    </div>
+    {bloco.fecho?.map((p) => <p class="ap-fecho chamada ap-entra" style="--i:2">{p}</p>)}
+
+    <div class="ramos" aria-hidden="true">
+      <svg viewBox="0 0 900 120" preserveAspectRatio="none">
+        {xs.map((x, k) => <path class="ap-traco ramo" d={ramo(x)} pathLength="1" style={`--o:${(0.3 + k * 0.15).toFixed(2)}`} vector-effect="non-scaling-stroke" />)}
+        {xs.map((x, k) => <path class="ap-fluxo" d={ramo(x)} pathLength="1" style={`--k:${k}; --dur:2.4s`} vector-effect="non-scaling-stroke" />)}
+      </svg>
+    </div>
+
+    <ul class="cartoes">
+      {cards.map((c, k) => (
+        <li class="ap-entra" style={`--i:${k + 3}`}>
+          <a class="cartao" href={c.href ? L(c.href) : undefined}>
+            <span class="pc-no ativo"><MenuIcon nome={ICONES[k] ?? "parceria"} /></span>
+            <span class="cartao-titulo">{c.titulo}</span>
+            <span class="seta" aria-hidden="true"><MenuIcon nome="seta" /></span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .topo { display: grid; grid-template-columns: 1fr 1.3fr; gap: var(--space-8); align-items: start; }
+  .topo p { font-size: var(--fs-base); line-height: 1.7; color: var(--color-text-muted); }
+  .topo .primeiro { font-size: var(--fs-xl); line-height: 1.45; font-weight: 600; color: var(--color-text); }
+  .chamada { margin-top: var(--space-12); text-align: center; }
+
+  .ramos { height: 90px; margin-top: var(--space-6); }
+  .ramos svg { display: block; width: 100%; height: 100%; fill: none; overflow: visible; }
+  .ramo { stroke: var(--navy-700); stroke-width: 2; }
+
+  .cartoes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); }
+  .cartao {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-4);
+    height: 100%;
+    padding: var(--space-8) var(--space-6);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 18px 40px -30px rgba(11, 23, 48, 0.35);
+    text-align: center;
+    color: var(--color-text);
+    text-decoration: none;
+    transition: transform var(--dur-fast) var(--ease-out), border-color var(--dur-fast) ease;
+  }
+  .cartao:hover { transform: translateY(-4px); border-color: var(--red-600); }
+  .cartao:focus-visible { outline: 2px solid var(--red-600); outline-offset: 3px; }
+  .cartao .pc-no { width: 64px; height: 64px; }
+  .cartao-titulo { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-lg); text-transform: uppercase; line-height: var(--lh-snug); }
+  .seta { color: var(--red-600); transition: transform var(--dur-fast) var(--ease-out); }
+  .seta :global(.menu-icon) { width: 22px; height: 22px; transform: rotate(90deg); }
+  .cartao:hover .seta { transform: translateY(3px); }
+
+  @media (max-width: 900px) {
+    .topo { grid-template-columns: 1fr; gap: var(--space-4); }
+  }
+  /* Celular: os três ramos não se separam o bastante. Os cartões empilham e o
+     tronco vira uma linha ao lado deles. */
+  @media (max-width: 720px) {
+    .ramos { display: none; }
+    .cartoes { grid-template-columns: 1fr; margin-top: var(--space-8); }
+    .cartao { grid-template-columns: auto 1fr auto; justify-items: start; align-items: center; text-align: left; padding: var(--space-5); }
+    .cartao .pc-no { width: 52px; height: 52px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cartao, .seta { transition: none; }
+  }
+</style>

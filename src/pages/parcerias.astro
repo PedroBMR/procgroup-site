@@ -4,9 +4,73 @@
  * "Ajustes no site" (páginas 32 a 40). Fora do site publicado, sem nada de
  * preview na tela. Conteúdo em src/data/preview/paginas/parcerias.ts, onde
  * estão também os dois travamentos do programa de indicação (R2 e R4).
+ *
+ * Redesign de 2026-10-26: saiu do molde genérico (PaginaPreview + Secoes)
+ * para seções próprias em src/components/parcerias/, no padrão da A Proc, de
+ * Infraestrutura de TI e de Hospedagem em Nuvem (src/styles/aproc.css e
+ * src/scripts/aprocCenas.ts). O texto continua vindo inteiro do mesmo
+ * arquivo de dados, na mesma ordem.
+ *
+ * Âncoras do menu: #indicacao, #software e #tecnicos, nas seções de mesmo
+ * nome.
+ *
+ * Formulários: mesmo comportamento de antes. O bloco deles passa por Secoes,
+ * que só o desenha quando FORMULARIOS_NO_AR for true
+ * (src/components/preview/formularios.ts); hoje não aparece nada.
+ *
+ * A ordem dos blocos em parcerias.ts é a ordem do documento. Se ela mudar
+ * lá, a lista abaixo muda junto.
  */
-import PaginaPreview from "../components/preview/PaginaPreview.astro";
+import "../styles/aproc.css";
+import "../components/parcerias/parcerias.css";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Secoes from "../components/preview/Secoes.astro";
+import { navPreview } from "../data/preview/ajustes";
 import { parcerias } from "../data/preview/paginas/parcerias";
+import Hero from "../components/parcerias/Hero.astro";
+import Modelos from "../components/parcerias/Modelos.astro";
+import Indicacao from "../components/parcerias/Indicacao.astro";
+import ComoFunciona from "../components/parcerias/ComoFunciona.astro";
+import Participantes from "../components/parcerias/Participantes.astro";
+import Regras from "../components/parcerias/Regras.astro";
+import Acompanhamento from "../components/parcerias/Acompanhamento.astro";
+import Software from "../components/parcerias/Software.astro";
+import Servicos from "../components/parcerias/Servicos.astro";
+import Valor from "../components/parcerias/Valor.astro";
+import Escala from "../components/parcerias/Escala.astro";
+import Tecnicos from "../components/parcerias/Tecnicos.astro";
+import Demandas from "../components/parcerias/Demandas.astro";
+import Contrario from "../components/parcerias/Contrario.astro";
+import Bonificacao from "../components/parcerias/Bonificacao.astro";
+import Manifesto from "../components/parcerias/Manifesto.astro";
+
+const [
+  intro, indicacao, como, quem, regras, acompanha, software, servicos,
+  valor, escala, tecnicos, demandas, contrario, bonificacao, manifesto, formularios,
+] = parcerias.blocos;
 ---
 
-<PaginaPreview pagina={parcerias} title="Seja um Parceiro da Proc" description="Indicação de oportunidades, parceria com desenvolvedores de software e parceria com profissionais técnicos." />
+<BaseLayout title="Seja um Parceiro da Proc" description="Indicação de oportunidades, parceria com desenvolvedores de software e parceria com profissionais técnicos." nav={navPreview()}>
+  <Hero hero={parcerias.hero} />
+  <Modelos bloco={intro} />
+  <Indicacao bloco={indicacao} />
+  <ComoFunciona bloco={como} />
+  <Participantes bloco={quem} />
+  <Regras bloco={regras} />
+  <Acompanhamento bloco={acompanha} />
+  <Software bloco={software} />
+  <Servicos bloco={servicos} />
+  <Valor bloco={valor} />
+  <Escala bloco={escala} />
+  <Tecnicos bloco={tecnicos} />
+  <Demandas bloco={demandas} />
+  <Contrario bloco={contrario} />
+  <Bonificacao bloco={bonificacao} />
+  <Manifesto bloco={manifesto} />
+  <Secoes blocos={[formularios]} />
+</BaseLayout>
+
+<script>
+  import { montarCenas } from "../scripts/aprocCenas";
+  montarCenas();
+</script>

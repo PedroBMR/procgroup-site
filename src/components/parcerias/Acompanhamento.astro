@@ -1,0 +1,90 @@
+---
+/**
+ * "Como acompanhamos sua indicação": as sete etapas (Indicação a Fechamento)
+ * como um trilho horizontal. Cada etapa é um nó com ícone e o nome dela; os
+ * nós acendem um a um na entrada, e depois um pulso percorre o trilho em loop
+ * até o Fechamento, que fica em destaque. No celular o trilho fica vertical.
+ *
+ * Texto: titulo, paragrafos, fluxo e depois do bloco, sem alteração.
+ */
+import MenuIcon from "../MenuIcon.astro";
+import type { Bloco } from "../../data/preview/blocos";
+import type { NomeIconeMenu } from "../../data/iconesMenu";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+const etapas = bloco.fluxo ?? [];
+const ICONES: NomeIconeMenu[] = ["sino", "checklist", "conversa", "pessoas", "arquivo", "parceria", "selo"];
+---
+
+<section class="ap-secao escura acompanha" data-cena>
+  <div class="container">
+    <div class="ap-cabeca">
+      {bloco.titulo && <h2 class="ap-entra">{bloco.titulo}</h2>}
+      {bloco.paragrafos?.map((p, i) => <p class="ap-p ap-entra" style={`--i:${i + 1}`}>{p}</p>)}
+    </div>
+
+    <ol class="trilho" style={`--n:${etapas.length}`}>
+      {etapas.map((nome, k) => (
+        <li class="etapa" style={`--k:${k}`}>
+          <span class:list={["pc-no", { ativo: k === etapas.length - 1 }]}><MenuIcon nome={ICONES[k] ?? "modulos"} /></span>
+          <span class="nome">{nome}</span>
+        </li>
+      ))}
+    </ol>
+
+    {bloco.depois?.map((p) => <p class="depois ap-entra" style="--i:3">{p}</p>)}
+  </div>
+</section>
+
+<style>
+  .trilho {
+    position: relative;
+    list-style: none;
+    margin: var(--space-16) 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+    gap: var(--space-2);
+  }
+  /* Trilho: do centro do primeiro nó ao centro do último. */
+  .trilho::before, .trilho::after {
+    content: "";
+    position: absolute;
+    top: 32px;
+    left: calc(100% / var(--n) / 2);
+    right: calc(100% / var(--n) / 2);
+    height: 2px;
+  }
+  .trilho::before { background: rgba(230, 238, 248, 0.2); }
+  .trilho::after {
+    background: linear-gradient(90deg, transparent 0 46%, var(--red-500) 48% 52%, transparent 54%) 0 0 / 300% 100%;
+    filter: drop-shadow(0 0 4px rgba(226, 8, 29, 0.7));
+    opacity: 0;
+  }
+  .em-cena .trilho::after { opacity: 1; animation: pc-corre 4s linear 3s infinite; }
+  @keyframes pc-corre { from { background-position: 100% 0; } to { background-position: 0 0; } }
+
+  .etapa { position: relative; display: grid; justify-items: center; gap: var(--space-3); text-align: center; opacity: 0.25; transition: opacity 0.4s ease calc(0.5s + var(--k) * 0.3s); }
+  .em-cena .etapa { opacity: 1; }
+  .etapa .pc-no { width: 64px; height: 64px; }
+  .etapa .pc-no :global(.menu-icon) { width: 28px; height: 28px; }
+  .nome { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-base); text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-text); overflow-wrap: anywhere; }
+  .etapa:last-child .nome { color: var(--white); }
+
+  .depois { max-width: 78ch; margin-top: var(--space-12); font-size: var(--fs-base); line-height: 1.7; color: rgba(230, 238, 248, 0.78); }
+
+  @media (max-width: 860px) {
+    .trilho { grid-template-columns: 1fr; gap: var(--space-4); margin-top: var(--space-10, 2.5rem); }
+    .trilho::before, .trilho::after { top: 32px; bottom: 32px; left: 31px; right: auto; width: 2px; height: auto; }
+    .trilho::after { background: linear-gradient(180deg, transparent 0 46%, var(--red-500) 48% 52%, transparent 54%) 0 0 / 100% 300%; }
+    @keyframes pc-corre { from { background-position: 0 100%; } to { background-position: 0 0; } }
+    .etapa { grid-template-columns: 64px 1fr; justify-items: start; align-items: center; gap: var(--space-4); text-align: left; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .etapa { transition: none; opacity: 1; }
+    .em-cena .trilho::after { animation: none; opacity: 0; }
+  }
+</style>

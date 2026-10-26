@@ -1,0 +1,99 @@
+---
+/**
+ * "Ambiente escalável com rapidez e segurança": os dois parágrafos e, ao
+ * lado, a infraestrutura que acompanha o crescimento. Quatro colunas de
+ * servidores que ganham módulos em loop, devagar, enquanto uma curva sobe por
+ * cima delas: mais clientes, mais usuários, mais capacidade.
+ *
+ * As duas frases do fecho ficam lado a lado, separadas por uma linha: o que
+ * fica com o parceiro e o que fica com a Proc.
+ *
+ * Texto: titulo, paragrafos e fecho do bloco, sem alteração.
+ */
+import type { Bloco } from "../../data/preview/blocos";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+// Módulos por coluna, da menor para a maior.
+const COLUNAS = [3, 4, 5, 6];
+const curva = "M10 150 C80 140 120 110 170 90 S270 30 330 14";
+---
+
+<section class="ap-secao escura escala" data-cena>
+  <div class="container grade">
+    <div class="ap-cabeca">
+      {bloco.titulo && <h2 class="ap-entra">{bloco.titulo}</h2>}
+      {bloco.paragrafos?.map((p, i) => <p class:list={["ap-p ap-entra", { primeiro: i === 0 }]} style={`--i:${i + 1}`}>{p}</p>)}
+    </div>
+
+    <div class="racks" aria-hidden="true">
+      <div class="colunas">
+        {COLUNAS.map((n, c) => (
+          <div class="coluna">
+            {Array.from({ length: n }, (_, m) => <span style={`--m:${m}; --c:${c}`}></span>)}
+          </div>
+        ))}
+      </div>
+      <svg viewBox="0 0 340 160" preserveAspectRatio="none">
+        <path class="ap-traco curva" d={curva} pathLength="1" style="--o:0.6" vector-effect="non-scaling-stroke" />
+        <path class="ap-fluxo" d={curva} pathLength="1" style="--dur:3.2s; --atraso:2.4s" vector-effect="non-scaling-stroke" />
+      </svg>
+    </div>
+  </div>
+
+  {bloco.fecho && (
+    <div class="container">
+      <div class="fechos">
+        {bloco.fecho.map((p, i) => <p class="ap-fecho ap-entra" style={`--i:${i + 3}`}>{p}</p>)}
+      </div>
+    </div>
+  )}
+</section>
+
+<style>
+  .grade { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: var(--space-12); align-items: center; }
+  .primeiro { color: var(--white); font-size: var(--fs-lg); }
+
+  .racks { position: relative; height: 240px; padding: var(--space-6); border-radius: var(--radius-lg); background: var(--navy-900); border: 1px solid rgba(230, 238, 248, 0.12); }
+  .racks svg { position: absolute; inset: var(--space-6); width: calc(100% - 2 * var(--space-6)); height: calc(100% - 2 * var(--space-6)); fill: none; overflow: visible; }
+  .curva { stroke: rgba(96, 165, 250, 0.55); stroke-width: 2; }
+  .colunas { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); align-items: end; height: 100%; }
+  .coluna { display: flex; flex-direction: column-reverse; gap: 6px; }
+  .coluna span {
+    height: 20px;
+    border-radius: 4px;
+    background: rgba(230, 238, 248, 0.08);
+    border: 1px solid rgba(230, 238, 248, 0.3);
+    position: relative;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.35s ease calc(0.4s + (var(--c) * 0.25s) + var(--m) * 0.08s), transform 0.4s var(--ease-out) calc(0.4s + (var(--c) * 0.25s) + var(--m) * 0.08s);
+  }
+  /* Luz de atividade de cada módulo. */
+  .coluna span::after { content: ""; position: absolute; left: 8px; top: 50%; width: 5px; height: 5px; margin-top: -2.5px; border-radius: 50%; background: var(--red-400); opacity: 0.4; }
+  .em-cena .coluna span { opacity: 1; transform: none; }
+  .em-cena .coluna span::after { animation: pc-led 2.6s ease-in-out calc(2s + var(--m) * 0.3s + var(--c) * 0.5s) infinite; }
+  @keyframes pc-led { 50% { opacity: 1; box-shadow: 0 0 6px rgba(255, 74, 84, 0.9); } }
+  /* O módulo do topo de cada coluna entra e sai devagar: a capacidade se ajusta. */
+  .em-cena .coluna span:last-child { animation: pc-ajusta 5s ease-in-out calc(3s + var(--c) * 0.6s) infinite; }
+  @keyframes pc-ajusta { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+
+  .fechos { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-8); margin-top: var(--space-12); padding-top: var(--space-8); border-top: 1px solid rgba(230, 238, 248, 0.14); }
+  .fechos .ap-fecho { margin-top: 0; color: var(--white); }
+  .fechos .ap-fecho + .ap-fecho { padding-left: var(--space-8); border-left: 2px solid var(--red-500); }
+
+  @media (max-width: 900px) {
+    .grade { grid-template-columns: 1fr; gap: var(--space-8); }
+    .racks { height: 200px; }
+  }
+  @media (max-width: 640px) {
+    .fechos { grid-template-columns: 1fr; gap: var(--space-6); }
+    .fechos .ap-fecho + .ap-fecho { padding-left: var(--space-5); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .coluna span { transition: none; opacity: 1; transform: none; }
+    .em-cena .coluna span::after, .em-cena .coluna span:last-child { animation: none; }
+  }
+</style>

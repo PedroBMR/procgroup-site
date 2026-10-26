@@ -1,0 +1,87 @@
+---
+/**
+ * Diagrama do herói de Contato: os dois canais (e-mail e WhatsApp) à
+ * esquerda, ligados por curvas ao especialista Proc à direita (anel
+ * vermelho). Um traço curto vai pelos canais até a Proc e volta (.ap-fluxo),
+ * em loop, depois que a cena entrou.
+ *
+ * Sem palavra nenhuma: decorativo, aria-hidden.
+ */
+import MenuIcon from "../MenuIcon.astro";
+
+const W = 480;
+const H = 320;
+const CANAIS = [
+  { icone: "envelope", x: 92, y: 88 },
+  { icone: "conversa", x: 92, y: 232 },
+] as const;
+const PROC = { x: 380, y: 160 };
+const ida = (x: number, y: number) => `M${x} ${y} C${x + 150} ${y} ${PROC.x - 150} ${PROC.y} ${PROC.x} ${PROC.y}`;
+const volta = (x: number, y: number) => `M${PROC.x} ${PROC.y} C${PROC.x - 150} ${PROC.y} ${x + 150} ${y} ${x} ${y}`;
+const pct = (v: number, t: number) => `${((v / t) * 100).toFixed(1)}%`;
+---
+
+<div class="ligacao" aria-hidden="true">
+  <svg viewBox={`0 0 ${W} ${H}`}>
+    <circle class="ap-traco anel" cx={PROC.x} cy={PROC.y} r="78" pathLength="1" style="--o:1.4" />
+    {CANAIS.map((c, k) => (
+      <path class="ap-traco curva" d={ida(c.x, c.y)} pathLength="1" style={`--o:${(0.4 + k * 0.25).toFixed(2)}`} />
+    ))}
+    {CANAIS.map((c, k) => (
+      <path class="ap-fluxo" d={ida(c.x, c.y)} pathLength="1" style={`--k:${k * 3}; --dur:3s; --atraso:2.4s`} />
+    ))}
+    {CANAIS.map((c, k) => (
+      <path class="ap-fluxo de-volta" d={volta(c.x, c.y)} pathLength="1" style={`--k:${k * 3 + 4}; --dur:3s; --atraso:2.4s`} />
+    ))}
+  </svg>
+
+  {CANAIS.map((c, k) => (
+    <span class="no canal" style={`--x:${pct(c.x, W)}; --y:${pct(c.y, H)}; --k:${k}`}>
+      <MenuIcon nome={c.icone} />
+    </span>
+  ))}
+  <span class="no proc" style={`--x:${pct(PROC.x, W)}; --y:${pct(PROC.y, H)}; --k:2`}>
+    <MenuIcon nome="pessoas" />
+  </span>
+</div>
+
+<style>
+  .ligacao { position: relative; width: 100%; max-width: 520px; aspect-ratio: 480 / 320; margin-inline: auto; }
+  .ligacao svg { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; overflow: visible; }
+  .curva { stroke: rgba(96, 165, 250, 0.5); stroke-width: 1.4; }
+  .anel { stroke: rgba(230, 238, 248, 0.12); stroke-width: 1; }
+  .de-volta { stroke: #93c5fd; filter: drop-shadow(0 0 3px rgba(96, 165, 250, 0.6)); }
+
+  .no {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    display: grid;
+    place-items: center;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    color: #e6eef8;
+    background: var(--navy-900);
+    border: 1px solid rgba(230, 238, 248, 0.25);
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.6);
+    transition:
+      opacity 0.5s ease calc(0.3s + var(--k) * 0.3s),
+      transform 0.6s var(--ease-out) calc(0.3s + var(--k) * 0.3s);
+  }
+  :global(.em-cena) .no { opacity: 1; transform: translate(-50%, -50%); }
+  .canal { width: 18%; border-radius: 22%; }
+  .canal :global(.menu-icon) { width: 44%; height: 44%; }
+  .proc {
+    width: 24%;
+    background: radial-gradient(circle at 50% 35%, var(--navy-700), var(--navy-950));
+    border: 2px solid var(--red-500);
+    color: var(--red-400);
+    box-shadow: 0 0 0 10px rgba(226, 8, 29, 0.08), 0 0 50px rgba(226, 8, 29, 0.25);
+  }
+  .proc :global(.menu-icon) { width: 42%; height: 42%; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .no { transition: none; opacity: 1; transform: translate(-50%, -50%); }
+  }
+</style>

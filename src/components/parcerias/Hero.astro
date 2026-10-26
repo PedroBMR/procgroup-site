@@ -1,0 +1,100 @@
+---
+/**
+ * Herói de Parcerias: texto à esquerda e, à direita, uma rede de parceiros.
+ * A marca da Proc no centro, ligada a nós espalhados em volta (pessoas,
+ * empresas, software, técnicos), e um anel externo de pontos menores: a rede
+ * que cresce. As ligações se desenham uma vez; depois, dados passam em loop
+ * dos nós para o centro e do centro para os nós.
+ *
+ * Só ícones, sem rótulo: nada de texto novo na tela.
+ *
+ * Texto: o hero de parcerias.ts, sem alteração.
+ */
+import { ICONES_MENU, type NomeIconeMenu } from "../../data/iconesMenu";
+import { withBase } from "../../utils/url";
+
+interface Props {
+  hero: { eyebrow: string; titulo: string; lead?: string };
+}
+const { hero } = Astro.props;
+
+const C = 260;
+const NOS: { a: number; r: number; icone: NomeIconeMenu }[] = [
+  { a: -90, r: 160, icone: "pessoas" },
+  { a: -35, r: 170, icone: "codigo" },
+  { a: 15, r: 155, icone: "capacete" },
+  { a: 65, r: 170, icone: "predio" },
+  { a: 120, r: 160, icone: "cliente" },
+  { a: 170, r: 170, icone: "servidores" },
+  { a: 220, r: 158, icone: "conversa" },
+];
+const pos = (a: number, r: number) => {
+  const t = (a * Math.PI) / 180;
+  return [+(C + Math.cos(t) * r).toFixed(1), +(C + Math.sin(t) * r).toFixed(1)];
+};
+const nos = NOS.map((n) => ({ ...n, p: pos(n.a, n.r) }));
+const PONTOS = Array.from({ length: 14 }, (_, k) => pos(k * (360 / 14) + 12, 232 + (k % 3) * 6));
+---
+
+<section class="ap-secao escura hero" data-cena>
+  <div class="container grade">
+    <div class="texto">
+      <p class="eyebrow ap-entra" style="--i:0">{hero.eyebrow}</p>
+      <h1 class="ap-entra" style="--i:1">{hero.titulo}</h1>
+      {hero.lead && <p class="lead ap-entra" style="--i:2">{hero.lead}</p>}
+    </div>
+
+    <div class="rede" aria-hidden="true">
+      <svg viewBox="0 0 520 520">
+        <circle class="ap-traco orbita" cx={C} cy={C} r="232" pathLength="1" style="--o:0.2" />
+        {nos.map((n, k) => (
+          <path class="ap-traco liga" d={`M${C} ${C} L${n.p[0]} ${n.p[1]}`} pathLength="1" style={`--o:${(0.4 + k * 0.12).toFixed(2)}`} />
+        ))}
+        {nos.map((n, k) => (
+          <path class="ap-fluxo" d={k % 2 ? `M${C} ${C} L${n.p[0]} ${n.p[1]}` : `M${n.p[0]} ${n.p[1]} L${C} ${C}`} pathLength="1" style={`--k:${k}; --dur:2.6s; --atraso:2.2s`} />
+        ))}
+        {PONTOS.map((p, k) => <circle class="ponto" cx={p[0]} cy={p[1]} r={k % 3 ? 3 : 4.5} style={`--k:${k}`} />)}
+        {nos.map((n, k) => (
+          <g class="no" style={`--k:${k}`}>
+            <circle cx={n.p[0]} cy={n.p[1]} r="30" />
+            <g transform={`translate(${n.p[0] - 14.4} ${n.p[1] - 14.4}) scale(1.2)`} set:html={ICONES_MENU[n.icone]} />
+          </g>
+        ))}
+        <circle class="centro-anel" cx={C} cy={C} r="62" />
+        <circle class="centro" cx={C} cy={C} r="54" />
+      </svg>
+      <img class="marca" src={withBase("/brand/logo-white.png")} alt="" width="234" height="74" decoding="async" />
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero { padding-block: var(--space-16); }
+  .grade { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr); gap: var(--space-12); align-items: center; }
+  .hero h1 { margin-top: var(--space-5); font-size: clamp(2.1rem, 1.5rem + 2.2vw, 3.5rem); color: var(--white); }
+  .lead { margin-top: var(--space-8); max-width: 46ch; padding-left: var(--space-6); border-left: 2px solid var(--red-500); font-size: var(--fs-lg); line-height: 1.6; color: rgba(230, 238, 248, 0.8); }
+
+  .rede { position: relative; width: 100%; max-width: 520px; margin-inline: auto; aspect-ratio: 1; }
+  .rede svg { display: block; width: 100%; height: 100%; overflow: visible; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .orbita { stroke: rgba(230, 238, 248, 0.14); stroke-width: 1; }
+  .liga { stroke: rgba(96, 165, 250, 0.4); stroke-width: 1.4; }
+  .ponto { fill: rgba(230, 238, 248, 0.35); opacity: 0; transition: opacity 0.4s ease calc(0.3s + var(--k) * 0.06s); }
+  .em-cena .ponto { opacity: 1; animation: pc-pisca 4s ease-in-out calc(2s + var(--k) * 0.3s) infinite; }
+  @keyframes pc-pisca { 50% { fill: rgba(255, 74, 84, 0.85); } }
+  .no { opacity: 0; transform-box: fill-box; transform-origin: center; transform: scale(0.8); transition: opacity 0.4s ease calc(0.8s + var(--k) * 0.12s), transform 0.5s var(--ease-out) calc(0.8s + var(--k) * 0.12s); }
+  .em-cena .no { opacity: 1; transform: none; }
+  .no circle { fill: var(--navy-900); stroke: rgba(230, 238, 248, 0.25); stroke-width: 1.2; }
+  .no g { stroke: #e6eef8; stroke-width: 1.6; }
+  .centro-anel { stroke: var(--red-500); stroke-width: 2; filter: drop-shadow(0 0 10px rgba(226, 8, 29, 0.55)); }
+  .centro { fill: var(--navy-950); }
+  .marca { position: absolute; left: 50%; top: 50%; width: 17%; height: auto; transform: translate(-50%, -50%); }
+
+  @media (max-width: 900px) {
+    .grade { grid-template-columns: 1fr; gap: var(--space-8); }
+    .rede { max-width: 400px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ponto, .no { transition: none; opacity: 1; transform: none; }
+    .em-cena .ponto { animation: none; }
+  }
+</style>

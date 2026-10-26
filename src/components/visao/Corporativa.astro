@@ -1,0 +1,198 @@
+---
+/**
+ * "Visão Computacional Corporativa e Industrial" com as cinco frentes
+ * (produção, qualidade, estoque e logística, equipamentos, segurança
+ * operacional) em Feature Tabs, no mesmo desenho das soluções de
+ * Infraestrutura de TI: lista à esquerda, painel com cena à direita.
+ *
+ * Âncoras: o mega-menu leva a #visao-corporativa-industrial (a seção) e a
+ * #controle-de-producao e afins. Cada aba tem o id da frente, então o
+ * navegador rola até ela, e o script abre a aba certa (na carga e a cada troca
+ * de hash). Padrão de abas do WAI-ARIA, com setas, Home e End.
+ *
+ * Texto: titulo, subtitulo, paragrafos e cards (titulo, itens) do bloco, sem
+ * alteração.
+ */
+import Cena from "./Cena.astro";
+import MenuIcon from "../MenuIcon.astro";
+import type { NomeCena } from "./cenas";
+import type { Bloco } from "../../data/preview/blocos";
+import type { NomeIconeMenu } from "../../data/iconesMenu";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+const abas = (bloco.cards ?? []).map((c, i) => ({ id: c.id ?? `frente-${i + 1}`, card: c }));
+
+// Mesmos ícones das frentes no mega-menu (src/data/preview/menuSolucoes.ts).
+const ICONES: Record<string, NomeIconeMenu> = {
+  "controle-de-producao": "engrenagem",
+  "inspecoes-de-qualidade": "selo",
+  "estoque-e-logistica": "caixas",
+  "equipamentos-e-processos": "medidor",
+  "seguranca-operacional": "capacete",
+};
+---
+
+<section class="ap-secao corporativa" data-theme="light" data-cena id={bloco.id}>
+  <div class="container">
+    <div class="topo">
+      <div class="ap-cabeca">
+        {bloco.titulo && <h2 class="ap-entra">{bloco.titulo}</h2>}
+        {bloco.subtitulo && <p class="ap-sub ap-entra" style="--i:1">{bloco.subtitulo}</p>}
+      </div>
+      <div class="paragrafos">
+        {bloco.paragrafos?.map((p, i) => <p class="ap-p ap-entra" style={`--i:${i + 2}`}>{p}</p>)}
+      </div>
+    </div>
+
+    <div class="abas ap-entra" style="--i:3" data-abas>
+      <div class="lista" role="tablist" aria-orientation="vertical" aria-label={bloco.titulo}>
+        {abas.map((a, i) => (
+          <button
+            type="button"
+            class="aba"
+            role="tab"
+            id={a.id}
+            aria-controls={`painel-${a.id}`}
+            aria-selected={i === 0 ? "true" : "false"}
+            tabindex={i === 0 ? 0 : -1}
+          >
+            <span class="aba-icone" aria-hidden="true"><MenuIcon nome={ICONES[a.id] ?? "modulos"} /></span>
+            <span class="aba-titulo">{a.card.titulo}</span>
+          </button>
+        ))}
+      </div>
+
+      <div class="paineis">
+        {abas.map((a, i) => (
+          <div class="painel" role="tabpanel" id={`painel-${a.id}`} aria-labelledby={a.id} hidden={i !== 0} tabindex="0">
+            <Cena nome={a.id as NomeCena} />
+            {a.card.itens && <ul class="check">{a.card.itens.map((it) => <li>{it}</li>)}</ul>}
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .corporativa { scroll-margin-top: calc(var(--topbar-h) + var(--header-h)); }
+  .topo { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--space-12); align-items: end; }
+  .paragrafos .ap-p:first-child { margin-top: 0; }
+
+  .abas {
+    display: grid;
+    grid-template-columns: minmax(240px, 0.7fr) minmax(0, 2fr);
+    gap: var(--space-6);
+    margin-top: var(--space-12);
+    padding: var(--space-3);
+    border-radius: var(--radius-lg);
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+  }
+  .lista { display: grid; gap: 2px; align-content: start; }
+  .aba {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: 56px;
+    padding: var(--space-3) var(--space-4);
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: none;
+    color: var(--color-text-muted);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    scroll-margin-top: calc(var(--topbar-h) + var(--header-h) + var(--space-6));
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .aba::before { content: ""; position: absolute; left: 0; top: 10px; bottom: 10px; width: 3px; border-radius: 3px; background: var(--red-600); transform: scaleY(0); transition: transform 0.25s var(--ease-out); }
+  .aba:hover { background: var(--color-surface); color: var(--color-text); }
+  .aba[aria-selected="true"] { background: var(--color-surface); color: var(--color-text); box-shadow: 0 1px 2px rgba(11, 23, 48, 0.06); }
+  .aba[aria-selected="true"]::before { transform: scaleY(1); }
+  .aba:focus-visible { outline: 2px solid var(--red-600); outline-offset: 2px; }
+  .aba-icone { display: grid; place-items: center; color: var(--red-600); }
+  .aba-icone :global(.menu-icon) { width: 22px; height: 22px; }
+  .aba-titulo { font-size: var(--fs-sm); font-weight: 600; line-height: 1.35; }
+
+  .paineis { min-height: 520px; }
+  .painel {
+    height: 100%;
+    padding: var(--space-5) var(--space-6) var(--space-8);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 18px 40px -30px rgba(11, 23, 48, 0.35);
+    outline: none;
+    animation: vc-painel 0.4s var(--ease-out);
+  }
+  .painel[hidden] { display: none; }
+  .painel:focus-visible { box-shadow: 0 0 0 2px var(--red-600); }
+  .painel :global(.vc-cena) { max-height: 240px; }
+  @keyframes vc-painel { from { opacity: 0; transform: translateY(10px); } }
+  .painel h3 { margin-top: var(--space-6); font-size: var(--fs-xl); }
+  .check { list-style: none; margin: var(--space-4) 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2) var(--space-6); }
+  .check li { position: relative; padding-left: 26px; font-size: var(--fs-sm); line-height: 1.5; color: var(--color-text); }
+  .check li::before { content: ""; position: absolute; left: 2px; top: 0.45em; width: 12px; height: 7px; border-left: 2px solid var(--red-600); border-bottom: 2px solid var(--red-600); transform: rotate(-45deg); }
+
+  @media (max-width: 960px) {
+    .topo { grid-template-columns: 1fr; gap: var(--space-4); }
+    .paragrafos .ap-p:first-child { margin-top: var(--space-4); }
+    .abas { grid-template-columns: 1fr; }
+    .lista { grid-auto-flow: column; grid-auto-columns: minmax(200px, 72%); overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: var(--space-2); }
+    .aba { scroll-snap-align: start; }
+    .paineis { min-height: 0; }
+    .painel { padding: var(--space-4); }
+  }
+  @media (max-width: 480px) {
+    .check { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .painel { animation: none; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-abas]").forEach((raiz) => {
+    const abas = Array.from(raiz.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+    const paineis = Array.from(raiz.querySelectorAll<HTMLElement>('[role="tabpanel"]'));
+    let atual = 0;
+
+    const mostrar = (n: number, focar = false) => {
+      atual = (n + abas.length) % abas.length;
+      abas.forEach((a, k) => {
+        const sim = k === atual;
+        a.setAttribute("aria-selected", String(sim));
+        a.tabIndex = sim ? 0 : -1;
+        paineis[k].hidden = !sim;
+      });
+      if (focar) abas[atual].focus();
+      const lista = abas[atual].parentElement;
+      if (lista && lista.scrollWidth > lista.clientWidth) {
+        lista.scrollTo({ left: abas[atual].offsetLeft - lista.offsetLeft, behavior: "smooth" });
+      }
+    };
+
+    abas.forEach((a, k) => a.addEventListener("click", () => mostrar(k)));
+    raiz.querySelector('[role="tablist"]')?.addEventListener("keydown", (e) => {
+      const ev = e as KeyboardEvent;
+      const mapa: Record<string, number> = { ArrowDown: atual + 1, ArrowRight: atual + 1, ArrowUp: atual - 1, ArrowLeft: atual - 1, Home: 0, End: abas.length - 1 };
+      if (!(ev.key in mapa)) return;
+      ev.preventDefault();
+      mostrar(mapa[ev.key], true);
+    });
+
+    // Âncora do mega-menu (#controle-de-producao...) abre a aba certa.
+    const pelaAncora = () => {
+      const k = abas.findIndex((a) => `#${a.id}` === decodeURIComponent(location.hash));
+      if (k >= 0) mostrar(k);
+    };
+    pelaAncora();
+    window.addEventListener("hashchange", pelaAncora);
+  });
+</script>

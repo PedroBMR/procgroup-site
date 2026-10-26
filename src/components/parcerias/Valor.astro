@@ -1,0 +1,59 @@
+---
+/**
+ * "Você agrega valor. Seu cliente ganha tranquilidade.": título e parágrafo
+ * à esquerda e, à direita, a conta que o parágrafo faz: a aplicação do
+ * parceiro somada à infraestrutura da Proc dá ao cliente uma solução
+ * completa. Três nós (código, servidores, cliente) com um sinal de soma e uma
+ * seta desenhados em linha; o nó do cliente pulsa devagar, em loop.
+ *
+ * Texto: titulo e paragrafos do bloco, sem alteração.
+ */
+import MenuIcon from "../MenuIcon.astro";
+import type { Bloco } from "../../data/preview/blocos";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+---
+
+<section class="ap-secao valor" data-theme="light" data-cena>
+  <div class="container grade">
+    <div class="ap-cabeca">
+      {bloco.titulo && <h2 class="ap-entra">{bloco.titulo}</h2>}
+      {bloco.paragrafos?.map((p, i) => <p class="ap-p ap-entra" style={`--i:${i + 1}`}>{p}</p>)}
+    </div>
+
+    <div class="conta" aria-hidden="true">
+      <span class="pc-no ap-entra" style="--i:1"><MenuIcon nome="codigo" /></span>
+      <svg class="sinal ap-entra" style="--i:2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></svg>
+      <span class="pc-no ap-entra" style="--i:3"><MenuIcon nome="servidores" /></span>
+      <svg class="sinal ap-entra" style="--i:4" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6" /></svg>
+      <span class="pc-no ativo resultado ap-entra" style="--i:5"><MenuIcon nome="cliente" /></span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .valor { background: radial-gradient(rgba(11, 23, 48, 0.1) 1px, transparent 1.2px) 0 0 / 22px 22px, var(--color-bg-alt); }
+  .grade { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: var(--space-12); align-items: center; }
+  .conta { display: flex; align-items: center; justify-content: center; gap: var(--space-4); }
+  .conta .pc-no { width: 80px; height: 80px; }
+  .conta .pc-no :global(.menu-icon) { width: 34px; height: 34px; }
+  .sinal { width: 28px; height: 28px; fill: none; stroke: var(--red-600); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+  .em-cena .resultado { animation: pc-pulsa 3s ease-in-out 2s infinite; }
+  @keyframes pc-pulsa { 50% { box-shadow: 0 0 0 12px rgba(226, 8, 29, 0.1), 0 12px 24px -16px rgba(11, 23, 48, 0.45); } }
+
+  @media (max-width: 900px) {
+    .grade { grid-template-columns: 1fr; gap: var(--space-8); }
+  }
+  @media (max-width: 420px) {
+    .conta { gap: var(--space-2); }
+    .conta .pc-no { width: 64px; height: 64px; }
+    .conta .pc-no :global(.menu-icon) { width: 28px; height: 28px; }
+    .sinal { width: 22px; height: 22px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .em-cena .resultado { animation: none; }
+  }
+</style>

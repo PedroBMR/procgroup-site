@@ -1,0 +1,100 @@
+---
+/**
+ * Diagrama do herói de Soluções: as três áreas como um triângulo ligado,
+ * cada vértice com o ícone da área (infraestrutura no topo, nuvem à direita,
+ * visão à esquerda) e um ponto vermelho no centro, ligado às três.
+ *
+ * Entrada (.em-cena no ancestral com data-cena): os lados e os raios se
+ * desenham, os vértices acendem um a um. Depois, um traço curto percorre os
+ * lados em loop (.ap-fluxo) e uma área de cada vez ganha brilho.
+ *
+ * Sem palavra nenhuma: decorativo, aria-hidden.
+ */
+import UnitIcon from "../UnitIcon.astro";
+import { unidades } from "../../data/preview/ajustes";
+
+const W = 480;
+const H = 320;
+const CX = 240;
+const CY = 190;
+const R = 150;
+const pos = [-90, 30, 150].map((g) => {
+  const a = (g * Math.PI) / 180;
+  return [CX + Math.cos(a) * R, CY + Math.sin(a) * R];
+});
+const f = (n: number) => n.toFixed(1);
+const lado = (k: number) => {
+  const [a, b] = [pos[k], pos[(k + 1) % 3]];
+  return `M${f(a[0])} ${f(a[1])} L${f(b[0])} ${f(b[1])}`;
+};
+---
+
+<div class="trio" aria-hidden="true">
+  <svg viewBox={`0 0 ${W} ${H}`}>
+    {pos.map(([x, y], k) => (
+      <path class="ap-traco raio" d={`M${CX} ${CY} L${f(x)} ${f(y)}`} pathLength="1" style={`--o:${(0.3 + k * 0.15).toFixed(2)}`} />
+    ))}
+    {pos.map((_, k) => (
+      <path class="ap-traco lado" d={lado(k)} pathLength="1" style={`--o:${(0.7 + k * 0.3).toFixed(2)}`} />
+    ))}
+    {pos.map((_, k) => (
+      <path class="ap-fluxo" d={lado(k)} pathLength="1" style={`--k:${k * 2}; --dur:3.6s; --atraso:2.6s`} />
+    ))}
+    <circle class="onda" cx={CX} cy={CY} r="10" />
+    <circle class="centro" cx={CX} cy={CY} r="6" />
+  </svg>
+
+  {unidades.map((u, k) => (
+    <span class="no" style={`--x:${f((pos[k][0] / W) * 100)}%; --y:${f((pos[k][1] / H) * 100)}%; --k:${k}`}>
+      <UnitIcon slug={u.slug} />
+    </span>
+  ))}
+</div>
+
+<style>
+  .trio { position: relative; width: 100%; max-width: 520px; aspect-ratio: 480 / 320; margin-inline: auto; }
+  .trio svg { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; overflow: visible; }
+  .raio { stroke: rgba(230, 238, 248, 0.16); stroke-width: 1; }
+  .lado { stroke: rgba(96, 165, 250, 0.5); stroke-width: 1.4; }
+  .centro { fill: var(--red-500); opacity: 0; transition: opacity 0.5s ease 0.2s; }
+  .onda { fill: none; stroke: var(--red-500); stroke-width: 1.2; opacity: 0; transform-box: fill-box; transform-origin: center; }
+  :global(.em-cena) .centro { opacity: 1; }
+  :global(.em-cena) .onda { animation: tr-onda 3s ease-out 1.4s infinite; }
+  @keyframes tr-onda {
+    0% { opacity: 0.7; transform: scale(0.6); }
+    100% { opacity: 0; transform: scale(3.4); }
+  }
+
+  .no {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    display: grid;
+    place-items: center;
+    width: 19%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    color: #e6eef8;
+    background: radial-gradient(circle at 50% 35%, var(--navy-700), var(--navy-950));
+    border: 1px solid rgba(230, 238, 248, 0.25);
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.6);
+    transition:
+      opacity 0.5s ease calc(0.5s + var(--k) * 0.3s),
+      transform 0.6s var(--ease-out) calc(0.5s + var(--k) * 0.3s);
+    animation: tr-destaque 9s ease-in-out calc(3s + var(--k) * 3s) infinite;
+  }
+  .no :global(.unit-icon) { width: 42%; height: 42%; }
+  :global(.em-cena) .no { opacity: 1; transform: translate(-50%, -50%); }
+  /* Uma área de cada vez ganha brilho: três áreas, 3 s cada. */
+  @keyframes tr-destaque {
+    0%, 30%, 100% { border-color: rgba(230, 238, 248, 0.25); box-shadow: none; color: #e6eef8; }
+    10%, 20% { border-color: var(--red-400); box-shadow: 0 0 0 6px rgba(226, 8, 29, 0.12), 0 0 22px rgba(226, 8, 29, 0.35); color: var(--red-400); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .no { transition: none; opacity: 1; transform: translate(-50%, -50%); animation: none; }
+    .centro { transition: none; opacity: 1; }
+    :global(.em-cena) .onda { animation: none; }
+  }
+</style>

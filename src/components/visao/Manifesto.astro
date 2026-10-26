@@ -1,0 +1,89 @@
+---
+/**
+ * Fechamento da página: "Visão Computacional e Vídeo Analytics para
+ * transformar imagens em inteligência.", o parágrafo, o fecho e o botão.
+ *
+ * O fecho ("Veja. Analise. Entenda. Decida.") é o próprio ciclo da
+ * plataforma: cada palavra ganha um ícone acima (olho, chip, gráfico,
+ * selo) e um destaque passa por elas em ordem, sem parar. As palavras
+ * continuam sendo o texto do fecho, inteiro e na mesma ordem; os ícones são
+ * decorativos.
+ *
+ * Texto: eyebrow, titulo, paragrafos, fecho e ctas do bloco, sem alteração.
+ */
+import Button from "../Button.astro";
+import MenuIcon from "../MenuIcon.astro";
+import { withBase } from "../../utils/url";
+import type { Bloco } from "../../data/preview/blocos";
+import type { NomeIconeMenu } from "../../data/iconesMenu";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+const L = (href: string) => (href.startsWith("#") || href.startsWith("http") ? href : withBase(href));
+const ICONES: NomeIconeMenu[] = ["olho", "chip", "grafico", "selo"];
+---
+
+<section class="ap-secao escura manifesto" data-cena>
+  <div class="container texto">
+    {bloco.eyebrow && <p class="eyebrow ap-entra">{bloco.eyebrow}</p>}
+    {bloco.titulo && <h2 class="ap-entra" style="--i:1">{bloco.titulo}</h2>}
+    {bloco.paragrafos?.map((p) => <p class="p ap-entra" style="--i:2">{p}</p>)}
+    {bloco.fecho?.map((frase) => {
+      const palavras = frase.split(" ");
+      return (
+        <p class="ciclo ap-entra" style={`--i:3; --n:${palavras.length}`}>
+          {palavras.map((w, k) => (
+            <>
+              <span class="palavra" style={`--k:${k}`}>
+                <span class="icone" aria-hidden="true"><MenuIcon nome={ICONES[k % ICONES.length]} /></span>
+                {w}
+              </span>{k < palavras.length - 1 ? " " : ""}
+            </>
+          ))}
+        </p>
+      );
+    })}
+    {bloco.ctas && (
+      <div class="ctas ap-entra" style="--i:4">
+        {bloco.ctas.map((c, n) => <Button href={L(c.href)} variant={n === 0 ? "primary" : "ghost"} size="lg">{c.label}</Button>)}
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .manifesto {
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    background:
+      radial-gradient(70% 60% at 50% 0%, rgba(37, 56, 102, 0.5), transparent 70%),
+      linear-gradient(180deg, var(--navy-900), var(--navy-950));
+  }
+  .texto { max-width: 900px; }
+  .manifesto h2 { margin: var(--space-4) auto 0; max-width: 26ch; font-size: var(--fs-3xl); color: var(--white); }
+  .p { margin: var(--space-6) auto 0; max-width: 62ch; font-size: var(--fs-lg); line-height: 1.6; color: rgba(230, 238, 248, 0.78); }
+
+  .ciclo { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-4) var(--space-8); margin-top: var(--space-12); font-family: var(--font-display); font-weight: 800; font-size: var(--fs-2xl); text-transform: uppercase; color: var(--white); }
+  .palavra { display: inline-grid; justify-items: center; gap: var(--space-3); }
+  .icone { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; border: 2px solid rgba(230, 238, 248, 0.2); color: #e6eef8; }
+  .icone :global(.menu-icon) { width: 24px; height: 24px; }
+  /* Um destaque percorre as palavras em ordem (ciclo de 4 x 1,2 s). */
+  .em-cena .palavra { animation: mf-vez calc(var(--n) * 1.2s) steps(1) calc(1.2s + var(--k) * 1.2s) infinite; }
+  .em-cena .icone { animation: mf-icone calc(var(--n) * 1.2s) steps(1) calc(1.2s + var(--k) * 1.2s) infinite; }
+  @keyframes mf-vez { 0% { color: var(--red-400); } 25%, 100% { color: var(--white); } }
+  @keyframes mf-icone { 0% { border-color: var(--red-500); color: var(--red-400); box-shadow: 0 0 24px rgba(226, 8, 29, 0.45); } 25%, 100% { border-color: rgba(230, 238, 248, 0.2); color: #e6eef8; box-shadow: none; } }
+
+  .ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-4); margin-top: var(--space-12); }
+  /* O rótulo do botão é longo: no celular ele quebra em vez de vazar. */
+  .ctas :global(.btn) { max-width: 100%; height: auto; white-space: normal; text-align: center; }
+
+  @media (max-width: 560px) {
+    .ciclo { font-size: var(--fs-xl); gap: var(--space-4) var(--space-5); }
+    .icone { width: 46px; height: 46px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .em-cena .palavra, .em-cena .icone { animation: none; }
+  }
+</style>

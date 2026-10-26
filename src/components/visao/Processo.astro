@@ -1,0 +1,129 @@
+---
+/**
+ * Seção de processo: blocos que, no documento, descrevem uma sequência de
+ * etapas (fluxoTitulo e fluxo). Estacionamento, Rastreabilidade e Integração
+ * com IoT.
+ *
+ * Cabeçalho e texto à esquerda, a cena do assunto à direita, a sequência de
+ * etapas em largura total por baixo (Passos.astro) e, por último, o texto de
+ * depois. Integração mostra também a lista do bloco como placas com ícone,
+ * todas penduradas no mesmo barramento, por onde passa dado sem parar: a
+ * inteligência visual ligada ao resto da empresa.
+ *
+ * Texto: titulo, subtitulo, paragrafos, itensTitulo, itens, fluxoTitulo,
+ * fluxo e depois do bloco, sem alteração, nesta ordem.
+ */
+import Cena from "./Cena.astro";
+import Passos from "./Passos.astro";
+import MenuIcon from "../MenuIcon.astro";
+import type { NomeCena } from "./cenas";
+import type { Bloco } from "../../data/preview/blocos";
+import type { NomeIconeMenu } from "../../data/iconesMenu";
+
+interface Props {
+  bloco: Bloco;
+  /** Ícone de cada etapa do fluxo, na ordem. */
+  iconesFluxo: NomeIconeMenu[];
+  cena?: NomeCena;
+  /** Ícone de cada item da lista, na ordem (só Integração tem lista). */
+  iconesItens?: NomeIconeMenu[];
+  escura?: boolean;
+}
+const { bloco, iconesFluxo, cena, iconesItens = [], escura = false } = Astro.props;
+---
+
+<section class:list={["ap-secao processo", { escura }]} data-theme={escura ? undefined : "light"} data-cena id={bloco.id}>
+  <div class="container">
+    <div class:list={["topo", { "com-cena": !!cena }]}>
+      <div class="ap-cabeca">
+        {bloco.titulo && <h2 class="ap-entra">{bloco.titulo}</h2>}
+        {bloco.subtitulo && <p class="ap-sub ap-entra" style="--i:1">{bloco.subtitulo}</p>}
+        {bloco.paragrafos?.map((p, i) => <p class="ap-p ap-entra" style={`--i:${i + 2}`}>{p}</p>)}
+      </div>
+      {cena && <div class="figura ap-entra" style="--i:2"><Cena nome={cena} /></div>}
+    </div>
+
+    {bloco.itens && (
+      <div class="integracoes">
+        {bloco.itensTitulo && <p class="itens-titulo ap-entra" style="--i:3">{bloco.itensTitulo}</p>}
+        <div class="barramento">
+          <span class="dado" aria-hidden="true"></span>
+          <ul>
+            {bloco.itens.map((it, k) => (
+              <li style={`--k:${k}`}>
+                <span class="item-icone" aria-hidden="true"><MenuIcon nome={iconesItens[k] ?? "modulos"} /></span>
+                {it}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    )}
+
+    {bloco.fluxo && (
+      <div class="etapas">
+        <Passos titulo={bloco.fluxoTitulo} passos={bloco.fluxo} icones={iconesFluxo} escura={escura} />
+      </div>
+    )}
+
+    {bloco.depois?.map((p) => <p class="depois ap-entra" style="--i:6">{p}</p>)}
+  </div>
+</section>
+
+<style>
+  .processo { scroll-margin-top: calc(var(--topbar-h) + var(--header-h)); }
+  .escura h2 { color: var(--white); }
+  .topo.com-cena { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: var(--space-16); align-items: center; }
+  .etapas { margin-top: var(--space-16); padding-top: var(--space-12); border-top: 1px solid var(--color-border); }
+  .depois { margin-top: var(--space-12); max-width: 60ch; font-size: var(--fs-lg); font-weight: 600; line-height: 1.5; color: var(--color-text); }
+
+  .integracoes { margin-top: var(--space-12); }
+  .itens-titulo { font-size: var(--fs-sm); font-weight: 700; color: var(--color-text); }
+  /* Barramento: uma linha no alto, um fio descendo para cada placa e um
+     ponto de dado que corre pela linha. */
+  .barramento { position: relative; margin-top: var(--space-6); padding-top: var(--space-6); }
+  .barramento::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: var(--color-border-strong); }
+  .dado { position: absolute; top: -3px; left: 0; width: 40px; height: 8px; border-radius: 4px; background: linear-gradient(90deg, transparent, var(--red-500)); box-shadow: 0 0 10px rgba(226, 8, 29, 0.7); opacity: 0; }
+  .em-cena .dado { animation: pr-dado 3.6s linear 1.4s infinite; }
+  @keyframes pr-dado { 0% { opacity: 1; left: 0; } 95% { opacity: 1; } 100% { opacity: 0; left: calc(100% - 40px); } }
+  .barramento ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-4); }
+  .barramento li {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--color-text);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.4s ease calc(0.6s + var(--k) * 0.08s), transform 0.5s var(--ease-out) calc(0.6s + var(--k) * 0.08s);
+  }
+  .barramento li::before { content: ""; position: absolute; left: 50%; top: calc(-1 * var(--space-6) - 1px); height: var(--space-6); width: 2px; background: var(--color-border-strong); }
+  .em-cena .barramento li { opacity: 1; transform: none; }
+  .item-icone { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; background: var(--navy-800); color: #e6eef8; border: 1px solid rgba(255, 74, 84, 0.45); }
+  .item-icone :global(.menu-icon) { width: 20px; height: 20px; }
+
+  @media (max-width: 900px) {
+    .topo.com-cena { grid-template-columns: 1fr; gap: var(--space-12); }
+    .figura { max-width: 520px; }
+    .barramento ul { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  /* Celular: o barramento fica de pé, à esquerda das placas. */
+  @media (max-width: 560px) {
+    .barramento { padding-top: 0; padding-left: var(--space-6); }
+    .barramento::before { right: auto; bottom: 0; width: 2px; height: auto; }
+    .barramento li::before { left: calc(-1 * var(--space-6)); top: 50%; width: var(--space-6); height: 2px; }
+    .barramento ul { grid-template-columns: 1fr; gap: var(--space-3); }
+    .dado { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .barramento li { opacity: 1; transform: none; transition: none; }
+    .em-cena .dado { animation: none; }
+  }
+</style>

@@ -1,0 +1,69 @@
+---
+/**
+ * Página de Visão Computacional e Vídeo Analytics, com o conteúdo INTEGRAL do
+ * documento "Ajustes no site". Conteúdo em src/data/preview/paginas/visao.ts.
+ *
+ * Redesign de 2026-10-26: saiu do molde genérico ([area].astro + Secoes) para
+ * seções próprias em src/components/visao/, no mesmo padrão aprovado pelo
+ * comercial em A Proc, Infraestrutura de TI e Hospedagem em Nuvem (base em
+ * src/styles/aproc.css e src/scripts/aprocCenas.ts). O texto continua vindo
+ * inteiro do mesmo arquivo de dados, na mesma ordem.
+ *
+ * Âncoras do mega-menu: #inteligencia-comercial, #fluxo-de-pessoas e
+ * #fluxo-de-veiculos (Comercial), #estacionamentos (Processo),
+ * #visao-corporativa-industrial e as cinco frentes, que abrem a aba certa
+ * (Corporativa), #integracao-iot (Processo) e #videomonitoramento.
+ *
+ * A ordem dos blocos em visao.ts é a ordem do documento. Se ela mudar lá, a
+ * lista abaixo muda junto.
+ */
+import "../styles/aproc.css";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { navPreview } from "../data/preview/ajustes";
+import { visao } from "../data/preview/paginas/visao";
+import Hero from "../components/visao/Hero.astro";
+import Aplicacao from "../components/visao/Aplicacao.astro";
+import Capacidades from "../components/visao/Capacidades.astro";
+import Comercial from "../components/visao/Comercial.astro";
+import Processo from "../components/visao/Processo.astro";
+import Corporativa from "../components/visao/Corporativa.astro";
+import Videomonitoramento from "../components/visao/Videomonitoramento.astro";
+import Manifesto from "../components/visao/Manifesto.astro";
+
+const [
+  intro, capacidades, comercial, fluxos, estacionamentos, corporativa, producao, inspecao,
+  rastreabilidade, maquinas, integracao, expedicao, estoque, automatize, video,
+  aproveitamento, tecnologia, manifesto,
+] = visao.blocos;
+---
+
+<BaseLayout title="Visão Computacional e Vídeo Analytics" description={visao.hero.lead ?? visao.hero.titulo} nav={navPreview()}>
+  <Hero hero={visao.hero} />
+  <Aplicacao bloco={intro} cena="imagemDado" />
+  <Capacidades bloco={capacidades} />
+  <Comercial intro={comercial} fluxos={fluxos} />
+  <Processo bloco={estacionamentos} cena="estacionamento" escura iconesFluxo={["carro", "estacionamento", "relogio", "medidor", "sino"]} />
+  <Corporativa bloco={corporativa} />
+  <Aplicacao bloco={producao} cena="producao" tom="escura" />
+  <Aplicacao bloco={inspecao} cena="inspecao" invertido />
+  <Processo bloco={rastreabilidade} cena="rastreabilidade" escura iconesFluxo={["seta", "engrenagem", "chip", "lupa", "caixas", "caminhao"]} />
+  <Aplicacao bloco={maquinas} cena="maquinas" />
+  <Processo
+    bloco={integracao}
+    escura
+    iconesItens={["chip", "termometro", "erp", "servidores", "predio", "codigo", "fabrica", "engrenagem"]}
+    iconesFluxo={["camera", "chip", "grafico", "servidores", "selo"]}
+  />
+  <Aplicacao bloco={expedicao} cena="expedicao" invertido />
+  <Aplicacao bloco={estoque} cena="estoque" tom="escura" />
+  <Aplicacao bloco={automatize} cena="automatize" tom="alt" invertido />
+  <Videomonitoramento bloco={video} />
+  <Aplicacao bloco={aproveitamento} cena="aproveitamento" />
+  <Aplicacao bloco={tecnologia} cena="tecnologia" tom="alt" invertido />
+  <Manifesto bloco={manifesto} />
+</BaseLayout>
+
+<script>
+  import { montarCenas } from "../scripts/aprocCenas";
+  montarCenas();
+</script>

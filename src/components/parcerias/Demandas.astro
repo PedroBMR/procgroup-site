@@ -1,0 +1,76 @@
+---
+/**
+ * "Seja um parceiro técnico da Proc": os dois parágrafos (o cadastro e o
+ * contato quando surge uma demanda na região) e as demandas como um quadro de
+ * chamados. Cada demanda é uma peça com marcador; na entrada elas aparecem em
+ * sequência e depois um sinal percorre o quadro em loop, acendendo uma de
+ * cada vez: a demanda que surgiu e chegou ao parceiro da região.
+ *
+ * Texto: titulo, paragrafos, itensTitulo e itens do bloco, sem alteração.
+ */
+import MenuIcon from "../MenuIcon.astro";
+import type { Bloco } from "../../data/preview/blocos";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+const itens = bloco.itens ?? [];
+---
+
+<section class="ap-secao escura demandas" data-cena style={`--n:${itens.length}`}>
+  <div class="container grade">
+    <div class="ap-cabeca">
+      <span class="pc-no ativo selo ap-entra" aria-hidden="true"><MenuIcon nome="capacete" /></span>
+      {bloco.titulo && <h2 class="ap-entra" style="--i:1">{bloco.titulo}</h2>}
+      {bloco.paragrafos?.map((p, i) => <p class="ap-p ap-entra" style={`--i:${i + 2}`}>{p}</p>)}
+    </div>
+
+    <div class="quadro">
+      {bloco.itensTitulo && <p class="pc-titulo-lista ap-entra" style="--i:2">{bloco.itensTitulo}</p>}
+      <ul class="pecas">
+        {itens.map((it, k) => <li class:list={["peca", { ultima: k === itens.length - 1 }]} style={`--k:${k}`}>{it}</li>)}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .grade { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr); gap: var(--space-12); align-items: start; }
+  .selo { width: 64px; height: 64px; margin-bottom: var(--space-6); }
+  .selo :global(.menu-icon) { width: 30px; height: 30px; }
+
+  .pecas { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2); }
+  .peca {
+    position: relative;
+    padding: var(--space-3) var(--space-4) var(--space-3) 40px;
+    border-radius: var(--radius-sm);
+    background: rgba(230, 238, 248, 0.04);
+    border: 1px solid rgba(230, 238, 248, 0.12);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--color-text);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.35s ease calc(0.4s + var(--k) * 0.06s), transform 0.4s var(--ease-out) calc(0.4s + var(--k) * 0.06s);
+  }
+  .peca::before { content: ""; position: absolute; left: 16px; top: calc(var(--space-3) + 0.45em); width: 11px; height: 6px; border-left: 2px solid var(--red-400); border-bottom: 2px solid var(--red-400); transform: rotate(-45deg); }
+  .ultima { grid-column: 1 / -1; }
+  .em-cena .peca { opacity: 1; transform: none; animation: pc-chamado calc(var(--n) * 0.5s) ease-in-out calc(2s + var(--k) * 0.5s) infinite; }
+  @keyframes pc-chamado {
+    0%, 10%, 100% { border-color: rgba(230, 238, 248, 0.12); background: rgba(230, 238, 248, 0.04); }
+    4% { border-color: var(--red-500); background: rgba(226, 8, 29, 0.12); }
+  }
+
+  @media (max-width: 900px) {
+    .grade { grid-template-columns: 1fr; gap: var(--space-8); }
+  }
+  @media (max-width: 480px) {
+    .pecas { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .peca { transition: none; opacity: 1; transform: none; }
+    .em-cena .peca { animation: none; }
+  }
+</style>

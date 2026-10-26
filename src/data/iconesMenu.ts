@@ -62,6 +62,13 @@ export const ICONES_MENU = {
   relogio: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>',
   seta: '<path d="M5 12h14M13 6l6 6-6 6"/>',
   externo: '<path d="M7 17 17 7M9 7h8v8"/>',
+  // Da página de Visão Computacional (2026-10-26).
+  caminhao: '<path d="M2.5 6h11v10h-11zM13.5 9.5h4l3 3.5V16h-7"/><circle cx="6.5" cy="17.5" r="1.8"/><circle cx="16.5" cy="17.5" r="1.8"/>',
+  lupa: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/>',
+  olho: '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/>',
+  qrcode: '<rect x="3.5" y="3.5" width="6.5" height="6.5" rx="1"/><rect x="14" y="3.5" width="6.5" height="6.5" rx="1"/><rect x="3.5" y="14" width="6.5" height="6.5" rx="1"/><path d="M14 14h2.5v2.5H14zM18 18h2.5v2.5H18zM14 20.5h1.5M20.5 14v1.5"/>',
+  termometro: '<path d="M10 14.5V5a2 2 0 0 1 4 0v9.5a4 4 0 1 1-4 0z"/><path d="M12 9v7.5"/>',
+  dvr: '<rect x="2.5" y="8" width="19" height="8" rx="1.5"/><path d="M6 12h.01M9 12h.01M13 12h5M5 16v2M19 16v2"/>',
 } as const;
 
 export type NomeIconeMenu = keyof typeof ICONES_MENU;

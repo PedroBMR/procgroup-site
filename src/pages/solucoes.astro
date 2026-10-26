@@ -2,14 +2,19 @@
 /**
  * O índice de Soluções com as três áreas do documento, como ficaria no ar.
  *
- * Fora do site publicado, mas sem nada de preview na tela. Mesmos cards e
- * mesmos estilos do índice de soluções de hoje, só com as três áreas novas no
- * lugar das unidades atuais.
+ * Fora do site publicado, mas sem nada de preview na tela.
+ *
+ * Redesign de 2026-10-26: mesmo padrão visual de A Proc, Infraestrutura de TI
+ * e Hospedagem em Nuvem (src/styles/aproc.css e src/scripts/aprocCenas.ts).
+ * Herói próprio com o triângulo das três áreas e uma faixa por área com a
+ * cena da home, em src/components/solucoes/. O texto não mudou: título,
+ * lead e o conteúdo dos cards são os mesmos de antes.
  */
+import "../styles/aproc.css";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import UnitIcon from "../components/UnitIcon.astro";
-import { withBase } from "../utils/url";
-import { unidades, areas, navPreview } from "../data/preview/ajustes";
+import { navPreview } from "../data/preview/ajustes";
+import Hero from "../components/solucoes/Hero.astro";
+import Areas from "../components/solucoes/Areas.astro";
 ---
 
 <BaseLayout
@@ -17,70 +22,15 @@ import { unidades, areas, navPreview } from "../data/preview/ajustes";
   description="Infraestrutura de TI, hospedagem em nuvem e visão computacional com IA. Três áreas de negócio, uma equipe especializada em cada uma."
   nav={navPreview()}
 >
-  <section class="hero-page">
-    <div class="container">
-      <p class="eyebrow">Soluções</p>
-      <h1>Três áreas de negócio. Uma equipe especializada em cada uma.</h1>
-      <p class="lead">
-        Da infraestrutura que mantém a operação funcionando à inteligência artificial que
-        transforma imagens em informação. Escolha por onde começar.
-      </p>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container units-grid">
-      {unidades.map((unit, i) => (
-        <a href={withBase(unit.href)} class="unit-card" data-reveal style={`--unit-color: ${unit.color}`}>
-          <span class="unit-icon-wrap"><UnitIcon slug={unit.slug} /></span>
-          <span class="unit-badge">{unit.shortName}</span>
-          <h2>{unit.name}</h2>
-          <p>{unit.tagline}</p>
-          <ul class="sol-lista">
-            {areas[i].solucoes.slice(0, 6).map((s) => <li>{s}</li>)}
-            {areas[i].solucoes.length > 6 && (
-              <li class="mais">e mais {areas[i].solucoes.length - 6}</li>
-            )}
-          </ul>
-        </a>
-      ))}
-    </div>
-  </section>
+  <Hero
+    eyebrow="Soluções"
+    titulo="Três áreas de negócio. Uma equipe especializada em cada uma."
+    lead="Da infraestrutura que mantém a operação funcionando à inteligência artificial que transforma imagens em informação. Escolha por onde começar."
+  />
+  <Areas />
 </BaseLayout>
 
-<style>
-  /* Mesmos valores do índice de soluções publicado, para o preview não ter
-     tipografia nem respiro diferentes do site. */
-  .hero-page { padding-block: var(--space-16) var(--space-8); }
-  .hero-page h1 { font-size: var(--fs-4xl); margin-top: var(--space-4); }
-  .hero-page .lead { margin-top: var(--space-5); max-width: 62ch; font-size: var(--fs-lg); color: var(--color-text-muted); text-wrap: pretty; }
-  .section { padding-block: var(--space-16) var(--space-24); }
-  .units-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-6); }
-  .unit-card {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    padding: var(--space-8);
-    border-radius: var(--radius-md);
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    box-shadow: var(--shadow-sm);
-    transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out), border-color var(--dur-fast) ease;
-    overflow: hidden;
-  }
-  .unit-card::before {
-    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px;
-    background: color-mix(in srgb, var(--unit-color), white 24%);
-  }
-  .unit-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); border-color: color-mix(in srgb, var(--unit-color), white 36%); }
-  .unit-icon-wrap { color: color-mix(in srgb, var(--unit-color), white 40%); }
-  .unit-icon-wrap :global(.unit-icon) { width: 28px; height: 28px; }
-  .unit-badge { margin-top: var(--space-4); font-size: var(--fs-xs); font-weight: 700; color: var(--color-text-faint); text-transform: uppercase; letter-spacing: 0.08em; }
-  .unit-card h2 { margin-top: var(--space-2); font-size: var(--fs-xl); }
-  .unit-card > p { margin-top: var(--space-2); color: var(--color-text-muted); }
-  .sol-lista { margin-top: var(--space-5); display: grid; gap: var(--space-1); }
-  .sol-lista li { font-size: var(--fs-xs); color: var(--color-text-faint); }
-  .sol-lista li::before { content: "› "; color: var(--color-eyebrow); }
-  .mais { font-style: italic; }
-  @media (max-width: 900px) { .units-grid { grid-template-columns: 1fr; } }
-</style>
+<script>
+  import { montarCenas } from "../scripts/aprocCenas";
+  montarCenas();
+</script>

@@ -1,0 +1,209 @@
+---
+/**
+ * As três áreas de Soluções, uma por faixa, cada uma com a cena explicativa
+ * da home (CenaArea) num painel escuro, alternando de lado. A faixa inteira é
+ * o link para a página da área, como os cards de antes.
+ *
+ * O painel continua a linha da cena até a borda (as "portas" do
+ * CardsEcossistema) e, entre uma faixa e outra, uma espinha vertical com um
+ * pulso liga as três: infraestrutura, nuvem, visão.
+ *
+ * Cada cena se desenha quando a faixa dela entra na tela e só anda enquanto
+ * ela está visível (classes .desenhado e .vivo no .eco, que é o que a
+ * CenaArea espera).
+ *
+ * Texto: o mesmo dos cards de antes (shortName, name, tagline e até seis
+ * soluções de cada área, com "e mais N"), sem alteração.
+ */
+import UnitIcon from "../UnitIcon.astro";
+import MenuIcon from "../MenuIcon.astro";
+import CenaArea from "../preview/CenaArea.astro";
+import { withBase } from "../../utils/url";
+import { unidades, areas } from "../../data/preview/ajustes";
+---
+
+<section class="ap-secao areas" data-theme="light">
+  <div class="container lista">
+    <span class="espinha" aria-hidden="true"></span>
+    {unidades.map((unit, i) => (
+      <div class="item eco" data-cena data-sol-eco>
+        <a href={withBase(unit.href)} class="area ap-entra" style={`--unit-color: ${unit.color}`}>
+          <span class="visual" aria-hidden="true"><CenaArea indice={i} /></span>
+          <span class="corpo">
+            <span class="topo">
+              <span class="icone"><UnitIcon slug={unit.slug} /></span>
+              <span class="badge">{unit.shortName}</span>
+            </span>
+            <h2>{unit.name}</h2>
+            <p class="tagline">{unit.tagline}</p>
+            <ul class="sol-lista">
+              {areas[i].solucoes.slice(0, 6).map((s) => <li>{s}</li>)}
+              {areas[i].solucoes.length > 6 && (
+                <li class="mais">e mais {areas[i].solucoes.length - 6}</li>
+              )}
+            </ul>
+            <span class="seta" aria-hidden="true"><MenuIcon nome="seta" /></span>
+          </span>
+        </a>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .areas {
+    background: linear-gradient(180deg, var(--color-bg-alt), var(--color-bg));
+  }
+  /* Malha de pontos fraca no topo, como no ecossistema da home. */
+  .areas::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 480px;
+    background-image: radial-gradient(rgba(11, 23, 48, 0.14) 1px, transparent 1.2px);
+    background-size: 22px 22px;
+    mask-image: radial-gradient(70% 90% at 15% 0%, black 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .lista { position: relative; display: grid; gap: var(--space-12); }
+
+  /* Espinha: atrás das faixas, aparece só nos vãos. */
+  .espinha {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(50% - 1px);
+    width: 2px;
+    background: var(--color-border-strong);
+    overflow: hidden;
+  }
+  .espinha::after {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 18%;
+    background: linear-gradient(180deg, transparent, var(--red-500), transparent);
+    animation: sl-pulso 6s linear infinite;
+  }
+  @keyframes sl-pulso {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(560%); }
+  }
+
+  /* Cada faixa é uma cena (data-cena): entra sozinha quando aparece. */
+  .item { position: relative; z-index: 1; display: flex; }
+  .area {
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    box-shadow: 0 1px 2px rgba(11, 23, 48, 0.04), 0 12px 32px -18px rgba(11, 23, 48, 0.18);
+    overflow: hidden;
+    color: inherit;
+    text-decoration: none;
+    transition: opacity 0.7s var(--ease-out), transform 0.6s var(--ease-out), box-shadow 0.6s var(--ease-out), border-color 0.4s ease;
+  }
+  /* A espinha é o primeiro filho: a segunda faixa é o nth-child(3). */
+  .item:nth-child(odd) .visual { order: 2; }
+  .area:hover,
+  .area:focus-visible {
+    transform: translateY(-6px);
+    border-color: color-mix(in srgb, var(--unit-color), white 45%);
+    box-shadow: 0 2px 4px rgba(11, 23, 48, 0.05), 0 28px 56px -24px rgba(11, 23, 48, 0.32);
+  }
+  .area:focus-visible { outline: 2px solid var(--red-600); outline-offset: 4px; }
+
+  /* ── Painel da cena ── */
+  .visual {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: 300px;
+    padding-block: var(--space-8);
+    background:
+      radial-gradient(70% 90% at 70% 20%, rgba(226, 8, 29, 0.1), transparent 60%),
+      radial-gradient(120% 100% at 50% 0%, var(--navy-800), var(--navy-950) 80%);
+  }
+  .visual :global(.cena) { width: min(100%, 420px); height: auto; aspect-ratio: 280 / 160; }
+  /* Portas: continuam a linha da cena (y = 80 de 160) até a borda do painel. */
+  .visual::before,
+  .visual::after {
+    content: "";
+    position: absolute;
+    top: calc(50% - 1px);
+    height: 2px;
+    width: calc(50% - min(50%, 210px));
+    background: rgba(230, 238, 248, 0.5);
+    transition: background var(--dur-med) ease;
+  }
+  .visual::before { left: 0; }
+  .visual::after { right: 0; }
+  .area:is(:hover, :focus-visible) .visual::before,
+  .area:is(:hover, :focus-visible) .visual::after { background: var(--red-400); }
+
+  /* ── Texto ── */
+  .corpo { position: relative; display: flex; flex-direction: column; padding: var(--space-12) var(--space-12) var(--space-16); }
+  .topo { display: flex; align-items: center; gap: var(--space-3); }
+  .icone { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; color: var(--white); background: var(--unit-color); flex: none; }
+  .icone :global(.unit-icon) { width: 24px; height: 24px; }
+  .badge { font-size: var(--fs-xs); font-weight: 700; color: var(--color-text-faint); text-transform: uppercase; letter-spacing: 0.08em; }
+  .area h2 { margin-top: var(--space-5); font-size: var(--fs-2xl); transition: color 0.4s ease; }
+  .area:is(:hover, :focus-visible) h2 { color: var(--unit-color); }
+  .tagline { margin-top: var(--space-3); max-width: 52ch; color: var(--color-text-muted); line-height: 1.6; padding-left: var(--space-5); border-left: 2px solid color-mix(in srgb, var(--red-600), white 70%); }
+  .sol-lista { margin-top: var(--space-6); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2) var(--space-6); }
+  .sol-lista li { font-size: var(--fs-sm); color: var(--color-text-faint); line-height: 1.45; }
+  .sol-lista li::before { content: "› "; color: var(--color-eyebrow); }
+  .mais { font-style: italic; }
+  .seta {
+    position: absolute;
+    right: var(--space-8);
+    bottom: var(--space-6);
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    color: var(--color-eyebrow);
+    transition: transform 0.5s var(--ease-out), background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
+  .seta :global(.menu-icon) { width: 18px; height: 18px; }
+  .area:is(:hover, :focus-visible) .seta { transform: translateX(6px); background: var(--red-600); border-color: var(--red-600); color: var(--white); }
+
+  @media (max-width: 900px) {
+    .lista { gap: var(--space-8); }
+    .area { grid-template-columns: 1fr; }
+    .item:nth-child(odd) .visual { order: 0; }
+    .visual { min-height: 220px; padding-block: var(--space-6); }
+    .corpo { padding: var(--space-8) var(--space-6) var(--space-16); }
+  }
+  @media (max-width: 520px) {
+    .sol-lista { grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .espinha::after { animation: none; display: none; }
+    .area, .seta { transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease; }
+    .area:is(:hover, :focus-visible), .area:is(:hover, :focus-visible) .seta { transform: none; }
+  }
+</style>
+
+<script>
+  const semMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  document.querySelectorAll<HTMLElement>("[data-sol-eco]").forEach((eco) => {
+    const cenas = Array.from(eco.querySelectorAll<SVGSVGElement>("svg[data-cena-area]"));
+    // Desenha uma vez ao entrar; anda (CSS e SMIL) só enquanto está na tela.
+    new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) eco.classList.add("desenhado");
+        eco.classList.toggle("vivo", e.isIntersecting);
+        cenas.forEach((s) => (e.isIntersecting && !semMovimento ? s.unpauseAnimations() : s.pauseAnimations()));
+      },
+      { threshold: 0.2 },
+    ).observe(eco);
+  });
+</script>

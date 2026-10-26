@@ -1,0 +1,89 @@
+---
+/**
+ * Sequência de etapas (os campos fluxoTitulo e fluxo dos blocos): cada etapa
+ * com ícone e nome, ligadas por uma linha. Depois que a seção aparece, um
+ * destaque percorre as etapas em ordem, sem parar, como o evento passando pelo
+ * processo. No celular a sequência fica na vertical.
+ *
+ * Usado em Estacionamento, Rastreabilidade e Integração. É uma lista ordenada
+ * de verdade: o leitor de tela lê as etapas na ordem, sem depender do desenho.
+ *
+ * Texto: titulo e passos, como vêm do bloco.
+ */
+import MenuIcon from "../MenuIcon.astro";
+import type { NomeIconeMenu } from "../../data/iconesMenu";
+
+interface Props {
+  titulo?: string;
+  passos: string[];
+  icones: NomeIconeMenu[];
+  escura?: boolean;
+}
+const { titulo, passos, icones, escura = false } = Astro.props;
+---
+
+<div class:list={["passos", { escura }]} data-passos>
+  {titulo && <p class="titulo ap-entra" style="--i:3">{titulo}</p>}
+  <ol style={`--n:${passos.length}`}>
+    {passos.map((nome, k) => (
+      <li class="ap-entra" style={`--i:${k + 3}`}>
+        <span class="icone" aria-hidden="true"><MenuIcon nome={icones[k] ?? "modulos"} /></span>
+        <span class="nome">{nome}</span>
+      </li>
+    ))}
+  </ol>
+</div>
+
+<style>
+  .titulo { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-lg); text-transform: uppercase; line-height: var(--lh-snug); color: var(--color-text); }
+  ol { position: relative; list-style: none; margin: var(--space-8) 0 0; padding: 0; display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: var(--space-3); }
+  /* A linha que liga as etapas, por trás dos ícones. */
+  ol::before { content: ""; position: absolute; left: calc(50% / var(--n)); right: calc(50% / var(--n)); top: 31px; height: 2px; background: var(--color-border-strong); }
+  li { position: relative; display: grid; justify-items: center; gap: var(--space-3); text-align: center; }
+  .icone {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--color-surface);
+    border: 2px solid var(--color-border-strong);
+    color: var(--color-text);
+    transition: border-color 0.35s ease, color 0.35s ease, box-shadow 0.35s ease, transform 0.35s var(--ease-out);
+  }
+  .escura .icone { background: var(--navy-900); border-color: rgba(230, 238, 248, 0.25); color: #e6eef8; }
+  .icone :global(.menu-icon) { width: 26px; height: 26px; }
+  .nome { font-size: var(--fs-sm); font-weight: 700; line-height: 1.35; color: var(--color-text); }
+  li.ativo .icone { border-color: var(--red-500); color: var(--red-500); transform: scale(1.08); box-shadow: 0 0 0 6px rgba(226, 8, 29, 0.12), 0 0 24px rgba(226, 8, 29, 0.35); }
+  li:last-child .icone { border-color: var(--red-600); }
+
+  @media (max-width: 700px) {
+    ol { grid-template-columns: 1fr; gap: var(--space-4); }
+    ol::before { left: 31px; right: auto; top: 32px; bottom: 32px; width: 2px; height: auto; }
+    li { grid-template-columns: 64px 1fr; justify-items: start; align-items: center; text-align: left; gap: var(--space-4); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .icone { transition: none; }
+  }
+</style>
+
+<script>
+  import { semMovimento } from "../../scripts/aprocCenas";
+
+  const PASSO_MS = 1100;
+  document.querySelectorAll<HTMLElement>("[data-passos]").forEach((raiz) => {
+    if (semMovimento) return;
+    const itens = Array.from(raiz.querySelectorAll("li"));
+    const secao = raiz.closest<HTMLElement>("[data-cena]");
+    let k = -1;
+    const comecar = () => {
+      window.setInterval(() => {
+        itens[k]?.classList.remove("ativo");
+        k = (k + 1) % itens.length;
+        itens[k].classList.add("ativo");
+      }, PASSO_MS);
+    };
+    if (secao?.classList.contains("em-cena")) comecar();
+    else secao?.addEventListener("cena", comecar, { once: true });
+  });
+</script>

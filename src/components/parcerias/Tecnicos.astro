@@ -1,0 +1,79 @@
+---
+/**
+ * "Parceria com Profissionais Técnicos" (âncora #tecnicos do menu): os dois
+ * parágrafos e um mapa de cobertura. Sobre uma malha de pontos, a Proc no
+ * centro e técnicos parceiros em várias regiões, cada um com um raio de
+ * atendimento que pulsa em loop. As ligações com o centro levam dados nos dois
+ * sentidos: a rede amplia o atendimento da Proc e conta com ela quando
+ * precisa de apoio.
+ *
+ * Texto: id, titulo e paragrafos do bloco, sem alteração.
+ */
+import { ICONES_MENU } from "../../data/iconesMenu";
+import { withBase } from "../../utils/url";
+import type { Bloco } from "../../data/preview/blocos";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+const C = [300, 200];
+const REGIOES = [[90, 80], [220, 50], [470, 70], [530, 230], [400, 330], [150, 310], [60, 200]];
+const linha = (p: number[], ida: boolean) => (ida ? `M${C[0]} ${C[1]} L${p[0]} ${p[1]}` : `M${p[0]} ${p[1]} L${C[0]} ${C[1]}`);
+---
+
+<section id={bloco.id} class="ap-secao tecnicos" data-theme="light" data-cena>
+  <div class="container grade">
+    <div class="ap-cabeca">
+      {bloco.titulo && <h2 class="ap-entra">{bloco.titulo}</h2>}
+      {bloco.paragrafos?.map((p, i) => <p class:list={["ap-p ap-entra", { primeiro: i === 0 }]} style={`--i:${i + 1}`}>{p}</p>)}
+    </div>
+
+    <div class="mapa" aria-hidden="true">
+      <svg viewBox="0 0 600 400">
+        {REGIOES.map((p, k) => <path class="ap-traco liga" d={linha(p, true)} pathLength="1" style={`--o:${(0.4 + k * 0.1).toFixed(2)}`} />)}
+        {REGIOES.map((p, k) => <path class="ap-fluxo" d={linha(p, k % 2 === 0)} pathLength="1" style={`--k:${k}; --dur:2.8s`} />)}
+        {REGIOES.map((p, k) => (
+          <g style={`--k:${k}`}>
+            <circle class="raio" cx={p[0]} cy={p[1]} r="40" />
+            <circle class="ponto" cx={p[0]} cy={p[1]} r="22" />
+            <g class="ic" transform={`translate(${p[0] - 12} ${p[1] - 12})`} set:html={ICONES_MENU.capacete} />
+          </g>
+        ))}
+        <circle class="hub-anel" cx={C[0]} cy={C[1]} r="50" />
+        <circle class="hub" cx={C[0]} cy={C[1]} r="44" />
+      </svg>
+      <img class="marca" src={withBase("/brand/logo-white.png")} alt="" width="234" height="74" loading="lazy" decoding="async" />
+    </div>
+  </div>
+</section>
+
+<style>
+  .grade { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: var(--space-12); align-items: center; }
+  .primeiro { color: var(--color-text); font-size: var(--fs-lg); font-weight: 600; }
+
+  .mapa {
+    position: relative;
+    aspect-ratio: 600 / 400;
+    border-radius: var(--radius-lg);
+    background: radial-gradient(rgba(11, 23, 48, 0.16) 1.2px, transparent 1.4px) 0 0 / 18px 18px, var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+  }
+  .mapa svg { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .liga { stroke: rgba(11, 23, 48, 0.3); stroke-width: 1.4; stroke-dasharray: 1; }
+  .ponto { fill: var(--white); stroke: var(--navy-700); stroke-width: 1.5; }
+  .ic { stroke: var(--navy-800); stroke-width: 1.6; }
+  .raio { fill: rgba(226, 8, 29, 0.08); stroke: rgba(226, 8, 29, 0.35); stroke-width: 1; transform-box: fill-box; transform-origin: center; transform: scale(0.4); opacity: 0; }
+  .em-cena .raio { animation: pc-raio 3.6s ease-out calc(1.6s + var(--k) * 0.5s) infinite; }
+  @keyframes pc-raio { 0% { transform: scale(0.4); opacity: 0.9; } 100% { transform: scale(1.5); opacity: 0; } }
+  .hub-anel { stroke: var(--red-600); stroke-width: 2; }
+  .hub { fill: var(--navy-900); }
+  .marca { position: absolute; left: 50%; top: 50%; width: 11%; min-width: 44px; height: auto; transform: translate(-50%, -50%); }
+
+  @media (max-width: 900px) {
+    .grade { grid-template-columns: 1fr; gap: var(--space-8); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .em-cena .raio { animation: none; opacity: 1; transform: none; }
+  }
+</style>

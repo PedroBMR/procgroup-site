@@ -1,0 +1,88 @@
+---
+/**
+ * "Segurança e Videomonitoramento Inteligente": faixa escura, como uma sala
+ * de monitoramento. Os três parágrafos de abertura e, abaixo, os três recursos
+ * (pesquisa de pessoas, pesquisa de veículos, alertas), cada um com a cena do
+ * que faz: a lupa percorrendo as gravações até o quadro certo, a placa lida
+ * no veículo, o alerta disparado por quem entrou na área restrita.
+ *
+ * Âncora do mega-menu: #videomonitoramento, na seção.
+ *
+ * Texto: titulo, subtitulo, paragrafos, cards (titulo, subtitulo, paragrafos,
+ * itensTitulo, itens, depois) e depois do bloco, sem alteração.
+ */
+import Cena from "./Cena.astro";
+import type { NomeCena } from "./cenas";
+import type { Bloco } from "../../data/preview/blocos";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+const CENAS: NomeCena[] = ["pesquisaPessoas", "pesquisaVeiculos", "alertas"];
+---
+
+<section class="ap-secao escura video" data-cena id={bloco.id}>
+  <div class="container">
+    <div class="topo">
+      <div class="ap-cabeca">
+        {bloco.titulo && <h2 class="ap-entra">{bloco.titulo}</h2>}
+        {bloco.subtitulo && <p class="ap-sub ap-entra" style="--i:1">{bloco.subtitulo}</p>}
+      </div>
+      <div class="paragrafos">
+        {bloco.paragrafos?.map((p, i) => <p class:list={["ap-entra", { destaque: i === 0 }]} style={`--i:${i + 2}`}>{p}</p>)}
+      </div>
+    </div>
+
+    <div class="cards">
+      {bloco.cards?.map((c, i) => (
+        <article class="card ap-entra" style={`--i:${i + 3}`}>
+          <Cena nome={CENAS[i] ?? "alertas"} />
+          <div class="corpo">
+            <h3>{c.titulo}</h3>
+            {c.subtitulo && <p class="sub">{c.subtitulo}</p>}
+            {c.paragrafos?.map((p) => <p class="p">{p}</p>)}
+            {c.itensTitulo && <p class="itens-titulo">{c.itensTitulo}</p>}
+            {c.itens && <ul class="filtros">{c.itens.map((it) => <li>{it}</li>)}</ul>}
+            {c.depois?.map((p) => <p class="p depois">{p}</p>)}
+          </div>
+        </article>
+      ))}
+    </div>
+
+    {bloco.depois?.map((p) => <p class="fim ap-entra" style="--i:6">{p}</p>)}
+  </div>
+</section>
+
+<style>
+  .video {
+    scroll-margin-top: calc(var(--topbar-h) + var(--header-h));
+    background:
+      radial-gradient(60% 50% at 15% 0%, rgba(226, 8, 29, 0.12), transparent 70%),
+      radial-gradient(80% 60% at 85% 0%, rgba(37, 56, 102, 0.4), transparent 70%),
+      var(--navy-950);
+  }
+  .video h2 { color: var(--white); }
+  .topo { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: var(--space-12); align-items: start; }
+  .paragrafos p { margin-top: var(--space-4); font-size: var(--fs-base); line-height: 1.65; color: rgba(230, 238, 248, 0.72); }
+  .paragrafos p:first-child { margin-top: 0; }
+  .paragrafos .destaque { font-size: var(--fs-lg); font-weight: 600; line-height: 1.5; color: var(--white); }
+
+  .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-5); margin-top: var(--space-16); align-items: start; }
+  .card { padding: var(--space-3); border-radius: var(--radius-lg); background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015)); border: 1px solid rgba(255, 255, 255, 0.1); }
+  .corpo { padding: var(--space-5) var(--space-3) var(--space-3); }
+  .card h3 { font-size: var(--fs-xl); color: var(--white); }
+  .sub { margin-top: var(--space-2); font-weight: 600; line-height: 1.45; color: var(--red-400); }
+  .p { margin-top: var(--space-3); font-size: var(--fs-sm); line-height: 1.6; color: rgba(230, 238, 248, 0.72); }
+  .itens-titulo { margin-top: var(--space-5); font-size: var(--fs-sm); font-weight: 700; color: var(--white); }
+  /* Os itens como filtros de busca de um sistema de monitoramento. */
+  .filtros { list-style: none; margin: var(--space-3) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .filtros li { padding: 5px 11px; border-radius: var(--radius-pill); font-size: var(--fs-xs); font-weight: 600; color: #e6eef8; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(230, 238, 248, 0.16); }
+  .depois { padding-top: var(--space-3); border-top: 1px solid rgba(255, 255, 255, 0.08); color: rgba(230, 238, 248, 0.9); font-weight: 600; }
+  .fim { margin: var(--space-16) auto 0; max-width: 56ch; text-align: center; font-family: var(--font-display); font-weight: 800; font-size: var(--fs-xl); text-transform: uppercase; line-height: var(--lh-snug); color: var(--white); }
+
+  @media (max-width: 1000px) {
+    .topo, .cards { grid-template-columns: 1fr; }
+    .cards { max-width: 620px; }
+  }
+</style>

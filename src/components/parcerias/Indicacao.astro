@@ -1,0 +1,77 @@
+---
+/**
+ * "Indicação de Oportunidades" (âncora #indicacao do menu): os quatro
+ * parágrafos à esquerda e, à direita, o que o fecho diz em desenho. Três nós
+ * em diagonal: a empresa que alguém identificou (prédio), a Proc que conduz
+ * (conversa) e o negócio fechado (selo). Uma linha os liga e dados descem por
+ * ela em loop. O fecho fica embaixo, inteiro.
+ *
+ * Texto: id, titulo, paragrafos e fecho do bloco, sem alteração.
+ */
+import MenuIcon from "../MenuIcon.astro";
+import type { Bloco } from "../../data/preview/blocos";
+import type { NomeIconeMenu } from "../../data/iconesMenu";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+const PASSOS: NomeIconeMenu[] = ["predio", "conversa", "selo"];
+const PTS = [[60, 50], [200, 160], [340, 270]];
+const trilho = `M60 50 C140 50 120 160 200 160 S260 270 340 270`;
+---
+
+<section id={bloco.id} class="ap-secao escura indicacao" data-cena>
+  <div class="container grade">
+    <div class="ap-cabeca">
+      {bloco.titulo && <h2 class="ap-entra">{bloco.titulo}</h2>}
+      {bloco.paragrafos?.map((p, i) => <p class:list={["ap-p ap-entra", { forte: i === 3 }]} style={`--i:${i + 1}`}>{p}</p>)}
+    </div>
+
+    <div class="trilha" aria-hidden="true">
+      <svg viewBox="0 0 400 320">
+        <path class="ap-traco linha" d={trilho} pathLength="1" style="--o:0.4" />
+        <path class="ap-fluxo" d={trilho} pathLength="1" style="--dur:3.4s; --atraso:2s" />
+      </svg>
+      {PASSOS.map((icone, k) => (
+        <span class:list={["pc-no", "passo", { ativo: k === 2 }]} style={`--x:${(PTS[k][0] / 400) * 100}%; --y:${(PTS[k][1] / 320) * 100}%; --k:${k}`}>
+          <MenuIcon nome={icone} />
+        </span>
+      ))}
+    </div>
+  </div>
+  <div class="container">
+    {bloco.fecho?.map((p) => <p class="ap-fecho fecho ap-entra" style="--i:5">{p}</p>)}
+  </div>
+</section>
+
+<style>
+  .grade { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: var(--space-12); align-items: center; }
+  .forte { color: var(--white); font-weight: 600; font-size: var(--fs-lg); }
+
+  .trilha { position: relative; width: 100%; max-width: 440px; margin-inline: auto; aspect-ratio: 400 / 320; }
+  .trilha svg { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; overflow: visible; }
+  .linha { stroke: rgba(230, 238, 248, 0.3); stroke-width: 2; stroke-dasharray: 1; }
+  .passo {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: 72px;
+    height: 72px;
+    transform: translate(-50%, -50%) scale(0.85);
+    opacity: 0;
+    transition: opacity 0.45s ease calc(0.6s + var(--k) * 0.45s), transform 0.55s var(--ease-out) calc(0.6s + var(--k) * 0.45s);
+  }
+  .passo :global(.menu-icon) { width: 32px; height: 32px; }
+  .em-cena .passo { opacity: 1; transform: translate(-50%, -50%); }
+
+  .fecho { margin-top: var(--space-12); padding-top: var(--space-8); border-top: 1px solid rgba(230, 238, 248, 0.14); color: var(--white); max-width: 34ch; }
+
+  @media (max-width: 900px) {
+    .grade { grid-template-columns: 1fr; gap: var(--space-8); }
+    .trilha { max-width: 320px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .passo { transition: none; opacity: 1; transform: translate(-50%, -50%); }
+  }
+</style>

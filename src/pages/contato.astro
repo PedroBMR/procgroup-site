@@ -10,8 +10,16 @@
  * O formulário NÃO envia nada: não existe destino aprovado, e o vendas@ ainda
  * é decisão em aberto (R5 de AUDITORIA-AJUSTES-SITE.md). No ar ele fica
  * desligado (components/preview/formularios.ts) e a página mostra só os canais.
+ *
+ * Redesign de 2026-10-26: mesmo padrão visual de A Proc, Infraestrutura de TI
+ * e Hospedagem em Nuvem (src/styles/aproc.css e src/scripts/aprocCenas.ts).
+ * Herói próprio em src/components/contato/ e os canais como cartões com
+ * ícone. Texto, dados e o comportamento do formulário não mudaram.
  */
+import "../styles/aproc.css";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import MenuIcon from "../components/MenuIcon.astro";
+import Hero from "../components/contato/Hero.astro";
 import { navPreview } from "../data/preview/ajustes";
 import { FORMULARIOS_NO_AR } from "../components/preview/formularios";
 
@@ -25,26 +33,28 @@ const WHATSAPP_LINK = "https://wa.me/5546991411324";
   description="Fale com um especialista Proc e descubra a solução ideal para o seu contexto."
   nav={navPreview()}
 >
-  <section class="hero-page">
-    <div class="container">
-      <p class="eyebrow">Contato</p>
-      <h1>Fale com um especialista Proc</h1>
-      <p class="lead">Descubra a solução ideal para o seu contexto.</p>
-    </div>
-  </section>
+  <Hero eyebrow="Contato" titulo="Fale com um especialista Proc" lead="Descubra a solução ideal para o seu contexto." />
 
-  <section class="section banda" data-theme="light">
+  <section class="ap-secao banda" data-theme="light" data-cena>
     <div class:list={["container", "grade", { "so-canais": !FORMULARIOS_NO_AR }]}>
-      <div class="canais" data-reveal>
-        <h2>Fale com vendas</h2>
+      <div class="canais">
+        <h2 class="ap-entra">Fale com vendas</h2>
         <ul>
-          <li>
-            <span class="rotulo">E-mail</span>
-            <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+          <li class="canal ap-entra" style="--i:1">
+            <span class="icone" aria-hidden="true"><MenuIcon nome="envelope" /></span>
+            <span class="dados">
+              <span class="rotulo">E-mail</span>
+              <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+            </span>
+            <span class="sinal" aria-hidden="true"></span>
           </li>
-          <li>
-            <span class="rotulo">WhatsApp</span>
-            <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer">{WHATSAPP_ROTULO}</a>
+          <li class="canal ap-entra" style="--i:2">
+            <span class="icone" aria-hidden="true"><MenuIcon nome="conversa" /></span>
+            <span class="dados">
+              <span class="rotulo">WhatsApp</span>
+              <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer">{WHATSAPP_ROTULO}</a>
+            </span>
+            <span class="sinal" aria-hidden="true"></span>
           </li>
         </ul>
       </div>
@@ -76,19 +86,77 @@ const WHATSAPP_LINK = "https://wa.me/5546991411324";
 </BaseLayout>
 
 <style>
-  .hero-page { padding-block: var(--space-16) var(--space-8); }
-  .hero-page h1 { font-size: var(--fs-4xl); margin-top: var(--space-4); }
-  .lead { margin-top: var(--space-5); max-width: 62ch; font-size: var(--fs-lg); color: var(--color-text-muted); }
-
-  .section { padding-block: var(--space-16) var(--space-24); }
-  .banda { background: var(--color-bg); }
+  .banda { background: linear-gradient(180deg, var(--color-bg-alt), var(--color-bg)); }
+  /* Malha de pontos fraca no topo, como nas seções claras da home. */
+  .banda::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 420px;
+    background-image: radial-gradient(rgba(11, 23, 48, 0.14) 1px, transparent 1.2px);
+    background-size: 22px 22px;
+    mask-image: radial-gradient(70% 90% at 85% 0%, black 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .banda .container { position: relative; }
   .grade.so-canais { grid-template-columns: 1fr; }
   .grade { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: var(--space-16); align-items: start; }
 
-  .canais h2 { font-size: var(--fs-2xl); }
-  .canais ul { margin-top: var(--space-6); display: grid; gap: var(--space-5); }
+  .canais h2 { font-size: var(--fs-3xl); }
+  .canais ul { margin-top: var(--space-8); display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: var(--space-6); }
+
+  /* Cartão de canal: o link cobre o cartão inteiro (::after), o resto é desenho. */
+  .canal {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+    padding: var(--space-8);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    box-shadow: 0 1px 2px rgba(11, 23, 48, 0.04), 0 12px 32px -18px rgba(11, 23, 48, 0.18);
+    overflow: hidden;
+  }
+  .em-cena .canal { transition: opacity 0.7s var(--ease-out) calc(var(--i) * 0.12s), transform 0.5s var(--ease-out), border-color 0.3s ease, box-shadow 0.5s var(--ease-out); }
+  .em-cena .canal:is(:hover, :focus-within) {
+    transform: translateY(-6px);
+    border-color: color-mix(in srgb, var(--red-600), white 55%);
+    box-shadow: 0 2px 4px rgba(11, 23, 48, 0.05), 0 28px 56px -24px rgba(11, 23, 48, 0.32);
+  }
+  .icone {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    color: var(--white);
+    background: radial-gradient(circle at 50% 30%, var(--navy-700), var(--navy-950));
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    transition: box-shadow 0.4s ease;
+  }
+  .icone :global(.menu-icon) { width: 28px; height: 28px; }
+  .canal:is(:hover, :focus-within) .icone { box-shadow: inset 0 0 0 2px var(--red-500), 0 0 22px rgba(226, 8, 29, 0.3); }
+  .dados { display: grid; gap: var(--space-1); min-width: 0; }
   .rotulo { display: block; font-size: var(--fs-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--color-eyebrow); }
-  .canais a { display: inline-flex; align-items: center; min-height: 32px; font-size: var(--fs-lg); font-weight: 600; color: var(--color-text); text-decoration: underline; text-underline-offset: 3px; }
+  .canais a { display: inline-flex; align-items: center; min-height: 32px; font-size: var(--fs-lg); font-weight: 600; color: var(--color-text); text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+  .canais a::after { content: ""; position: absolute; inset: 0; border-radius: inherit; }
+  .canais a:focus-visible { outline: none; }
+  .canal:has(a:focus-visible) { outline: 2px solid var(--red-600); outline-offset: 4px; }
+  /* Sinal: linha na base do cartão com um pulso passando. */
+  .sinal { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--color-border); overflow: hidden; }
+  .sinal::after { content: ""; position: absolute; inset: 0; width: 30%; background: linear-gradient(90deg, transparent, var(--red-500), transparent); transform: translateX(-100%); }
+  .em-cena .sinal::after { animation: ct-sinal 3.2s linear 1.6s infinite; }
+  .canal:is(:hover, :focus-within) .sinal::after { animation-duration: 1.4s; }
+  @keyframes ct-sinal { to { transform: translateX(340%); } }
+  @media (max-width: 480px) {
+    .canal { flex-direction: column; align-items: flex-start; padding: var(--space-6); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .em-cena .canal:is(:hover, :focus-within) { transform: none; }
+    .em-cena .sinal::after { animation: none; }
+  }
 
   .form {
     display: grid; gap: var(--space-5);
@@ -134,6 +202,9 @@ const WHATSAPP_LINK = "https://wa.me/5546991411324";
 </style>
 
 <script>
+  import { montarCenas } from "../scripts/aprocCenas";
+  montarCenas();
+
   // Cópia de avaliação: o formulário não tem para onde enviar. Avisa quem
   // clicar, em vez de fingir que a mensagem foi.
   const form = document.querySelector<HTMLFormElement>("[data-form-demo]");

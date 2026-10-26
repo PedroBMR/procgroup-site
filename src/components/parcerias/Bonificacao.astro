@@ -1,0 +1,98 @@
+---
+/**
+ * "Bonificação e condições comerciais": o parágrafo do percentual e os sete
+ * critérios da análise individual. Cada critério é uma linha que converge para
+ * um medidor à direita, cujo ponteiro oscila devagar em loop: o percentual
+ * sai da combinação dos critérios, não de uma tabela fixa. A frase sobre a
+ * formalização fica embaixo, como nota.
+ *
+ * Texto: titulo, paragrafos, itensTitulo, itens e depois do bloco, sem
+ * alteração.
+ */
+import MenuIcon from "../MenuIcon.astro";
+import type { Bloco } from "../../data/preview/blocos";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+const itens = bloco.itens ?? [];
+// Linhas de 44px com 8px de intervalo: a SVG usa a mesma régua.
+const ALT = itens.length * 52 - 8;
+const meio = ALT / 2;
+const liga = (k: number) => `M0 ${22 + k * 52} C80 ${22 + k * 52} 90 ${meio} 150 ${meio}`;
+---
+
+<section class="ap-secao escura bonificacao" data-cena>
+  <div class="container">
+    <div class="ap-cabeca">
+      {bloco.titulo && <h2 class="ap-entra">{bloco.titulo}</h2>}
+      {bloco.paragrafos?.map((p, i) => <p class="ap-p ap-entra primeiro" style={`--i:${i + 1}`}>{p}</p>)}
+    </div>
+
+    {bloco.itensTitulo && <p class="pc-titulo-lista titulo ap-entra" style="--i:2">{bloco.itensTitulo}</p>}
+    <div class="analise" style={`--alt:${ALT}px`}>
+      <ul class="criterios">
+        {itens.map((it, k) => <li class="ap-entra" style={`--i:${k + 2}`}>{it}</li>)}
+      </ul>
+      <svg class="ligas" viewBox={`0 0 150 ${ALT}`} preserveAspectRatio="none" aria-hidden="true">
+        {itens.map((_, k) => <path class="ap-traco liga" d={liga(k)} pathLength="1" style={`--o:${(0.6 + k * 0.1).toFixed(2)}`} vector-effect="non-scaling-stroke" />)}
+        {itens.map((_, k) => <path class="ap-fluxo" d={liga(k)} pathLength="1" style={`--k:${k}; --dur:2.4s; --atraso:2.6s`} vector-effect="non-scaling-stroke" />)}
+      </svg>
+      <div class="medidor" aria-hidden="true">
+        <svg viewBox="0 0 120 80">
+          <path class="arco-fundo" d="M14 70 A46 46 0 0 1 106 70" />
+          <path class="ap-traco arco" d="M14 70 A46 46 0 0 1 106 70" pathLength="1" style="--o:1" />
+          <g class="ponteiro"><path d="M60 70 L60 32" /><circle cx="60" cy="70" r="5" /></g>
+        </svg>
+      </div>
+    </div>
+
+    {bloco.depois?.map((p) => <p class="nota ap-entra" style="--i:3">{p}</p>)}
+  </div>
+</section>
+
+<style>
+  .primeiro { font-size: var(--fs-lg); color: rgba(230, 238, 248, 0.85); }
+  .titulo { margin-top: var(--space-12); }
+
+  .analise { display: grid; grid-template-columns: minmax(0, 1fr) minmax(80px, 0.6fr) auto; align-items: center; max-width: 900px; }
+  .criterios { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .criterios li {
+    display: flex;
+    align-items: center;
+    height: 44px;
+    padding-inline: var(--space-4);
+    border-radius: var(--radius-sm);
+    background: var(--navy-900);
+    border: 1px solid rgba(230, 238, 248, 0.14);
+    border-left: 3px solid var(--red-500);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-text);
+  }
+  .ligas { display: block; width: 100%; height: var(--alt); fill: none; overflow: visible; }
+  .liga { stroke: rgba(96, 165, 250, 0.4); stroke-width: 1.4; }
+
+  .medidor { display: grid; place-items: center; width: 168px; height: 168px; border-radius: 50%; background: var(--navy-900); border: 1px solid rgba(230, 238, 248, 0.16); box-shadow: 0 0 50px -12px rgba(226, 8, 29, 0.5); }
+  .medidor svg { width: 116px; height: auto; fill: none; stroke-linecap: round; }
+  .arco-fundo { stroke: rgba(230, 238, 248, 0.14); stroke-width: 8; }
+  .arco { stroke: var(--red-500); stroke-width: 8; }
+  .ponteiro { stroke: #e6eef8; stroke-width: 3; fill: #e6eef8; transform-origin: 60px 70px; transform: rotate(-70deg); transition: transform 1.2s var(--ease-out) 1.4s; }
+  .em-cena .ponteiro { transform: rotate(10deg); animation: pc-ponteiro 6s ease-in-out 2.8s infinite; }
+  @keyframes pc-ponteiro { 0%, 100% { transform: rotate(10deg); } 30% { transform: rotate(-30deg); } 65% { transform: rotate(45deg); } }
+
+  .nota { max-width: 72ch; margin-top: var(--space-12); padding-left: var(--space-5); border-left: 2px solid var(--red-500); font-size: var(--fs-base); line-height: 1.6; color: rgba(230, 238, 248, 0.82); }
+
+  @media (max-width: 760px) {
+    .analise { grid-template-columns: 1fr; justify-items: center; gap: var(--space-6); }
+    .ligas { display: none; }
+    .medidor { order: -1; width: 132px; height: 132px; }
+    .medidor svg { width: 90px; }
+    .criterios { width: 100%; }
+    .criterios li { height: auto; min-height: 44px; padding-block: var(--space-2); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ponteiro, .em-cena .ponteiro { transition: none; animation: none; transform: rotate(10deg); }
+  }
+</style>

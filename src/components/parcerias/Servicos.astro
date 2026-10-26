@@ -1,0 +1,179 @@
+---
+/**
+ * "O que a Proc faz pela sua software house?" como Feature Tabs, no mesmo
+ * desenho das soluções de Infraestrutura de TI, em faixa escura: os oito
+ * serviços na lista à esquerda, o painel à direita. Sem autoplay. Padrão de
+ * abas do WAI-ARIA, com setas, Home e End.
+ *
+ * Cada painel abre com uma cena em linha: a aplicação do parceiro à esquerda
+ * ligada ao ícone do serviço à direita, com dados passando entre eles em
+ * loop. Sem palavra dentro das cenas.
+ *
+ * Texto: titulo e cards (titulo e paragrafos) do bloco, sem alteração.
+ */
+import MenuIcon from "../MenuIcon.astro";
+import { ICONES_MENU, type NomeIconeMenu } from "../../data/iconesMenu";
+import type { Bloco } from "../../data/preview/blocos";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+const cards = bloco.cards ?? [];
+const ICONES: NomeIconeMenu[] = ["medidor", "engrenagem", "modulos", "monitor", "crescimento", "escudo", "nuvemBackup", "suporte"];
+const ic = (nome: NomeIconeMenu, x: number, y: number, s: number) =>
+  `<g transform="translate(${x} ${y}) scale(${s})">${ICONES_MENU[nome]}</g>`;
+const LIGA = "M86 75 C130 75 150 50 160 50 S200 100 226 75";
+const cena = (nome: NomeIconeMenu) =>
+  ic("codigo", 18, 41, 2.8) +
+  `<path class="tr fraco" pathLength="1" d="${LIGA}"/>` +
+  `<path class="fl" pathLength="1" d="${LIGA}"/>` +
+  ic(nome, 228, 33, 3.5);
+const id = (k: number) => `servico-${k + 1}`;
+---
+
+<section class="ap-secao escura servicos" data-cena>
+  <div class="container">
+    <div class="ap-cabeca">
+      {bloco.titulo && <h2 class="ap-entra">{bloco.titulo}</h2>}
+    </div>
+
+    <div class="abas ap-entra" style="--i:1" data-pc-abas>
+      <div class="lista" role="tablist" aria-orientation="vertical" aria-label={bloco.titulo}>
+        {cards.map((c, k) => (
+          <button type="button" class="aba" role="tab" id={id(k)} aria-controls={`painel-${id(k)}`} aria-selected={k === 0 ? "true" : "false"} tabindex={k === 0 ? 0 : -1}>
+            <span class="aba-ic" aria-hidden="true"><MenuIcon nome={ICONES[k] ?? "modulos"} /></span>
+            <span class="aba-titulo">{c.titulo}</span>
+          </button>
+        ))}
+      </div>
+      <div class="paineis">
+        {cards.map((c, k) => (
+          <div class="painel" role="tabpanel" id={`painel-${id(k)}`} aria-labelledby={id(k)} hidden={k !== 0} tabindex="0">
+            <svg class="cena" viewBox="0 0 320 150" aria-hidden="true" set:html={cena(ICONES[k] ?? "modulos")} />
+            {c.paragrafos?.map((p) => <p class="p">{p}</p>)}
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .abas {
+    display: grid;
+    grid-template-columns: minmax(240px, 0.8fr) minmax(0, 2fr);
+    gap: var(--space-6);
+    margin-top: var(--space-12);
+    padding: var(--space-3);
+    border-radius: var(--radius-lg);
+    background: rgba(230, 238, 248, 0.04);
+    border: 1px solid rgba(230, 238, 248, 0.12);
+  }
+  .lista { display: grid; gap: 2px; align-content: start; }
+  .aba {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: 52px;
+    padding: var(--space-3) var(--space-4);
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: none;
+    color: rgba(230, 238, 248, 0.7);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .aba::before { content: ""; position: absolute; left: 0; top: 10px; bottom: 10px; width: 3px; border-radius: 3px; background: var(--red-500); transform: scaleY(0); transition: transform 0.25s var(--ease-out); }
+  .aba:hover { background: rgba(230, 238, 248, 0.06); color: var(--white); }
+  .aba[aria-selected="true"] { background: var(--navy-800); color: var(--white); }
+  .aba[aria-selected="true"]::before { transform: scaleY(1); }
+  .aba:focus-visible { outline: 2px solid var(--red-500); outline-offset: 2px; }
+  .aba-ic { display: grid; place-items: center; color: var(--red-400); }
+  .aba-ic :global(.menu-icon) { width: 20px; height: 20px; }
+  .aba-titulo { font-size: var(--fs-sm); font-weight: 600; line-height: 1.35; }
+
+  .paineis { min-height: 380px; }
+  .painel {
+    height: 100%;
+    padding: var(--space-6) var(--space-8) var(--space-8);
+    border-radius: var(--radius-md);
+    background: var(--navy-900);
+    border: 1px solid rgba(230, 238, 248, 0.12);
+    outline: none;
+    animation: pc-entra 0.4s var(--ease-out);
+  }
+  .painel[hidden] { display: none; }
+  .painel:focus-visible { box-shadow: 0 0 0 2px var(--red-500); }
+  @keyframes pc-entra { from { opacity: 0; transform: translateY(10px); } }
+
+  .cena {
+    display: block;
+    width: 100%;
+    height: 150px;
+    margin-bottom: var(--space-6);
+    border-radius: var(--radius-sm);
+    background: radial-gradient(70% 90% at 75% 30%, rgba(226, 8, 29, 0.14), transparent 60%), var(--navy-950);
+    fill: none;
+    stroke: #e6eef8;
+    stroke-width: 0.65;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .cena :global(.tr) { stroke-width: 1.6; stroke-dasharray: 1; stroke-dashoffset: 1; animation: pc-traco 1s cubic-bezier(0.33, 1, 0.68, 1) 0.2s forwards; }
+  .cena :global(.tr.fraco) { stroke: rgba(230, 238, 248, 0.35); }
+  @keyframes pc-traco { to { stroke-dashoffset: 0; } }
+  .cena :global(.fl) { stroke: #ff4a54; stroke-width: 2.4; stroke-dasharray: 0.08 0.92; stroke-dashoffset: 0.08; filter: drop-shadow(0 0 3px rgba(226, 8, 29, 0.7)); animation: pc-fl 2.2s linear 1.1s infinite; opacity: 0; }
+  @keyframes pc-fl { 0% { opacity: 1; } 100% { opacity: 1; stroke-dashoffset: -0.92; } }
+
+  .p { margin-top: 0; font-size: var(--fs-base); line-height: 1.65; color: rgba(230, 238, 248, 0.8); max-width: 62ch; }
+
+  @media (max-width: 960px) {
+    .abas { grid-template-columns: 1fr; }
+    .lista { grid-auto-flow: column; grid-auto-columns: minmax(180px, 64%); overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: var(--space-2); }
+    .aba { scroll-snap-align: start; }
+    .paineis { min-height: 0; }
+    .painel { padding: var(--space-5); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .painel { animation: none; }
+    .cena :global(.tr) { animation: none; stroke-dashoffset: 0; stroke-dasharray: none; }
+    .cena :global(.fl) { display: none; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-pc-abas]").forEach((raiz) => {
+    const abas = Array.from(raiz.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+    const paineis = Array.from(raiz.querySelectorAll<HTMLElement>('[role="tabpanel"]'));
+    let atual = 0;
+
+    const mostrar = (n: number, focar = false) => {
+      atual = (n + abas.length) % abas.length;
+      abas.forEach((a, k) => {
+        const sim = k === atual;
+        a.setAttribute("aria-selected", String(sim));
+        a.tabIndex = sim ? 0 : -1;
+        paineis[k].hidden = !sim;
+      });
+      if (focar) abas[atual].focus();
+      const lista = abas[atual].parentElement;
+      if (lista && lista.scrollWidth > lista.clientWidth) {
+        lista.scrollTo({ left: abas[atual].offsetLeft - lista.offsetLeft, behavior: "smooth" });
+      }
+    };
+
+    abas.forEach((a, k) => a.addEventListener("click", () => mostrar(k)));
+    raiz.querySelector('[role="tablist"]')?.addEventListener("keydown", (e) => {
+      const ev = e as KeyboardEvent;
+      const mapa: Record<string, number> = { ArrowDown: atual + 1, ArrowRight: atual + 1, ArrowUp: atual - 1, ArrowLeft: atual - 1, Home: 0, End: abas.length - 1 };
+      if (!(ev.key in mapa)) return;
+      ev.preventDefault();
+      mostrar(mapa[ev.key], true);
+    });
+  });
+</script>

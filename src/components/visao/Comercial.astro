@@ -1,0 +1,92 @@
+---
+/**
+ * "Inteligência Comercial e de Marketing" e, logo abaixo, os dois analytics
+ * de fluxo (pessoas e veículos), numa seção só: os cards são o detalhe do
+ * texto que os apresenta.
+ *
+ * Cada card abre com a cena do próprio fluxo: a planta da loja com o mapa de
+ * calor e as pessoas circulando, e a pista com os veículos passando pela linha
+ * de contagem. Os itens de cada card ficam em duas colunas de etiquetas.
+ *
+ * Âncoras do mega-menu: #inteligencia-comercial na seção, #fluxo-de-pessoas e
+ * #fluxo-de-veiculos nos cards.
+ *
+ * Texto: eyebrow, titulo, subtitulo e paragrafos do bloco de introdução, e os
+ * cards do bloco seguinte (titulo, subtitulo, paragrafos, itensTitulo, itens,
+ * fecho), sem alteração.
+ */
+import Cena from "./Cena.astro";
+import type { NomeCena } from "./cenas";
+import type { Bloco } from "../../data/preview/blocos";
+
+interface Props {
+  intro: Bloco;
+  fluxos: Bloco;
+}
+const { intro, fluxos } = Astro.props;
+const CENAS: NomeCena[] = ["fluxoPessoas", "fluxoVeiculos"];
+---
+
+<section class="ap-secao comercial" data-theme="light" data-cena id={intro.id}>
+  <div class="container">
+    <div class="ap-cabeca">
+      {intro.eyebrow && <p class="eyebrow ap-entra">{intro.eyebrow}</p>}
+      {intro.titulo && <h2 class="ap-entra" style="--i:1">{intro.titulo}</h2>}
+      {intro.subtitulo && <p class="ap-sub ap-entra" style="--i:2">{intro.subtitulo}</p>}
+    </div>
+    <div class="paragrafos">
+      {intro.paragrafos?.map((p, i) => <p class="ap-entra" style={`--i:${i + 3}`}>{p}</p>)}
+    </div>
+
+    <div class="cards">
+      {fluxos.cards?.map((c, i) => (
+        <article class="card ap-entra" id={c.id} style={`--i:${i + 4}`}>
+          <Cena nome={CENAS[i] ?? "fluxoPessoas"} />
+          <div class="corpo">
+            <h3>{c.titulo}</h3>
+            {c.subtitulo && <p class="sub">{c.subtitulo}</p>}
+            {c.paragrafos?.map((p) => <p class="p">{p}</p>)}
+            {c.itensTitulo && <p class="itens-titulo">{c.itensTitulo}</p>}
+            {c.itens && <ul class="itens">{c.itens.map((it) => <li>{it}</li>)}</ul>}
+            {c.fecho?.map((p) => <p class="fecho">{p}</p>)}
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .comercial { scroll-margin-top: calc(var(--topbar-h) + var(--header-h)); }
+  .paragrafos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-8); margin-top: var(--space-8); }
+  .paragrafos p { font-size: var(--fs-sm); line-height: 1.7; color: var(--color-text-muted); padding-top: var(--space-4); border-top: 2px solid var(--color-border); }
+  .paragrafos p:first-child { border-top-color: var(--red-600); }
+
+  .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-6); margin-top: var(--space-16); align-items: start; }
+  .card {
+    padding: var(--space-3);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 24px 50px -40px rgba(11, 23, 48, 0.5);
+    scroll-margin-top: calc(var(--topbar-h) + var(--header-h) + var(--space-6));
+  }
+  .corpo { padding: var(--space-6) var(--space-5) var(--space-5); }
+  .card h3 { font-size: var(--fs-xl); }
+  .sub { margin-top: var(--space-2); font-weight: 600; color: var(--red-600); line-height: 1.45; }
+  .p { margin-top: var(--space-4); font-size: var(--fs-sm); line-height: 1.65; color: var(--color-text-muted); }
+  .itens-titulo { margin-top: var(--space-6); font-size: var(--fs-sm); font-weight: 700; color: var(--color-text); }
+  .itens { list-style: none; margin: var(--space-3) 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2) var(--space-5); }
+  .itens li { position: relative; padding-left: var(--space-4); font-size: var(--fs-sm); line-height: 1.45; color: var(--color-text); }
+  .itens li::before { content: ""; position: absolute; left: 0; top: 0.55em; width: 6px; height: 6px; border-radius: 50%; background: var(--red-500); }
+  .fecho { margin-top: var(--space-6); padding: var(--space-4) var(--space-5); border-radius: var(--radius-sm); background: var(--color-bg-alt); border-left: 3px solid var(--red-600); font-weight: 700; line-height: 1.5; color: var(--color-text); }
+
+  @media (max-width: 960px) {
+    .paragrafos, .cards { grid-template-columns: 1fr; }
+    .paragrafos { gap: var(--space-4); }
+  }
+  @media (max-width: 480px) {
+    .itens { grid-template-columns: 1fr; }
+    .corpo { padding: var(--space-5) var(--space-2) var(--space-3); }
+  }
+</style>

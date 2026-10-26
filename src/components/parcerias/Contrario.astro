@@ -1,0 +1,110 @@
+---
+/**
+ * "E a parceria também funciona no sentido contrário.": o parceiro à
+ * esquerda e a Proc à direita, ligados por dois arcos, um em cada sentido,
+ * com dados passando em loop nos dois. As três áreas que podem ser acionadas
+ * viram cartões com o ícone da área. O fecho fecha a seção em duas linhas.
+ *
+ * Texto: eyebrow, titulo, subtitulo, paragrafos, itensTitulo, itens, depois e
+ * fecho do bloco, sem alteração.
+ */
+import MenuIcon from "../MenuIcon.astro";
+import { withBase } from "../../utils/url";
+import type { Bloco } from "../../data/preview/blocos";
+import type { NomeIconeMenu } from "../../data/iconesMenu";
+
+interface Props {
+  bloco: Bloco;
+}
+const { bloco } = Astro.props;
+const AREAS: NomeIconeMenu[] = ["servidores", "nuvem", "camera"];
+const IDA = "M70 80 C150 10 270 10 350 80";
+const VOLTA = "M350 100 C270 170 150 170 70 100";
+---
+
+<section class="ap-secao contrario" data-theme="light" data-cena>
+  <div class="container grade">
+    <div class="ap-cabeca">
+      {bloco.eyebrow && <p class="eyebrow ap-entra">{bloco.eyebrow}</p>}
+      {bloco.titulo && <h2 class="ap-entra" style="--i:1">{bloco.titulo}</h2>}
+      {bloco.subtitulo && <p class="ap-sub sub ap-entra" style="--i:2">{bloco.subtitulo}</p>}
+      {bloco.paragrafos?.map((p, i) => <p class="ap-p ap-entra" style={`--i:${i + 3}`}>{p}</p>)}
+    </div>
+
+    <div class="mao-dupla" aria-hidden="true">
+      <svg viewBox="0 0 420 180">
+        <path class="ap-traco arco" d={IDA} pathLength="1" style="--o:0.4" />
+        <path class="ap-traco arco" d={VOLTA} pathLength="1" style="--o:0.9" />
+        <path class="ponta" d="M338 62 L350 80 L330 82" />
+        <path class="ponta" d="M82 118 L70 100 L90 98" />
+        <path class="ap-fluxo" d={IDA} pathLength="1" style="--dur:2.6s; --atraso:2s" />
+        <path class="ap-fluxo" d={VOLTA} pathLength="1" style="--dur:2.6s; --atraso:3.3s" />
+      </svg>
+      <span class="pc-no lado esq"><MenuIcon nome="pessoas" /></span>
+      <span class="lado dir"><img src={withBase("/brand/logo-white.png")} alt="" width="234" height="74" loading="lazy" decoding="async" /></span>
+    </div>
+  </div>
+
+  <div class="container">
+    {bloco.itensTitulo && <p class="pc-titulo-lista areas-titulo ap-entra">{bloco.itensTitulo}</p>}
+    {bloco.itens && (
+      <ul class="areas">
+        {bloco.itens.map((it, k) => (
+          <li class="area ap-entra" style={`--i:${k + 1}`}>
+            <span class="pc-no ativo" aria-hidden="true"><MenuIcon nome={AREAS[k] ?? "modulos"} /></span>
+            <span>{it}</span>
+          </li>
+        ))}
+      </ul>
+    )}
+
+    <div class="pe">
+      {bloco.depois?.map((p, i) => <p class="ap-p ap-entra" style={`--i:${i}`}>{p}</p>)}
+    </div>
+    {bloco.fecho && (
+      <div class="fechos">
+        {bloco.fecho.map((p, i) => <p class="ap-fecho ap-entra" style={`--i:${i + 2}`}>{p}</p>)}
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .grade { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: var(--space-12); align-items: center; }
+  .sub { color: var(--red-600); }
+
+  .mao-dupla { position: relative; aspect-ratio: 420 / 180; max-width: 480px; width: 100%; margin-inline: auto; }
+  .mao-dupla svg { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; overflow: visible; stroke-linecap: round; stroke-linejoin: round; }
+  .arco { stroke: var(--navy-700); stroke-width: 2; }
+  .ponta { stroke: var(--navy-700); stroke-width: 2; opacity: 0; transition: opacity 0.4s ease 2.2s; }
+  .em-cena .ponta { opacity: 1; }
+  .lado { position: absolute; top: 50%; transform: translate(-50%, -50%); }
+  .esq { left: calc(40 / 420 * 100%); width: 72px; height: 72px; }
+  .esq :global(.menu-icon) { width: 32px; height: 32px; }
+  .dir { left: calc(380 / 420 * 100%); display: grid; place-items: center; width: 80px; height: 80px; border-radius: 50%; background: var(--navy-900); box-shadow: 0 0 0 3px var(--red-600), 0 14px 30px -14px rgba(11, 23, 48, 0.6); }
+  .dir img { width: 52px; height: auto; }
+
+  .areas-titulo { margin-top: var(--space-12); }
+  .areas { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); }
+  .area { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-5); border-radius: var(--radius-md); background: var(--color-surface); border: 1px solid var(--color-border); font-family: var(--font-display); font-weight: 800; font-size: var(--fs-base); text-transform: uppercase; line-height: var(--lh-snug); color: var(--color-text); }
+  .area .pc-no { flex: none; }
+
+  .pe { max-width: 72ch; margin-top: var(--space-8); }
+  .pe .ap-p:first-child { margin-top: 0; }
+  .fechos { margin-top: var(--space-8); padding-top: var(--space-6); border-top: 1px solid var(--color-border); }
+  .fechos .ap-fecho { margin-top: 0; }
+  .fechos .ap-fecho + .ap-fecho { margin-top: var(--space-2); color: var(--red-600); }
+
+  @media (max-width: 900px) {
+    .grade { grid-template-columns: 1fr; gap: var(--space-8); }
+    .areas { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 420px) {
+    .esq { width: 56px; height: 56px; }
+    .dir { width: 62px; height: 62px; }
+    .dir img { width: 40px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ponta { transition: none; opacity: 1; }
+  }
+</style>

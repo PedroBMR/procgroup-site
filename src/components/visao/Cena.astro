@@ -1,0 +1,133 @@
+---
+/**
+ * Moldura escura com um dos desenhos de src/components/visao/cenas.ts.
+ *
+ * O movimento parte da classe .em-cena da seção (src/scripts/aprocCenas.ts):
+ * os traços se desenham uma vez e, depois, o que é processo continua andando
+ * (esteira, feixe de inspeção, ponteiro, dados na linha). Tudo por animação,
+ * e não por transição, para recomeçar quando a cena está numa aba que abre
+ * depois. Com prefers-reduced-motion, aparece pronto e parado.
+ *
+ * Decorativo: aria-hidden, sem texto dentro. O que a cena mostra está dito
+ * no texto da seção.
+ */
+import { CENAS, type NomeCena } from "./cenas";
+
+interface Props {
+  nome: NomeCena;
+  class?: string;
+}
+const { nome, class: className } = Astro.props;
+---
+
+<svg class:list={["vc-cena", className]} viewBox="0 0 320 200" aria-hidden="true" focusable="false" set:html={CENAS[nome]} />
+
+<style>
+  .vc-cena {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 320 / 200;
+    border-radius: var(--radius-md);
+    background:
+      radial-gradient(70% 90% at 75% 15%, rgba(226, 8, 29, 0.12), transparent 60%),
+      radial-gradient(120% 100% at 50% 0%, var(--navy-800), var(--navy-950) 80%);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 30px 60px -36px rgba(11, 23, 48, 0.8);
+    fill: none;
+    stroke: #e6eef8;
+    stroke-width: 0.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* Traço que se desenha. */
+  .vc-cena :global(.tr) { stroke-width: 1.5; stroke-dasharray: 1; stroke-dashoffset: 1; }
+  :global(.em-cena) .vc-cena :global(.tr) { animation: vc-traco 1.1s cubic-bezier(0.33, 1, 0.68, 1) calc(0.3s + var(--o, 0) * 1s) forwards; }
+  .vc-cena :global(.tr.destaque) { stroke: #ff4a54; stroke-width: 2; filter: drop-shadow(0 0 4px rgba(255, 74, 84, 0.5)); }
+  .vc-cena :global(.tr.fraco) { stroke: rgba(230, 238, 248, 0.35); }
+  .vc-cena :global(.tr.ok) { stroke: #4ade80; stroke-width: 2; }
+  @keyframes vc-traco { to { stroke-dashoffset: 0; } }
+  /* Tracejado fixo: entra por opacidade, não por desenho. */
+  .vc-cena :global(.tr.tracejado) { stroke-dasharray: 0.02 0.015; stroke-dashoffset: 0; opacity: 0; }
+  :global(.em-cena) .vc-cena :global(.tr.tracejado) { animation: vc-surge 0.6s ease calc(0.3s + var(--o, 0) * 1s) forwards; }
+  /* Quadro de detecção que pisca, marcando o que saiu do padrão. */
+  :global(.em-cena) .vc-cena :global(.tr.pisca-traco) {
+    animation:
+      vc-traco 1.1s cubic-bezier(0.33, 1, 0.68, 1) calc(0.3s + var(--o, 0) * 1s) forwards,
+      vc-pisca 1.4s ease-in-out calc(1.6s + var(--o, 0) * 1s) infinite;
+  }
+
+  /* Dado passando pela linha, em loop (mesmo desenho do .ap-fluxo). */
+  .vc-cena :global(.fl) { stroke: #ff4a54; stroke-width: 2.6; stroke-dasharray: 0.08 0.92; stroke-dashoffset: 0.08; opacity: 0; filter: drop-shadow(0 0 3px rgba(255, 74, 84, 0.7)); }
+  :global(.em-cena) .vc-cena :global(.fl) { opacity: 1; animation: vc-fluxo 2.4s linear calc(1.8s + var(--k, 0) * 0.4s) infinite; }
+  @keyframes vc-fluxo { to { stroke-dashoffset: -0.92; } }
+
+  .vc-cena :global(.barra) { fill: rgba(96, 165, 250, 0.55); stroke: none; transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(0); }
+  :global(.em-cena) .vc-cena :global(.barra) { animation: vc-cresce 0.8s var(--ease-out) calc(0.3s + var(--o, 0) * 1s) forwards; }
+  @keyframes vc-cresce { to { transform: none; } }
+
+  .vc-cena :global(.pisca) { fill: #ff4a54; stroke: none; }
+  :global(.em-cena) .vc-cena :global(.pisca) { animation: vc-pisca 1.2s ease-in-out 1s infinite; }
+  @keyframes vc-pisca { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+  @keyframes vc-surge { to { opacity: 1; } }
+
+  /* Esteira: o grupo anda um passo e volta, sem emenda. */
+  :global(.em-cena) .vc-cena :global(.esteira) { animation: vc-esteira var(--dur, 3s) linear 1s infinite; }
+  :global(.em-cena) .vc-cena :global(.esteira.volta) { animation-direction: reverse; }
+  @keyframes vc-esteira { to { transform: translateX(var(--passo, 80px)); } }
+  .vc-cena :global(.rolo) { stroke: rgba(230, 238, 248, 0.35); }
+
+  /* Feixe de inspeção que varre a cena da esquerda para a direita. */
+  .vc-cena :global(.feixe) { fill: rgba(255, 74, 84, 0.5); stroke: none; filter: drop-shadow(0 0 8px rgba(255, 74, 84, 0.8)); opacity: 0; }
+  :global(.em-cena) .vc-cena :global(.feixe) { animation: vc-varre 3.2s ease-in-out 1s infinite; }
+  @keyframes vc-varre {
+    0% { opacity: 0; transform: translateX(0); }
+    10%, 90% { opacity: 1; }
+    100% { opacity: 0; transform: translateX(314px); }
+  }
+  .vc-cena :global(.falha) { stroke: #ff4a54; }
+  .vc-cena :global(.ok) { stroke: #4ade80; }
+
+  /* Ponteiro de mostrador que oscila. */
+  .vc-cena :global(.ponteiro) { stroke: #ff4a54; stroke-width: 2; transform-box: view-box; transform-origin: var(--ox) var(--oy); transform: rotate(-40deg); }
+  :global(.em-cena) .vc-cena :global(.ponteiro) { animation: vc-ponteiro 3.4s ease-in-out 1s infinite alternate; }
+  @keyframes vc-ponteiro { to { transform: rotate(45deg); } }
+  .vc-cena :global(.eixo) { fill: #ff4a54; stroke: none; }
+
+  .vc-cena :global(.nivel) { fill: rgba(96, 165, 250, 0.45); stroke: none; transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(0.5); }
+  :global(.em-cena) .vc-cena :global(.nivel) { animation: vc-nivel 4s ease-in-out 1s infinite alternate; }
+  @keyframes vc-nivel { from { transform: scaleY(0.35); } to { transform: scaleY(0.9); } }
+
+  /* Algo que se desloca e volta (pessoa, lupa, item fora do lugar). */
+  :global(.em-cena) .vc-cena :global(.anda) { animation: vc-anda 3.6s ease-in-out calc(1s + var(--k, 0) * 0.5s) infinite alternate; }
+  @keyframes vc-anda { to { transform: translate(var(--dx, 0), var(--dy, 0)); } }
+  .vc-cena :global(.pessoa) { fill: #e6eef8; stroke: none; }
+
+  .vc-cena :global(.calor) { fill: rgba(226, 8, 29, 0.35); stroke: none; filter: blur(10px); transform-box: fill-box; transform-origin: center; opacity: 0; }
+  .vc-cena :global(.calor.fraco) { fill: rgba(250, 204, 21, 0.3); }
+  :global(.em-cena) .vc-cena :global(.calor) { animation: vc-surge 1s ease 0.6s forwards, vc-respira 4s ease-in-out calc(1.6s + var(--k, 0) * 0.8s) infinite alternate; }
+  @keyframes vc-respira { to { transform: scale(1.25); } }
+
+  /* Linha do tempo de eventos: o que foi visto acende. */
+  .vc-cena :global(.evento) { fill: var(--navy-950); stroke: rgba(230, 238, 248, 0.35); stroke-width: 1.4; }
+  .vc-cena :global(.evento.visto) { stroke: #ff4a54; }
+  :global(.em-cena) .vc-cena :global(.evento.visto) { animation: vc-acende 0.3s ease calc(0.8s + var(--k, 0) * 0.18s) forwards; }
+  @keyframes vc-acende { to { fill: #ff4a54; } }
+
+  .vc-cena :global(.relogio-fundo) { stroke: rgba(230, 238, 248, 0.15); stroke-width: 4; }
+  .vc-cena :global(.tr.relogio) { stroke-width: 4; transform: rotate(-90deg); transform-box: fill-box; transform-origin: center; }
+  :global(.em-cena) .vc-cena :global(.tr.relogio) { animation: vc-traco 6s linear 1s infinite; }
+  .vc-cena :global(.nucleo) { fill: var(--navy-900); stroke: #ff4a54; stroke-width: 1.6; }
+  .vc-cena :global(.onda) { fill: none; stroke: #ff4a54; stroke-width: 1.4; opacity: 0; transform-box: fill-box; transform-origin: center; }
+  :global(.em-cena) .vc-cena :global(.onda) { animation: vc-onda 2.4s ease-out calc(1.2s + var(--k, 0) * 1.2s) infinite; }
+  @keyframes vc-onda { from { opacity: 0.8; transform: scale(0.7); } to { opacity: 0; transform: scale(1.6); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vc-cena :global(*) { animation: none !important; }
+    .vc-cena :global(.tr) { stroke-dashoffset: 0; }
+    .vc-cena :global(.tr.tracejado), .vc-cena :global(.calor) { opacity: 1; }
+    .vc-cena :global(.barra) { transform: none; }
+    .vc-cena :global(.evento.visto) { fill: #ff4a54; }
+    .vc-cena :global(.fl), .vc-cena :global(.feixe), .vc-cena :global(.onda) { display: none; }
+  }
+</style>
