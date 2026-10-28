@@ -1,6 +1,8 @@
 ---
 import { getMainNav } from "../data/nav";
-import { MAPS_URL } from "../data/contact";
+import { MAPS_URL, whatsappDemo } from "../data/contact";
+import { rodape } from "../data/preview/ajustes";
+import { withBase } from "../utils/url";
 import Logo from "./Logo.astro";
 import { getLangFromUrl, useTranslations, localizePath } from "../i18n/utils";
 import { googleAnalytics } from "../data/medicao";
@@ -14,7 +16,15 @@ const common = useTranslations(lang).common;
 const trabalheLabel = useTranslations(lang).topbar.trabalhe;
 const mainNav = getMainNav(lang);
 const solucoesItem = mainNav.find((i) => i.id === "solucoes");
-const solucoes = solucoesItem?.children ?? (solucoesItem ? [{ label: solucoesItem.label, href: solucoesItem.href }] : []);
+// Português já é o site reestruturado: colunas próprias (data/preview/ajustes.ts).
+// EN e ES seguem no site antigo, com o menu antigo.
+const L = (href: string) => (href.startsWith("#") ? href : withBase(href));
+const navLinks = lang === "pt"
+  ? rodape.navegacao.map((i) => ({ label: i.label, href: L(i.href) }))
+  : mainNav.filter((i) => i.id !== "home").map((i) => ({ label: i.id === "contato" ? t.contatoLink : i.label, href: i.href }));
+const solucoes = lang === "pt"
+  ? rodape.solucoes.map((i) => ({ label: i.label, href: L(i.href) }))
+  : solucoesItem?.children ?? (solucoesItem ? [{ label: solucoesItem.label, href: solucoesItem.href }] : []);
 const year = new Date().getFullYear();
 ---
 
@@ -28,17 +38,14 @@ const year = new Date().getFullYear();
     <nav class="footer-nav" aria-label={common.navFooter}>
       {/* h2, não h3: em páginas sem h2 no conteúdo (404, trabalhe-conosco) as
           colunas vinham logo após o h1 e criavam salto h1→h3 no outline. */}
-      {mainNav.length > 0 && (
+      {navLinks.length > 0 && (
       <div>
         <h2>{t.navHeading}</h2>
         <ul>
-          {/* O contato leva rótulo próprio nesta coluna: no celular as colunas
-              empilham e ele caía colado no <h2> "Contato" da coluna seguinte,
-              dois iguais em sequência. No menu do topo segue "Contato" — lá
-              não há com o que colidir. */}
-          {mainNav.filter((i) => i.id !== "home").map((item) => (
-            <li><a href={item.href}>{item.id === "contato" ? t.contatoLink : item.label}</a></li>
-          ))}
+          {/* EN/ES: o contato leva rótulo próprio nesta coluna, para não cair
+              colado no <h2> "Contato" quando as colunas empilham. Em PT o
+              comercial pediu "Contato" mesmo (2026-10-28). */}
+          {navLinks.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
         </ul>
       </div>
       )}
@@ -56,7 +63,7 @@ const year = new Date().getFullYear();
           <li><a href="mailto:comercial@procgroup.com.br">comercial@procgroup.com.br</a></li>
           <li><a href="tel:+554632243532">+55 46 3224-3532</a></li>
           <li>{t.address} · <a href={MAPS_URL} target="_blank" rel="noopener noreferrer">{t.mapLink}</a></li>
-          <li><a href={localizePath("/contato", lang)}>{t.demoLink}</a></li>
+          <li><a href={whatsappDemo(lang)}>{t.demoLink}</a></li>
           <li><a href={localizePath("/suporte", lang)}>{t.suporteLink}</a></li>
           {/* Só no celular. Lá a TopBar esconde os links de utilidade, e este
               é o ÚNICO caminho do site para /trabalhe-conosco — sem ele a

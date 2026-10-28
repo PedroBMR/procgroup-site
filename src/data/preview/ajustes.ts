@@ -106,6 +106,24 @@ export const menu: EntradaMenu[] = [
   { label: "Contato", href: "/contato" },
 ];
 
+/** Colunas do rodapé em português (pedido do comercial, 2026-10-28). A Proc
+    City usa o mesmo destino do menu do topo: o endereço segue em aberto (R9). */
+export const rodape = {
+  navegacao: [
+    { label: "A Proc", href: "/a-proc" },
+    { label: "Soluções", href: "/solucoes" },
+    { label: "Parcerias", href: "/parcerias" },
+    { label: "Proc City", href: menu.find((i) => i.label === "Proc City")!.href },
+    { label: "Blog", href: "/blog" },
+    { label: "Contato", href: "/contato" },
+  ],
+  solucoes: [
+    { label: "Infraestrutura de TI", href: "/infraestrutura-de-ti" },
+    { label: "Hospedagem em nuvem", href: "/hospedagem-em-nuvem" },
+    { label: "Visão Computacional e Vídeo Analytics", href: "/visao-computacional" },
+  ],
+};
+
 /* ══════════════════ HOME: OS QUATRO HERÓIS ══════════════════ */
 
 export const herois = [

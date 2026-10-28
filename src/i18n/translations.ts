@@ -77,7 +77,7 @@ export const translations = {
       highlight: ["Engenharia própria", "Tudo conectado"],
     },
     footer: {
-      tagline: "Engenharia própria em IA e Visão Computacional. Inteligência para um mundo mais seguro, conectado e eficiente.",
+      tagline: "Tecnologia Inteligente para um mundo mais seguro, conectado e eficiente.",
       navHeading: "Navegação",
       solucoesHeading: "Soluções",
       contatoHeading: "Contato",

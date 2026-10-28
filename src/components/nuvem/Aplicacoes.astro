@@ -1,13 +1,18 @@
 ---
 /**
- * Hospedagem de ERP e Hospedagem de outros projetos. Os dois cards têm pesos
- * diferentes no próprio texto (o de ERP é bem maior), então a composição é
- * assimétrica: ERP à esquerda, largo; outros projetos à direita, estreito.
+ * Hospedagem de ERP e Hospedagem de outros projetos em Feature Tabs: duas
+ * abas lado a lado formam um seletor só, e abaixo aparece o conteúdo inteiro
+ * da solução escolhida. Pedido do comercial em 2026-10-28.
  *
- *   ERP              os fatores de dimensionamento viram uma grade de
- *                    etiquetas em volta de um ícone de ERP, que acendem em
- *                    sequência quando o card aparece
+ *   ERP              os fatores de dimensionamento viram um painel técnico,
+ *                    uma linha por fator com barra ao lado. As barras são
+ *                    todas iguais de propósito: ilustram, não medem nada.
+ *                    A parceria com software house ganha um destaque com um
+ *                    diagrama só de ícones (código, ERP, nuvem)
  *   outros projetos  cada tipo de projeto da lista ganha um ícone próprio
+ *
+ * Âncoras: o mega-menu leva a #erp e #outros-projetos. Cada aba tem o id da
+ * solução e o script abre a aba certa, como em infra/Solucoes.astro.
  *
  * Texto: os dois cards do bloco (n, titulo, subtitulo, paragrafos,
  * itensTitulo, itens, depois), sem alteração.
@@ -20,10 +25,27 @@ interface Props {
   bloco: Bloco;
 }
 const { bloco } = Astro.props;
-const [erp, outros] = bloco.cards ?? [];
+const cards = bloco.cards ?? [];
+const [erp, outros] = cards;
+const ICONE_DA_ABA: Record<string, NomeIconeMenu> = { erp: "erp", "outros-projetos": "camadas" };
+
+// Ícone de cada fator de dimensionamento do ERP, pelo texto do item.
+const iconeDoFator = (t: string): NomeIconeMenu =>
+  /usuário/i.test(t) ? "pessoas"
+  : /filiais/i.test(t) ? "predio"
+  : /volume/i.test(t) ? "camadas"
+  : /processamento/i.test(t) ? "chip"
+  : /banco/i.test(t) ? "servidores"
+  : /complementares/i.test(t) ? "modulos"
+  : /simultâneos/i.test(t) ? "rede"
+  : /armazenamento/i.test(t) ? "caixas"
+  : /backup/i.test(t) ? "relogio"
+  : /segurança/i.test(t) ? "cadeado"
+  : /crescimento/i.test(t) ? "crescimento"
+  : "checklist";
 
 // Ícone de cada tipo de projeto, pelo texto do item.
-const iconeDe = (t: string): NomeIconeMenu =>
+const iconeDoTipo = (t: string): NomeIconeMenu =>
   /site|portal/i.test(t) ? "globo"
   : /corporativ/i.test(t) ? "erp"
   : /arquivo|document/i.test(t) ? "arquivo"
@@ -31,12 +53,32 @@ const iconeDe = (t: string): NomeIconeMenu =>
   : /e-mail/i.test(t) ? "envelope"
   : /aplicativo/i.test(t) ? "aplicativo"
   : "modulos";
+
+const parceria = erp?.depois?.at(-1);
+const depoisSemParceria = erp?.depois?.slice(0, -1) ?? [];
 ---
 
 <section class="ap-secao aplicacoes" data-theme="light" data-cena>
-  <div class="container grade">
+  <div class="container" data-abas-hospedagem>
+    <div class="abas ap-entra" role="tablist">
+      {cards.map((c, i) => (
+        <button
+          type="button"
+          class="aba"
+          role="tab"
+          id={c.id}
+          aria-controls={`painel-${c.id}`}
+          aria-selected={i === 0 ? "true" : "false"}
+          tabindex={i === 0 ? 0 : -1}
+        >
+          <span class="aba-icone" aria-hidden="true"><MenuIcon nome={ICONE_DA_ABA[c.id ?? ""] ?? "modulos"} /></span>
+          <span class="aba-titulo">{c.titulo}</span>
+        </button>
+      ))}
+    </div>
+
     {erp && (
-      <article class="card erp ap-entra" id={erp.id}>
+      <div class="painel ap-entra" style="--i:1" role="tabpanel" id={`painel-${erp.id}`} aria-labelledby={erp.id} tabindex="0">
         <header class="cab">
           <span class="icone-grande" aria-hidden="true"><MenuIcon nome="erp" /></span>
           <div>
@@ -45,19 +87,47 @@ const iconeDe = (t: string): NomeIconeMenu =>
           </div>
         </header>
         {erp.subtitulo && <p class="sub">{erp.subtitulo}</p>}
-        {erp.paragrafos?.map((p) => <p class="p">{p}</p>)}
-        {erp.itensTitulo && <p class="itens-titulo">{erp.itensTitulo}</p>}
-        {erp.itens && (
-          <ul class="fatores">
-            {erp.itens.map((it, k) => <li style={`--k:${k}`}>{it}</li>)}
-          </ul>
+
+        <div class="erp-grade">
+          <div class="leitura">
+            {erp.paragrafos?.map((p) => <p class="p">{p}</p>)}
+          </div>
+          {erp.itens && (
+            <div class="dimensionamento">
+              {erp.itensTitulo && <p class="itens-titulo">{erp.itensTitulo}</p>}
+              <ul class="fatores">
+                {erp.itens.map((it, k) => (
+                  <li style={`--k:${k}`}>
+                    <span class="f-icone" aria-hidden="true"><MenuIcon nome={iconeDoFator(it)} /></span>
+                    <span class="f-nome">{it}</span>
+                    <span class="f-barra" aria-hidden="true"><span></span></span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+
+        {depoisSemParceria.map((p) => <p class="p leitura">{p}</p>)}
+        {parceria && (
+          <div class="parceria">
+            <div class="integracao" aria-hidden="true">
+              <svg viewBox="0 0 240 64" focusable="false">
+                <path class="linha" d="M24 32 H216" />
+                <path class="ap-fluxo" style="--dur:2.6s; --atraso:1.6s" pathLength="1" d="M24 32 H216" />
+              </svg>
+              <span class="no"><MenuIcon nome="codigo" /></span>
+              <span class="no meio"><MenuIcon nome="erp" /></span>
+              <span class="no fim"><MenuIcon nome="nuvem" /></span>
+            </div>
+            <p>{parceria}</p>
+          </div>
         )}
-        {erp.depois?.map((p, k) => <p class:list={["p", { parceria: k === erp.depois!.length - 1 }]}>{p}</p>)}
-      </article>
+      </div>
     )}
 
     {outros && (
-      <article class="card outros ap-entra" style="--i:2" id={outros.id}>
+      <div class="painel" role="tabpanel" id={`painel-${outros.id}`} aria-labelledby={outros.id} tabindex="0" hidden>
         <header class="cab">
           <span class="icone-grande" aria-hidden="true"><MenuIcon nome="camadas" /></span>
           <div>
@@ -65,68 +135,213 @@ const iconeDe = (t: string): NomeIconeMenu =>
             <h3>{outros.titulo}</h3>
           </div>
         </header>
-        {outros.paragrafos?.map((p) => <p class="p">{p}</p>)}
+        {outros.paragrafos?.map((p) => <p class="p leitura">{p}</p>)}
         {outros.itens && (
           <ul class="tipos">
             {outros.itens.map((it, k) => (
               <li style={`--k:${k}`}>
-                <span class="tipo-icone" aria-hidden="true"><MenuIcon nome={iconeDe(it)} /></span>
+                <span class="tipo-icone" aria-hidden="true"><MenuIcon nome={iconeDoTipo(it)} /></span>
                 <span>{it}</span>
               </li>
             ))}
           </ul>
         )}
-      </article>
+      </div>
     )}
   </div>
 </section>
 
 <style>
-  .grade { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: var(--space-6); align-items: stretch; }
-  .card {
+  .aplicacoes { scroll-margin-top: calc(var(--topbar-h) + var(--header-h)); }
+
+  /* As duas abas são um seletor só: uma faixa, dois botões iguais e uma
+     linha vermelha embaixo do ativo. */
+  .abas {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 6px;
+    border-radius: var(--radius-lg);
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+  }
+  .aba {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    min-height: 64px;
+    padding: var(--space-3) var(--space-5);
+    border: 0;
+    border-radius: calc(var(--radius-lg) - 4px);
+    background: transparent;
+    color: var(--color-text-muted);
+    font: inherit;
+    cursor: pointer;
+    scroll-margin-top: calc(var(--topbar-h) + var(--header-h) + var(--space-6));
+    transition: background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .aba::after {
+    content: "";
+    position: absolute;
+    left: var(--space-5);
+    right: var(--space-5);
+    bottom: 6px;
+    height: 3px;
+    border-radius: 3px;
+    background: var(--red-600);
+    transform: scaleX(0);
+    transition: transform 0.35s var(--ease-out);
+  }
+  .aba:hover { color: var(--color-text); }
+  .aba[aria-selected="true"] {
+    background: var(--color-surface);
+    color: var(--color-text);
+    box-shadow: 0 1px 2px rgba(11, 23, 48, 0.06), 0 10px 24px -18px rgba(11, 23, 48, 0.4);
+  }
+  .aba[aria-selected="true"]::after { transform: scaleX(1); }
+  .aba:focus-visible { outline: 2px solid var(--red-600); outline-offset: 2px; }
+  .aba-icone { display: grid; place-items: center; flex: none; width: 36px; height: 36px; border-radius: 10px; background: var(--color-surface); border: 1px solid var(--color-border); color: var(--navy-700); transition: background 0.25s ease, color 0.25s ease; }
+  .aba[aria-selected="true"] .aba-icone { background: var(--navy-900); border-color: var(--navy-900); color: var(--white); }
+  .aba-icone :global(.menu-icon) { width: 18px; height: 18px; }
+  .aba-titulo { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-lg); line-height: 1.15; text-transform: uppercase; text-align: left; }
+
+  .painel {
+    margin-top: var(--space-6);
     padding: var(--space-8);
     border-radius: var(--radius-lg);
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     box-shadow: 0 1px 2px rgba(11, 23, 48, 0.04), 0 18px 40px -28px rgba(11, 23, 48, 0.3);
-    scroll-margin-top: calc(var(--topbar-h) + var(--header-h) + var(--space-6));
+    animation: hp-entra 0.32s var(--ease-out);
   }
-  .outros { background: linear-gradient(180deg, var(--color-bg-alt), var(--color-surface)); }
+  .painel[hidden] { display: none; }
+  .painel:focus-visible { outline: 2px solid var(--red-600); outline-offset: 2px; }
+  @keyframes hp-entra { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
   .cab { display: flex; align-items: center; gap: var(--space-4); }
   .icone-grande { display: grid; place-items: center; flex: none; width: 64px; height: 64px; border-radius: 18px; background: var(--navy-900); color: var(--white); }
   .icone-grande :global(.menu-icon) { width: 30px; height: 30px; }
   .n { font-family: var(--font-display); font-weight: 800; font-size: var(--fs-base); line-height: 1; color: var(--red-600); }
-  .card h3 { margin-top: 2px; font-size: var(--fs-xl); }
-  .sub { margin-top: var(--space-5); font-size: var(--fs-base); font-weight: 600; line-height: 1.45; color: var(--red-600); }
-  .p { margin-top: var(--space-4); font-size: var(--fs-sm); line-height: 1.65; color: var(--color-text-muted); }
-  .parceria { padding: var(--space-4) var(--space-5); border-radius: var(--radius-sm); background: var(--color-bg-alt); border-left: 3px solid var(--red-600); color: var(--color-text); }
-  .itens-titulo { margin-top: var(--space-6); font-size: var(--fs-sm); font-weight: 700; color: var(--color-text); }
+  .painel h3 { margin-top: 2px; font-size: var(--fs-2xl); }
+  .sub { margin-top: var(--space-5); max-width: 52ch; font-size: var(--fs-lg); font-weight: 600; line-height: 1.4; color: var(--red-600); }
+  .p { margin-top: var(--space-4); font-size: var(--fs-base); line-height: 1.65; color: var(--color-text-muted); }
+  .leitura { max-width: 64ch; }
 
-  /* Fatores de dimensionamento: etiquetas que acendem em sequência. */
-  .fatores { list-style: none; margin: var(--space-3) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-2); }
-  .fatores li {
-    font-size: var(--fs-xs);
-    font-weight: 600;
-    padding: 7px 12px;
-    border-radius: var(--radius-pill);
+  .erp-grade { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: var(--space-8); align-items: start; margin-top: var(--space-4); }
+  .erp-grade .p:first-child { margin-top: 0; }
+
+  /* Painel de dimensionamento, no mesmo desenho das barras da seção seguinte
+     (Escala): fundo escuro, ícone, nome e barra. Todas as barras enchem até o
+     mesmo ponto e uma luz percorre cada uma: ilustração, não medida. */
+  .dimensionamento { padding: var(--space-6); border-radius: var(--radius-lg); background: var(--navy-900); border: 1px solid rgba(255, 255, 255, 0.08); }
+  .itens-titulo { font-size: var(--fs-sm); font-weight: 600; line-height: 1.5; color: rgba(230, 238, 248, 0.86); }
+  .fatores { list-style: none; margin: var(--space-5) 0 0; padding: 0; display: grid; gap: var(--space-3); }
+  .fatores li { display: grid; grid-template-columns: 32px minmax(0, 1fr) minmax(64px, 0.8fr); align-items: center; gap: var(--space-3); }
+  .f-icone { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 9px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(230, 238, 248, 0.16); color: #e6eef8; }
+  .f-icone :global(.menu-icon) { width: 16px; height: 16px; }
+  .f-nome { font-size: var(--fs-sm); font-weight: 600; line-height: 1.3; color: var(--white); }
+  .f-barra { position: relative; display: block; height: 6px; border-radius: 6px; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
+  .f-barra span { position: absolute; inset: 0; border-radius: 6px; background: linear-gradient(90deg, var(--red-600), var(--red-400)); transform: scaleX(0); transform-origin: left; }
+  .f-barra span::after { content: ""; position: absolute; top: 0; bottom: 0; width: 30%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent); transform: translateX(-120%); }
+  .em-cena .f-barra span { animation: hp-enche 1s cubic-bezier(0.22, 1, 0.36, 1) calc(0.5s + var(--k) * 0.09s) forwards; }
+  .em-cena .f-barra span::after { animation: hp-luz 3.2s ease-in-out calc(2.2s + var(--k) * 0.28s) infinite; }
+  @keyframes hp-enche { to { transform: scaleX(1); } }
+  @keyframes hp-luz { 0% { transform: translateX(-120%); } 45%, 100% { transform: translateX(380%); } }
+
+  /* Parceria com software house: destaque com linha lateral e um diagrama
+     só de ícones ligando código, ERP e nuvem. */
+  .parceria {
+    position: relative;
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    align-items: center;
+    gap: var(--space-8);
+    margin-top: var(--space-8);
+    padding: var(--space-6) var(--space-8);
+    border-radius: var(--radius-md);
     background: var(--color-bg-alt);
-    border: 1px solid var(--color-border);
-    color: var(--color-text);
-    transition: background 0.4s ease, border-color 0.4s ease, color 0.4s ease;
-    transition-delay: calc(0.6s + var(--k) * 0.08s);
+    border-left: 3px solid var(--red-600);
   }
-  .em-cena .fatores li { border-color: rgba(184, 8, 26, 0.35); background: rgba(226, 8, 29, 0.05); }
+  .parceria p { font-size: var(--fs-base); line-height: 1.65; color: var(--color-text); }
+  .integracao { position: relative; display: flex; justify-content: space-between; align-items: center; width: 240px; height: 64px; }
+  .integracao svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .integracao .linha { fill: none; stroke: var(--navy-700); stroke-width: 1.6; stroke-dasharray: 4 5; opacity: 0.45; }
+  .no { position: relative; display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; background: var(--color-surface); border: 1px solid var(--color-border); color: var(--navy-700); box-shadow: 0 8px 18px -14px rgba(11, 23, 48, 0.5); }
+  .no :global(.menu-icon) { width: 22px; height: 22px; }
+  .no.meio { background: var(--navy-900); border-color: var(--navy-900); color: var(--white); }
+  .no.fim { color: var(--red-600); }
 
-  .tipos { list-style: none; margin: var(--space-6) 0 0; padding: 0; display: grid; gap: var(--space-2); }
-  .tipos li { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-3); border-radius: var(--radius-sm); font-size: var(--fs-sm); font-weight: 600; color: var(--color-text); transition: background 0.2s ease; }
-  .tipos li:hover { background: var(--color-surface); }
-  .tipo-icone { display: grid; place-items: center; flex: none; width: 36px; height: 36px; border-radius: 10px; background: var(--color-surface); border: 1px solid var(--color-border); color: var(--navy-700); }
-  .tipo-icone :global(.menu-icon) { width: 18px; height: 18px; }
+  .tipos { list-style: none; margin: var(--space-8) 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-4); }
+  .tipos li {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-5);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-alt);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--color-text);
+    animation: hp-entra 0.4s var(--ease-out) calc(var(--k) * 0.05s) both;
+  }
+  .tipo-icone { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: var(--navy-900); color: var(--white); }
+  .tipo-icone :global(.menu-icon) { width: 20px; height: 20px; }
 
   @media (max-width: 900px) {
-    .grade { grid-template-columns: 1fr; }
+    .painel { padding: var(--space-6); }
+    .erp-grade { grid-template-columns: 1fr; }
+    .tipos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .parceria { grid-template-columns: 1fr; gap: var(--space-5); padding: var(--space-5); }
+  }
+  @media (max-width: 560px) {
+    .aba { flex-direction: column; gap: var(--space-2); padding: var(--space-3); }
+    .aba-titulo { font-size: var(--fs-sm); text-align: center; }
+    .painel { padding: var(--space-5); }
+    .fatores li { grid-template-columns: 32px minmax(0, 1fr) 56px; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .fatores li { transition: none; }
+    .painel, .tipos li { animation: none; }
+    .aba, .aba::after, .aba-icone { transition: none; }
+    .f-barra span { transform: scaleX(1); }
+    .em-cena .f-barra span, .em-cena .f-barra span::after { animation: none; }
   }
 </style>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-abas-hospedagem]").forEach((raiz) => {
+    const abas = Array.from(raiz.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+    const paineis = Array.from(raiz.querySelectorAll<HTMLElement>('[role="tabpanel"]'));
+    let atual = 0;
+
+    const mostrar = (n: number, focar = false) => {
+      atual = (n + abas.length) % abas.length;
+      abas.forEach((a, k) => {
+        const sim = k === atual;
+        a.setAttribute("aria-selected", String(sim));
+        a.tabIndex = sim ? 0 : -1;
+        paineis[k].hidden = !sim;
+      });
+      if (focar) abas[atual].focus();
+    };
+
+    abas.forEach((a, k) => a.addEventListener("click", () => mostrar(k)));
+    raiz.querySelector('[role="tablist"]')?.addEventListener("keydown", (e) => {
+      const ev = e as KeyboardEvent;
+      const mapa: Record<string, number> = { ArrowRight: atual + 1, ArrowLeft: atual - 1, Home: 0, End: abas.length - 1 };
+      if (!(ev.key in mapa)) return;
+      ev.preventDefault();
+      mostrar(mapa[ev.key], true);
+    });
+
+    // Âncora do mega-menu (#erp, #outros-projetos) abre a aba certa.
+    const pelaAncora = () => {
+      const k = abas.findIndex((a) => `#${a.id}` === decodeURIComponent(location.hash));
+      if (k >= 0) mostrar(k);
+    };
+    pelaAncora();
+    window.addEventListener("hashchange", pelaAncora);
+  });
+</script>
