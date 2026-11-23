@@ -17,7 +17,7 @@ export interface Vaga {
 
 const condicoesEstagio: Vaga["condicoes"] = [
   { rotulo: "Vaga", valor: "1 vaga, presencial" },
-  { rotulo: "Horário", valor: "Segunda a sexta, 8h30 às 12h e 13h30 às 16h (30h semanais)" },
+  { rotulo: "Horário", valor: "Até 30 horas semanais, com horários negociáveis" },
   { rotulo: "Bolsa", valor: "R$ 9,60 por hora" },
   { rotulo: "Benefícios", valor: "Seguro contra acidentes pessoais" },
   { rotulo: "Local", valor: "Rua Caetano Munhoz da Rocha, 480, Pato Branco/PR" },
