@@ -2,6 +2,7 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Button from "../../components/Button.astro";
 import { usePages } from "../../i18n/pages";
+import { EMAIL_VAGAS, vagas } from "../../data/vagas";
 import { defaultLocale, type Locale } from "../../i18n/config";
 
 export function getStaticPaths() {
@@ -10,6 +11,8 @@ export function getStaticPaths() {
 const lang = (Astro.params.lang as Locale) || defaultLocale;
 const t = usePages(lang).trabalhe;
 const mailHref = `mailto:comercial@procgroup.com.br?subject=${encodeURIComponent(t.mailSubject)}`;
+const abertas = lang === "pt" ? vagas.filter((v) => v.aberta) : [];
+const candidatura = (assunto: string) => `mailto:${EMAIL_VAGAS}?subject=${encodeURIComponent(assunto)}`;
 ---
 
 <BaseLayout title={t.heroTitle} description={t.metaDescription}>
@@ -23,6 +26,32 @@ const mailHref = `mailto:comercial@procgroup.com.br?subject=${encodeURIComponent
       </div>
     </div>
   </section>
+
+  {abertas.length > 0 && (
+    <section class="vagas" data-theme="light" aria-labelledby="vagas-titulo">
+      <div class="container">
+        <h2 id="vagas-titulo">Vagas abertas</h2>
+        <div class="lista">
+          {abertas.map((v) => (
+            <article class="vaga" id={v.id}>
+              <h3>{v.titulo}</h3>
+              <h4>Atividades</h4>
+              <ul>{v.atividades.map((i) => <li>{i}</li>)}</ul>
+              <h4>Requisitos</h4>
+              <ul>{v.requisitos.map((i) => <li>{i}</li>)}</ul>
+              <dl>
+                {v.condicoes.map((c) => <div><dt>{c.rotulo}</dt><dd>{c.valor}</dd></div>)}
+              </dl>
+              <div class="acao">
+                <Button href={candidatura(v.assunto)}>Quero me candidatar</Button>
+                <p>Ou envie seu currículo para {EMAIL_VAGAS}, com o assunto "{v.assunto}".</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
 </BaseLayout>
 
 <style>
@@ -30,4 +59,20 @@ const mailHref = `mailto:comercial@procgroup.com.br?subject=${encodeURIComponent
   .hero-page h1 { font-size: var(--fs-4xl); margin-top: var(--space-4); }
   .lead { margin-top: var(--space-6); font-size: var(--fs-lg); color: var(--color-text-muted); max-width: 620px; }
   .cta-row { margin-top: var(--space-8); }
+
+  .vagas { padding-block: var(--space-16) var(--space-24); background: var(--color-bg); color: var(--color-text); }
+  .vagas h2 { font-size: var(--fs-3xl); }
+  .lista { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: var(--space-8); margin-top: var(--space-8); }
+  .vaga { display: flex; flex-direction: column; padding: var(--space-8); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); scroll-margin-top: 120px; }
+  .vaga:target { border-color: var(--color-primary); }
+  .vaga h3 { font-size: var(--fs-2xl); }
+  .vaga h4 { margin: var(--space-6) 0 var(--space-2); font-size: var(--fs-base); }
+  .vaga ul { padding-left: 1.2em; list-style: disc; }
+  .vaga li + li { margin-top: var(--space-2); }
+  .vaga dl { margin: var(--space-6) 0; }
+  .vaga dl div { display: grid; grid-template-columns: 90px 1fr; gap: var(--space-4); padding-block: var(--space-2); border-top: 1px solid var(--color-border); }
+  .vaga dt { font-weight: 600; }
+  .vaga dd { margin: 0; }
+  .acao { margin-top: auto; }
+  .acao p { margin-top: var(--space-4); font-size: var(--fs-sm); color: var(--color-text-muted); overflow-wrap: anywhere; }
 </style>
